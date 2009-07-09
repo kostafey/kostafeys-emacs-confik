@@ -25,6 +25,12 @@
 ;;=============================================================================
 (add-to-list 'load-path "~/.emacs.d/")
 ;;-----------------------------------------------------------------------------
+;; Scheme
+(require 'cmuscheme)
+(setq scheme-program-name "mzscheme")
+;M-x run-scheme
+(require 'quack)
+;;-----------------------------------------------------------------------------
 ;; auto-complete
 (when (require 'auto-complete nil t)
    (auto-complete-mode)
@@ -45,17 +51,44 @@
 ;; M-x sunrise
 (require 'sunrise-commander)
 ;;-----------------------------------------------------------------------------
-;; tabs
+;;;;;;;;;
+;; Tabbar
 (require 'tabbar)
+
+(global-set-key [C-tab] 'tabbar-forward-tab)
+(global-set-key [C-S-tab] 'tabbar-backward-tab)
+
+;(set-face-foreground 'tabbar-default "LightSteelBlue")
+;(set-face-background 'tabbar-default "DarkSlateGray")
+;(set-face-foreground 'tabbar-selected "pale green")
+
+(set-face-bold-p 'tabbar-selected t)
+(set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72"))
+
+(setq tabbar-buffer-groups-function
+      (lambda () 
+        (list
+         (cond
+          ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
+          (t "All Buffers"))
+         )))
+
 (tabbar-mode t)
-(global-set-key [(control shift tab)] 'tabbar-forward)
-(global-set-key [(control meta shift tab)] 'tabbar-backward)
+;; tabbar end
+;;;;;;;;;;;;;
 ;;-----------------------------------------------------------------------------
 ;; ido
 (require 'ido)
 (ido-mode t)
 ;ibuffer - еще один способ переключения между буферами
 (global-set-key "\C-x\C-b" 'ibuffer)
+
+;Убить буфер
+(defun prh:kill-current-buffer ()
+    (interactive)
+    (kill-buffer (current-buffer)))
+(global-set-key "\C-w" 'prh:kill-current-buffer)
+(global-set-key (kbd "C-x w") 'kill-buffer)
 ;;-----------------------------------------------------------------------------
 ;; session
 (require 'session)
@@ -175,6 +208,14 @@
 
 ;;Свернуть окно
 (global-set-key "\M-z" 'iconify-or-deiconify-frame)
+
+;;Максимизировать окно 
+;;set right ;) font and maximizes
+(defun prh:ajust-frame ()
+  "Ajusts current frame to display properties"
+  (interactive)
+  (w32-send-sys-command 61488))
+(prh:ajust-frame)
 
 ;; Выделение парных скобок
 (show-paren-mode 1)
