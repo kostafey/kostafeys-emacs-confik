@@ -6,6 +6,10 @@
 (setq semantic-load-turn-useful-things-on t)
 (load-file "~/.emacs.d/cedet-1.0pre6/common/cedet.el")
 (global-set-key [?\C- ] 'semantic-ia-complete-symbol)
+
+(defun my-semantic-hook ()
+  (semantic-tag-folding-mode 1))
+(add-hook 'semantic-init-hooks 'my-semantic-hook)
 ;;-----------------------------------------------------------------------------
 
 ;;-----------------------------------------------------------------------------
@@ -24,6 +28,14 @@
 ;;Указываем где будут лежать файлы расширений
 ;;=============================================================================
 (add-to-list 'load-path "~/.emacs.d/")
+;;-----------------------------------------------------------------------------
+;; Org-mode
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+(global-font-lock-mode 1)
 ;;-----------------------------------------------------------------------------
 ;; Scheme
 (require 'cmuscheme)
@@ -55,7 +67,7 @@
 ;; Tabbar
 (require 'tabbar)
 
-(global-set-key [C-tab] 'tabbar-forward-tab)
+(global-set-key [S-tab] 'tabbar-forward-tab)
 (global-set-key [C-S-tab] 'tabbar-backward-tab)
 
 ;(set-face-foreground 'tabbar-default "LightSteelBlue")
@@ -103,7 +115,8 @@
 (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/")  
 (require 'color-theme) ;;подгружаем "модуль раскраски"
 (color-theme-initialize) ;;подгрузить библиотеку цветовых схем
-(color-theme-aliceblue) ;;выбрать конкретную схему
+(load-file "~/.emacs.d/color-theme-6.6.0/themes/color-theme-aliceblue-mod.el")
+(color-theme-aliceblue-mod) ;;выбрать конкретную схему
 ;;-----------------------------------------------------------------------------
 
 ;; Сохранять сессию перед выходом
