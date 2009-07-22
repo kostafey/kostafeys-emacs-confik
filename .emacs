@@ -29,7 +29,7 @@
 ;;=============================================================================
 (add-to-list 'load-path "~/.emacs.d/")
 ;;-----------------------------------------------------------------------------
-;; Org-mode
+;; Org-mode settings
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -44,8 +44,7 @@
 (require 'quack)
 ;;-----------------------------------------------------------------------------
 ;; auto-complete
-(when (require 'auto-complete nil t)
-   (auto-complete-mode)
+(when (require 'auto-complete nil t)   
    (global-auto-complete-mode t)
    (setq ac-auto-start t)                  ;automatically start
    (setq ac-dwim t)                        ;Do what i mean
@@ -57,11 +56,13 @@
    (define-key ac-complete-mode-map "\r" 'ac-complete)
    (define-key ac-complete-mode-map "\M-n" 'ac-next)
    (define-key ac-complete-mode-map "\M-p" 'ac-previous)
+   (auto-complete-mode)
 )
 ;;-----------------------------------------------------------------------------
 ;;Подключаем Sunrise Commander
 ;; M-x sunrise
 (require 'sunrise-commander)
+(autoload 'nc "nc" "Emulate MS-DOG file shell" t)
 ;;-----------------------------------------------------------------------------
 ;;;;;;;;;
 ;; Tabbar
@@ -92,6 +93,9 @@
 ;; ido
 (require 'ido)
 (ido-mode t)
+(global-set-key "\C-x\C-f" 'ido-find-file)
+(global-set-key "\C-x\b" 'ido-switch-buffer)
+
 ;ibuffer - еще один способ переключения между буферами
 (global-set-key "\C-x\C-b" 'ibuffer)
 
@@ -237,12 +241,51 @@
 (fset 'yes-or-no-p 'y-or-n-p) ;;не заставляйте меня печать yes целиком
 (setq default-tab-width 4) ;;подифолту
 
+
+;;-----------------------------------------------------------------------------
+;; Скроллинг
+;;
+;прокрутка экрана при неподвижной точке
+(defun gcm-scroll-down ()
+  (interactive)
+  (scroll-up 1))
+
+(defun gcm-scroll-up ()
+  (interactive)
+  (scroll-down 1))
+
+(global-set-key [(control down)] 'gcm-scroll-down)
+(global-set-key [(control up)]   'gcm-scroll-up)
+
+;(require 'smooth-scrolling)
+;(setq smooth-scroll-margin 4)
+
+    (defun sfp-page-down ()
+      (interactive)
+      (next-line
+       (- (window-text-height)
+          next-screen-context-lines)))
+    
+    (defun sfp-page-up ()
+      (interactive)
+      (previous-line
+       (- (window-text-height)
+          next-screen-context-lines)))
+    
+    (global-set-key [next] 'sfp-page-down)
+    (global-set-key [prior] 'sfp-page-up)
+
 ;; Шаг прокрутки
 ;(setq scroll-step 1)
-;; conservatively scrolling
+;; Если тока вышла за пределы окна на число не первосходящее данное,
+;; то прокрутить лишь настолько, чтобы вернуть точку в окно
 (setq scroll-conservatively 50)
-(setq scroll-preserve-screen-position 't)
+;; Не изменять положение точки после прокрутки
+(setq scroll-preserve-screen-position t)
+;; Граница прокрутки
 (setq scroll-margin 4)
+;;
+;;-----------------------------------------------------------------------------
 
 ; Метки текста
 (global-set-key [f5] 'bookmark-set)
@@ -341,9 +384,32 @@
 ;режимо автозавршения команды в минибуфере
 (icomplete-mode)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;Настройки проверка правописания Ispell
+;;
+(setq-default ispell-program-name "aspell")
+(setq ispell-dictionary "english")
+(setq ispell-local-dictionary "russian")
+(setq ispell-highlight-face (quote flyspell-incorrect))
+(setq ispell-have-new-look t)
+(setq ispell-enable-tex-parser t)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(setq flyspell-default-dictionary "russian")
+(setq flyspell-delay 1)
+(setq flyspell-always-use-popup t)
+(global-set-key [f11] 'ispell-buffer); проверить орфографию в текущем буфере
+(global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
+(global-set-key [f10] 'auto-fill-mode); вкл/выкл автозаполнения
+(global-set-key [f1] 'ispell-word)
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;
 ;;
+(message "*************************")
 (message "*** .emacs loaded OK. ***")
+(message "*************************")
 ;;
 ;; end of .emacs
 ;;
