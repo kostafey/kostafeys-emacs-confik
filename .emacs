@@ -29,6 +29,10 @@
 ;;=============================================================================
 (add-to-list 'load-path "~/.emacs.d/")
 ;;-----------------------------------------------------------------------------
+;; html-изация
+(require 'htmlize)
+(setq htmlize-output-type (quote css))
+;;-----------------------------------------------------------------------------
 ;; Org-mode settings
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
@@ -105,6 +109,9 @@
     (kill-buffer (current-buffer)))
 (global-set-key "\C-w" 'prh:kill-current-buffer)
 (global-set-key (kbd "C-x w") 'kill-buffer)
+;;-----------------------------------------------------------------------------
+;режимо автозавршения команды в минибуфере
+(icomplete-mode)
 ;;-----------------------------------------------------------------------------
 ;; session
 (require 'session)
@@ -200,9 +207,9 @@
  '(tool-bar-mode nil)
  '(transient-mark-mode t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;=============================================================================
 ;; KEYS
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;=============================================================================
 ;;
 ;; full screen toggle using command+[RET]
 (defun toggle-fullscreen () 
@@ -220,6 +227,10 @@
  (global-set-key "\M-j" 'backward-char)
  (global-set-key "\M-l" 'forward-char)
 
+; Метки текста
+(global-set-key [f5] 'bookmark-set)
+(global-set-key [f6] 'bookmark-jump)
+
 ;; Undo - wtf C-S-_
 (global-set-key "\C-z" 'undo)
 
@@ -234,13 +245,65 @@
   (w32-send-sys-command 61488))
 (prh:ajust-frame)
 
-;; Выделение парных скобок
-(show-paren-mode 1)
+(defun join-next-line ()
+  "Joins next line with current"
+  (interactive)
+  (progn
+	(end-of-line)
+	(next-line)
+	(join-line)))
+(global-set-key "\C-j" 'join-next-line)
 
+;Включаем команды изменения регистра
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+(global-set-key "\C-\M-u" 'upcase-region)
+(global-set-key "\C-\M-l" 'downcase-region)
+(global-unset-key "\C-f")
+(global-set-key "\C-fd" 'downcase-region)
+
+(global-set-key "\C-a" 'mark-whole-buffer)
+(global-set-key "\C-\M-k" 'kill-whole-line)
+(global-set-key "\C-b" 'backward-delete-char)
+(global-set-key "\C-d" 'delete-char);delete
+(global-set-key [(meta f4)] 'save-buffers-kill-terminal)
+
+(defun create-temp-buffer ()
+  "Creates new buffer temp"
+  (interactive)
+  (progn
+	(switch-to-buffer "temp")
+	(lisp-interaction-mode)
+	(switch-to-buffer nil)))
+(create-temp-buffer)
+(defun switch-to-temp-buffer ()
+  "Canges current buffer to temp"
+  (interactive)
+  (switch-to-buffer "temp"))
+(global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
+(global-set-key "\C-ft" 'switch-to-temp-buffer)
+
+(defun switch-to-keys-buffer ()
+  "Canges current buffer to keys.org"
+  (interactive)
+  (find-file "~/keys.org"))
+(global-set-key "\C-fk" 'switch-to-keys-buffer)
+
+(defun switch-to-emacs-buffer ()
+  "Canges current buffer to .emacs"
+  (interactive)
+  (find-file "~/.emacs"))
+(global-set-key "\C-fe" 'switch-to-emacs-buffer)
+
+(global-set-key "\M-s" 'save-buffer)
+(global-set-key "\C-s" 'isearch-forward)
+(global-set-key "\C-r" 'isearch-backward)
+
+(show-paren-mode 1) ;;Выделение парных скобок
 (setq inhibit-startup-message t) ;;не показывать сообщение при старте
 (fset 'yes-or-no-p 'y-or-n-p) ;;не заставляйте меня печать yes целиком
 (setq default-tab-width 4) ;;подифолту
-
 
 ;;-----------------------------------------------------------------------------
 ;; Скроллинг
@@ -280,16 +343,15 @@
 ;; Если тока вышла за пределы окна на число не первосходящее данное,
 ;; то прокрутить лишь настолько, чтобы вернуть точку в окно
 (setq scroll-conservatively 50)
+(setq scroll-up-agressively 0)
+(setq scroll-down-agressively 0)
+
 ;; Не изменять положение точки после прокрутки
 (setq scroll-preserve-screen-position t)
 ;; Граница прокрутки
 (setq scroll-margin 4)
 ;;
 ;;-----------------------------------------------------------------------------
-
-; Метки текста
-(global-set-key [f5] 'bookmark-set)
-(global-set-key [f6] 'bookmark-jump)
 
 ;; Выбираем текст
 ;(cua-selection-mode t)
@@ -381,29 +443,79 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;режимо автозавршения команды в минибуфере
-(icomplete-mode)
+;;=============================================================================
+;;
+;;Настройка проверки правописания Ispell
+;;
+(require 'flyspell)
+(require 'ispell)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;Настройки проверка правописания Ispell
-;;
-(setq-default ispell-program-name "aspell")
-(setq ispell-dictionary "english")
-(setq ispell-local-dictionary "russian")
+(setq
+ ; i like aspel, and you?
+ ispell-program-name "aspell"
+
+ ; my dictionary-alist, using for redefinition russian dictionary
+ ispell-dictionary-alist 
+ '(("english"                       ; English
+    "[a-zA-Z]"
+    "[^a-zA-Z]"
+    "[']"
+    nil
+    ("-d" "en")
+    nil iso-8859-1)
+   ("russian"                       ; Russian
+    "[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
+    "[^АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
+    "[-]"
+    nil
+    ("-C" "-d" "ru")
+    nil utf-8)
+   (nil                             ; Default
+    "[A-Za-z]"
+    "[^A-Za-z]"
+    "[']"
+    nil
+    ("-C")
+    nil iso-8859-1))
+
+ ispell-russian-dictionary "russian"
+ ispell-english-dictionary "english"
+ flyspell-default-dictionary ispell-russian-dictionary
+ ispell-dictionary ispell-english-dictionary
+ ispell-local-dictionary ispell-russian-dictionary
+ ispell-extra-args '("--sug-mode=ultra"))
+
+(defun flyspell-russian ()
+  (interactive)
+  (flyspell-mode t)
+  (ispell-change-dictionary ispell-russian-dictionary)
+  (flyspell-buffer)
+  (message "Russian dictionary - Spell Checking completed."))
+
+; English
+(defun flyspell-english ()
+  (interactive)
+  (flyspell-mode t)
+  (ispell-change-dictionary ispell-english-dictionary)
+  (flyspell-buffer)
+  (message "English dictionary - Spell Checking completed."))
+
 (setq ispell-highlight-face (quote flyspell-incorrect))
 (setq ispell-have-new-look t)
 (setq ispell-enable-tex-parser t)
 (add-hook 'text-mode-hook 'flyspell-mode)
-(setq flyspell-default-dictionary "russian")
 (setq flyspell-delay 1)
 (setq flyspell-always-use-popup t)
-(global-set-key [f11] 'ispell-buffer); проверить орфографию в текущем буфере
-(global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
-(global-set-key [f10] 'auto-fill-mode); вкл/выкл автозаполнения
+
 (global-set-key [f1] 'ispell-word)
+(global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
+(global-set-key [f8] 'ispell-region)
+(global-set-key [f9] 'auto-fill-mode); вкл/выкл автозаполнения
+(global-set-key [f10] 'flyspell-english)
+(global-set-key [f11] 'flyspell-russian)
+(global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;=============================================================================
 
 ;;
 ;;
