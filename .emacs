@@ -3,12 +3,15 @@
 ;;=============================================================================
 ;;-----------------------------------------------------------------------------
 ;; Cedet
+(add-to-list 'load-path "~/.emacs.d/cedet-1.0pre6/common/")
 (setq semantic-load-turn-useful-things-on t)
-(load-file "~/.emacs.d/cedet-1.0pre6/common/cedet.el")
+;(load-file "~/.emacs.d/cedet-1.0pre6/common/cedet.el")
+(require 'cedet)
 (global-set-key [?\C- ] 'semantic-ia-complete-symbol)
 
 (defun my-semantic-hook ()
-  (semantic-tag-folding-mode 1))
+  (progn 
+	 (semantic-tag-folding-mode 1)))
 (add-hook 'semantic-init-hooks 'my-semantic-hook)
 ;;-----------------------------------------------------------------------------
 
@@ -22,6 +25,22 @@
 (global-set-key "\M-m" 'ecb-goto-window-methods)
 ;Перезагрузка окна методов после каждого сохранения
 (setq imenu-auto-rescan 1)
+
+(ecb-layout-define "my-left" left nil
+  (ecb-split-ver 0.6666666666666666 t)
+  (if (fboundp (quote ecb-set-history-buffer)) (ecb-set-history-buffer) (ecb-set-default-ecb-buffer))
+  (dotimes (i 1) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
+  (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
+  (if (fboundp (quote ecb-set-methods-buffer)) (ecb-set-methods-buffer) (ecb-set-default-ecb-buffer))
+  (dotimes (i 1) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
+  (if (fboundp (quote ecb-set-history-buffer)) (ecb-set-history-buffer) (ecb-set-default-ecb-buffer))
+  (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
+  (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
+  )
+
+ (setq ecb-layout-window-sizes (quote (("my-left" (0.25 . 0.66) (0.25 . 0.34)))))
+ (setq ecb-layout-name "my-left")
+
 ;;-----------------------------------------------------------------------------
 
 ;;=============================================================================
@@ -65,7 +84,7 @@
 ;;-----------------------------------------------------------------------------
 ;;Подключаем Sunrise Commander
 ;; M-x sunrise
-(require 'sunrise-commander)
+;(require 'sunrise-commander)
 (autoload 'nc "nc" "Emulate MS-DOG file shell" t)
 ;;-----------------------------------------------------------------------------
 ;;;;;;;;;
@@ -195,7 +214,8 @@
  '(default-input-method "russian-computer")
  '(display-time-mode t)
  '(ecb-auto-activate t)
- '(ecb-layout-window-sizes (quote (("left8" (0.33766233766233766 . 0.26666666666666666) (0.33766233766233766 . 0.1111111111111111) (0.33766233766233766 . 0.4888888888888889) (0.33766233766233766 . 0.1111111111111111)))))
+ '(ecb-layout-window-sizes (quote (("my-left" (0.25 . 0.66) (0.25 . 0.34)))))
+ '(ecb-layout-name my-left)
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
  '(ecb-source-path (quote ("c:")))
@@ -226,6 +246,9 @@
  (global-set-key "\M-k" 'next-line)
  (global-set-key "\M-j" 'backward-char)
  (global-set-key "\M-l" 'forward-char)
+
+(global-set-key [(meta down)] 'forward-sentence)
+(global-set-key [(meta up)] 'backward-sentence)
 
 ; Метки текста
 (global-set-key [f5] 'bookmark-set)
@@ -274,13 +297,16 @@
   (interactive)
   (progn
 	(switch-to-buffer "temp")
-	(lisp-interaction-mode)
+	;(lisp-interaction-mode)
+	(linum-mode t)
 	(switch-to-buffer nil)))
 (create-temp-buffer)
 (defun switch-to-temp-buffer ()
   "Canges current buffer to temp"
   (interactive)
-  (switch-to-buffer "temp"))
+  (progn
+	(create-temp-buffer)
+	(switch-to-buffer "temp")))
 (global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
 (global-set-key "\C-ft" 'switch-to-temp-buffer)
 
@@ -288,6 +314,7 @@
   "Canges current buffer to keys.org"
   (interactive)
   (find-file "~/keys.org"))
+(switch-to-keys-buffer)
 (global-set-key "\C-fk" 'switch-to-keys-buffer)
 
 (defun switch-to-emacs-buffer ()
@@ -296,8 +323,34 @@
   (find-file "~/.emacs"))
 (global-set-key "\C-fe" 'switch-to-emacs-buffer)
 
+(defun scheme-study-ide ()
+  "Creates handy scheme study ide"
+  (interactive)
+  (progn
+	(run-scheme "mzscheme")
+	(delete-frame)
+	(split-window-horizontally)
+	(next-multiframe-window)
+	(switch-to-buffer "*scheme*")
+	(shrink-window-horizontally 22)
+	(previous-multiframe-window)
+))
+(global-set-key "\C-cs" 'scheme-study-ide)
+(global-set-key "\C-fsr" 'scheme-send-region)
+(global-set-key "\M-e" 'eval-print-last-sexp)
+
 (global-set-key "\M-s" 'save-buffer)
+
 (global-set-key "\C-s" 'isearch-forward)
+;(drop-hook 'isearch-mode-hook)
+
+(add-hook 'isearch-mode-hook
+		  '(lambda ()
+			 (define-key isearch-mode-map "\C-s"
+			   'isearch-repeat-forward)
+			 (define-key isearch-mode-map "\C-v"
+			   'isearch-yank-kill)))
+
 (global-set-key "\C-r" 'isearch-backward)
 
 (show-paren-mode 1) ;;Выделение парных скобок
@@ -345,6 +398,9 @@
 (setq scroll-conservatively 50)
 (setq scroll-up-agressively 0)
 (setq scroll-down-agressively 0)
+(scroll-bar-mode -1)
+(setq default-indicate-buffer-boundaries '((top . left) (bottom . left) (t . right)))
+(setq default-indicate-empty-lines t)
 
 ;; Не изменять положение точки после прокрутки
 (setq scroll-preserve-screen-position t)
@@ -386,6 +442,7 @@
 ;; 
 (load "c:/Program Files/Maxima-5.18.1/share/maxima/5.18.1/emacs/setup-imaxima-imath.el")
 (setq imaxima-tmp-dir "C:\\Windows\\tmp")
+(setq imaxima-gs-bin-dir "C:\\gs\\gs8.70\\bin")
 ;; Подключаем Maxima
 ;; указываем где будут лежать файлы расширений
 (add-to-list 'load-path "c:/Program Files/Maxima-5.18.1/share/maxima/5.18.1/emacs/")
@@ -406,6 +463,10 @@
 ;;
 ;;Настройки AucTeX
 ;;
+;(add-to-list 'load-path "~/.emacs.d/auctex-11.85-e22.3-msw/site-lisp/")
+;(add-to-list 'load-path "~/.emacs.d/auctex-11.85-e22.3-msw/site-lisp/auctex/")
+;(add-to-list 'load-path "~/.emacs.d/auctex-11.85-e22.3-msw/site-lisp/site-start.d/")
+;;;;;;;;;;;;;; pdf2dsc
 (require 'tex-mik)
 (add-hook 'LaTeX-mode-hook 'LaTeX-install-toolbar)
 (setq TeX-parse-self t)             ; Enable parse on load.
@@ -481,6 +542,7 @@
  ispell-russian-dictionary "russian"
  ispell-english-dictionary "english"
  flyspell-default-dictionary ispell-russian-dictionary
+ flyspell-dictionary ispell-russian-dictionary
  ispell-dictionary ispell-english-dictionary
  ispell-local-dictionary ispell-russian-dictionary
  ispell-extra-args '("--sug-mode=ultra"))
@@ -503,7 +565,7 @@
 (setq ispell-highlight-face (quote flyspell-incorrect))
 (setq ispell-have-new-look t)
 (setq ispell-enable-tex-parser t)
-(add-hook 'text-mode-hook 'flyspell-mode)
+;(add-hook 'text-mode-hook 'flyspell-russian)
 (setq flyspell-delay 1)
 (setq flyspell-always-use-popup t)
 
@@ -517,6 +579,42 @@
 ;;
 ;;=============================================================================
 
+;;=============================================================================
+;; JavaScript IDE
+(autoload 'js2-mode "js2" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+;;=============================================================================
+
+(defun my-htmlize-region (beg end)
+  "Htmlize region and put into <pre> tag style that is left in <body> tag
+plus add font-size: 8pt"
+  (interactive "r")
+  (let* ((buffer-faces (htmlize-faces-in-buffer))
+         (face-map (htmlize-make-face-map (adjoin 'default buffer-faces)))
+         (pre-tag (format
+                   "<pre style=\"%s font-size:8pt; padding:10px; line-height:130%%\">"
+                   (mapconcat #'identity (htmlize-css-specs
+                                          (gethash 'default face-map)) " ")))
+         (htmlized-reg (htmlize-region-for-paste beg end)))
+    (switch-to-buffer-other-window "*htmlized output*")
+    ; clear buffer
+    (kill-region (point-min) (point-max))
+    ; set mode to have syntax highlighting
+    (nxml-mode)
+    (save-excursion
+      (insert htmlized-reg))
+    (while (re-search-forward "<pre>" nil t)
+      (replace-match pre-tag nil nil))
+    (goto-char (point-min))))
+
+;;=============================================================================
+;; misc
+;;
+(setq max-specpdl-size 5000) ;for byte-compile
+
+(setq custom-file "~/.emacs.d/custom.el") ;auto-customized custom-set-variables
+(load custom-file)
+;;=============================================================================
 ;;
 ;;
 (message "*************************")
@@ -526,3 +624,4 @@
 ;; end of .emacs
 ;;
 ;;
+
