@@ -39,7 +39,7 @@
 (defvar desert-doc-fg "IndianRed3")
 (defvar desert-kw-fg "#225522")
 (defvar desert-function-fg "PaleGreen3")
-(defvar desert-variable-fg desert-fg)
+;(defvar desert-variable-fg desert-fg)
 (defvar desert-type-fg "PaleGreen3") ; unfortunately, vim doesn't highlight class names, when they are defined
 (defvar organic-constant-fg "#000000")
 (defvar desert-warning-fg "goldenrod")
