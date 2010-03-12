@@ -33,7 +33,9 @@
    (define-key ac-complete-mode-map "\r" 'ac-complete)
    (define-key ac-complete-mode-map "\M-n" 'ac-next)
    (define-key ac-complete-mode-map "\M-p" 'ac-previous)
-   (auto-complete-mode)
+   ;(auto-complete-mode)
+   (global-auto-complete-mode t)
+   (setq ac-auto-start 1)
 )
 ;;=============================================================================
 

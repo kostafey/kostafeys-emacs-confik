@@ -7,12 +7,15 @@
  '(bongo-mplayer-audio-driver nil)
  '(bongo-mplayer-interactive nil)
  '(default-input-method "russian-computer")
+ '(ecb-layout-name "my-left")
  '(ecb-options-version "2.40")
- '(ecb-layout-name "my-left"))
+ '(mouse-wheel-down-event (quote wheel-up))
+ '(mouse-wheel-follow-mouse t)
+ '(mouse-wheel-up-event (quote wheel-down)))
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(fringe ((t (:background "grey20")))))
+ )

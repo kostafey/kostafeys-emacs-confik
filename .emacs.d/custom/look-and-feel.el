@@ -1,5 +1,6 @@
 ;Font
-(set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 100)
+;(set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 100)
+(set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 110)
 
 ;(set-face-attribute 'default nil :family "Liberation Mono" :height 100)
 
@@ -78,12 +79,19 @@
 (setq inhibit-startup-message t) ;;не показывать сообщение при старте
 (fset 'yes-or-no-p 'y-or-n-p)    ;;не печать yes целиком
 (setq default-tab-width 4)       ;;количество пробелов в табуляции
+(setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;;=============================================================================
 (setq fringe-mode t) ;Show fields
-(custom-set-faces '(fringe ((t (:background "grey20")))))
+
+;;Folding
+(global-set-key [(control meta tab)] 'fold-dwim-toggle-selective-display)
+(global-set-key "\C-cf" 'semantic-tag-folding-fold-block)
+(global-set-key "\C-cs" 'semantic-tag-folding-show-block)
+;;=============================================================================
 
 (setq default-indicate-buffer-boundaries '((top . left) (bottom . left) (t . right)))
 (setq default-indicate-empty-lines t)

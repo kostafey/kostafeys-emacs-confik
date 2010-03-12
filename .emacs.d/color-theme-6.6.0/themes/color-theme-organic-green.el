@@ -13,6 +13,8 @@
 ;#E3F2E1
 
 ;цвета
+
+;#95E454
 ;#66CDAA
 ;#CE7B00
 ;#32CD32
@@ -28,6 +30,9 @@
 ;#DDEE00
 ;#EEDD00
 ;#B1B100
+;#717100
+;#339966
+;#44AAFF
 
 
 (defvar organic-fg "#326B6B")
@@ -74,7 +79,11 @@
           `(font-lock-comment-face ((t (:foreground ,organic-comment-fg))))
           `(font-lock-string-face ((t (:foreground ,organic-string-fg))))
 
-		  `(font-lock-constant-face ((t (:foreground ,organic-constant-fg))))
+          '(fringe ((t (:background "#E5E5E5"))))
+          '(fringe ((t (:foreground "#DDEE00"))))
+
+		  `(font-lock-constant-face ((t (:foreground ,"#3465BD"))))
+          
 		  '(font-lock-function-name-face ((t (:bold t :foreground "Blue" :weight extra-bold ))))
 		  '(font-lock-keyword-face ((t (:bold t :foreground "Purple" :weight semi-bold))))
 		  '(font-lock-type-face ((t (:italic t :foreground "ForestGreen" :slant italic))))
@@ -109,6 +118,8 @@
 		  '(font-latex-string-face ((t (nil))))
 		  '(font-latex-warning-face ((t (:bold t :weight semi-bold :foreground "#00CC00"))))
 
+          '(quack-pltish-paren-face ((((class color) (background light)) (:foreground "#53AD2F"))))
+          '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))
 		  ))))
 
 (provide 'color-theme-organic-green)

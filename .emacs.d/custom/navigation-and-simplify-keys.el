@@ -33,6 +33,7 @@
 (global-set-key "\C-k" 'kill-line)
 (global-set-key "\C-b" 'backward-delete-char)
 (global-set-key "\C-d" 'delete-char)                ; delete
+(global-set-key "\C-q" 'quoted-insert)
 (global-set-key [(delete)] 'delete-char)
 (global-set-key "\C-l" 'recenter-top-bottom)
 (global-set-key [(meta f4)] 'save-buffers-kill-terminal)
@@ -41,10 +42,8 @@
 ;;=============================================================================
 ;; Перфикс для ключей, применяемых к выделенным областям
 ;;=============================================================================
-(global-unset-key "\C-q")
-(global-set-key "\C-qq" 'quoted-insert)
-
-(defvar selected-area-prefix "\C-q")
+(global-unset-key "\C-\M-a")
+(defvar selected-area-prefix "\C-\M-a")
 
 ;;=============================================================================
 ;; Включаем команды изменения регистра
@@ -54,15 +53,20 @@
 (global-set-key (concat selected-area-prefix "u") 'upcase-region)
 (global-set-key (concat selected-area-prefix "l") 'downcase-region)
 ;;=============================================================================
+(global-set-key (concat selected-area-prefix "c") 'comment-dwim)
+(global-set-key (kbd "C-;") 'comment-or-uncomment-this)
 (global-set-key (concat selected-area-prefix "c") 'comment-region)
-(global-set-key (concat selected-area-prefix "u") 'uncomment-region)
+(global-set-key (concat selected-area-prefix "d") 'uncomment-region)
 ;;-----------------------------------------------------------------------------
 (global-set-key "\C-s" 'save-buffer)
 (global-set-key [f2] 'save-buffer)
 ;;-----------------------------------------------------------------------------
 ; Метки текста
-(global-set-key [f5] 'bookmark-set)
-(global-set-key [f6] 'bookmark-jump)
+;; (global-set-key [f5] 'bookmark-set)
+;; (global-set-key [f6] 'bookmark-jump)
+
+(global-set-key (kbd "C-i") 'bookmark-set)
+(global-set-key (kbd "C-p") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
 
 ;;=============================================================================
@@ -120,6 +124,13 @@
 ;;=============================================================================
 ;; Скроллинг
 ;;=============================================================================
+;;mouse
+(setq mouse-wheel-mode t)
+(setq mouse-wheel-progressive-speed nil)
+
+(setq mouse-drag-copy-region nil)
+
+;;keyboard
 (setq scroll-step 1)                     ; Шаг прокрутки
 (setq next-screen-context-lines 10)      ; Number of lines of continuity when scrolling by screenfuls. 
 ;; Если тока вышла за пределы окна на число не первосходящее данное,

@@ -64,7 +64,7 @@
 (setq flyspell-always-use-popup t)
 
 (global-set-key [f1] 'ispell-word)
-(global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
+;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
 (global-set-key [f8] 'ispell-region)
 (global-set-key [f9] 'auto-fill-mode); вкл/выкл автозаполнения
 (global-set-key [f10] 'flyspell-english)

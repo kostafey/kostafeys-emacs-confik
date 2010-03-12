@@ -96,4 +96,14 @@
 (global-set-key "\C-cd" 'duplicate-line)
 ;;=============================================================================
 
+(defun comment-or-uncomment-this (&optional lines)
+  (interactive "P")
+  (if mark-active
+      (if (< (mark) (point))
+          (comment-or-uncomment-region (mark) (point))
+          (comment-or-uncomment-region (point) (mark)))
+      (comment-or-uncomment-region
+       (line-beginning-position)
+       (line-end-position lines))))
+
 (provide 'basic-text-editing)

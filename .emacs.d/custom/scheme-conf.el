@@ -18,8 +18,9 @@
 	(shrink-window-horizontally 22)
 	(previous-multiframe-window)
 ))
-(global-set-key "\C-cs" 'scheme-study-ide)
-(global-set-key "\C-qsr" 'scheme-send-region)
+(global-unset-key "\C-xs")
+(global-set-key "\C-xss" 'scheme-study-ide)
+(global-set-key "\C-xsr" 'scheme-send-region)
 (global-set-key "\M-e" 'eval-print-last-sexp)
 ;;=============================================================================
 
