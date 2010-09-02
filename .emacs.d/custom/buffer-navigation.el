@@ -54,8 +54,11 @@
 
 ;;-----------------------------------------------------------------------------
 ;; minibuffer
+(require 'icomplete+)
+
 ;режимо автозавршения команды в минибуфере
 (icomplete-mode)
+
 ;;; save minibuffer history between sessions
 (when (> emacs-major-version 21) (savehist-mode t))
 ;;=============================================================================

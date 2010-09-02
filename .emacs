@@ -1,6 +1,6 @@
 ;;=============================================================================
 ;;Человеку свойственно ошибаться, но для нечеловеческих ляпов нужен компьютер.
-;;																	Пол Эрлих
+;;                                                                  Пол Эрлих
 ;;
 ;;Kostafey's emacs confik :) 
 ;;started from 08.08.2008, 22:45:25
@@ -35,7 +35,7 @@
 ;;-----------------------------------------------------------------------------
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
 (require 'calc-time)
-(require 'hibernate-mapping)
+;(require 'hibernate-mapping)
 
 ;;-----------------------------------------------------------------------------
 ;(require 'russian-utf8-env)
@@ -43,7 +43,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; nxhtml
-;(load (concat site-lisp-path "nxhtml/autostart.el"))
+(load (concat site-lisp-path "nxhtml/autostart.el"))
 
 ;;-----------------------------------------------------------------------------
 ;; html-изация
@@ -120,6 +120,8 @@
 ;; (global-set-key '[C-tab] 'bs-cycle-next)
 ;; (global-set-key [S-tab] 'bs-cycle-previous) 
 
+(put 'narrow-to-page 'disabled nil)
+
 (message "*************************")
 (message "*** .emacs loaded OK. ***")
 (message "*************************")
@@ -128,86 +130,103 @@
 ;;
 ;;
 
-
-(global-set-key (kbd "M-t") 'transpose-words)
-(global-set-key (kbd "M-y") '(lambda() (interactive) (transpose-words -1)))
-
-;; Usage: Just enable highlight-parentheses-mode.
-(require 'highlight-parentheses)
-
-(require 'minimap)
-
-(require 'icomplete+)
-
-    (require 'window-number)
-    (window-number-mode)
-
-(global-set-key (kbd "C-/") 'repeat)
-
-(global-unset-key [tab])
-;;(global-set-key [tab] 'indent-relative-maybe)
-
-(fset 'insert-as-string
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([34 end 92 110 34 43 home down] 0 "%d")) arg)))
-(global-set-key (kbd "C-x C-l") 'insert-as-string)
-
-;; (add-to-list 'load-path (concat site-lisp-path "skype/"))
-
-;; (defun my-skype ()
+;; (defun djcb-full-screen-toggle ()
+;;   "toggle full-screen mode"
 ;;   (interactive)
-;;   (require 'skype)
-;;   (setq skype--my-user-handle "Kostafey")
-;;   (skype--init)
-;;   (skype--open-all-users-buffer-command))
-;; ()
-;; (global-set-key "\M-(" 'insert-parentheses)
+;;   (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
 
-;; someday might want to rotate windows if more than 2 of them
-(defun swap-windows ()
- "If you have 2 windows, it swaps them." (interactive) (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
- (t
- (let* ((w1 (first (window-list)))
-	 (w2 (second (window-list)))
-	 (b1 (window-buffer w1))
-	 (b2 (window-buffer w2))
-	 (s1 (window-start w1))
-	 (s2 (window-start w2)))
- (set-window-buffer w1 b2)
- (set-window-buffer w2 b1)
- (set-window-start w1 s2)
- (set-window-start w2 s1)))))
+(add-hook 'fundamental-mode-hook
+               (lambda ()
+                (font-lock-add-keywords nil
+                 '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
 
-(global-unset-key "\C-u")
-(global-set-key "\C-u" 'swap-windows)
+(defun djcb-zoom (n)
+  "with positive N, increase the font size, otherwise decrease it"
+  (set-face-attribute 'default (selected-frame) :height 
+    (+ (face-attribute 'default :height) (* (if (> n 0) 1 -1) 10))))
 
-;; Or these two, which I consider serious omissions in the lineup of standard file-manipulation functions:
 
-;;
-;; Never understood why Emacs doesn't have this function.
-;;
-(defun rename-file-and-buffer (new-name)
- "Renames both current buffer and file it's visiting to NEW-NAME." (interactive "sNew name: ")
- (let ((name (buffer-name))
-	(filename (buffer-file-name)))
- (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
- (if (get-buffer new-name)
-	 (message "A buffer named '%s' already exists!" new-name)
-	(progn 	 (rename-file name new-name 1) 	 (rename-buffer new-name) 	 (set-visited-file-name new-name) 	 (set-buffer-modified-p nil))))))
+(global-set-key (kbd "C-+")      '(lambda nil (interactive) (djcb-zoom 1)))
+(global-set-key [C-kp-add]       '(lambda nil (interactive) (djcb-zoom 1)))
+(global-set-key (kbd "C--")      '(lambda nil (interactive) (djcb-zoom -1)))
+(global-set-key [C-kp-subtract]  '(lambda nil (interactive) (djcb-zoom -1)))
 
-;;
-;; Never understood why Emacs doesn't have this function, either.
-;;
-(defun move-buffer-file (dir)
- "Moves both current buffer and file it's visiting to DIR." (interactive "DNew directory: ")
- (let* ((name (buffer-name))
-	 (filename (buffer-file-name))
-	 (dir
-	 (if (string-match dir "\\(?:/\\|\\\\)$")
-	 (substring dir 0 -1) dir))
-	 (newname (concat dir "/" name)))
+;;; erc is the emacs irc chat client-- waste time productively
+(setq erc-server "irc.freenode.net"
+	  erc-port 6667
+	  erc-nick "Kostafey"
+	  erc-user-full-name "Kostafey"
+	  erc-public-away-p t;lets ppl know how long you were away
+	  erc-prompt-for-password nil)
 
- (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
- (progn 	(copy-file filename newname 1) 	(delete-file filename) 	(set-visited-file-name newname) 	(set-buffer-modified-p nil) 	t)))) 
-(put 'narrow-to-page 'disabled nil)
+;; automatically join channels when we start-up
+(require 'erc-autojoin) (erc-autojoin-mode 1)
+(setq erc-autojoin-channels-alist
+	  '(("freenode.net" "#emacs")))
+
+
+;;;Handy MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  insert current date into the buffer at point  
+(defun insert-date()
+  "Insert a time-stamp according to locale's date and time format."
+  (interactive)
+  (insert (format-time-string "%c" (current-time))))
+
+;; Emacs does not beep when you hit `C-g' in the minibuffer or during
+;; an `isearch' (http://www.emacswiki.org/cgi-bin/wiki.pl?AlarmBell)
+;; (setq ring-bell-function 
+;;       (lambda ()
+;; 	(unless (memq this-command
+;; 		      '(isearch-abort abort-recursive-edit find-file
+;; 				      exit-minibuffer keyboard-quit))
+;; 	  (ding))))
+
+;;;turn off the bell http://www.emacswiki.org/cgi-bin/wiki?AlarmBell
+;; (setq ring-bell-function 'ignore)
+
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph       
+;;; Takes a multi-line paragraph and makes it into a single line of text.       
+(defun unfill-paragraph ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+(global-set-key (kbd "C-c q")  'unfill-paragraph)
+
+;;; In praise of Emacs, The One True Editor
+;;; 1.0 Aug 19, 1994
+;;; 2.0 Aug 28, 1994
+;;; Rather ecclesiastical, though.
+;;; -elf
+(defun praise-emacs()
+  "In praise of emacs"
+  (interactive)
+  (message "Praise Emacs...")
+  (sit-for 2)
+  (message "Amen."))
+
+(require 'rainbow-mode)
+(require 'lusty-explorer)
+
+(global-set-key (kbd "C-?") 'describe-char)
+
+(require 'vel)
+(setq-default vel-mode t)
+
+(require 'hi-list)
+(set-face-background 'hi-list-face "#E3F2A1")
+(add-hook 'emacs-lisp-mode-hook 'hi-list-mode)
+
+(require 'highlight-parentheses)
+(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+(setq hl-paren-colors '("#326B6B"))
+(setq hl-paren-background-colors '(
+      "#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" 
+      "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
+;; (setq hl-paren-colors '
+;;       ("#326B6B" "#66CC66" "#73CD4F" "#32CD32"
+;;        "#6495ED" "#9E9B29" "#32227B" "#226B4B"))
+;; (setq hl-paren-background-colors '(
+;;       "#00FF99" "#CCFF99" "#FFCC99" "#FF9999" 
+;;       "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" 
+;;       "#99FFCC" "#7FFF00" "#73CDF4" "#DDEE00"))
+

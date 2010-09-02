@@ -6,14 +6,18 @@
 
 (require 'color-theme)
 
-;css-palette-mode
+;; (list-colors-display)
+;; (rainbow-mode)
+;; (css-palette-mode)
 
 ; фон 
 ;#F0FFF0
 ;#E3F2E1
+;#E3F2A1
 
 ;цвета
 
+;#7FFF00
 ;#95E454
 ;#66CDAA
 ;#CE7B00
@@ -23,6 +27,7 @@
 ;#73CDF4
 ;#6495ED
 ;#6666CC
+;#8000FF
 ;#A020F0
 ;#0066CC
 ;#000099
@@ -33,7 +38,8 @@
 ;#717100
 ;#339966
 ;#44AAFF
-
+;#F9F9F9
+;#F0FFF0
 
 (defvar organic-fg "#326B6B")
 (defvar organic-bg "#F0FFF0")
@@ -79,6 +85,8 @@
           `(font-lock-comment-face ((t (:foreground ,organic-comment-fg))))
           `(font-lock-string-face ((t (:foreground ,organic-string-fg))))
 
+          `(font-lock-warning-face ((t (:bold t :weight semi-bold :foreground "#AA0000"))))
+
           '(fringe ((t (:background "#E5E5E5"))))
           '(fringe ((t (:foreground "#DDEE00"))))
 
@@ -119,7 +127,8 @@
 		  '(font-latex-warning-face ((t (:bold t :weight semi-bold :foreground "#00CC00"))))
 
           '(quack-pltish-paren-face ((((class color) (background light)) (:foreground "#53AD2F"))))
-          '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))
+          '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))          
+
 		  ))))
 
 (provide 'color-theme-organic-green)

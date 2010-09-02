@@ -1,9 +1,10 @@
 ;Font
-;(set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 100)
+;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 100)
 (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 110)
 
 ;(set-face-attribute 'default nil :family "Liberation Mono" :height 100)
 
+(setq font-lock-maximum-decoration t)
 (global-font-lock-mode 1)
 ;Maximum size of a buffer for buffer fontification.
 (setq font-lock-maximum-size 2560000)
@@ -15,6 +16,8 @@
 ;; Модуль нумерации строк
 (require 'linum)
 (global-linum-mode) ; Нумерация строк
+
+(require 'minimap)
 ;;-----------------------------------------------------------------------------
 ;; Боевая раскраска
 ;;указываем где будут лежать файлы расширений
@@ -43,6 +46,9 @@
 ;;
 ;;=============================================================================
 
+(require 'window-number)
+(window-number-mode)
+
 ;; full screen toggle using command+[RET]
 (defun toggle-fullscreen () 
   (interactive) 
@@ -58,22 +64,14 @@
   (w32-send-sys-command 61488))
 (prh:ajust-frame)
 
-; при запуске - разворачиваем на весь экран - Linux
-;(set-frame-parameter nil 'fullscreen
-;   (if (frame-parameter nil 'fullscreen) nil 'fullboth))
-; устанавливаем позицию и размер фрейма
-; (add-to-list 'default-frame-alist '(left . 0))
-; (add-to-list 'default-frame-alist '(top . 0))
-; (add-to-list 'default-frame-alist '(height . 45))
-; (add-to-list 'default-frame-alist '(width . 154))
-;(set-frame-position (selected-frame) 0 0)
-;(set-frame-size (selected-frame) 154 45)
-
 ;Длинные строки всегда разбивать при отображении
 (setq truncate-lines nil)
 (setq truncate-partial-width-windows nil)
 
 (setq no-redraw-on-reenter nil)
+
+;; Usage: Just enable highlight-parentheses-mode.
+(require 'highlight-parentheses)
 
 (show-paren-mode 1)              ;;Выделение парных скобок
 (setq inhibit-startup-message t) ;;не показывать сообщение при старте
@@ -122,3 +120,14 @@
 ;;   (if my-fullscreen-p
 ;; 	  (my-non-fullscreen)
 ;; 	(my-fullscreen)))
+
+; при запуске - разворачиваем на весь экран - Linux
+;(set-frame-parameter nil 'fullscreen
+;   (if (frame-parameter nil 'fullscreen) nil 'fullboth))
+; устанавливаем позицию и размер фрейма
+; (add-to-list 'default-frame-alist '(left . 0))
+; (add-to-list 'default-frame-alist '(top . 0))
+; (add-to-list 'default-frame-alist '(height . 45))
+; (add-to-list 'default-frame-alist '(width . 154))
+;(set-frame-position (selected-frame) 0 0)
+;(set-frame-size (selected-frame) 154 45)
