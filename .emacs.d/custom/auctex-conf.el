@@ -2,9 +2,9 @@
 ;;
 ;;Настройки AucTeX
 ;;
-(add-to-list 'load-path "~/.emacs.d/auctex-11.85-e22.3-msw/site-lisp/")
-(add-to-list 'load-path "~/.emacs.d/auctex-11.85-e22.3-msw/site-lisp/auctex/")
-(add-to-list 'load-path "~/.emacs.d/auctex-11.85-e22.3-msw/site-lisp/site-start.d/")
+(add-to-list 'load-path "~/.emacs.d/auctex-11.86-e23.1-msw/site-lisp/")
+(add-to-list 'load-path "~/.emacs.d/auctex-11.86-e23.1-msw/site-lisp/auctex/")
+(add-to-list 'load-path "~/.emacs.d/auctex-11.86-e23.1-msw/site-lisp/site-start.d/")
 (load "auctex.el" nil t t)
 (load "preview-latex.el" nil t t)
 

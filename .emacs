@@ -23,7 +23,7 @@
 (require 'navigation-and-simplify-keys)
 (require 'buffer-navigation)
 (require 'ispell-conf)
-(require 'maxima-conf)
+;; (require 'maxima-conf)
 (require 'auctex-conf)
 (require 'ide)
 (require 'completition-conf)
@@ -43,7 +43,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; nxhtml
-(load (concat site-lisp-path "nxhtml/autostart.el"))
+;; (load (concat site-lisp-path "nxhtml/autostart.el"))
 
 ;;-----------------------------------------------------------------------------
 ;; html-изация
@@ -237,8 +237,9 @@
 (add-hook 'c-mode-common-hook
 	  (lambda () (c-subword-mode 1)))
 
-(require 'column-marker)
-(add-hook 'fundamental-mode (lambda () (interactive) (column-marker-1 fill-column)))
+;; (require 'column-marker)
+;; (add-hook 'fundamental-mode 
+;;           (lambda () (interactive) (column-marker-1 fill-column)))
 ;; (column-marker-1 fill-column)
 
 ;; do not truncate and wrap long lines
@@ -294,7 +295,8 @@ the confirm to be killed."
                   ;; capslock - 20
                   ;; scroll - 145
                   ;; quit - q
-                  (start-process lswitch-process-name nil lswitch-program-name "145")
+                  (start-process lswitch-process-name nil 
+                                 lswitch-program-name "145")
                   (if (get-process lswitch-process-name)
                       (process-kill-without-query
                        (get-process lswitch-process-name) t))))
