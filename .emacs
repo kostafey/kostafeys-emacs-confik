@@ -454,3 +454,7 @@ With ARG recode from Russian o English."
       (insert (format "%4d %c\n" i i))))
   (beginning-of-buffer))
 
+;; battery mode:
+(require 'battery)
+(setq battery−mode−line−format " [%L %p%% %dC]")
+(display-battery-mode)

@@ -1,9 +1,10 @@
 ;;-----------------------------------------------------------------------------
 ;; Cedet
-(add-to-list 'load-path "~/.emacs.d/cedet-1.0/common/")
-(add-to-list 'load-path "~/.emacs.d/cedet-1.0/semantic/")
+(setq cedet-version "1.0")
+(add-to-list 'load-path (format "~/.emacs.d/cedet-%s/common/" cedet-version))
+(add-to-list 'load-path (format "~/.emacs.d/cedet-%s/semantic/" cedet-version))
 (setq semantic-load-turn-useful-things-on t)
-(load-file "~/.emacs.d/cedet-1.0/common/cedet.el")
+(load-file (format "~/.emacs.d/cedet-%s/common/cedet.el" cedet-version))
 
 (require 'cedet)
 ;(global-set-key [?\C- ] 'semantic-ia-complete-symbol)

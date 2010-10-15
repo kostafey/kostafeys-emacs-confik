@@ -1,12 +1,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Настройка Maxima
-;; 
-(load "c:/Program Files/Maxima-5.18.1/share/maxima/5.18.1/emacs/setup-imaxima-imath.el")
+;;
+;;(setq maxima-version "5.22.1")
+(setq maxima-version "5.18.1")
+(setq maxima-path 
+      (format "c:/Program Files/Maxima-%s/share/maxima/%s/emacs/"
+              maxima-version maxima-version))
+(add-to-list 'load-path maxima-path)
+;;
+;; Подключаем Imaxima
+;;
+;; (load (concat maxima-path "setup-imaxima-imath.el"))
 (setq imaxima-tmp-dir "C:\\Windows\\tmp")
 (setq imaxima-gs-bin-dir "C:\\gs\\gs8.70\\bin")
+;;
 ;; Подключаем Maxima
 ;; указываем где будут лежать файлы расширений
-(add-to-list 'load-path "c:/Program Files/Maxima-5.18.1/share/maxima/5.18.1/emacs/")
+;;
 (autoload 'maxima "maxima" "Maxima interaction" t)
 (autoload 'maxima-mode "maxima" "Maxima mode" t)
 ; C-c C-C - выполнить строку
