@@ -151,20 +151,6 @@
 (global-set-key (kbd "C--")      '(lambda nil (interactive) (djcb-zoom -1)))
 (global-set-key [C-kp-subtract]  '(lambda nil (interactive) (djcb-zoom -1)))
 
-;;; erc is the emacs irc chat client-- waste time productively
-(setq erc-server "irc.freenode.net"
-	  erc-port 6667
-	  erc-nick "Kostafey"
-	  erc-user-full-name "Kostafey"
-	  erc-public-away-p t;lets ppl know how long you were away
-	  erc-prompt-for-password nil)
-
-;; automatically join channels when we start-up
-(require 'erc-autojoin) (erc-autojoin-mode 1)
-(setq erc-autojoin-channels-alist
-	  '(("freenode.net" "#emacs")))
-
-
 ;;;Handy MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;  insert current date into the buffer at point  
 (defun insert-date()
