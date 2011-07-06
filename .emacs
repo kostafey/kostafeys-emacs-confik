@@ -30,12 +30,23 @@
 (require 'communications)
 (require 'scheme-conf)
 (require 'reencoding-file)
-(require 'haskell-conf)
+;; (require 'haskell-conf)
+
+(defun smooth-scroll (increment)
+  (scroll-up increment) (sit-for 0.05)
+  ;; (scroll-up increment) (sit-for 0.02)
+  ;; (scroll-up increment) (sit-for 0.02)
+  ;; (scroll-up increment) (sit-for 0.05)
+  ;; (scroll-up increment) (sit-for 0.06)
+  (scroll-up increment))
+
+(global-set-key [(mouse-5)] '(lambda () (interactive) (smooth-scroll 1)))
+(global-set-key [(mouse-4)] '(lambda () (interactive) (smooth-scroll -1)))
 
 ;;-----------------------------------------------------------------------------
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
 (require 'calc-time)
-;(require 'hibernate-mapping)
+(require 'hibernate-mapping)
 
 ;;-----------------------------------------------------------------------------
 ;(require 'russian-utf8-env)
@@ -135,6 +146,7 @@
 ;;   (interactive)
 ;;   (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
 
+
 (add-hook 'fundamental-mode-hook
                (lambda ()
                 (font-lock-add-keywords nil
@@ -150,6 +162,21 @@
 (global-set-key [C-kp-add]       '(lambda nil (interactive) (djcb-zoom 1)))
 (global-set-key (kbd "C--")      '(lambda nil (interactive) (djcb-zoom -1)))
 (global-set-key [C-kp-subtract]  '(lambda nil (interactive) (djcb-zoom -1)))
+
+;;; erc is the emacs irc chat client-- waste time productively
+(setq erc-server "irc.freenode.net"
+	  erc-port 6667
+	  erc-nick "Kostafey"
+	  erc-user-full-name "Kostafey"
+	  erc-public-away-p t;lets ppl know how long you were away
+	  erc-prompt-for-password nil)
+
+;; automatically join channels when we start-up
+(require 'erc-autojoin) 
+(erc-autojoin-mode 1)
+(setq erc-autojoin-channels-alist
+	  '(("freenode.net" "#emacs")))
+
 
 ;;;Handy MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;  insert current date into the buffer at point  
@@ -313,8 +340,9 @@ Then revert back the OS input language."
       (global-set-key [(control lwindow)] 'toggle-emacs-os-switching)))
 
 
+;; (global-set-key [(meta shift)] '(lambda nil (interactive) (message "qwe")))
+;; (global-set-key (kbd "C-n") '(lambda nil (interactive) (message "qwe")))
 
-;; вапвапвап sdfsdf
 
 ;; (w32-toggle-lock-key 'capslock)
 ;; (w32-toggle-lock-key 'scroll)
@@ -444,3 +472,24 @@ With ARG recode from Russian o English."
 (require 'battery)
 (setq battery−mode−line−format " [%L %p%% %dC]")
 (display-battery-mode)
+
+;(add-to-list 'default-frame-alist '(alpha . (0.90 0.85)))
+
+
+;; Here's a handy function that kills the current buffer and removes
+;; the file it is connected to.
+(defun delete-this-buffer-and-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
+(global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
+
+

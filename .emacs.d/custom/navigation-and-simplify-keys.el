@@ -8,6 +8,8 @@
 ;(cua-selection-mode t)
 ;;поддержка Ctr-c,v,x,d как в windows
 (require 'cua-base)
+;; (require 'cua)
+;;(require 'cua-selection-mode)
 (cua-mode t)
 (require 'pc-select)
 (pc-selection-mode t)

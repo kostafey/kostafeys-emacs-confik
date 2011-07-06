@@ -1,7 +1,8 @@
 ;Font
 ;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 100)
-(set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 110)
-
+;;(set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 110)
+;; (set-face-attribute 'default nil :family "Consolas" :height 140)
+(set-face-attribute 'default nil :family "Consolas" :height 130)
 ;(set-face-attribute 'default nil :family "Liberation Mono" :height 100)
 
 (setq font-lock-maximum-decoration t)
@@ -52,17 +53,22 @@
 ;; full screen toggle using command+[RET]
 (defun toggle-fullscreen () 
   (interactive) 
-  (set-frame-parameter nil 'fullscreen (if (frame-parameter nil 'fullscreen) 
-                                           nil 
-										 'fullboth)))
-(global-set-key [(meta return)] 'toggle-fullscreen) 
+  (set-frame-parameter nil 'fullscreen 
+                       (if (frame-parameter nil 'fullscreen) 
+                           nil 
+                         'fullboth)))
+(global-set-key [(meta return)] 'toggle-fullscreen)
 
-;;Максимизировать окно - Windows
-(defun prh:ajust-frame ()
-  "Ajusts current frame to display properties"
-  (interactive)
-  (w32-send-sys-command 61488))
-(prh:ajust-frame)
+(if (eq system-type 'windows-nt)
+    ;; Максимизировать окно - Windows
+    (progn            
+      (defun prh:ajust-frame ()
+        "Ajusts current frame to display properties"
+        (interactive)
+        (w32-send-sys-command 61488))
+      (prh:ajust-frame))
+  ;; При запуске - разворачиваем на весь экран - Linux 
+  (toggle-fullscreen))
 
 ;Длинные строки всегда разбивать при отображении
 (setq truncate-lines nil)
@@ -81,6 +87,7 @@
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+;; (scroll-bar-mode t)
 
 ;;=============================================================================
 (setq fringe-mode t) ;Show fields
@@ -121,9 +128,7 @@
 ;; 	  (my-non-fullscreen)
 ;; 	(my-fullscreen)))
 
-; при запуске - разворачиваем на весь экран - Linux
-;(set-frame-parameter nil 'fullscreen
-;   (if (frame-parameter nil 'fullscreen) nil 'fullboth))
+
 ; устанавливаем позицию и размер фрейма
 ; (add-to-list 'default-frame-alist '(left . 0))
 ; (add-to-list 'default-frame-alist '(top . 0))
