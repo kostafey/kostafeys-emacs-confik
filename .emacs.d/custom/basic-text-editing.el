@@ -2,6 +2,38 @@
 
 (require 'simple)
 
+(require 'browse-kill-ring)
+
+(global-set-key (kbd "C-?") 'describe-char)
+
+;; show ascii table
+;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
+(defun ascii-table ()
+  "Print the ascii table. Based on a defun by Alex Schroeder <asc@bsiag.com>"
+  (interactive)
+  (switch-to-buffer "*ASCII*")
+  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))
+  (let ((i 0))
+    (while (< i 254)
+      (setq i (+ i 1))
+      (insert (format "%4d %c\n" i i))))
+  (beginning-of-buffer))
+
+
+;;;Handy MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  insert current date into the buffer at point  
+(defun insert-date()
+  "Insert a time-stamp according to locale's date and time format."
+  (interactive)
+  (insert (format-time-string "%c" (current-time))))
+
+;Очистка SQL
+;"\|\(\\n\)\|\+
+(defun insert-crear-sql-regexp()
+  (interactive)
+  (insert "\"\\|\\(\\\\n\\)\\|\\+"))
+
 ;;=============================================================================
 ;; Join lines
 ;;=============================================================================

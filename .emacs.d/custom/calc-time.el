@@ -2,8 +2,8 @@
 ;
 ; (middle-velocity-delta 16 "21:36:00" "22:50:00")
 ; (middle-velocity-time 25.62 "2:09:39")
-; 25.62 км
-; 15.92 миль
+; 25.62 РєРј
+; 15.92 РјРёР»СЊ
 
 (defun middle-velocity-time (distance delta-time)
   (middle-velocity-calc distance (full-time delta-time)))
@@ -18,14 +18,14 @@
   (calc-time (parse-time-string entered-time)))  
 
 (defun calc-time (list-time)
-  "Печатать каждый элемент СПИСКА на отдельной строке."  
+  "РџРµС‡Р°С‚Р°С‚СЊ РєР°Р¶РґС‹Р№ СЌР»РµРјРµРЅС‚ РЎРџРРЎРљРђ РЅР° РѕС‚РґРµР»СЊРЅРѕР№ СЃС‚СЂРѕРєРµ."  
   (progn	
 	(set 'time-kind 1)
 	(set 'summ-time 0)
-	(while (< time-kind 4)         ; проверка-истинна-ложь
+	(while (< time-kind 4)         ; РїСЂРѕРІРµСЂРєР°-РёСЃС‚РёРЅРЅР°-Р»РѕР¶СЊ
 	  (setq summ-time (+ summ-time (* (car list-time) (kind-time-multiplier time-kind))))
 	  (setq list-time (cdr list-time))
-	  (setq time-kind (+ 1 time-kind))          ; инкремент, увеличение
+	  (setq time-kind (+ 1 time-kind))          ; РёРЅРєСЂРµРјРµРЅС‚, СѓРІРµР»РёС‡РµРЅРёРµ
 	  ))
   summ-time)
 

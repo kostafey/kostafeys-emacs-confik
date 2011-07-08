@@ -76,8 +76,14 @@
 (global-set-key (kbd "C-p") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
 
+(require 'goto-last-change)
+(global-set-key "\C-xx" 'goto-last-change)
+
+;; Cancel all changes from last save
+(global-set-key (kbd "C-x r") 'revert-buffer)
+
 ;;=============================================================================
-;; Поиск
+;; Поиск и замена
 ;;=============================================================================
 (global-unset-key "\C-f")
 (global-set-key "\C-f" 'isearch-forward)
@@ -92,6 +98,9 @@
 			 (define-key isearch-mode-map "\C-v"
 			   'isearch-yank-kill)))
 
+(global-unset-key (kbd "M-r"))
+(global-set-key (kbd "M-r") 'replace-string)
+
 ;;=============================================================================
 ;; Навигация по окнам
 ;;=============================================================================
@@ -103,6 +112,20 @@
 ;;=============================================================================
 (global-set-key [(control next)] 'next-buffer) 		; C-Page Up
 (global-set-key [(control prior)] 'previous-buffer)	; C-Page Down
+
+;;=============================================================================
+;; Physical line navigation
+;;=============================================================================
+;; do not truncate and wrap long lines
+(setq truncate-partial-width-windows nil)
+(setq truncate-lines nil)
+;; and move up down end begin over the real visible screen lines
+(require 'physical-line)
+(global-set-key [(up)] 'physical-line-previous-line)
+(global-set-key [(down)] 'physical-line-next-line)
+(physical-line-mode 1)
+(global-set-key [(end)] 'end-of-line)
+(global-set-key [(home)] 'beginning-of-line)
 
 ;;=============================================================================
 ;; Meta - Навигация
@@ -137,9 +160,23 @@
 
 (setq mouse-drag-copy-region nil)
 
+(if (eq system-type 'gnu/linux)
+    (defun smooth-scroll (increment)
+      (scroll-up increment) (sit-for 0.05)
+      ;; (scroll-up increment) (sit-for 0.02)
+      ;; (scroll-up increment) (sit-for 0.02)
+      ;; (scroll-up increment) (sit-for 0.05)
+      ;; (scroll-up increment) (sit-for 0.06)
+      (scroll-up increment))
+
+  (global-set-key [(mouse-5)] '(lambda () (interactive) (smooth-scroll 1)))
+  (global-set-key [(mouse-4)] '(lambda () (interactive) (smooth-scroll -1))))
+
 ;;keyboard
 (setq scroll-step 1)                     ; Шаг прокрутки
-(setq next-screen-context-lines 10)      ; Number of lines of continuity when scrolling by screenfuls. 
+(setq next-screen-context-lines 10)      ; Number of lines of continuity when 
+                                         ; scrolling by screenfuls.
+
 ;; Если тока вышла за пределы окна на число не первосходящее данное,
 ;; то прокрутить лишь настолько, чтобы вернуть точку в окно
 (setq scroll-conservatively 50)
@@ -154,21 +191,29 @@
 (global-set-key [(meta control up)] 'backward-sentence)
 ;;-----------------------------------------------------------------------------
 
-(defun sfp-page-down ()
-  (interactive)
-  (next-line
-   (- (window-text-height)
-	  next-screen-context-lines)))
+;; (defun sfp-page-down ()
+;;   (interactive)
+;;   (next-line
+;;    (- (window-text-height)
+;; 	  next-screen-context-lines)))
     
-(defun sfp-page-up ()
-  (interactive)
-  (previous-line
-   (- (window-text-height)
-	  next-screen-context-lines)))
+;; (defun sfp-page-up ()
+;;   (interactive)
+;;   (previous-line
+;;    (- (window-text-height)
+;; 	  next-screen-context-lines)))
     
-(global-set-key [next] 'sfp-page-down)
-(global-set-key [prior] 'sfp-page-up)
+;; (global-set-key [next] 'sfp-page-down)
+;; (global-set-key [prior] 'sfp-page-up)
 
+(require 'pager)
+;;; Bind scrolling functions from pager library.
+(global-set-key [next] 	   'pager-page-down)
+(global-set-key [prior]	   'pager-page-up)
+
+;;=============================================================================
+;; This used for less resource-hungry point moving.
+;;=============================================================================
 (defun point-of-beginning-of-bottom-line ()
   (save-excursion
     (move-to-window-line -1)

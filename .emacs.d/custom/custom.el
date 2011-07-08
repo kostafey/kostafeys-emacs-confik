@@ -11,7 +11,9 @@
  '(ecb-options-version "2.40")
  '(mouse-wheel-down-event (quote wheel-up))
  '(mouse-wheel-follow-mouse t)
- '(mouse-wheel-up-event (quote wheel-down)))
+ '(mouse-wheel-up-event (quote wheel-down))
+ '(safe-local-variable-values (quote ((whitespace-line-column . 80) (whitespace-style face trailing lines-tail))))
+ '(visible-bell t))
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
