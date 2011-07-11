@@ -167,6 +167,9 @@
 
 (require 'highlight-parentheses)
 (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+(add-hook 'python-mode-hook 'highlight-parentheses-mode)
+(add-hook 'comint-mode-hook 'highlight-parentheses-mode)
+
 (setq hl-paren-colors '("#326B6B"))
 (setq hl-paren-background-colors '(
       "#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" 
