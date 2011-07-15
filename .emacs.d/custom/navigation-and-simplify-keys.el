@@ -121,8 +121,10 @@
 (setq truncate-lines nil)
 ;; and move up down end begin over the real visible screen lines
 (require 'physical-line)
-(global-set-key [(up)] 'physical-line-previous-line)
-(global-set-key [(down)] 'physical-line-next-line)
+;; (global-set-key [(up)] 'physical-line-previous-line)
+;; (global-set-key [(down)] 'physical-line-next-line)
+(global-set-key [(up)] 'previous-line)
+(global-set-key [(down)] 'next-line)   
 (physical-line-mode 1)
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)
