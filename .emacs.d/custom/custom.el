@@ -13,6 +13,7 @@
  '(mouse-wheel-follow-mouse t)
  '(mouse-wheel-up-event (quote wheel-down))
  '(safe-local-variable-values (quote ((whitespace-line-column . 80) (whitespace-style face trailing lines-tail))))
+ '(session-use-package t nil (session))
  '(visible-bell t))
 
 (custom-set-faces
@@ -20,4 +21,4 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- )
+)

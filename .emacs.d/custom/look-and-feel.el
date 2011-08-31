@@ -30,17 +30,19 @@
 (require 'font-lock)
 (if (fboundp 'global-font-lock-mode)
     (global-font-lock-mode t))
-(make-face 'trailing-spaces-face "Face to display trailing spaces in.")
-(add-hook 'font-lock-mode-hook     ; Show trailing spaces and make fixme tags standout
-          (lambda ()
-            (font-lock-add-keywords nil
-             '(("[ \t]+$" 0 'trailing-spaces-face t)
-               ("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 0 'font-lock-warning-face t)))))
+;; (make-face 'trailing-spaces-face "Face to display trailing spaces in.")
+;; (add-hook 'font-lock-mode-hook     ; Show trailing spaces and make fixme tags standout
+;;           (lambda ()
+;;             (font-lock-add-keywords nil
+;;              '(("[ \t]+$" 0 'trailing-spaces-face t)
+;;                ("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 0 'font-lock-warning-face t)))))
 
-;; (add-hook 'fundamental-mode-hook
-;;                (lambda ()
-;;                 (font-lock-add-keywords nil
-;;                  '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+(font-lock-add-keywords 'emacs-lisp-mode
+                        '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 0 
+                           'font-lock-warning-face t)))
+(font-lock-add-keywords 'python-mode
+                        '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 0 
+                           'font-lock-warning-face t)))
 
 ;;=============================================================================
 ;; bell

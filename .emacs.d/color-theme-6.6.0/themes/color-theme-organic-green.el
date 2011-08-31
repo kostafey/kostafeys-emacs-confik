@@ -10,12 +10,12 @@
 ;; (rainbow-mode)
 ;; (css-palette-mode)
 
-; ÙÓÌ 
+; —Ñ–æ–Ω 
 ;#F0FFF0
 ;#E3F2E1
 ;#E3F2A1
 
-;ˆ‚ÂÚ‡
+;—Ü–≤–µ—Ç–∞
 
 ;#7FFF00
 ;#95E454
@@ -127,12 +127,18 @@
 		  '(font-latex-warning-face ((t (:bold t :weight semi-bold :foreground "#00CC00"))))
 
           '(quack-pltish-paren-face ((((class color) (background light)) (:foreground "#53AD2F"))))
-          '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))          
+          '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))
 
+          '(erc-action-face ((t (:foreground "gray" :weight bold))))
+          '(erc-command-indicator-face ((t (:foreground "black" :weight bold))))
+          '(erc-nick-default-face ((t (:foreground "SlateBlue" :weight bold))))
+          '(erc-input-face ((t (:foreground "#000099"))))
+          '(erc-notice-face ((t (:foreground "dark sea green" :weight bold))))
+          '(erc-timestamp-face ((t (:foreground "#32CD32" :weight bold))))
 		  ))))
 
 (provide 'color-theme-organic-green)
 
-(color-theme-organic-green)
+;; (color-theme-organic-green)
 
 ;;; color-theme-desert.el ends here

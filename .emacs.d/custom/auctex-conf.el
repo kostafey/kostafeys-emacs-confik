@@ -22,6 +22,16 @@
 (setq TeX-PDF-mode t)
 (setq TeX-interactive-mode t)
 (setq TeX-source-specials-mode 1)
+
+;; (setq TeX-view-program-selection '("okular"))
+;; (setq TeX-view-program-list '("okular"))
+
+(setq TeX-view-program-list '(("Okular" "okular --unique %o#src:%n%b")))
+(setq TeX-view-program-selection '((output-pdf "Okular")))
+
+ ;; TeX-command-list
+;; TeX-view-program-list
+
 ;;модифицируем меню
 ;;; some more menu entries in the command list:
 ;;; see tex-mik.el from package auctex: %v is defined in tex-mik.el
@@ -48,6 +58,9 @@
 ;;
 ;;Настройки PreviewLatex
 (load "preview-latex.el" nil t t) 
+
+;; (setenv "PATH" (concat "/usr/local/texlive/2011/bin/x86_64-linux/:" (getenv "PATH")))
+;; (add-to-list 'exec-path "/usr/local/texlive/2011/bin/x86_64-linux/")
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

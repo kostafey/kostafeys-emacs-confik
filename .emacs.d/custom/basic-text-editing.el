@@ -137,5 +137,9 @@
       (comment-or-uncomment-region
        (line-beginning-position)
        (line-end-position lines))))
+(global-set-key (kbd "C-;") 'comment-or-uncomment-this)
+
+
+
 
 (provide 'basic-text-editing)

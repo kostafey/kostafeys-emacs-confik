@@ -4,6 +4,12 @@
 ;;
 ;;Kostafey's emacs confik :) 
 ;;started from 08.08.2008, 22:45:25
+;;
+;;    ___ _ __ ___   __ _  ___ ___
+;;   / _ \ '_ ` _ \ / _` |/ __/ __|
+;;  |  __/ | | | | | (_| | (__\__ \
+;; (_)___|_| |_| |_|\__,_|\___|___/
+;;
 
 ;;=============================================================================
 ;; Указываем где будут лежать файлы расширений
@@ -33,7 +39,7 @@
 ;; (require 'haskell-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
-(require 'python-conf)
+;; (require 'python-conf)
 
 ;;-----------------------------------------------------------------------------
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
@@ -114,6 +120,15 @@
 
 (require 'misc-swarm)
 ;;=============================================================================
+
+(require 'rst)
+(setq auto-mode-alist
+      (append '(("\\.txt$" . rst-mode)
+                ("\\.rst$" . rst-mode)
+                ("\\.rest$" . rst-mode)) auto-mode-alist))
+
+(server-start)
+;; cd ~/.emacs.d; emacs --batch -f batch-byte-compile **/*.el
 
 ;;; In praise of Emacs, The One True Editor
 ;;; 1.0 Aug 19, 1994

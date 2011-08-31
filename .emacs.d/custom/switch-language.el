@@ -18,9 +18,10 @@
 
 ;;; Commentary:
 
-;; Realized just for Windows Nt and EmacsW32.
+;; Realized just for Windows Nt and EmacsW32 (partially for Linux with KDE).
+;; (global-set-key [(meta shift)] 'toggle-input-method) - is dream only? ;)
 
-
+;;=============================================================================
 (if (eq system-type 'windows-nt)
     (progn
       (defvar lswitch-process-name "lswitch-process")
@@ -66,7 +67,62 @@ Then revert back the OS input language."
       (global-set-key (kbd "<language-change>") 'safe-language-change-revert)
       (global-set-key [(control lwindow)] 'toggle-emacs-os-switching)))
 
-;; (global-set-key [(meta shift)] 'toggle-input-method)
+;;=============================================================================
+(if (eq system-type 'gnu/linux)
+    ;; meta-shift-z
+    (progn
+      (defun toggle-to-english()
+        (interactive)
+        (shell-command "qdbus org.kde.kxkb /kxkb org.kde.KXKB.setLayout us"))
+      (defun safe-language-change ()
+        (interactive)
+        (toggle-to-english)
+        (toggle-input-method))
+
+      (global-set-key (kbd "M-Z") 'safe-language-change))) ; [(meta shift z)]
+
+
+;; (global-unset-key [f10])
+;; (global-unset-key [f31])
+;; (global-unset-key [f32])
+;; (global-unset-key [f33])
+
+;; (global-set-key [f31 f32]  'toggle-input-method)
+
+;; (global-set-key [meta shift] '(lambda() (interactive) (message "done!")))
+
+;; (global-set-key [f31]  'toggle-input-method)
+
+;; (global-set-key (kbd "M-<f32>") 'toggle-input-method)
+;; (global-set-key (kbd "<f31>") 'toggle-input-method)
+(global-set-key (kbd "<f31>") '(lambda() (interactive) (message "done!")))
+(global-set-key (kbd "<f32>") '(lambda() (interactive) (message "done!")))
+(global-set-key (kbd "<f33>") '(lambda() (interactive) (message "done!")))
+;; (global-set-key (kbd "<f32>") 'toggle-input-method)
+
+;; (global-set-key [(f31)] '(lambda() (interactive) (message "done!")))
+
+;;=============================================================================
+;; Это не распространяется на последовательности клавиш, содержащие
+;; буквы без модификаторов (такие как C-x b), но хоть
+;; что-то. ©YuriKhan http://www.emacswiki.org/emacs/GnuEmacsRussification
+(loop
+  for from across "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖ\ЭЯЧСМИТЬБЮ№"
+  for to   across "qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>#"
+  do
+  (eval `(define-key key-translation-map 
+           (kbd ,(concat "C-" (string from))) (kbd ,(concat "C-" (string to)))))
+  (eval `(define-key key-translation-map 
+           (kbd ,(concat "M-" (string from))) (kbd ,(concat "M-" (string to))))))
 
 (provide 'switch-language)
 
+;; (global-set-key (kbd "M-Z") '(lambda() (interactive) (toggle-input-method) (toggle-to-english)))
+;; (global-set-key [(control lwindow)] '(lambda() (interactive) (message "done!")))
+;; (global-set-key (kbd "M-Z") '(lambda() (interactive) (message "done!")))
+;; (global-set-key [(meta shift)] '(lambda() (interactive) (message "done!")))
+;; (global-set-key (kbd "C-q") '(lambda() (interactive) (message "done!")))
+;; (global-set-key (kbd "M-Z") '(lambda() (interactive) (message "done!")))
+;; (global-set-key (kbd "<language-change>") '(lambda() (interactive) (message "done!")))
+
+;; (global-set-key (kbd "<change-keyboard-layout>") '(lambda() (interactive) (message "done!")))
