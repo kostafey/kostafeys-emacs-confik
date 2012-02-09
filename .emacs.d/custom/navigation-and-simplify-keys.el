@@ -125,7 +125,8 @@
 (global-set-key [(up)] 'physical-line-previous-line)
 (global-set-key [(down)] 'physical-line-next-line)
 ;; (global-set-key [(up)] 'previous-line)
-;; (global-set-key [(down)] 'next-line)   
+;; (global-set-key [(down)] 'next-line)  
+
 (physical-line-mode 1)
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)
@@ -247,6 +248,26 @@
 
 (global-set-key (kbd "<down>") 'next-one-line)
 (global-set-key (kbd "<up>") 'previous-one-line)
+;;=============================================================================
+
+(defvar change-buffer-prefix "\C-c\C-b")
+
+(global-set-key (concat selected-area-prefix "\C-e") 
+                '(lambda () (interactive) (find-file "~/.emacs")))
+(global-set-key (concat change-buffer-prefix "e") 
+                '(lambda () (interactive) (find-file "~/.emacs")))
+
+(global-set-key "\C-x\C-c" 
+                '(lambda () (interactive) (switch-to-buffer "temp") (linum-mode t)))
+(global-set-key (concat change-buffer-prefix "t") 
+                '(lambda () (interactive) (switch-to-buffer "temp") (linum-mode t)))
+
+(global-set-key (concat change-buffer-prefix "p") 
+                '(lambda () (interactive) (find-file "~/.org.gpg")))
+(global-set-key (concat change-buffer-prefix "k") 
+                '(lambda () (interactive) (find-file "~/.keys.org")))
+
+(global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)
 
 ;;=============================================================================
 ;; Someday might want to rotate windows if more than 2 of them
