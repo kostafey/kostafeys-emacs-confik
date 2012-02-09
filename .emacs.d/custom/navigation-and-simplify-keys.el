@@ -14,6 +14,7 @@
 (require 'pc-select)
 (pc-selection-mode t)
 (setq transient-mark-mode t)
+(setq x-select-enable-clipboard t)
 ;;-----------------------------------------------------------------------------
 (global-set-key [(control shift v)] 'cua-paste-pop)
 ;;-----------------------------------------------------------------------------
@@ -121,10 +122,10 @@
 (setq truncate-lines nil)
 ;; and move up down end begin over the real visible screen lines
 (require 'physical-line)
-;; (global-set-key [(up)] 'physical-line-previous-line)
-;; (global-set-key [(down)] 'physical-line-next-line)
-(global-set-key [(up)] 'previous-line)
-(global-set-key [(down)] 'next-line)   
+(global-set-key [(up)] 'physical-line-previous-line)
+(global-set-key [(down)] 'physical-line-next-line)
+;; (global-set-key [(up)] 'previous-line)
+;; (global-set-key [(down)] 'next-line)   
 (physical-line-mode 1)
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)
@@ -134,8 +135,8 @@
 ;;=============================================================================
 (global-set-key "\M-g" 'goto-line)
 ;;l - влево j - вправо i - вверх k - вниз	
-(global-set-key "\M-i" 'previous-line) 
-(global-set-key "\M-k" 'next-line)     
+(global-set-key "\M-i" 'previous-line)
+(global-set-key "\M-k" 'next-line)
 (global-set-key "\M-j" 'backward-char)
 (global-set-key "\M-l" 'forward-char)
 
@@ -163,16 +164,17 @@
 (setq mouse-drag-copy-region nil)
 
 (if (eq system-type 'gnu/linux)
-    (defun smooth-scroll (increment)
-      (scroll-up increment) (sit-for 0.05)
-      ;; (scroll-up increment) (sit-for 0.02)
-      ;; (scroll-up increment) (sit-for 0.02)
-      ;; (scroll-up increment) (sit-for 0.05)
-      ;; (scroll-up increment) (sit-for 0.06)
-      (scroll-up increment))
+    (progn
+      (defun smooth-scroll (increment)
+        (scroll-up increment) (sit-for 0.05)
+        ;; (scroll-up increment) (sit-for 0.02)
+        ;; (scroll-up increment) (sit-for 0.02)
+        ;; (scroll-up increment) (sit-for 0.05)
+        ;; (scroll-up increment) (sit-for 0.06)
+        (scroll-up increment))
 
-  (global-set-key [(mouse-5)] '(lambda () (interactive) (smooth-scroll 1)))
-  (global-set-key [(mouse-4)] '(lambda () (interactive) (smooth-scroll -1))))
+      (global-set-key [(mouse-5)] '(lambda () (interactive) (smooth-scroll 1)))
+      (global-set-key [(mouse-4)] '(lambda () (interactive) (smooth-scroll -1)))))
 
 ;;keyboard
 (setq scroll-step 1)                     ; Шаг прокрутки
@@ -245,26 +247,6 @@
 
 (global-set-key (kbd "<down>") 'next-one-line)
 (global-set-key (kbd "<up>") 'previous-one-line)
-;;=============================================================================
-
-(defvar change-buffer-prefix "\C-c\C-b")
-
-(global-set-key (concat selected-area-prefix "\C-e") 
-                '(lambda () (interactive) (find-file "~/.emacs")))
-(global-set-key (concat change-buffer-prefix "e") 
-                '(lambda () (interactive) (find-file "~/.emacs")))
-
-(global-set-key "\C-x\C-c" 
-                '(lambda () (interactive) (switch-to-buffer "temp") (linum-mode t)))
-(global-set-key (concat change-buffer-prefix "t") 
-                '(lambda () (interactive) (switch-to-buffer "temp") (linum-mode t)))
-
-(global-set-key (concat change-buffer-prefix "p") 
-                '(lambda () (interactive) (find-file "~/.org.gpg")))
-(global-set-key (concat change-buffer-prefix "k") 
-                '(lambda () (interactive) (find-file "~/.keys.org")))
-
-(global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)
 
 ;;=============================================================================
 ;; Someday might want to rotate windows if more than 2 of them

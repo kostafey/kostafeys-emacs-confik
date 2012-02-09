@@ -19,7 +19,7 @@
 ;;; Commentary:
 
 ;; Realized just for Windows Nt and EmacsW32.
-
+;; (global-set-key [(meta shift)] 'toggle-input-method) - is a dream only? ;)
 
 (if (eq system-type 'windows-nt)
     (progn
@@ -66,7 +66,30 @@ Then revert back the OS input language."
       (global-set-key (kbd "<language-change>") 'safe-language-change-revert)
       (global-set-key [(control lwindow)] 'toggle-emacs-os-switching)))
 
-;; (global-set-key [(meta shift)] 'toggle-input-method)
+(if (eq system-type 'gnu/linux)
+    ;; meta-shift-z
+    (progn
+      (defun toggle-to-english()
+        (interactive)
+        (progn
+          (shell-command "setxkbmap -layout us")
+          (shell-command (concat
+                          "setxkbmap -layout 'us,ru' -option"
+                          " 'grp:alt_shift_toggle,grp_led:scroll,numpad:microsoft,compose:caps'"))))
+      
+      (global-set-key (kbd "M-Z") 'toggle-input-method)))
+
+;; Это не распространяется на последовательности клавиш, содержащие
+;; буквы без модификаторов (такие как C-x b), но хоть
+;; что-то. ©YuriKhan http://www.emacswiki.org/emacs/GnuEmacsRussification
+(loop
+  for from across "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖ\ЭЯЧСМИТЬБЮ№"
+  for to   across "qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>#"
+  do
+  (eval `(define-key key-translation-map 
+           (kbd ,(concat "C-" (string from))) (kbd ,(concat "C-" (string to)))))
+  (eval `(define-key key-translation-map 
+           (kbd ,(concat "M-" (string from))) (kbd ,(concat "M-" (string to))))))
 
 (provide 'switch-language)
 

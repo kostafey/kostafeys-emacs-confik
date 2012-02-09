@@ -1,4 +1,4 @@
-(add-to-list 'load-path (concat site-lisp-path "python-mode/"))
+(add-to-list 'load-path (concat site-lisp-path "python-mode-6.0/"))
 
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))

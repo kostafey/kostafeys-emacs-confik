@@ -74,10 +74,14 @@
 ;; Боевая раскраска
 ;;указываем где будут лежать файлы расширений
 (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/")
+(add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/themes/")
+
 (require 'color-theme) ;;подгружаем "модуль раскраски"
 (color-theme-initialize) ;;подгрузить библиотеку цветовых схем
 ;(load-file "~/.emacs.d/color-theme-6.6.0/themes/color-theme-organic-green.el")
 (color-theme-organic-green);;выбрать конкретную схему
+;; (require 'color-theme-solarized)
+;; (color-theme-solarized-light)
 ;(color-theme-aliceblue-mod) 
 ;;-----------------------------------------------------------------------------
 
@@ -87,10 +91,12 @@
 (column-number-mode t)
 (display-time-mode t)
 
-;; battery mode:
-(require 'battery)
-(setq battery−mode−line−format " [%L %p%% %dC]")
-(display-battery-mode)
+(if (< emacs-major-version 24)
+ (progn
+   ;; battery mode:
+   (require 'battery)
+   (setq battery−mode−line−format " [%L %p%% %dC]")
+   (display-battery-mode)))
 
 ;;
 ;;=============================================================================

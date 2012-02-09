@@ -13,7 +13,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;auto-customized custom-set-variables
-(setq custom-file (concat site-lisp-path "custom/custom.el")) 
+(setq custom-file (concat site-lisp-path "custom/custom.el"))
 (load custom-file)
 
 ;;-----------------------------------------------------------------------------
@@ -31,9 +31,10 @@
 (require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
+(require 'java-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
-(require 'python-conf)
+;; (require 'python-conf)
 
 ;;-----------------------------------------------------------------------------
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
@@ -114,6 +115,9 @@
 
 (require 'misc-swarm)
 ;;=============================================================================
+
+(server-start)
+;; cd ~/.emacs.d; emacs --batch -f batch-byte-compile **/*.el
 
 ;;; In praise of Emacs, The One True Editor
 ;;; 1.0 Aug 19, 1994

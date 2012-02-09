@@ -1,3 +1,29 @@
+;;=============================================================================
+
+(defvar change-buffer-prefix "\C-c\C-b")
+
+(global-set-key (concat selected-area-prefix "\C-e") 
+                '(lambda () (interactive) (find-file "~/.emacs")))
+(global-set-key (concat change-buffer-prefix "e") 
+                '(lambda () (interactive) (find-file "~/.emacs")))
+
+(global-set-key "\C-x\C-c" 
+                '(lambda () (interactive) 
+                   (progn
+                     (switch-to-buffer "temp") (linum-mode t)
+                     (flyspell-russian)
+                     (auto-fill-mode t)
+                     (setq auto-complete-mode t))))
+(global-set-key (concat change-buffer-prefix "t") 
+                '(lambda () (interactive) (switch-to-buffer "temp") (linum-mode t)))
+
+(global-set-key (concat change-buffer-prefix "p") 
+                '(lambda () (interactive) (find-file "~/.org.gpg")))
+(global-set-key (concat change-buffer-prefix "k") 
+                '(lambda () (interactive) (find-file "~/.keys.org")))
+
+(global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)
+
 ;;-----------------------------------------------------------------------------
 ;; Here's a handy function that kills the current buffer and removes
 ;; the file it is connected to.
