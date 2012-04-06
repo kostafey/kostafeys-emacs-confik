@@ -9,10 +9,12 @@
  '(default-input-method "russian-computer")
  '(ecb-layout-name "my-left")
  '(ecb-options-version "2.40")
+ '(jde-jdk-registry (quote (("1.6.0" . "C:\\Java\\jdk1.6.0_24\\"))))
  '(mouse-wheel-down-event (quote wheel-up))
  '(mouse-wheel-follow-mouse t)
  '(mouse-wheel-up-event (quote wheel-down))
  '(safe-local-variable-values (quote ((whitespace-line-column . 80) (whitespace-style face trailing lines-tail))))
+ '(session-use-package t nil (session))
  '(visible-bell t))
 
 (custom-set-faces

@@ -110,6 +110,7 @@
 ;; misc
 ;;
 (setq max-specpdl-size 5000) ;for byte-compile
+(setq max-lisp-eval-depth 500000)
 
 (put 'narrow-to-page 'disabled nil)
 
@@ -138,4 +139,5 @@
 ;; end of .emacs
 ;;
 ;;
+
 

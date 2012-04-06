@@ -65,6 +65,27 @@
 (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
 (global-set-key (concat selected-area-prefix "c") 'comment-region)
 (global-set-key (concat selected-area-prefix "d") 'uncomment-region)
+
+;;=============================================================================
+;; Marks&select a line
+;;=============================================================================
+(defun mark-line (&optional arg)
+  "Marks a line from start of indentation to end"
+  (interactive "p")
+
+  (back-to-indentation)
+  (end-of-line-mark arg))
+
+(defun copy-line (&optional arg)
+  "Kills a line, not including leading indentation"
+  (interactive "p")
+  (save-excursion
+    (mark-line arg)
+    (kill-ring-save (point) (mark))))
+
+(global-set-key (kbd "C-S-c") 'copy-line)
+(global-set-key (kbd "C-S-l") 'mark-line)
+
 ;;-----------------------------------------------------------------------------
 (global-set-key "\C-s" 'save-buffer)
 (global-set-key [f2] 'save-buffer)
@@ -122,10 +143,10 @@
 (setq truncate-lines nil)
 ;; and move up down end begin over the real visible screen lines
 (require 'physical-line)
-(global-set-key [(up)] 'physical-line-previous-line)
-(global-set-key [(down)] 'physical-line-next-line)
-;; (global-set-key [(up)] 'previous-line)
-;; (global-set-key [(down)] 'next-line)   
+;; (global-set-key [(up)] 'physical-line-previous-line)
+;; (global-set-key [(down)] 'physical-line-next-line)
+(global-set-key [(up)] 'previous-line)
+(global-set-key [(down)] 'next-line)
 (physical-line-mode 1)
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)

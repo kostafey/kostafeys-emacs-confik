@@ -188,6 +188,25 @@
 ;;       "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" 
 ;;       "#99FFCC" "#7FFF00" "#73CDF4" "#DDEE00"))
 
+;;-----------------------------------------------------------------------------
+;; Заменяет lambda на λ.
+(font-lock-add-keywords 
+ 'emacs-lisp-mode
+ '(("(\\(lambda\\)\\>" (0 (prog1 ()
+                       (compose-region (match-beginning 1)
+                                       (match-end 1)
+                                       ?λ))))))
+;;-----------------------------------------------------------------------------
+(setq redisplay-dont-pause t)
+
+;;-----------------------------------------------------------------------------
+(require 'highlight-symbol)
+
+(global-set-key [(control f3)] 'highlight-symbol-at-point)
+(global-set-key [f3] 'highlight-symbol-next)
+(global-set-key [(shift f3)] 'highlight-symbol-prev)
+(global-set-key [(meta f3)] 'highlight-symbol-remove-all)
+
 (provide 'look-and-feel)
 
 
