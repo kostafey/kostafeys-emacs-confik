@@ -147,6 +147,7 @@
 ;; (global-set-key [(down)] 'physical-line-next-line)
 (global-set-key [(up)] 'previous-line)
 (global-set-key [(down)] 'next-line)
+
 (physical-line-mode 1)
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)
