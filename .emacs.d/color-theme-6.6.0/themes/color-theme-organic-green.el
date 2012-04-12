@@ -128,6 +128,9 @@
 
           '(quack-pltish-paren-face ((((class color) (background light)) (:foreground "#53AD2F"))))
           '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))          
+          
+          '(rst-definition ((t (:foreground "#3465BD"))))
+          '(rst-level-2-face ((t (:background "grey78"))) t)
 
 		  ))))
 

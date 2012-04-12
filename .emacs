@@ -70,6 +70,14 @@
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log4j-mode))
 
 ;;-----------------------------------------------------------------------------
+;; reStructuredText settings
+;; .. -*- mode: rst -*-
+(add-hook 'rst-adjust-hook 'rst-toc-update)
+(setq auto-mode-alist
+      (append '(("\\.rst$" . rst-mode)
+                ("\\.rest$" . rst-mode)) auto-mode-alist))
+
+;;-----------------------------------------------------------------------------
 ;; Org-mode settings
 (add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
 (require 'org-install)
@@ -105,11 +113,12 @@
 ;; JavaScript IDE
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-
+;; in Emacs, M-x byte-compile-file RE js2.el RET
+;; (byte-compile-file ".emacs.d/js2.el")
 ;;=============================================================================
 ;; misc
 ;;
-(setq max-specpdl-size 5000) ;for byte-compile
+(setq max-specpdl-size 100000) ;for byte-compile
 (setq max-lisp-eval-depth 500000)
 
 (put 'narrow-to-page 'disabled nil)
@@ -139,5 +148,6 @@
 ;; end of .emacs
 ;;
 ;;
+
 
 
