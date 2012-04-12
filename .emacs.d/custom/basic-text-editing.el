@@ -167,7 +167,42 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
       (forward-line) (beginning-of-line) (forward-char colpos)
       (setq i (1+ i)))))
 
+;;=============================================================================
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph       
+;;; Takes a multi-line paragraph and makes it into a single line of text.       
+(defun unfill-paragraph ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+(global-set-key (kbd "C-c q")  'unfill-paragraph)
 
+;=============================================================================
+(defun insert-column-counter (n)
+  "Insert a sequence of numbers vertically.
+For example, if your text is:
+
+a b
+c d
+e f
+
+and your cursor is after “a”, then calling this function with argument
+3 will change it to become:
+
+a1 b
+c2 d
+e3 f
+
+If there are not enough existing lines after the cursor
+when this function is called, it aborts at the last line.
+
+This command is conveniently used together with `kill-rectangle' and `string-rectangle'."
+  (interactive "nEnter the max integer: ")
+  (let ((i 1) colpos )
+    (setq colpos (- (point) (line-beginning-position)))
+    (while (<= i n)
+      (insert (number-to-string i))
+      (forward-line) (beginning-of-line) (forward-char colpos)
+      (setq i (1+ i)))))
 
 
 (provide 'basic-text-editing)

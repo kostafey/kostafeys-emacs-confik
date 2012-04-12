@@ -132,12 +132,6 @@
 (require 'misc-swarm)
 ;;=============================================================================
 
-(require 'rst)
-(setq auto-mode-alist
-      (append '(("\\.txt$" . rst-mode)
-                ("\\.rst$" . rst-mode)
-                ("\\.rest$" . rst-mode)) auto-mode-alist))
-
 (server-start)
 ;; cd ~/.emacs.d; emacs --batch -f batch-byte-compile **/*.el
 

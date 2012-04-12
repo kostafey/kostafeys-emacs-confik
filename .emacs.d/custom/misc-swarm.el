@@ -4,22 +4,14 @@
 ;;   (interactive)
 ;;   (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
 
-
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph       
-;;; Takes a multi-line paragraph and makes it into a single line of text.       
-(defun unfill-paragraph ()
-  (interactive)
-  (let ((fill-column (point-max)))
-    (fill-paragraph nil)))
-(global-set-key (kbd "C-c q")  'unfill-paragraph)
-
-
 (require 'lusty-explorer)
 
-
-(require 'vel)
-(setq-default vel-mode t)
-
+;; (require 'vel)
+;; (setq-default vel-mode t)
+;; (define-key vel-mode-map-default
+;;   (kbd "<C-c-down>") 'vel-doscroll-enter-and-key-down)
+;; (define-key vel-mode-map-default
+;;   (kbd "<C-c-up>") 'vel-doscroll-enter-and-key-up)
 
 (require 'cc-subword)
 (add-hook 'c-mode-common-hook

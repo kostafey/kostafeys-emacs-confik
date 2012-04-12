@@ -318,6 +318,5 @@
  (progn 	(copy-file filename newname 1) 	(delete-file filename) 	(set-visited-file-name newname) 	(set-buffer-modified-p nil) 	t)))) 
 ;;=============================================================================
 
-
 (provide 'navigation-and-simplify-keys)
 

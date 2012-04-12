@@ -43,8 +43,8 @@
       (setq ac-auto-start t)                  ;automatically start
       (setq ac-dwim t)                        ;Do what i mean
       (setq ac-override-local-map nil)        ;don't override local map
-      (set-face-background 'ac-menu-face "lightgray")
-      (set-face-underline 'ac-menu-face "darkgray")
+      ;; (set-face-background 'ac-menu-face "lightgray")
+      ;; (set-face-underline 'ac-menu-face "darkgray")
       (set-face-background 'ac-selection-face "steelblue")
       (define-key ac-complete-mode-map "\t" 'ac-expand)
       (define-key ac-complete-mode-map "\r" 'ac-complete)
