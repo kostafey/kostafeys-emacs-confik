@@ -45,7 +45,27 @@
 (global-set-key (kbd "M-y") '(lambda() (interactive) (transpose-words -1)))
 
 (global-set-key (kbd "C-/") 'repeat)
-;;-----------------------------------------------------------------------------
+
+;;=============================================================================
+;; Select by mouse and shift
+;;
+;; shift + click select region
+(define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
+(define-key global-map (kbd "<S-mouse-1>") 'mouse-set-point)
+(put 'mouse-set-point 'CUA 'move)
+
+;; ctrl + shift + click select rectange region
+(require 'cua-rect)
+(defun hkb-mouse-mark-cua-rectangle (event)
+  (interactive "e")
+  (if (not cua--rectangle)
+  (cua-mouse-set-rectangle-mark event)
+(cua-mouse-resize-rectangle event)))
+
+(require 'cua-base)
+(global-unset-key (kbd "<C-S-down-mouse-1>"))
+(global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
+(define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 
 ;;=============================================================================
 ;; Перфикс для ключей, применяемых к выделенным областям
@@ -142,13 +162,18 @@
 (setq truncate-partial-width-windows nil)
 (setq truncate-lines nil)
 ;; and move up down end begin over the real visible screen lines
-(require 'physical-line)
-;; (global-set-key [(up)] 'physical-line-previous-line)
-;; (global-set-key [(down)] 'physical-line-next-line)
-(global-set-key [(up)] 'previous-line)
-(global-set-key [(down)] 'next-line)
+(if (eq system-type 'windows-nt)
+    (progn
+      (require 'physical-line)
+      (physical-line-mode 1)
+      (global-set-key [(up)] 'physical-line-previous-line)
+      (global-set-key [(down)] 'physical-line-next-line)))
 
-(physical-line-mode 1)
+(if (eq system-type 'gnu/linux)
+    (progn
+      (global-set-key [(up)] 'previous-line)
+      (global-set-key [(down)] 'next-line)))
+
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)
 
