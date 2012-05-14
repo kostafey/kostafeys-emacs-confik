@@ -34,6 +34,7 @@
 (require 'communications)
 (require 'reencoding-file)
 
+(require 'version-control)
 (require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
@@ -162,5 +163,4 @@
 ;; end of .emacs
 ;;
 ;;
-
 

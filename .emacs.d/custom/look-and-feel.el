@@ -75,14 +75,13 @@
 ;;указываем где будут лежать файлы расширений
 (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/")
 (add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0/themes/")
-
+ 
 (require 'color-theme) ;;подгружаем "модуль раскраски"
 (color-theme-initialize) ;;подгрузить библиотеку цветовых схем
-;(load-file "~/.emacs.d/color-theme-6.6.0/themes/color-theme-organic-green.el")
 (color-theme-organic-green);;выбрать конкретную схему
 ;; (require 'color-theme-solarized)
 ;; (color-theme-solarized-light)
-;(color-theme-aliceblue-mod) 
+;; (color-theme-aliceblue-mod) 
 ;;-----------------------------------------------------------------------------
 
 ;;=============================================================================
@@ -133,10 +132,18 @@
   ;; При запуске - разворачиваем на весь экран - Linux 
   (toggle-fullscreen))
 
-;Длинные строки всегда разбивать при отображении
+;;=============================================================================
+;; Continuation lines
+;;
+;; Non-nil means do not display continuation lines.
+;; Instead, give each line of text just one screen line.
 (setq truncate-lines nil)
+;; A value of nil means to respect the value of `truncate-lines'.
 (setq truncate-partial-width-windows nil)
+;; Toggle whether to fold or truncate long lines for the current buffer.
+(global-set-key (kbd "C-M-l") 'toggle-truncate-lines)
 
+;; Non-nil means no need to redraw entire frame after suspending.
 (setq no-redraw-on-reenter nil)
 
 ;; Usage: Just enable highlight-parentheses-mode.

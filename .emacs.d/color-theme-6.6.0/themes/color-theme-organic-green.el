@@ -32,6 +32,7 @@
 ;#0066CC
 ;#000099
 ;#FFAEAE
+;#E5E5E5
 ;#DDEE00
 ;#EEDD00
 ;#B1B100
@@ -88,7 +89,7 @@
           `(font-lock-warning-face ((t (:bold t :weight semi-bold :foreground "#AA0000"))))
 
           '(fringe ((t (:background "#E5E5E5"))))
-          '(fringe ((t (:foreground "#DDEE00"))))
+          '(fringe ((t (:foreground "gray40"))))
 
 		  `(font-lock-constant-face ((t (:foreground ,"#3465BD"))))
           
@@ -137,7 +138,16 @@
           '(erc-timestamp-face ((t (:foreground "#32CD32" :weight bold))))
           
           '(rst-definition ((t (:foreground "#3465BD"))))
-          '(rst-level-2-face ((t (:background "grey78"))) t)          
+          '(rst-level-2-face ((t (:background "grey85"))) t)
+          '(rst-level-3-face ((t (:background "grey85"))) t)
+          '(rst-level-4-face ((t (:background "grey85"))) t)
+          '(rst-level-5-face ((t (:background "grey85"))) t)
+
+          '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
+          
+          ;; '(magit-header ((t (:background "grey85"))) t)
+          ;; '(magit-diff-add ((t (:foreground "green3"))) t)
+          ;; '(magit-diff-del ((t (:foreground "red3"))) t)
 		  ))))
 
 (provide 'color-theme-organic-green)

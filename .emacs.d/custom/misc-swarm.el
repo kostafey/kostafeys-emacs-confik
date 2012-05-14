@@ -47,44 +47,7 @@
 ;; (set-input-method 'cyrillic-jcuken)
 
 
-;; RECODE ENGLISH TO RUSSIAN ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar u:*en/ru-table*
-     '((?q  . ?й) (?w  . ?ц) (?e  . ?у)
-       (?r  . ?к) (?t  . ?е) (?y  . ?н) (?u  . ?г)
-       (?i  . ?ш) (?o  . ?щ) (?p  . ?з) (?[  . ?х)
-       (?]  . ?ъ) (?a  . ?ф) (?s  . ?ы) (?d  . ?в)
-       (?f  . ?а) (?g  . ?п) (?h  . ?р) (?j  . ?о)
-       (?k  . ?л) (?l  . ?д) (?\; . ?ж) (?\' . ?э)
-       (?z  . ?я) (?x  . ?ч) (?c  . ?с) (?v  . ?м)
-       (?b  . ?и) (?n  . ?т) (?m  . ?ь) (?,  . ?б)
-       (?.  . ?ю) (?/  . ?.) (?!  . ?!) (?@  . ?\")
-       (?#  . ?№) (?$  . ?\;) (?%  . ?%) (?^  . ?:)
-       (?&  . ??) (?*  . ?*) (?Q  . ?Й) (?W  . ?Ц)
-       (?E  . ?У) (?R  . ?К) (?T  . ?Е) (?Y  . ?Н)
-       (?U  . ?Г) (?I  . ?Ш) (?O  . ?Щ) (?P  . ?З)
-       (?{  . ?Х) (?}  . ?Ъ) (?A  . ?Ф)
-       (?S  . ?Ы) (?D  . ?В) (?F  . ?А) (?G  . ?П)
-       (?H  . ?Р) (?J  . ?О) (?K  . ?Л) (?L  . ?Д)
-       (?:  . ?Ж) (?\" . ?Э) (?Z  . ?Я) (?X  . ?Ч)
-       (?C  . ?С) (?V  . ?М) (?B  . ?И) (?N  . ?Т)
-       (?M  . ?Ь) (?<  . ?Б) (?>  . ?Ю) (?\? . ?,)))
-
 ;;------------------------------------------------------------------------------ 
-(defun u:en/ru-recode-region (beg end &optional arg)
-  "Recode the given region, that contains Russain text typed in English, into Russian.
-With ARG recode from Russian o English."
-
-  (interactive "*r\nP")
-  (save-excursion
-    (goto-char beg)
-    (do () ((>= (point) end))
-      (let* ((en-char (char-after (point)))
-             (ru-char (if arg 
-                          (car (rassoc en-char u:*en/ru-table*))
-                        (cdr (assoc en-char u:*en/ru-table*)))))
-        (delete-char 1)
-        (insert (if ru-char ru-char en-char))))))
-(global-set-key (kbd "C-`") 'u:en/ru-recode-region)
 
 (add-to-list 'load-path "~/.emacs.d/google-weather/")
 (require 'google-weather)
@@ -122,6 +85,27 @@ With ARG recode from Russian o English."
 ;; (el-get 'sync)
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; (require 'sql)
+;; (setq sql-server "192.168.181.60")
+;; (setq sql-database "july")
+;; (setq sql-password "K9$K7dt")
+;; (setq sql-user "informix")
+;; (setq sql-port "1541")
+
+(add-to-list 'load-path (concat site-lisp-path "ejsql/"))
+(require 'ejsql)
+
+(global-set-key 
+ (kbd "C-c h")  
+ '(lambda() (interactive)
+    (progn
+      (save-buffer)
+      (shell-command 
+       "sphinx-build -b html C:/myworkspaces/doc/ C:/myworkspaces/doc/build-html/")
+      (delete-other-windows))))
+
 
 (provide 'misc-swarm)
 

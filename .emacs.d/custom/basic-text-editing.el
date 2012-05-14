@@ -6,6 +6,7 @@
 
 (global-set-key (kbd "C-?") 'describe-char)
 
+;;=============================================================================
 ;; show ascii table
 ;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
 (defun ascii-table ()
@@ -21,7 +22,7 @@
   (beginning-of-buffer))
 
 
-;;;Handy MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;=============================================================================
 ;;;  insert current date into the buffer at point  
 (defun insert-date()
   "Insert a time-stamp according to locale's date and time format."
@@ -204,5 +205,50 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
       (forward-line) (beginning-of-line) (forward-char colpos)
       (setq i (1+ i)))))
 
+
+;=============================================================================
+;; Wrap text with punctation or tag
+(require 'wrap-region)
+(wrap-region-mode t)
+(wrap-region-add-wrapper "*" "*")
+
+;;=============================================================================
+;; Recode english to russian input
+(defvar u:*en/ru-table*
+     '((?q  . ?й) (?w  . ?ц) (?e  . ?у)
+       (?r  . ?к) (?t  . ?е) (?y  . ?н) (?u  . ?г)
+       (?i  . ?ш) (?o  . ?щ) (?p  . ?з) (?[  . ?х)
+       (?]  . ?ъ) (?a  . ?ф) (?s  . ?ы) (?d  . ?в)
+       (?f  . ?а) (?g  . ?п) (?h  . ?р) (?j  . ?о)
+       (?k  . ?л) (?l  . ?д) (?\; . ?ж) (?\' . ?э)
+       (?z  . ?я) (?x  . ?ч) (?c  . ?с) (?v  . ?м)
+       (?b  . ?и) (?n  . ?т) (?m  . ?ь) (?,  . ?б)
+       (?.  . ?ю) (?/  . ?.) (?!  . ?!) (?@  . ?\")
+       (?#  . ?№) (?$  . ?\;) (?%  . ?%) (?^  . ?:)
+       (?&  . ??) (?*  . ?*) (?Q  . ?Й) (?W  . ?Ц)
+       (?E  . ?У) (?R  . ?К) (?T  . ?Е) (?Y  . ?Н)
+       (?U  . ?Г) (?I  . ?Ш) (?O  . ?Щ) (?P  . ?З)
+       (?{  . ?Х) (?}  . ?Ъ) (?A  . ?Ф)
+       (?S  . ?Ы) (?D  . ?В) (?F  . ?А) (?G  . ?П)
+       (?H  . ?Р) (?J  . ?О) (?K  . ?Л) (?L  . ?Д)
+       (?:  . ?Ж) (?\" . ?Э) (?Z  . ?Я) (?X  . ?Ч)
+       (?C  . ?С) (?V  . ?М) (?B  . ?И) (?N  . ?Т)
+       (?M  . ?Ь) (?<  . ?Б) (?>  . ?Ю) (?\? . ?,)))
+
+(defun u:en/ru-recode-region (beg end &optional arg)
+  "Recode the given region, that contains Russain text typed in English, into Russian.
+With ARG recode from Russian o English."
+
+  (interactive "*r\nP")
+  (save-excursion
+    (goto-char beg)
+    (do () ((>= (point) end))
+      (let* ((en-char (char-after (point)))
+             (ru-char (if arg 
+                          (car (rassoc en-char u:*en/ru-table*))
+                        (cdr (assoc en-char u:*en/ru-table*)))))
+        (delete-char 1)
+        (insert (if ru-char ru-char en-char))))))
+(global-set-key (kbd "C-`") 'u:en/ru-recode-region)
 
 (provide 'basic-text-editing)
