@@ -15,8 +15,11 @@
 (pc-selection-mode t)
 (setq transient-mark-mode t)
 (setq x-select-enable-clipboard t)
+
 ;;-----------------------------------------------------------------------------
 (global-set-key [(control shift v)] 'cua-paste-pop)
+(global-set-key [(meta shift v)] '(lambda() (interactive) (cua-paste-pop -1)))
+
 ;;-----------------------------------------------------------------------------
 ;(global-set-key (kbd "C-e") 'exchange-point-and-mark)
 (global-set-key (kbd "C-e") 'cua-exchange-point-and-mark)

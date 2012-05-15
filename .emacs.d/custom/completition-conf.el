@@ -53,6 +53,8 @@
                                         ;(auto-complete-mode)
       (global-auto-complete-mode t)
       (setq ac-auto-start 1)))
+
+(global-set-key [f7] 'auto-complete-mode)
 ;;=============================================================================
 
 (provide 'completition-conf)

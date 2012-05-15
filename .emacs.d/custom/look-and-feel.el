@@ -166,6 +166,9 @@
 (global-set-key [(control meta tab)] 'fold-dwim-toggle-selective-display)
 (global-set-key "\C-cf" 'semantic-tag-folding-fold-block)
 (global-set-key "\C-cs" 'semantic-tag-folding-show-block)
+
+;; Enables narrow possibility (`narrow-to-page' function).
+(put 'narrow-to-page 'disabled nil)
 ;;=============================================================================
 
 (setq default-indicate-buffer-boundaries '((top . left) (bottom . left) (t . right)))

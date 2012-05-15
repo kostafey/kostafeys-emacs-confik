@@ -56,11 +56,6 @@
 ;;   :PROPERTIES: ...
 ;;   %%(org-google-weather "New York" "en-gb")
 
-(add-to-list 'load-path "~/.emacs.d/org-7.01h/lisp/")
-(require 'org)
-
-
-
 
 ;(add-to-list 'default-frame-alist '(alpha . (0.90 0.85)))
 
