@@ -141,7 +141,7 @@
 ;; A value of nil means to respect the value of `truncate-lines'.
 (setq truncate-partial-width-windows nil)
 ;; Toggle whether to fold or truncate long lines for the current buffer.
-(global-set-key (kbd "C-M-l") 'toggle-truncate-lines)
+(global-set-key (kbd "C-c C-l") 'toggle-truncate-lines)
 
 ;; Non-nil means no need to redraw entire frame after suspending.
 (setq no-redraw-on-reenter nil)

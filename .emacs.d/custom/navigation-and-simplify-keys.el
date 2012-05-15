@@ -164,18 +164,13 @@
 ;; do not truncate and wrap long lines
 (setq truncate-partial-width-windows nil)
 (setq truncate-lines nil)
-;; and move up down end begin over the real visible screen lines
-(if (eq system-type 'windows-nt)
-    (progn
-      (require 'physical-line)
-      (physical-line-mode 1)
-      (global-set-key [(up)] 'physical-line-previous-line)
-      (global-set-key [(down)] 'physical-line-next-line)))
 
-(if (eq system-type 'gnu/linux)
-    (progn
-      (global-set-key [(up)] 'previous-line)
-      (global-set-key [(down)] 'next-line)))
+;; and move up down end begin over the real visible screen lines
+(require 'physical-line)
+(physical-line-mode 1)
+
+(global-set-key [(up)] 'previous-line)
+(global-set-key [(down)] 'next-line)
 
 (global-set-key [(end)] 'end-of-line)
 (global-set-key [(home)] 'beginning-of-line)
@@ -245,58 +240,10 @@
 (global-set-key [(meta control up)] 'backward-sentence)
 ;;-----------------------------------------------------------------------------
 
-;; (defun sfp-page-down ()
-;;   (interactive)
-;;   (next-line
-;;    (- (window-text-height)
-;; 	  next-screen-context-lines)))
-    
-;; (defun sfp-page-up ()
-;;   (interactive)
-;;   (previous-line
-;;    (- (window-text-height)
-;; 	  next-screen-context-lines)))
-    
-;; (global-set-key [next] 'sfp-page-down)
-;; (global-set-key [prior] 'sfp-page-up)
-
 (require 'pager)
 ;;; Bind scrolling functions from pager library.
 (global-set-key [next] 	   'pager-page-down)
 (global-set-key [prior]	   'pager-page-up)
-
-;;=============================================================================
-;; This used for less resource-hungry point moving.
-;;=============================================================================
-(defun point-of-beginning-of-bottom-line ()
-  (save-excursion
-    (move-to-window-line -1)
-    (point)))
-(defun point-of-beginning-of-line ()
-  (save-excursion
-    (beginning-of-line)
-    (point)))
-(defun next-one-line () (interactive)
-  (if (= (point-of-beginning-of-bottom-line) (point-of-beginning-of-line))
-      (progn (scroll-up 1)
-             (next-line 1))
-    (next-line 1)))
-(defun point-of-beginning-of-top-line ()
-  (save-excursion
-    (move-to-window-line 0)
-    (point)))
-(defun previous-one-line () (interactive)
-  (if (= (point-of-beginning-of-top-line) (point-of-beginning-of-line))
-      (progn (scroll-down 1)
-             (previous-line 1))
-    (previous-line 1)))
-
-(byte-compile 'point-of-beginning-of-bottom-line)
-(byte-compile 'point-of-beginning-of-line)
-(byte-compile 'point-of-beginning-of-top-line)
-
-(global-set-key (kbd "<down>") 'next-one-line)
-(global-set-key (kbd "<up>") 'previous-one-line)
 
 ;;=============================================================================
 ;; Someday might want to rotate windows if more than 2 of them
@@ -316,8 +263,6 @@
 
 (global-unset-key "\C-u")
 (global-set-key "\C-u" 'swap-windows)
-;;=============================================================================
-
 
 ;;=============================================================================
 ;; Standard file-manipulation functions:
