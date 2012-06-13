@@ -87,6 +87,11 @@
 (require 'bs)
 (global-set-key "\C-x\C-n" 'bs-show)
 ;;-----------------------------------------------------------------------------
+;; lusty-explorer
+(when (require 'lusty-explorer nil 'noerror)
+  (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
+  (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
+;;-----------------------------------------------------------------------------
 ;Убить буфер
 (defun prh:kill-current-buffer ()
     (interactive)
@@ -94,13 +99,6 @@
 (global-set-key "\C-w" 'prh:kill-current-buffer)
 (global-set-key (kbd "C-x w") 'kill-buffer)
 ;;=============================================================================
-
-;;-----------------------------------------------------------------------------
-;; minibuffer
-(require 'icomplete+)
-
-;режимо автозавршения команды в минибуфере
-(icomplete-mode)
 
 ;;; save minibuffer history between sessions
 (when (> emacs-major-version 21) (savehist-mode t))

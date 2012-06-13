@@ -6,6 +6,27 @@
 
 (global-set-key (kbd "C-?") 'describe-char)
 
+(defun count-words-region (beginning end arg)  
+  "Counting words (chars) in the selected area.
+arg - is a searching word (char)"
+  (interactive "r\nMSearching word or char: ")
+  
+  (message "Counting ... ")
+  (save-excursion
+    (goto-char beginning)
+    (let ((count 0)
+          (search-word arg))
+
+      (while (and (< (point) end)
+                  (search-forward search-word end t))
+        (setq count (1+ count)))
+
+      (message 
+       "There is %d words in the selected area." count))))
+
+(global-unset-key "\C-\M-a")
+(global-set-key "\C-\M-a\C-c" 'count-words-region)
+
 ;;=============================================================================
 ;; show ascii table
 ;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
@@ -205,12 +226,11 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
       (forward-line) (beginning-of-line) (forward-char colpos)
       (setq i (1+ i)))))
 
-
 ;=============================================================================
 ;; Wrap text with punctation or tag
-(require 'wrap-region)
-(wrap-region-mode t)
-(wrap-region-add-wrapper "*" "*")
+(when (require 'wrap-region nil 'noerror)
+  (wrap-region-global-mode t)
+  (wrap-region-add-wrapper "*" "*"))
 
 ;;=============================================================================
 ;; Recode english to russian input

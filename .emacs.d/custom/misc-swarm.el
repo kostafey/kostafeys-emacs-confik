@@ -59,28 +59,7 @@
 
 ;(add-to-list 'default-frame-alist '(alpha . (0.90 0.85)))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; el-get configuration
-;;
-(add-to-list 'load-path (concat site-lisp-path "el-get/el-get/"))
-
-(unless (require 'el-get nil t)
-  (url-retrieve
-   "https://github.com/dimitri/el-get/raw/master/el-get-install.el"
-   (lambda (s)
-     (end-of-buffer)
-     (eval-print-last-sexp))))
-
-;; local sources
-;; (setq el-get-sources
-;;       '((:name ropemacs)
-;;         (:name pymacs)))
-
-;; (el-get 'sync)
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ;; (require 'sql)
 ;; (setq sql-server "192.168.181.60")

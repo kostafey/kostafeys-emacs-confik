@@ -25,6 +25,7 @@
 ;;-----------------------------------------------------------------------------
 (defvar custom-conf-lisp-path (concat site-lisp-path "custom/"))
 (add-to-list 'load-path custom-conf-lisp-path)
+
 (require 'look-and-feel)
 (require 'basic-text-editing)
 (require 'navigation-and-simplify-keys)
@@ -37,7 +38,7 @@
 (require 'history-conf)
 
 (require 'text-modes-conf)
-(require 'version-control)
+; (require 'version-control)
 (require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
@@ -49,6 +50,7 @@
 
 (require 'misc-swarm)
 
+(require 'el-get-conf)
 ;;-----------------------------------------------------------------------------
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
 (require 'calc-time)
