@@ -4,7 +4,8 @@
 ;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 110)
 ;; (set-face-attribute 'default nil :family "Consolas" :height 140)
 ;; (set-face-attribute 'default nil :family "Liberation Mono" :height 100)
-(set-face-attribute 'default nil :family "Consolas" :height 130)
+;; (set-face-attribute 'default nil :family "Consolas" :height 130)
+(set-face-attribute 'default nil :family "Consolas" :height 110)
 
 ;;=============================================================================
 ;; Change font size
@@ -104,7 +105,8 @@
 ;; Cursor config
 ;;
 (global-hl-line-mode 1) ; highlight the line about point in the current window
-(set-face-background 'hl-line "#afa")
+;; (set-face-background 'hl-line "#afa")
+
 (blink-cursor-mode -1)
 ;;
 ;;=============================================================================
@@ -185,6 +187,7 @@
 (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
 (add-hook 'python-mode-hook 'highlight-parentheses-mode)
 (add-hook 'comint-mode-hook 'highlight-parentheses-mode)
+(add-hook 'js-mode-hook 'highlight-parentheses-mode)
 
 (setq hl-paren-colors '("#326B6B"))
 (setq hl-paren-background-colors '(

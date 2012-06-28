@@ -16,7 +16,7 @@
 ;#E3F2A1
 
 ;цвета
-
+;#A0F0A0
 ;#7FFF00
 ;#95E454
 ;#66CDAA
@@ -82,6 +82,11 @@
             (mouse-color . ,organic-cursor-fg)
             (background-mode . light))
 
+          ;; '(linum ((t (:foreground ,desert-minibuffer-fg))))
+
+          '(isearch ((t (:background "yellow" :inverse-video nil))))
+          '(lazy-highlight ((t (:background "#DDEE00"))))
+
 		  `(font-lock-builtin-face ((t (:foreground ,organic-builtin-fg))))
           `(font-lock-comment-face ((t (:foreground ,organic-comment-fg))))
           `(font-lock-string-face ((t (:foreground ,organic-string-fg))))
@@ -142,13 +147,32 @@
           '(rst-level-3-face ((t (:background "grey85"))) t)
           '(rst-level-4-face ((t (:background "grey85"))) t)
           '(rst-level-5-face ((t (:background "grey85"))) t)
+          '(rst-level-6-face ((t (:background "grey85"))) t)
 
           '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
           
           ;; '(magit-header ((t (:background "grey85"))) t)
           ;; '(magit-diff-add ((t (:foreground "green3"))) t)
           ;; '(magit-diff-del ((t (:foreground "red3"))) t)
+
+          '(hl-line ((t (:background "#A0F0A0"))))
+          '(region ((t (:background "#EEEEA0"))))
+
+          ;; '(minibuffer-prompt ((t (:foreground "blue"))))
+
+          ;; '(mode-line
+          ;;   ((t (:foreground blue :background blue
+          ;;                  :box (:line-width 1 :color blue)))))
+
+          ;; '(header-line ((t (:foreground "blue" :background "blue"))))
+
 		  ))))
+
+
+         ;; (fringe ((t (:foreground ,base01 :background ,base02))))
+         ;; 
+         ;; (header-line ((t (:foreground ,base0 :background ,base2))))
+         ;; (highlight ((t (:background ,base02))))
 
 (provide 'color-theme-organic-green)
 
