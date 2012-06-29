@@ -1,10 +1,10 @@
 ;;-----------------------------------------------------------------------------
 ;; Cedet
-(setq cedet-version "1.0")
-(add-to-list 'load-path (format "~/.emacs.d/cedet-%s/common/" cedet-version))
-(add-to-list 'load-path (format "~/.emacs.d/cedet-%s/semantic/" cedet-version))
-(setq semantic-load-turn-useful-things-on t)
-(load-file (format "~/.emacs.d/cedet-%s/common/cedet.el" cedet-version))
+;; (setq cedet-version "1.0")
+;; (add-to-list 'load-path (format "~/.emacs.d/cedet-%s/common/" cedet-version))
+;; (add-to-list 'load-path (format "~/.emacs.d/cedet-%s/semantic/" cedet-version))
+;; (setq semantic-load-turn-useful-things-on t)
+;; (load-file (format "~/.emacs.d/cedet-%s/common/cedet.el" cedet-version))
 
 (require 'cedet)
 ;(global-set-key [?\C- ] 'semantic-ia-complete-symbol)
@@ -29,7 +29,7 @@
 	  ecb-tip-of-the-day nil
 	  ecb-options-version "2.40")
 
-(add-to-list 'load-path "~/.emacs.d/ecb-2.40/")
+(add-to-list 'load-path "~/.emacs.d/alexott-ecb/")
 (require 'ecb)
 (global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
 (global-set-key (kbd "C-x C-a") 'ecb-activate)

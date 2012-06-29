@@ -1,20 +1,3 @@
-;;=============================================================================
-;; CUA - гумоноидизация emacs ;)
-;;=============================================================================
-;; Выбираем текст
-;;Установка режима CUA
-; M-w - копировать ; C-y - вставить
-; C-w - вырезать   ; C-k - вырезать до конца строки
-;(cua-selection-mode t)
-;;поддержка Ctr-c,v,x,d как в windows
-(require 'cua-base)
-;; (require 'cua)
-;;(require 'cua-selection-mode)
-(cua-mode t)
-(require 'pc-select)
-(pc-selection-mode t)
-(setq transient-mark-mode t)
-(setq x-select-enable-clipboard t)
 
 ;;-----------------------------------------------------------------------------
 (global-set-key [(control shift v)] 'cua-paste-pop)
@@ -69,12 +52,6 @@
 (global-unset-key (kbd "<C-S-down-mouse-1>"))
 (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-
-;;=============================================================================
-;; Перфикс для ключей, применяемых к выделенным областям
-;;=============================================================================
-(global-unset-key "\C-\M-a")
-(defvar selected-area-prefix "\C-\M-a")
 
 ;;=============================================================================
 ;; Включаем команды изменения регистра

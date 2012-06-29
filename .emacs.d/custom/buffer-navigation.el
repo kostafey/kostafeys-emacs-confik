@@ -1,7 +1,5 @@
 ;;=============================================================================
 
-(defvar change-buffer-prefix "\C-c\C-b")
-
 (global-set-key (concat selected-area-prefix "\C-e") 
                 '(lambda () (interactive) (find-file "~/.emacs")))
 (global-set-key (concat change-buffer-prefix "e") 

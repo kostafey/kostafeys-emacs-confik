@@ -1,10 +1,7 @@
 ;;; basic-text-editing.el --- set of misc text editing functions.
 
 (require 'simple)
-
 (require 'browse-kill-ring)
-
-(global-set-key (kbd "C-?") 'describe-char)
 
 (defun count-words-region (beginning end arg)  
   "Counting words (chars) in the selected area.
@@ -23,9 +20,6 @@ arg - is a searching word (char)"
 
       (message 
        "There is %d words in the selected area." count))))
-
-(global-unset-key "\C-\M-a")
-(global-set-key "\C-\M-a\C-c" 'count-words-region)
 
 ;;=============================================================================
 ;; show ascii table
@@ -96,19 +90,16 @@ arg - is a searching word (char)"
   "Joins number of next lines with current with a space between them"
   (interactive "P")
 (circle-processing arg 'join-next-line-space))
-(global-set-key "\C-j" 'join-next-line-space-n)
 
 (defun join-next-line-n (&optional arg)
   "Joins number of  next lines with current without space between them"
   (interactive "P")
 (circle-processing arg 'join-next-line))
-(global-set-key "\C-cj" 'join-next-line-n)
 
 (defun join-next-line-semicolon-n (&optional arg)
   "Joins number of  next lines with current with semicolon between them"
   (interactive "P")
 (circle-processing arg 'join-next-line-semicolon))
-(global-set-key "\C-c\C-j" 'join-next-line-semicolon-n)
 
 ;;=============================================================================
 ;; Duplicate current line
@@ -147,7 +138,6 @@ arg - is a searching word (char)"
 
   ;; put the point in the lowest line and return
   (next-line arg))
-(global-set-key "\C-cd" 'duplicate-line)
 ;;=============================================================================
 
 (defun comment-or-uncomment-this (&optional lines)
@@ -159,7 +149,6 @@ arg - is a searching word (char)"
       (comment-or-uncomment-region
        (line-beginning-position)
        (line-end-position lines))))
-(global-set-key (kbd "C-;") 'comment-or-uncomment-this)
 
 ;;=============================================================================
 (defun insert-column-counter (n)
@@ -196,7 +185,6 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
   (interactive)
   (let ((fill-column (point-max)))
     (fill-paragraph nil)))
-(global-set-key (kbd "C-c q")  'unfill-paragraph)
 
 ;=============================================================================
 (defun insert-column-counter (n)
@@ -269,6 +257,5 @@ With ARG recode from Russian o English."
                         (cdr (assoc en-char u:*en/ru-table*)))))
         (delete-char 1)
         (insert (if ru-char ru-char en-char))))))
-(global-set-key (kbd "C-`") 'u:en/ru-recode-region)
 
 (provide 'basic-text-editing)

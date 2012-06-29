@@ -11,6 +11,7 @@
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 ;;
 
+(server-start)
 ;;=============================================================================
 ;; Указываем где будут лежать файлы расширений
 ;;=============================================================================
@@ -27,9 +28,11 @@
 (add-to-list 'load-path custom-conf-lisp-path)
 
 (require 'look-and-feel)
-(require 'basic-text-editing)
-(require 'navigation-and-simplify-keys)
-(require 'buffer-navigation)
+(toggle-fullscreen)
+(require 'key-bindings)
+
+;;;;;;;;;;;;;;;;;;;;;;
+
 (require 'switch-language)
 (require 'ispell-conf)
 (require 'completition-conf)
@@ -39,16 +42,16 @@
 
 (require 'text-modes-conf)
 ; (require 'version-control)
-(require 'ide)
+;; (require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
-(require 'java-conf)
+;; (require 'java-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
 ;; (require 'python-conf)
 
-(require 'misc-swarm)
+;;(require 'misc-swarm)
 
 (require 'el-get-conf)
 ;;-----------------------------------------------------------------------------
@@ -70,8 +73,6 @@
     (byte-recompile-directory (concat site-lisp-path "my-task-centric/") 0 t)))
 ;;=============================================================================
 
-(server-start)
-
 ;;; In praise of Emacs, The One True Editor
 ;;; 1.0 Aug 19, 1994
 ;;; 2.0 Aug 28, 1994
@@ -91,4 +92,6 @@
 ;; end of .emacs
 ;;
 ;;
+
+
 
