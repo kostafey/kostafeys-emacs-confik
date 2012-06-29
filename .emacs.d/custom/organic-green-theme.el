@@ -92,57 +92,63 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(link-visited ((,class (:underline t :foreground ,blue-2))))
 
    ;; Jabber
-          '(jabber-roster-user-chatty ((t (:inherit font-lock-type-face :bold tx))))
-          '(jabber-roster-user-online ((t (:inherit font-lock-keyword-face :bold t))))
-          `(jabber-roster-user-offline ((t (:foreground ,organic-fg :background ,organic-bg))))
-          '(jabber-roster-user-away ((t (:inherit font-lock-doc-face))))
-          '(jabber-roster-user-xa ((t (:inherit font-lock-doc-face))))
-          '(jabber-roster-user-dnd ((t (:inherit font-lock-comment-face))))
-          '(jabber-roster-user-error ((t (:inherit font-lock-warning-face))))
+   '(jabber-roster-user-chatty ((t (:inherit font-lock-type-face :bold tx))))
+   '(jabber-roster-user-online ((t (:inherit font-lock-keyword-face :bold t))))
+   `(jabber-roster-user-offline ((t (:foreground ,organic-fg :background ,organic-bg))))
+   '(jabber-roster-user-away ((t (:inherit font-lock-doc-face))))
+   '(jabber-roster-user-xa ((t (:inherit font-lock-doc-face))))
+   '(jabber-roster-user-dnd ((t (:inherit font-lock-comment-face))))
+   '(jabber-roster-user-error ((t (:inherit font-lock-warning-face))))
 
-          '(jabber-title-small ((t (:height 1.2 :weight bold))))
-          '(jabber-title-medium ((t (:inherit jabber-title-small :height 1.2))))
-          '(jabber-title-large ((t (:inherit jabber-title-medium :height 1.2))))
+   '(jabber-title-small ((t (:height 1.2 :weight bold))))
+   '(jabber-title-medium ((t (:inherit jabber-title-small :height 1.2))))
+   '(jabber-title-large ((t (:inherit jabber-title-medium :height 1.2))))
 
-          '(jabber-chat-prompt-local ((t (:inherit font-lock-string-face :bold t))))
-          '(jabber-chat-prompt-foreign ((t (:inherit font-lock-function-name-face :bold nil))))
-          '(jabber-chat-prompt-system ((t (:inherit font-lock-comment-face :bold t))))
-          '(jabber-rare-time-face ((t (:inherit font-lock-function-name-face :bold nil))))
+   '(jabber-chat-prompt-local ((t (:inherit font-lock-string-face :bold t))))
+   '(jabber-chat-prompt-foreign ((t (:inherit font-lock-function-name-face :bold nil))))
+   '(jabber-chat-prompt-system ((t (:inherit font-lock-comment-face :bold t))))
+   '(jabber-rare-time-face ((t (:inherit font-lock-function-name-face :bold nil))))
 
-          '(jabber-activity-face ((t (:inherit jabber-chat-prompt-foreign))))
-          '(jabber-activity-personal-face ((t (:inherit jabber-chat-prompt-local :bold t))))
+   '(jabber-activity-face ((t (:inherit jabber-chat-prompt-foreign))))
+   '(jabber-activity-personal-face ((t (:inherit jabber-chat-prompt-local :bold t))))
 
-		  '(speedbar-tag-face ((t (:foreground "DarkSlateGray4"))))
+   ;; LaTeX
+   '(font-latex-bold-face ((t (:bold t :foreground "DarkOliveGreen"))))
+   '(font-latex-italic-face ((t (:italic t :foreground "DarkOliveGreen"))))
+   '(font-latex-math-face ((t (:foreground "DarkGoldenrod"))))
+   '(font-latex-sedate-face ((t (:foreground "DimGray"))))
+   '(font-latex-string-face ((t (nil))))
+   '(font-latex-warning-face ((t (:bold t :weight semi-bold :foreground "#00CC00"))))
 
-		  '(font-latex-bold-face ((t (:bold t :foreground "DarkOliveGreen"))))
-		  '(font-latex-italic-face ((t (:italic t :foreground "DarkOliveGreen"))))
-		  '(font-latex-math-face ((t (:foreground "DarkGoldenrod"))))
-		  '(font-latex-sedate-face ((t (:foreground "DimGray"))))
-		  '(font-latex-string-face ((t (nil))))
-		  '(font-latex-warning-face ((t (:bold t :weight semi-bold :foreground "#00CC00"))))
+   ;; quack
+   '(quack-pltish-paren-face ((((class color) (background light)) (:foreground "#53AD2F"))))
+   '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))
 
-          '(quack-pltish-paren-face ((((class color) (background light)) (:foreground "#53AD2F"))))
-          '(quack-pltish-keyword-face ((t (:foreground "#A020F0" :weight bold))))
+   ;; erc
+   '(erc-action-face ((t (:foreground "gray" :weight bold))))
+   '(erc-command-indicator-face ((t (:foreground "black" :weight bold))))
+   '(erc-nick-default-face ((t (:foreground "SlateBlue" :weight bold))))
+   '(erc-input-face ((t (:foreground "#000099"))))
+   '(erc-notice-face ((t (:foreground "dark sea green" :weight bold))))
+   '(erc-timestamp-face ((t (:foreground "#32CD32" :weight bold))))
+   
+   ;; rst
+   '(rst-definition ((t (:foreground "#3465BD" :weight normal))))
+   '(rst-level-2-face ((t (:background "grey85"))) t)
+   '(rst-level-3-face ((t (:background "grey85"))) t)
+   '(rst-level-4-face ((t (:background "grey85"))) t)
+   '(rst-level-5-face ((t (:background "grey85"))) t)
+   '(rst-level-6-face ((t (:background "grey85"))) t)
 
-          '(erc-action-face ((t (:foreground "gray" :weight bold))))
-          '(erc-command-indicator-face ((t (:foreground "black" :weight bold))))
-          '(erc-nick-default-face ((t (:foreground "SlateBlue" :weight bold))))
-          '(erc-input-face ((t (:foreground "#000099"))))
-          '(erc-notice-face ((t (:foreground "dark sea green" :weight bold))))
-          '(erc-timestamp-face ((t (:foreground "#32CD32" :weight bold))))
-          
-          '(rst-definition ((t (:foreground "#3465BD"))))
-          '(rst-level-2-face ((t (:background "grey85"))) t)
-          '(rst-level-3-face ((t (:background "grey85"))) t)
-          '(rst-level-4-face ((t (:background "grey85"))) t)
-          '(rst-level-5-face ((t (:background "grey85"))) t)
-          '(rst-level-6-face ((t (:background "grey85"))) t)
-
-          '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
+   ;; misc
+   '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
+   '(speedbar-tag-face ((t (:foreground "DarkSlateGray4"))))
 
    ))
 
 (provide-theme 'organic-green)
+
+;; (load-theme 'organic-green t)
 
 ;; Local Variables:
 ;; no-byte-compile: t
