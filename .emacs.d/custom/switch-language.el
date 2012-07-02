@@ -18,7 +18,7 @@
 
 ;;; Commentary:
 
-;; Realized just for Windows Nt and EmacsW32.
+;; Realized just for Windows Nt and EmacsW32 (prior to 24 emacs version).
 ;; (global-set-key [(meta shift)] 'toggle-input-method) - is a dream only? ;)
 
 ;;====================================================================
@@ -85,7 +85,7 @@ Then revert back the OS input language."
 
   ;;------------------------------------------------------------------
   ;; emacs version 24 or later
-  ;; ©juri_jurta `http://ru-emacs.livejournal.com/82428.html'
+  ;; ©juri_jurta, hakubo `http://ru-emacs.livejournal.com/82428.html'
   (progn
     (defun reverse-input-method (input-method)
       "Build the reverse mapping of single letters from INPUT-METHOD."
@@ -104,11 +104,11 @@ Then revert back the OS input language."
                           (cadr map) (char-to-string to) 1)))
               (when (and (characterp from) (characterp to))
                 (dolist (mod modifiers)
-                  (define-key (if mod input-decode-map local-function-key-map)
+                  (define-key local-function-key-map
                     (vector (append mod (list from)))
                     (vector (append mod (list to)))))))))
         (when input-method
-          (activate-input-method current)))) 
+          (activate-input-method current))))
     (reverse-input-method "cyrillic-jcuken")
     (defadvice read-passwd (around my-read-passwd act)
       (let ((local-function-key-map nil))
@@ -117,7 +117,7 @@ Then revert back the OS input language."
 ;;====================================================================
 ;; Это не распространяется на последовательности клавиш, содержащие
 ;; буквы без модификаторов (такие как C-x b), но хоть
-;; что-то. ©YuriKhan http://www.emacswiki.org/emacs/GnuEmacsRussification
+;; что-то. ©YuriKhan `http://www.emacswiki.org/emacs/GnuEmacsRussification'
 (loop
   for from across "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖ\ЭЯЧСМИТЬБЮ№"
   for to   across "qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>#"
