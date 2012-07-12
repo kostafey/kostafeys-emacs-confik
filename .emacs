@@ -28,7 +28,6 @@
 (add-to-list 'load-path custom-conf-lisp-path)
 
 (require 'look-and-feel)
-(toggle-fullscreen)
 (require 'key-bindings)
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -51,7 +50,7 @@
 (require 'java-script-conf)
 ;; (require 'python-conf)
 
-;;(require 'misc-swarm)
+;; (require 'misc-swarm)
 
 (require 'el-get-conf)
 ;;-----------------------------------------------------------------------------
@@ -94,4 +93,11 @@
 ;;
 
 
-
+(global-set-key 
+ (kbd "C-c h")  
+ '(lambda() (interactive)
+    (progn
+      (save-buffer)
+      (shell-command 
+       "sphinx-build -b html C:/myworkspaces/doc/ C:/myworkspaces/doc/build-html/")
+      (delete-other-windows))))

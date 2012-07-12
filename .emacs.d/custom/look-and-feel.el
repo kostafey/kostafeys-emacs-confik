@@ -125,6 +125,20 @@
                              nil 
                            'fullboth))))
 
+;; (run-with-idle-timer 0.1 nil 'toggle-fullscreen)
+;; (setq term-setup-hook 'toggle-fullscreen)
+(setq window-setup-hook 
+      '(lambda() (interactive) 
+         (progn (toggle-fullscreen) 
+                (previous-buffer))))
+
+(defun toggle-full-screen-win32 ()
+ "Toggles full-screen mode for Emacs window on Win32."
+ (interactive)
+ (shell-command "emacs_fullscreen.exe"))
+ 
+(global-set-key (kbd "C-M-<return>") 'toggle-full-screen-win32)
+
 ;;=============================================================================
 ;; Continuation lines
 ;;
@@ -134,16 +148,16 @@
 ;; A value of nil means to respect the value of `truncate-lines'.
 (setq truncate-partial-width-windows nil)
 
+;;-----------------------------------------------------------------------------
 ;; Non-nil means no need to redraw entire frame after suspending.
 (setq no-redraw-on-reenter nil)
+;; update isn't paused when input is detected
+(setq redisplay-dont-pause t)
 
-;; Usage: Just enable highlight-parentheses-mode.
-(require 'highlight-parentheses)
-
-(show-paren-mode 1)              ;;Выделение парных скобок
-(setq inhibit-startup-message t) ;;не показывать сообщение при старте
-(fset 'yes-or-no-p 'y-or-n-p)    ;;не печать yes целиком
-(setq default-tab-width 4)       ;;количество пробелов в табуляции
+(show-paren-mode 1)              ;; Выделение парных скобок
+(setq inhibit-startup-message t) ;; не показывать сообщение при старте
+(fset 'yes-or-no-p 'y-or-n-p)    ;; не печать yes целиком
+(setq default-tab-width 4)       ;; количество пробелов в табуляции
 (setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)
@@ -151,18 +165,32 @@
 ;; (scroll-bar-mode t)
 
 ;;=============================================================================
+;; fringes
 (setq fringe-mode t) ;Show fields
+(setq-default indicate-buffer-boundaries 
+      '((top . left) (bottom . left) (t . right)))
+(setq-default indicate-empty-lines t)
 
+;;=============================================================================
+;; fill-column-indicator
+(require 'fill-column-indicator)
+(setq-default fci-rule-column 80)
+(setq fci-rule-width 1)
+(setq fci-rule-color "gray80")
+(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+(global-fci-mode 1)
+
+;;=============================================================================
 ;; Enables narrow possibility (`narrow-to-page' function).
 (put 'narrow-to-page 'disabled nil)
 ;;=============================================================================
 
-(setq default-indicate-buffer-boundaries '((top . left) (bottom . left) (t . right)))
-(setq default-indicate-empty-lines t)
-
 ;;=============================================================================
 ;; Magic lisp parentheses rainbow
 ;;=============================================================================
+;; Usage: Just enable highlight-parentheses-mode.
+(require 'highlight-parentheses)
+
 ;; (require 'hi-list)
 ;; (set-face-background 'hi-list-face "#E3F2A1")
 ;; (add-hook 'emacs-lisp-mode-hook 'hi-list-mode)
@@ -186,9 +214,6 @@
                        (compose-region (match-beginning 1)
                                        (match-end 1)
                                        ?λ))))))
-;;-----------------------------------------------------------------------------
-;; update isn't paused when input is detected
-(setq redisplay-dont-pause t)
 
 ;;-----------------------------------------------------------------------------
 

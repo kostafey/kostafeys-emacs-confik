@@ -49,6 +49,8 @@
 
 (global-set-key (kbd "C-c q")  'unfill-paragraph)
 
+(global-set-key (kbd "C-M-a :") 'align-by-column)
+
 (global-set-key (kbd "C-`") 'u:en/ru-recode-region)
 
 (provide 'key-bindings)

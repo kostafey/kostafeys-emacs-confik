@@ -3,7 +3,7 @@
 (require 'simple)
 (require 'browse-kill-ring)
 
-(defun count-words-region (beginning end arg)  
+(defun count-words-region (beginning end arg) 
   "Counting words (chars) in the selected area.
 arg - is a searching word (char)"
   (interactive "r\nMSearching word or char: ")
@@ -219,6 +219,25 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
 (when (require 'wrap-region nil 'noerror)
   (wrap-region-global-mode t)
   (wrap-region-add-wrapper "*" "*"))
+
+;=============================================================================
+(fset 'align-by-column-macro
+   [?\M-x ?a ?l ?i ?g ?n ?- ?r ?e ?g ?e ?x ?p return ?\\ ?: return])
+
+(defun align-by-column (beginning end)
+  "Align some declaration leveled by colon `:'
+Formating from:
+    xtype : 'radio',
+    boxLabel : 'some label',
+    name : 'some name'
+to:
+    xtype    : 'radio',
+    boxLabel : 'some label',
+    name     : 'some name'
+"
+  (interactive "r")
+  ;;(align-regexp beginning end "\:")
+  (execute-kbd-macro (symbol-function 'align-by-column-macro)))
 
 ;;=============================================================================
 ;; Recode english to russian input

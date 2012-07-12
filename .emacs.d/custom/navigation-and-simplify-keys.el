@@ -74,7 +74,8 @@
   (interactive "p")
 
   (back-to-indentation)
-  (end-of-line-mark arg))
+  (cua-set-mark)
+  (end-of-line arg))
 
 (defun copy-line (&optional arg)
   "Kills a line, not including leading indentation"
@@ -225,7 +226,9 @@
 ;;=============================================================================
 ;; Someday might want to rotate windows if more than 2 of them
 (defun swap-windows ()
- "If you have 2 windows, it swaps them." (interactive) (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
+ "If you have 2 windows, it swaps them." 
+ (interactive) 
+ (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
  (t
  (let* ((w1 (first (window-list)))
 	 (w2 (second (window-list)))
@@ -240,6 +243,21 @@
 
 (global-unset-key "\C-u")
 (global-set-key "\C-u" 'swap-windows)
+
+(defun mirror-window ()
+ "Show the same buffer in the second window as in the active window." 
+ (interactive) 
+ (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
+ (t
+ (let* ((w1 (first (window-list)))
+        (w2 (second (window-list)))
+        (b1 (window-buffer w1))
+        (s1 (window-start w1)))
+   (set-window-start w2 s1)   
+   (set-window-buffer w2 b1)))))
+
+(global-unset-key (kbd "M-m"))
+(global-set-key (kbd "M-m") 'mirror-window)
 
 ;;=============================================================================
 ;; Standard file-manipulation functions:
