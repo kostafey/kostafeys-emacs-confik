@@ -57,7 +57,6 @@
                :type emacswiki
                :url "http://bzr.savannah.gnu.org/lh/emacs/elpa/download/head:/rainbowmode0.1.el-20101118182351-xme90jru269t6msr-12/rainbow-mode.el"
                :features rainbow-mode)
-
         ))
 
 

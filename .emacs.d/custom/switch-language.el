@@ -98,6 +98,7 @@ Then revert back the OS input language."
         (when input-method
           (activate-input-method input-method))
         (when (and current-input-method quail-keyboard-layout)
+          (setq normal-local-function-key-map (copy-keymap local-function-key-map))
           (dolist (map (cdr (quail-map)))
             (let* ((to (car map))
                    (from (quail-get-translation

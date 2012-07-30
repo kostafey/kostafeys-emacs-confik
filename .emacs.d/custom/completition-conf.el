@@ -1,7 +1,7 @@
 ;;=============================================================================
 ;; Yet Another Snippet extension
 ;;=============================================================================
-(defvar yasnippet-path (concat site-lisp-path "yasnippet-0.6.1c"))
+(defvar yasnippet-path (concat site-lisp-path "yasnippet"))
 (add-to-list 'load-path yasnippet-path)
 (require 'yasnippet)                                             ;; not yasnippet-bundle
 (yas/initialize)
@@ -10,6 +10,8 @@
 
 (setq yas/root-directory (concat yasnippet-path "/mysnippets")) ;; Develop and keep personal snippets
 (yas/load-directory yas/root-directory)                         ;; Load the snippets
+
+(yas/global-mode 1)
 
 (defvar yasnippet-prefix "\C-y")
 (global-unset-key yasnippet-prefix)

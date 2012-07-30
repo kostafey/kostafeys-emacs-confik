@@ -187,34 +187,6 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
     (fill-paragraph nil)))
 
 ;=============================================================================
-(defun insert-column-counter (n)
-  "Insert a sequence of numbers vertically.
-For example, if your text is:
-
-a b
-c d
-e f
-
-and your cursor is after “a”, then calling this function with argument
-3 will change it to become:
-
-a1 b
-c2 d
-e3 f
-
-If there are not enough existing lines after the cursor
-when this function is called, it aborts at the last line.
-
-This command is conveniently used together with `kill-rectangle' and `string-rectangle'."
-  (interactive "nEnter the max integer: ")
-  (let ((i 1) colpos )
-    (setq colpos (- (point) (line-beginning-position)))
-    (while (<= i n)
-      (insert (number-to-string i))
-      (forward-line) (beginning-of-line) (forward-char colpos)
-      (setq i (1+ i)))))
-
-;=============================================================================
 ;; Wrap text with punctation or tag
 (when (require 'wrap-region nil 'noerror)
   (wrap-region-global-mode t)
@@ -225,7 +197,7 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
    [?\M-x ?a ?l ?i ?g ?n ?- ?r ?e ?g ?e ?x ?p return ?\\ ?: return])
 
 (defun align-by-column (beginning end)
-  "Align some declaration leveled by colon `:'
+  "Align declarations leveled by colon `:'
 Formating from:
     xtype : 'radio',
     boxLabel : 'some label',
@@ -276,5 +248,25 @@ With ARG recode from Russian o English."
                         (cdr (assoc en-char u:*en/ru-table*)))))
         (delete-char 1)
         (insert (if ru-char ru-char en-char))))))
+
+;; Copy rectangle to clipboard for use outside from emacs.
+;; by Xah Lee at
+;; `http://xahlee.blogspot.com/2012/06/emacs-commpand-to-copy-rectangle-to.html'
+(defun copy-rectangle-to-clipboard (p1 p2)
+  "Copy region as column (rectangle) to operating system's clipboard.
+This command will also put the text in register 0. (see: `copy-to-register')"
+  (interactive "r")
+  (let ((x-select-enable-clipboard t))
+    (copy-rectangle-to-register ?0 p1 p2)
+    (kill-new
+     (with-temp-buffer
+       (insert-register ?0)
+       (buffer-string)))))
+
+(defun print-elements-of-list (list)
+  "Print each element of LIST on a line of its own."
+  (while list
+    (print (car list))
+    (setq list (cdr list))))
 
 (provide 'basic-text-editing)

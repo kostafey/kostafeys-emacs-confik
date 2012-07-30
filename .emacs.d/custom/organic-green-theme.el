@@ -143,6 +143,8 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    ;; misc
    '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
    '(speedbar-tag-face ((t (:foreground "DarkSlateGray4"))))
+   '(yas/field-highlight-face ((t (:background "#DDEE00"))))
+
    ))
 
 (provide-theme 'organic-green)

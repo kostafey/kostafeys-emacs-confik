@@ -53,4 +53,23 @@
 
 (global-set-key (kbd "C-`") 'u:en/ru-recode-region)
 
+(global-set-key (kbd "C-c w") 'downcase-word)
+;; (global-unset-key "\C-\M-c")
+(global-set-key (kbd "C-M-a l") 'downcase-region)
+(global-set-key (kbd "C-M-a d") 'downcase-region)
+(global-set-key (kbd "C-M-a u") 'upcase-region)
+
+(global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
+(global-set-key (kbd "C-M-a v") 'string-insert-rectangle)
+
+;;=============================================================================
+;; Навигация по буферам
+;;=============================================================================
+;; (global-set-key (kbd "C-x <right>") 'next-buffer)
+;; (global-set-key (kbd "C-x <left>") 'previous-buffer)
+
+;; (global-set-key (kbd "M-u") 'cua-upcase-rectangle)
+
+(global-set-key (kbd "C-M-R") 'replace-regexp)
+
 (provide 'key-bindings)

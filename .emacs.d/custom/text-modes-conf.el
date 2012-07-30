@@ -36,5 +36,9 @@
 
 (setq org-hide-leading-stars t)
 
+(defun sql-ansi-mode ()
+  (interactive)
+  (sql-mode)
+  (sql-set-product "ansi"))
 
 (provide 'text-modes-conf)

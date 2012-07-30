@@ -211,8 +211,14 @@
 (setq scroll-margin 0)                   ; Граница прокрутки
 ;;-----------------------------------------------------------------------------
 ;прокрутка экрана при неподвижной точке
-(global-set-key [(control down)] (lambda () (interactive) (scroll-up 1))) ; [C-down]
-(global-set-key [(control up)] (lambda () (interactive) (scroll-down 1))) ; [C-up]
+(if (< emacs-major-version 24)
+    (progn
+    (global-set-key [(control down)] (lambda () (interactive) (scroll-up 1))) ; [C-down]
+    (global-set-key [(control up)] (lambda () (interactive) (scroll-down 1)))) ; [C-up]
+  (progn
+    (global-set-key [(control down)] 'scroll-up-line) ; [C-down]
+    (global-set-key [(control up)] 'scroll-down-line))) ; [C-up]
+
 ;;-----------------------------------------------------------------------------
 (global-set-key [(meta control down)] 'forward-sentence)
 (global-set-key [(meta control up)] 'backward-sentence)

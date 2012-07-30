@@ -9,7 +9,7 @@
                 '(lambda () (interactive) 
                    (progn
                      (switch-to-buffer "temp") (linum-mode t)
-                     (flyspell-russian)
+                     ;; (flyspell-russian)
                      (auto-fill-mode t)
                      (setq auto-complete-mode t))))
 (global-set-key (concat change-buffer-prefix "t") 

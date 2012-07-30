@@ -171,6 +171,10 @@
       '((top . left) (bottom . left) (t . right)))
 (setq-default indicate-empty-lines t)
 
+;; (require 'yascroll)
+;; (global-yascroll-bar-mode 1)
+
+
 ;;=============================================================================
 ;; fill-column-indicator
 (require 'fill-column-indicator)
@@ -217,6 +221,14 @@
 
 ;;-----------------------------------------------------------------------------
 
+(add-to-list 'load-path (concat site-lisp-path "m2ym-popwin-el/"))
+(require 'popwin)
+(setq display-buffer-function 'popwin:display-buffer)
+(global-set-key (kbd "C-x p") popwin:keymap)
+
+(add-to-list 'load-path (concat site-lisp-path "m2ym-popwin-el/misc/"))
+(require 'popwin-browse-kill-ring)
+(push "*Kill Ring*" popwin:special-display-config)
 
 (provide 'look-and-feel)
 

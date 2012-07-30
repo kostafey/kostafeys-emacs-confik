@@ -40,6 +40,7 @@
 (require 'history-conf)
 
 (require 'text-modes-conf)
+
 ; (require 'version-control)
 ;; (require 'ide)
 ;; (require 'maxima-conf)
@@ -91,7 +92,6 @@
 ;; end of .emacs
 ;;
 ;;
-
 
 (global-set-key 
  (kbd "C-c h")  
