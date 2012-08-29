@@ -18,14 +18,13 @@
   (calc-time (parse-time-string entered-time)))  
 
 (defun calc-time (list-time)
-  "Печатать каждый элемент СПИСКА на отдельной строке."  
   (progn	
 	(set 'time-kind 1)
 	(set 'summ-time 0)
-	(while (< time-kind 4)         ; проверка-истинна-ложь
+	(while (< time-kind 4)
 	  (setq summ-time (+ summ-time (* (car list-time) (kind-time-multiplier time-kind))))
 	  (setq list-time (cdr list-time))
-	  (setq time-kind (+ 1 time-kind))          ; инкремент, увеличение
+	  (setq time-kind (+ 1 time-kind))
 	  ))
   summ-time)
 
@@ -49,5 +48,13 @@
 	 ":" 
 	 seconds-velocity-str)
 	))
+
+(defun delta-msec-to-sec(msec1 msec2)
+  "Compute delta and convert milliseconds to seconds"
+  (let ((msec1 (if (>  msec2 msec1) msec2 msec1))
+        (msec2 (if (>  msec2 msec1) msec1 msec2)))
+    (/(- msec1 msec2) 6000.0)))
+
+
 
 (provide 'calc-time)

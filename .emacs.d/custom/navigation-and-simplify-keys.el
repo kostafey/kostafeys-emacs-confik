@@ -67,6 +67,37 @@
 (global-set-key (concat selected-area-prefix "d") 'uncomment-region)
 
 ;;=============================================================================
+;; Odinary C-<right>, C-<left> movements 
+;;=============================================================================
+(require 'thingatpt)
+
+(defun step-forward-word ()
+  "Like odinary editors, C-<right> moves forward word."
+  (interactive)
+  (skip-chars-forward " \t")
+  (forward-same-syntax 1))
+
+(defun step-backward-word ()
+  (interactive)
+  "Like odinary editors, C-<left> moves backward word."
+  (skip-chars-backward " \t")
+  (forward-same-syntax -1))
+
+(defun step-forward-select ()
+  "Like odinary editors, C-S-<right> moves forward word and selects it."
+  (interactive)
+  (if (not mark-active)
+      (cua-set-mark))
+  (step-forward-word))
+
+(defun step-backward-select ()
+  "Like odinary editors, C-S-<left> moves backward word and selects it."
+  (interactive)
+  (if (not mark-active)
+      (cua-set-mark))
+  (step-backward-word))
+
+;;=============================================================================
 ;; Marks&select a line
 ;;=============================================================================
 (defun mark-line (&optional arg)

@@ -17,6 +17,11 @@
 (require 'navigation-and-simplify-keys)
 (require 'buffer-navigation)
 
+(global-set-key (kbd "C-<right>") 'step-forward-word)
+(global-set-key (kbd "C-<left>") 'step-backward-word)
+(global-set-key (kbd "C-S-<right>") 'step-forward-select)
+(global-set-key (kbd "C-S-<left>") 'step-backward-select)
+
 (global-set-key (kbd "C-+")      '(lambda nil (interactive) (djcb-zoom 1)))
 (global-set-key [C-kp-add]       '(lambda nil (interactive) (djcb-zoom 1)))
 (global-set-key (kbd "C--")      '(lambda nil (interactive) (djcb-zoom -1)))
@@ -61,6 +66,7 @@
 
 (global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
 (global-set-key (kbd "C-M-a v") 'string-insert-rectangle)
+(global-set-key (kbd "C-M-a c") 'copy-rectangle-to-clipboard)
 
 ;;=============================================================================
 ;; Навигация по буферам
@@ -71,5 +77,12 @@
 ;; (global-set-key (kbd "M-u") 'cua-upcase-rectangle)
 
 (global-set-key (kbd "C-M-R") 'replace-regexp)
+(global-set-key (kbd "M-R") 'query-replace)
+(global-set-key (kbd "C-M-a k") 'keep-lines)
+
+
+(require 'bubble-buffer)
+(global-set-key (kbd "C-x <up>") 'bubble-buffer-next)
+(global-set-key (kbd "C-x <down>") 'bubble-buffer-previous)
 
 (provide 'key-bindings)

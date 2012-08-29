@@ -210,6 +210,8 @@
       "#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" 
       "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
 
+(setq query-replace-highlight t)
+
 ;;-----------------------------------------------------------------------------
 ;; Заменяет lambda на λ.
 (font-lock-add-keywords 
