@@ -211,6 +211,15 @@ to:
   ;;(align-regexp beginning end "\:")
   (execute-kbd-macro (symbol-function 'align-by-column-macro)))
 
+(fset 'align-by-quote-macro
+   [?\M-x ?a ?l ?i ?g ?n ?- ?r ?e ?g ?e ?x ?p return ?\' return])
+
+(defun align-by-quote (beginning end)
+  "Align declarations leveled by quote `''"
+  (interactive "r")
+  (execute-kbd-macro (symbol-function 'align-by-quote-macro)))
+
+
 ;;=============================================================================
 ;; Recode english to russian input
 (defvar u:*en/ru-table*
