@@ -148,14 +148,6 @@
 ;; Paragraph operations
 (global-set-key (kbd "C-c q")  'unfill-paragraph)
 ;;-----------------------------------------------------------------------------
-;; Region operations
-(global-set-key (kbd "C-M-a :") 'align-by-column)
-(global-set-key (kbd "C-M-a '") 'align-by-quote)
-
-(global-set-key (kbd "C-;") 'comment-or-uncomment-this)
-
-(global-set-key (kbd "C-`") 'u:en/ru-recode-region)
-;;-----------------------------------------------------------------------------
 ;; Rectangle operations
 (global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
 (global-set-key (kbd "C-M-a v") 'string-insert-rectangle)
@@ -163,13 +155,25 @@
 ;(global-set-key (kbd "M-u") 'cua-upcase-rectangle) - default
 ;;-----------------------------------------------------------------------------
 ;; Upcase/downcase
-(global-set-key (kbd "C-c w") 'downcase-word)
+(global-set-key (kbd "C-c w") 'toggle-letter-case)
 ;; (global-unset-key "\C-\M-c")
 (global-set-key (kbd "C-M-a l") 'downcase-region)
 (global-set-key (kbd "C-M-a d") 'downcase-region)
 (global-set-key (kbd "C-M-a u") 'upcase-region)
 (global-set-key (concat selected-area-prefix "u") 'upcase-region)
 (global-set-key (concat selected-area-prefix "l") 'downcase-region)
+;;-----------------------------------------------------------------------------
+;; Region & misc operations
+(global-set-key (kbd "C-M-a :") 'align-by-column)
+(global-set-key (kbd "C-M-a '") 'align-by-quote)
+
+(global-set-key (kbd "C-;") 'comment-or-uncomment-this)
+
+(global-set-key (kbd "C-`") 'u:en/ru-recode-region)
+
+(global-set-key (kbd "C-M-R") 'replace-regexp)
+(global-set-key (kbd "M-R") 'query-replace)
+(global-set-key (kbd "C-M-a k") 'keep-lines)
 ;;
 ;;=============================================================================
 
@@ -226,19 +230,39 @@
 ;;=============================================================================
 ;; Buffers navigation
 ;;
+(global-set-key "\C-w" 'prh:kill-current-buffer)
+(global-set-key (kbd "C-x w") 'kill-buffer)
+(global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
+
 ;(global-set-key (kbd "C-x <right>") 'next-buffer) - default
 ;(global-set-key (kbd "C-x <left>") 'previous-buffer) - default
-
-(global-set-key (kbd "C-M-R") 'replace-regexp)
-(global-set-key (kbd "M-R") 'query-replace)
-(global-set-key (kbd "C-M-a k") 'keep-lines)
 
 (global-set-key [(control next)] 'next-buffer) 		; C-Page Up
 (global-set-key [(control prior)] 'previous-buffer)	; C-Page Down
 
-(require 'bubble-buffer)
-(global-set-key (kbd "C-x <up>") 'bubble-buffer-next)
-(global-set-key (kbd "C-x <down>") 'bubble-buffer-previous)
+;;-----------------------------------------------------------------------------
+;; tabbar - switch buffers by tabs 
+(global-set-key [S-tab] 'tabbar-forward-tab)
+(global-set-key [C-S-tab] 'tabbar-backward-tab)
+(global-set-key [(meta shift left)] 'tabbar-backward-tab)
+(global-set-key [(meta shift right)] 'tabbar-forward-tab)
+;;-----------------------------------------------------------------------------
+;; ido - switch buffers by completiotion
+(require 'ido)
+(ido-mode t)
+(global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-x b") 'ido-switch-buffer)
+;;-----------------------------------------------------------------------------
+;; ibuffer - list of all buffers
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+;;-----------------------------------------------------------------------------
+(require 'bs) ;; other list of buffers
+(global-set-key (kbd "C-x C-n") 'bs-show)
+;;-----------------------------------------------------------------------------
+;; lusty-explorer
+(when (require 'lusty-explorer nil 'noerror)
+  (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
+  (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
 ;;
 ;;=============================================================================
 

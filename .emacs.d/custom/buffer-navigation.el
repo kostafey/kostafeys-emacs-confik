@@ -37,7 +37,12 @@
         (delete-file filename)
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
-(global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
+
+;;-----------------------------------------------------------------------------
+;Убить буфер
+(defun prh:kill-current-buffer ()
+    (interactive)
+    (kill-buffer (current-buffer)))
 
 ;;=============================================================================
 ;; Переключения буферов
@@ -46,15 +51,6 @@
 ;;-----------------------------------------------------------------------------
 ;; Tabbar
 (require 'tabbar)
-
-(global-set-key [S-tab] 'tabbar-forward-tab)
-(global-set-key [C-S-tab] 'tabbar-backward-tab)
-
-(global-set-key [(meta shift left)] 'tabbar-backward-tab)
-(global-set-key [(meta shift right)] 'tabbar-forward-tab)
-
-;(global-set-key [(meta ctrl left)] 'tabbar-backward-tab)
-;(global-set-key [(meta ctrl right)] 'tabbar-forward-tab)
 
 ;(set-face-foreground 'tabbar-default "LightSteelBlue")
 ;(set-face-background 'tabbar-default "DarkSlateGray")
@@ -72,30 +68,7 @@
          )))
 
 (tabbar-mode t)
-;;-----------------------------------------------------------------------------
-;; ido
-(require 'ido)
-(ido-mode t)
-(global-set-key "\C-x\C-f" 'ido-find-file)
-(global-set-key "\C-x\b" 'ido-switch-buffer)
-;;-----------------------------------------------------------------------------
-;; ibuffer - еще один способ переключения между буферами
-(global-set-key "\C-x\C-b" 'ibuffer)
-;;-----------------------------------------------------------------------------
-(require 'bs)
-(global-set-key "\C-x\C-n" 'bs-show)
-;;-----------------------------------------------------------------------------
-;; lusty-explorer
-(when (require 'lusty-explorer nil 'noerror)
-  (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
-  (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
-;;-----------------------------------------------------------------------------
-;Убить буфер
-(defun prh:kill-current-buffer ()
-    (interactive)
-    (kill-buffer (current-buffer)))
-(global-set-key "\C-w" 'prh:kill-current-buffer)
-(global-set-key (kbd "C-x w") 'kill-buffer)
+
 ;;=============================================================================
 
 ;;; save minibuffer history between sessions

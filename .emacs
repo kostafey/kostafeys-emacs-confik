@@ -59,27 +59,8 @@
 (require 'calc-time)
 (require 'hibernate-mapping)
 
-;;=============================================================================
-;; Byte-compilation
-;;
-(setq max-specpdl-size 100000) ;for byte-compile
-(setq max-lisp-eval-depth 500000)
-;; cd ~/.emacs.d; emacs --batch -f batch-byte-compile **/*.el
+(require 'emacs-lisp-conf)
 
-(defun byte-recompile-custom-files()
-  (interactive)
-  (progn
-    (byte-recompile-directory custom-conf-lisp-path 0 t)
-    (byte-recompile-directory (concat site-lisp-path "my-task-centric/") 0 t)))
-
-(defun byte-compile-current-buffer ()
-  "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
-  (interactive)
-  (when (and (eq major-mode 'emacs-lisp-mode)
-             (file-exists-p (byte-compile-dest-file buffer-file-name)))
-    (byte-compile-file buffer-file-name)))
-
-(add-hook 'after-save-hook 'byte-compile-current-buffer)
 ;;=============================================================================
 
 ;;; In praise of Emacs, The One True Editor
@@ -115,8 +96,8 @@
 (subword-mode)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("marmalade" . "http://marmalade-repo.org/packages")
-			 ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 ;; (setq inhibit-field-text-motion 1)
 ;; (setq words-include-escapes t)
