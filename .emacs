@@ -104,13 +104,6 @@
 ;; (modify-syntax-entry ?_ "w" c++-mode-syntax-table)
 ;; (modify-syntax-entry ?\n "w" text-mode-syntax-table)
 
-(defun my-mark-line ()
-  (interactive)
-  (beginning-of-line)
-  (cua-set-mark)
-  (end-of-line)
-  (next-line)
-  (beginning-of-line))
   
 ;(setq w32-get-true-file-attributes nil)
 (setq w32-quote-process-args t)

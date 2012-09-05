@@ -252,6 +252,7 @@
 (ido-mode t)
 (global-set-key (kbd "C-x C-f") 'ido-find-file)
 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+(global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)
 ;;-----------------------------------------------------------------------------
 ;; ibuffer - list of all buffers
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -263,6 +264,21 @@
 (when (require 'lusty-explorer nil 'noerror)
   (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
   (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
+;;-----------------------------------------------------------------------------
+;; buffers shortcuts
+(global-set-key (concat selected-area-prefix "\C-e") 
+                '(lambda () (interactive) (find-file "~/.emacs")))
+(global-set-key (concat change-buffer-prefix "e") 
+                '(lambda () (interactive) (find-file "~/.emacs")))
+
+(global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
+(global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
+
+(global-set-key (concat change-buffer-prefix "p") 
+                '(lambda () (interactive) (find-file "~/.org.gpg")))
+(global-set-key (concat change-buffer-prefix "k") 
+                '(lambda () (interactive) (find-file "~/.keys.org")))
+
 ;;
 ;;=============================================================================
 

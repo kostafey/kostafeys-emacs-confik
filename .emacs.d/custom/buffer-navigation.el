@@ -1,26 +1,3 @@
-;;=============================================================================
-
-(global-set-key (concat selected-area-prefix "\C-e") 
-                '(lambda () (interactive) (find-file "~/.emacs")))
-(global-set-key (concat change-buffer-prefix "e") 
-                '(lambda () (interactive) (find-file "~/.emacs")))
-
-(global-set-key "\C-x\C-c" 
-                '(lambda () (interactive) 
-                   (progn
-                     (switch-to-buffer "temp") (linum-mode t)
-                     ;; (flyspell-russian)
-                     (auto-fill-mode t)
-                     (setq auto-complete-mode t))))
-(global-set-key (concat change-buffer-prefix "t") 
-                '(lambda () (interactive) (switch-to-buffer "temp") (linum-mode t)))
-
-(global-set-key (concat change-buffer-prefix "p") 
-                '(lambda () (interactive) (find-file "~/.org.gpg")))
-(global-set-key (concat change-buffer-prefix "k") 
-                '(lambda () (interactive) (find-file "~/.keys.org")))
-
-(global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)
 
 ;;-----------------------------------------------------------------------------
 ;; Here's a handy function that kills the current buffer and removes
@@ -59,13 +36,13 @@
 (set-face-bold-p 'tabbar-selected t)
 (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72"))
 
-(setq tabbar-buffer-groups-function
-      (lambda () 
-        (list
-         (cond
-          ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
-          (t "All Buffers"))
-         )))
+(add-hook 'window-setup-hook 
+          '(lambda() (interactive) 
+             (setq tabbar-buffer-groups-function
+                   (lambda () ((list ) 
+                          (cond ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
+                                (t "All Buffers"))
+                          )))))
 
 (tabbar-mode t)
 
@@ -74,6 +51,20 @@
 ;;; save minibuffer history between sessions
 (when (> emacs-major-version 21) (savehist-mode t))
 ;;=============================================================================
+
+(defun switch-to-temp-buffer ()
+  "Swithes to temp buffer."
+  (interactive)
+  (progn
+    (let ((temp-buffer-name "temp"))
+      (if (not (get-buffer temp-buffer-name))
+          (progn 
+            (switch-to-buffer temp-buffer-name)            
+            (linum-mode t)
+            ;; (flyspell-russian)
+            (auto-fill-mode t)
+            (setq auto-complete-mode t))
+        (switch-to-buffer temp-buffer-name)))))
 
 (provide 'buffer-navigation)
 
