@@ -36,13 +36,13 @@
 (set-face-bold-p 'tabbar-selected t)
 (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72"))
 
-(add-hook 'window-setup-hook 
-          '(lambda() (interactive) 
-             (setq tabbar-buffer-groups-function
-                   (lambda () ((list ) 
-                          (cond ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
-                                (t "All Buffers"))
-                          )))))
+(setq tabbar-buffer-groups-function
+      (lambda () 
+        (list
+         (cond
+          ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
+          (t "All Buffers"))
+         )))
 
 (tabbar-mode t)
 

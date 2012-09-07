@@ -59,18 +59,21 @@
 (defun mark-line (&optional arg)
   "Marks a line from start of indentation to end"
   (interactive "p")
-  (back-to-indentation)
-  (cua-set-mark)
-  (end-of-line arg))
-
-;; TODO: adopt
-;; (defun my-mark-line ()
-;;   (interactive)
-;;   (beginning-of-line)
-;;   (cua-set-mark)
-;;   (end-of-line)
-;;   (next-line)
-;;   (beginning-of-line))
+  (if (not mark-active)
+      (progn
+        (back-to-indentation)
+        (cua-set-mark)
+        (end-of-line arg))
+    (progn
+      (if (not (eq (line-beginning-position) (point)))
+          (progn
+            (setq mark-active nil)
+            (beginning-of-line)
+            (cua-set-mark)
+            (setq mark-active t)))
+      (end-of-line)
+      (next-line)
+      (beginning-of-line))))
 
 (defun copy-line (&optional arg)
   "Kills a line, not including leading indentation"

@@ -45,7 +45,8 @@
 ;; (require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
-;; (require 'java-conf)
+(require 'emacs-lisp-conf)
+(require 'java-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
@@ -58,8 +59,6 @@
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
 (require 'calc-time)
 (require 'hibernate-mapping)
-
-(require 'emacs-lisp-conf)
 
 ;;=============================================================================
 
