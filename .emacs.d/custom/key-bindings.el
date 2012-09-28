@@ -221,8 +221,6 @@
 ;; Gathering information
 ;;
 (global-set-key (kbd "C-?") 'describe-char)
-
-(global-unset-key "\C-\M-a")
 (global-set-key "\C-\M-a\C-c" 'count-words-region)
 ;;
 ;;=============================================================================
@@ -287,7 +285,7 @@
 ;;
 (global-unset-key "\C-u")
 (global-set-key "\C-u" 'swap-windows)
-
+       
 (global-unset-key (kbd "M-m"))
 (global-set-key (kbd "M-m") 'mirror-window)
 

@@ -1,4 +1,4 @@
-;;-----------------------------------------------------------------------------
+﻿;;-----------------------------------------------------------------------------
 ;; Font
 (set-face-attribute 'default nil :family "Consolas" :height 110)
 
@@ -204,6 +204,8 @@
 (add-hook 'python-mode-hook 'highlight-parentheses-mode)
 (add-hook 'comint-mode-hook 'highlight-parentheses-mode)
 (add-hook 'js-mode-hook 'highlight-parentheses-mode)
+(add-hook 'java-mode-hook 'highlight-parentheses-mode)
+(add-hook 'clojure-mode-hook 'highlight-parentheses-mode)
 
 (setq hl-paren-colors '("#326B6B"))
 (setq hl-paren-background-colors '(

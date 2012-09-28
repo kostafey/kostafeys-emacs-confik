@@ -47,6 +47,7 @@
 ;; (require 'haskell-conf)
 (require 'emacs-lisp-conf)
 (require 'java-conf)
+(require 'clojure-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
@@ -106,5 +107,4 @@
   
 ;(setq w32-get-true-file-attributes nil)
 (setq w32-quote-process-args t)
-
 
