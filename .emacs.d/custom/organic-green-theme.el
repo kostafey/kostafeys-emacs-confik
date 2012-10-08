@@ -20,6 +20,9 @@
 
 ;;; Code:
 
+(make-face 'mode-line-default-face)
+(make-face 'mode-line-header)
+
 (deftheme organic-green
   "Non-contrast green color theme.
 Basic, Font Lock, Isearch, Jabber, rst faces are included.")
@@ -53,6 +56,9 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(default ((,class (:foreground ,organic-fg :background ,organic-bg))))
    `(cursor ((,class (:background ,organic-cursor-fg))))
    `(hl-line ((,class (:background "#A0F0A0" :inverse-video nil))))
+
+   `(mode-line-default-face ((,class (:foreground ,organic-fg))))
+   `(mode-line-header ((t (:foreground "gray25" :weight bold))))
 
    ;; Highlighting faces
    `(fringe ((,class (:background "#E5E5E5" :foreground "gray40"))))

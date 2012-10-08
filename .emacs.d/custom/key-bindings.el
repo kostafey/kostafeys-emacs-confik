@@ -302,8 +302,20 @@
 ;;=============================================================================
 ;; Modes enabling
 ;;
+;; auto-complete-mode
 (global-set-key [f7] 'auto-complete-mode)
 (define-key ac-mode-map (kbd "C-SPC") 'auto-complete) ;; to 'set-mark-command use M-s instead
+(define-key ac-complete-mode-map [next] 'ac-page-next)
+(define-key ac-complete-mode-map [prior] 'ac-page-previous)
+(define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
+
+;; yasnippet
+(defvar yasnippet-prefix "\C-y")
+(global-unset-key yasnippet-prefix)
+(global-set-key (concat yasnippet-prefix "n") 'yas/new-snippet)
+(global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
+(global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
+(global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
 ;;
 ;;=============================================================================
 

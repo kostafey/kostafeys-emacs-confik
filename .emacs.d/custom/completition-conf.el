@@ -13,19 +13,12 @@
 
 (yas/global-mode 1)
 
-(defvar yasnippet-prefix "\C-y")
-(global-unset-key yasnippet-prefix)
-(global-set-key (concat yasnippet-prefix "n") 'yas/new-snippet)
-(global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
-(global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
-(global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
-
 ;;=============================================================================
 ;; auto-complete
 ;;=============================================================================
 
 (defvar ac-required-packages
-  (list 'popup
+  (list ;'popup
         'auto-complete)
   "Required packages for autocompletition.")
 
@@ -41,6 +34,22 @@
 ;; completion will be started automatically
 (setq ac-auto-start 2)
 (setq ac-dwim t)               ; Do what i mean
+
+(defun ac-page-next ()
+  "Select next completion candidate per `ac-menu-height' range.
+Pages down through completion menu."
+  (interactive)
+  (let ((counter 0))
+    (dotimes (counter (1- ac-menu-height))
+      (ac-next))))
+
+(defun ac-page-previous ()
+  "Select previous completion candidate per `ac-menu-height' range.
+Pages up through completion menu."
+  (interactive)
+  (let ((counter 0))
+    (dotimes (counter (1- ac-menu-height))
+      (ac-previous))))
 
 ;;=============================================================================
 

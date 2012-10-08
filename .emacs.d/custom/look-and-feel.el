@@ -15,8 +15,10 @@
 ;;=============================================================================
 (setq font-lock-maximum-decoration t)
 (global-font-lock-mode 1)
-;Maximum size of a buffer for buffer fontification.
-(setq font-lock-maximum-size 2560000)
+
+; Maximum size of a buffer for buffer fontification.
+(if (< emacs-major-version 24)
+    (setq font-lock-maximum-size 2560000))
 
 (require 'font-lock)
 (if (fboundp 'global-font-lock-mode)
@@ -64,16 +66,7 @@
 ;;=============================================================================
 ;; StatusBar config
 ;;
-(column-number-mode t)
-(display-time-mode t)
-
-(if (< emacs-major-version 24)
- (progn
-   ;; battery mode:
-   (require 'battery)
-   (setq battery−mode−line−format " [%L %p%% %dC]")
-   (display-battery-mode)))
-
+(require 'mode-line-conf)
 ;;
 ;;=============================================================================
 
