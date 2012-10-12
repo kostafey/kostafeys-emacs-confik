@@ -57,6 +57,8 @@
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
+(require 'aj-compilation)
+(require 'sphinx-frontend)
 ;; (require 'python-conf)
 
 ;; (require 'misc-swarm)
@@ -88,15 +90,6 @@
 ;; end of .emacs
 ;;
 ;;
-
-(global-set-key 
- (kbd "C-c h")  
- '(lambda() (interactive)
-    (progn
-      (save-buffer)
-      (shell-command 
-       "sphinx-build -b html C:/myworkspaces/doc/ C:/myworkspaces/doc/build-html/")
-      (delete-other-windows))))
 
 (require 'whitespace)
 (subword-mode)

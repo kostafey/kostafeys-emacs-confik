@@ -174,6 +174,7 @@
 (global-set-key (kbd "C-M-R") 'replace-regexp)
 (global-set-key (kbd "M-R") 'query-replace)
 (global-set-key (kbd "C-M-a k") 'keep-lines)
+(global-set-key (kbd "C-M-a f") 'flush-lines)
 ;;
 ;;=============================================================================
 

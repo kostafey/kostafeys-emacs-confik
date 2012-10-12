@@ -7,6 +7,8 @@
 (require 'htmlize)
 (setq htmlize-output-type (quote css))
 
+(setq nxml-slash-auto-complete-flag t)
+
 ;;-----------------------------------------------------------------------------
 ; log4j-mode
 (autoload 'log4j-mode "log4j-mode" "Major mode for viewing log files." t)
