@@ -24,10 +24,10 @@
   "Runs `sphinx-build-script.py'. 
 -b <builder> -- builder to use; default is html")
 
-(defvar sphinx-output-dir-html "build-html/ " 
+(defvar sphinx-output-dir-html "build-html" 
   "Relative to current document's root output directory for html format.")
 
-(defvar sphinx-output-dir-pdf "build-pdf/ " 
+(defvar sphinx-output-dir-pdf "build-pdf" 
   "Relative to current document's root output directory for pdf format.")
 
 (defvar sphinx-conf-file-name "conf.py"
@@ -52,8 +52,9 @@ Returns current document's tree root directory."
   "Returns sphinx build command according to `output-format'."
   (let ((current-dir (sphinx-get-root-document-dir)))
     (concat sphinx-build-command " " output-format " "
-            " \"" current-dir "\" " ; sourcedir
-            " \"" (expand-file-name output-dir current-dir) " \" " ; outdir
+            " \"" (file-name-as-directory current-dir) "\" " ; sourcedir
+            " \"" (file-name-as-directory 
+                   (expand-file-name output-dir current-dir)) "\"" ; outdir
             )))
 
 (defun sphinx-get-build-command-html ()
@@ -77,25 +78,26 @@ If `save-without-query' is t, saves current file without query."
   "Compiles the rst file to html via sphinx and shows the output in a buffer.
 Without `arg' saves current file."
   (interactive "P")
+  (message (sphinx-get-build-command-html))
   (sphinx-build (not arg) (sphinx-get-build-command-html)))
 
 (defun sphinx-build-latex (arg)
   "Compiles the rst file to latex via sphinx and shows the output in a buffer.
 Without `arg' saves current file."
   (interactive "P")
-  (sphinx-build (not arg) (concat (sphinx-get-build-command-latex) "pdflatex -interaction=nonstopmode *.tex")))
+  (sphinx-build (not arg) (sphinx-get-build-command-latex)))
 
-;; TODO:
 (defun sphinx-run-pdflatex ()
-  (setq default-directory (expand-file-name sphinx-output-dir-pdf (sphinx-get-root-document-dir)))
+  (interactive)
+  (cd (expand-file-name sphinx-output-dir-pdf (sphinx-get-root-document-dir)))
   (compile "pdflatex -interaction=nonstopmode *.tex"))
 
-(defun sphinx-build-pdf (arg)
-  (interactive "P")
-  (sphinx-build-latex arg)
-  (sphinx-run-pdflatex))
+(require 'rst)
 
-(global-set-key (kbd "C-c h") 'sphinx-build-html)
+(define-key rst-mode-map (kbd "C-c h") 'sphinx-build-html)
+(define-key rst-mode-map (kbd "C-c l") 'sphinx-build-latex)
+(define-key rst-mode-map (kbd "C-c p") 'sphinx-run-pdflatex)
+
 
 (provide 'sphinx-frontend)
 

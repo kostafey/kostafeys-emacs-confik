@@ -6,7 +6,7 @@
 ;; AndreyBalaguta
 
 ;; Не знаю, как вам, а мне, например, не нравится эта связка
-;; set-buffer-file-coding-system…revert-buffer. В 22-м есть функция
+;; set-buffer-file-coding-system… revert-buffer. В 22-м есть функция
 ;; recode-region, которая делает именно то, что нужно (по правде
 ;; сказать, я ее нашел уже после того, как написал свои функции, но
 ;; в сущности внутри она делает точно то же). Чуть ниже есть две
@@ -55,30 +55,30 @@ If current buffer is write-protected (`buffer-read-only'), do nothing."
 			  target-coding-system)
     (set-buffer-file-coding-system target-coding-system)))
 
+(setq evm-coding-systems-list (make-ring 10))
+(ring-insert evm-coding-systems-list 'koi8-r)
+(ring-insert evm-coding-systems-list 'alternativnyj)
+(ring-insert evm-coding-systems-list 'iso-8859-5)
+(ring-insert evm-coding-systems-list 'windows-1251)
+(ring-insert evm-coding-systems-list 'mule-utf-8)
 
-  (setq evm-coding-systems-list (make-ring 10))
-  (ring-insert evm-coding-systems-list 'koi8-r)
-  (ring-insert evm-coding-systems-list 'alternativnyj)
-  (ring-insert evm-coding-systems-list 'iso-8859-5)
-  (ring-insert evm-coding-systems-list 'windows-1251)
-  (ring-insert evm-coding-systems-list 'mule-utf-8)
-
-  (global-set-key [f8]
-                  (lambda ()
-                    (interactive)
-                    (let* ((keys (recent-keys))
-                           (len (length keys))
-                           (key1 (if (> len 0) (elt keys (- len 1)) nil))
-                           (key2 (if (> len 1) (elt keys (- len 2)) nil))
-                           cs)
-                      (if (eq key1 key2)
-                          (setcar evm-coding-systems-list
-                                  (ring-plus1 (car evm-coding-systems-list)
-                                              (ring-length evm-coding-systems-list)))
-                        (setcar evm-coding-systems-list 0))
-                      (set-buffer-multibyte t)
-                      (recode-buffer-dangerous (aref (cddr evm-coding-systems-list)
-						     (car evm-coding-systems-list))))))
+(defun recode-buffer-rotate-ring ()
+  "Circle changes coding system in the current buffer.
+Encoding changes through rotation of `evm-coding-systems-list'."
+  (interactive)
+  (let* ((keys (recent-keys))
+         (len (length keys))
+         (key1 (if (> len 0) (elt keys (- len 1)) nil))
+         (key2 (if (> len 1) (elt keys (- len 2)) nil))
+         cs)
+    (if (eq key1 key2)
+        (setcar evm-coding-systems-list
+                (ring-plus1 (car evm-coding-systems-list)
+                            (ring-length evm-coding-systems-list)))
+      (setcar evm-coding-systems-list 0))
+    (set-buffer-multibyte t)
+    (recode-buffer-dangerous (aref (cddr evm-coding-systems-list)
+                                   (car evm-coding-systems-list)))))
 
 ;;=============================================================================
 

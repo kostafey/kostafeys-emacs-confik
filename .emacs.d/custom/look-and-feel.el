@@ -171,7 +171,8 @@
 ;;=============================================================================
 ;; fill-column-indicator
 (require 'fill-column-indicator)
-(setq-default fci-rule-column 80)
+(setq-default fill-column 80)
+(setq-default fci-rule-column fill-column)
 (setq fci-rule-width 1)
 (setq fci-rule-color "gray80")
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))

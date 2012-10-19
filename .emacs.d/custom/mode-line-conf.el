@@ -1,16 +1,18 @@
 ;;=============================================================================
-;; StatusBar config
+;; mode-line (emacs status bar) config
 ;;
 (column-number-mode t)
 (setq display-time-format "%H:%M")
 (display-time-mode t)
 
-(if (< emacs-major-version 24)
- (progn
-   ;; battery mode:
-   (require 'battery)
-   (setq battery−mode−line−format " [%L %p%% %dC]")
-   (display-battery-mode)))
+(when (require 'battery nil 'noerror)
+  (progn
+    (setq battery−mode−line−format " [%L %p%% %dC]")
+    (when (and battery-status-function
+       (not (string-match-p "N/A" 
+                (battery-format "%B"
+                        (funcall battery-status-function)))))
+      (display-battery-mode 1))))
 
 (setq-default mode-line-format 
   (list ""
@@ -73,3 +75,4 @@
         ))
 
 (provide 'mode-line-conf)
+

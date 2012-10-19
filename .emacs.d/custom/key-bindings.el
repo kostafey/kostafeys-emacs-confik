@@ -103,8 +103,6 @@
 ;;
 ;;-----------------------------------------------------------------------------
 ; bookmarks
-(global-set-key [f5] 'bookmark-set)
-(global-set-key [f6] 'bookmark-jump)
 (global-set-key (kbd "C-o") 'bookmark-set)
 (global-set-key (kbd "C-p") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
@@ -303,12 +301,25 @@
 ;;=============================================================================
 ;; Modes enabling
 ;;
+(global-set-key [f5] 'bookmark-set)
+(global-set-key [f6] 'bookmark-jump)
 ;; auto-complete-mode
 (global-set-key [f7] 'auto-complete-mode)
 (define-key ac-mode-map (kbd "C-SPC") 'auto-complete) ;; to 'set-mark-command use M-s instead
 (define-key ac-complete-mode-map [next] 'ac-page-next)
 (define-key ac-complete-mode-map [prior] 'ac-page-previous)
 (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
+
+(require 'reencoding-file)
+(global-set-key [f8] 'recode-buffer-rotate-ring)
+
+(global-set-key [f1] 'ispell-word)
+;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
+;; (global-set-key [f8] 'ispell-region)
+(global-set-key [f9] 'auto-fill-mode); вкл/выкл автозаполнения
+(global-set-key [f10] 'flyspell-english)
+(global-set-key [f11] 'flyspell-russian)
+(global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
 
 ;; yasnippet
 (defvar yasnippet-prefix "\C-y")
