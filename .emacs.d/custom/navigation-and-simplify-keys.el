@@ -72,7 +72,7 @@
             (cua-set-mark)
             (setq mark-active t)))
       (end-of-line)
-      (next-line)
+      (forward-line)
       (beginning-of-line))))
 
 (defun copy-line (&optional arg)
@@ -93,7 +93,6 @@
 			   'isearch-repeat-backward)
 			 (define-key isearch-mode-map "\C-v"
 			   'isearch-yank-kill)))
-
 
 ;; do not truncate and wrap long lines
 (setq truncate-partial-width-windows nil)

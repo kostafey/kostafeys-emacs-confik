@@ -1,30 +1,27 @@
+(require 'elpa-conf)
+
+(defvar ac-required-packages
+  (list 'popup
+        'auto-complete
+        'yasnippet)
+  "Required packages for autocompletition.")
+
+(install-reqired-packages ac-required-packages)
+
 ;;=============================================================================
 ;; Yet Another Snippet extension
 ;;=============================================================================
-(defvar yasnippet-path (concat site-lisp-path "yasnippet"))
-(add-to-list 'load-path yasnippet-path)
-(require 'yasnippet)                                             ;; not yasnippet-bundle
-(yas/initialize)
+(require 'yasnippet)
+;; personal snippets
+(setq yas-snippet-dirs
+      (append yas-snippet-dirs 
+              (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
 
-(yas/load-directory (concat yasnippet-path "/snippets"))
-
-(setq yas/root-directory (concat yasnippet-path "/mysnippets")) ;; Develop and keep personal snippets
-(yas/load-directory yas/root-directory)                         ;; Load the snippets
-
-(yas/global-mode 1)
+(yas-global-mode 1)
 
 ;;=============================================================================
 ;; auto-complete
 ;;=============================================================================
-
-(defvar ac-required-packages
-  (list ;'popup
-        'auto-complete)
-  "Required packages for autocompletition.")
-
-(dolist (package ac-required-packages)
-  (when (not (package-installed-p package))    
-    (package-install package)))
 
 (require 'auto-complete-config)
 (ac-config-default)

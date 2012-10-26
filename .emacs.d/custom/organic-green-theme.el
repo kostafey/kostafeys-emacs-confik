@@ -40,6 +40,9 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
       (organic-string-fg "#119911")
       (organic-constant-fg "#3465BD")
       (organic-builtin-fg "MediumPurple3")
+      (minor-green-highlight-background "#D5F0D5")
+      (minor-grey-highlight-background "#DAEADA")
+   
 
       (choc-1 "#e9b96e") (choc-2 "#c17d11") (choc-3 "#8f5902")
       (cham-1 "#8ae234") (cham-2 "#73d216") (cham-3 "#4e9a06")
@@ -137,14 +140,21 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(erc-input-face ((t (:foreground "#000099"))))
    '(erc-notice-face ((t (:foreground "dark sea green" :weight bold))))
    '(erc-timestamp-face ((t (:foreground "#32CD32" :weight bold))))
-   
+
    ;; rst
-   '(rst-definition ((t (:foreground "#3465BD" :weight normal))))
-   '(rst-level-2-face ((t (:background "grey85"))) t)
-   '(rst-level-3-face ((t (:background "grey85"))) t)
-   '(rst-level-4-face ((t (:background "grey85"))) t)
-   '(rst-level-5-face ((t (:background "grey85"))) t)
-   '(rst-level-6-face ((t (:background "grey85"))) t)
+   '(rst-definition ((t (:inherit font-lock-constant-face))) t)
+   `(rst-level-2-face ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-3-face ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-4-face ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-5-face ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-6-face ((t (:background ,minor-grey-highlight-background))))
+   '(rst-block ((t (:inherit font-lock-function-name-face :bold t))) t)
+   '(rst-external ((t (:inherit font-lock-constant-face))) t)
+   '(rst-directive ((t (:inheit font-lock-builtin-face))) t)
+   '(rst-literal ((t (:inheit font-lock-string-face))))
+   '(rst-emphasis1 ((t (:inherit italic))) t)
+
+
 
    ;; misc
    '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)

@@ -34,8 +34,8 @@
 (global-set-key [(meta backspace)] 'undo)
 (global-set-key (kbd "C-S-z") 'redo)            ; Redo C-S-z
 
-(global-unset-key (kbd "C-/"))
-(global-set-key (kbd "C-/") 'repeat)
+(global-unset-key (kbd "C-'"))
+(global-set-key (kbd "C-'") 'repeat)
 
 (global-set-key "\C-b" 'backward-delete-char)
 (global-set-key "\C-d" 'delete-char)            ; delete
@@ -113,6 +113,7 @@
 (global-unset-key (kbd "C-f"))
 (global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-r") 'isearch-backward)
+;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
 
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
@@ -166,6 +167,7 @@
 (global-set-key (kbd "C-M-a '") 'align-by-quote)
 
 (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
+(global-set-key (kbd "C-/") 'comment-or-uncomment-this)
 
 (global-set-key (kbd "C-`") 'u:en/ru-recode-region)
 
