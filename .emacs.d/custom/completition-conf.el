@@ -6,7 +6,7 @@
         'yasnippet)
   "Required packages for autocompletition.")
 
-(install-reqired-packages ac-required-packages)
+(install-required-packages ac-required-packages)
 
 ;;=============================================================================
 ;; Yet Another Snippet extension

@@ -1,4 +1,13 @@
-﻿;;-----------------------------------------------------------------------------
+﻿(require 'elpa-conf)
+
+(defvar laf-required-packages
+  (list 'fill-column-indicator
+        'highlight-parentheses)
+  "Required packages for look-and-feel.")
+
+(install-required-packages laf-required-packages)
+
+;;-----------------------------------------------------------------------------
 ;; Font
 (set-face-attribute 'default nil :family "Consolas" :height 110)
 
@@ -178,9 +187,16 @@
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
 (global-fci-mode 1)
 
+;; del `lines' highlight
+(setq whitespace-style 
+      '(face tabs spaces trailing  space-before-tab 
+             newline indentation empty space-after-tab 
+             space-mark tab-mark newline-mark))
+
 ;;=============================================================================
 ;; Enables narrow possibility (`narrow-to-page' function).
 (put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 ;;=============================================================================
 
 ;;=============================================================================

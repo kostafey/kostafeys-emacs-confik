@@ -1,4 +1,14 @@
 
+(require 'elpa-conf)
+
+(defvar nav-keys-required-packages
+  (list 'goto-last-change)
+  "Required packages for navigation-and-simplify-keys.")
+
+(install-required-packages nav-keys-required-packages)
+
+(require 'goto-last-change)
+
 ;; setting the PC keyboard's various keys to
 ;; Super or Hyper, for emacs running on Windows.
 (setq w32-pass-lwindow-to-system nil 
@@ -26,6 +36,7 @@
 ;; Odinary C-<right>, C-<left> movements 
 ;;=============================================================================
 (require 'thingatpt)
+;; (subword-mode)
 
 (defun step-forward-word ()
   "Like odinary editors, C-<right> moves forward word."

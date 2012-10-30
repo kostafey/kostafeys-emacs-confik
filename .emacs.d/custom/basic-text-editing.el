@@ -1,6 +1,13 @@
 ;;; basic-text-editing.el --- set of misc text editing functions.
 
-(require 'simple)
+(require 'elpa-conf)
+
+(defvar bte-required-packages
+  (list 'browse-kill-ring)
+  "Required packages for basic-text-editing.")
+
+(install-required-packages bte-required-packages)
+
 (require 'browse-kill-ring)
 
 (defun count-words-region (beginning end arg) 

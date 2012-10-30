@@ -1,6 +1,6 @@
 ﻿;;; organic-green-theme.el --- Non-contrast green color theme.
 
-;;; Copyright © 2009 - Kostafey <kostafey@gmail.com>
+;;; Copyright © 2009-2012 - Kostafey <kostafey@gmail.com>
 
 ;; This file is not [yet] part of GNU Emacs, but is distributed under
 ;; the same terms.
@@ -65,7 +65,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 
    ;; Highlighting faces
    `(fringe ((,class (:background "#E5E5E5" :foreground "gray40"))))
-   `(highlight ((,class (:background ,alum-3))))
+   `(highlight ((,class (:background ,minor-green-highlight-background))))
    `(region ((,class (:background ,"#EEEEA0"))))
    `(secondary-selection ((,class (:background ,blue-0))))
    `(isearch ((,class (:foreground ,organic-fg :background "yellow" :inverse-video nil))))
@@ -154,7 +154,17 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(rst-literal ((t (:inheit font-lock-string-face))))
    '(rst-emphasis1 ((t (:inherit italic))) t)
 
-
+   ;; whitespace-mode
+   `(whitespace-empty ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-indentation ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-newline ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-space-after-tab ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-tab ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-hspace ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-line ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-space ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-space-before-tab ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-trailing ((t (:background ,organic-bg :foreground "lightgray"))) t)
 
    ;; misc
    '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)

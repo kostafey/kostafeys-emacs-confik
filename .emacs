@@ -64,6 +64,8 @@
 (require 'calc-time)
 (require 'hibernate-mapping)
 
+(setq w32-quote-process-args t)
+
 ;;=============================================================================
 
 ;;; In praise of Emacs, The One True Editor
@@ -86,16 +88,4 @@
 ;;
 ;;
 
-(require 'whitespace)
-(subword-mode)
 
-;; (setq inhibit-field-text-motion 1)
-;; (setq words-include-escapes t)
-;; (modify-syntax-entry ?_ "w" c++-mode-syntax-table)
-;; (modify-syntax-entry ?\n "w" text-mode-syntax-table)
-
-  
-;(setq w32-get-true-file-attributes nil)
-(setq w32-quote-process-args t)
-
-(put 'narrow-to-region 'disabled nil)

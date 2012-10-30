@@ -14,8 +14,8 @@
     (package-refresh-contents)
     (setq package-is-refreshed t)))
 
-(defun reqired-packages-installed-p (reqired-packages)
-  (loop for p in reqired-packages
+(defun required-packages-installed-p (required-packages)
+  (loop for p in required-packages
         when (not (package-installed-p p)) do (return nil)
         finally (return t)))
 
@@ -23,8 +23,8 @@
   (if (y-or-n-p (format "Package %s is missing. Install it? " package))
       (package-install package)))
 
-(defun install-reqired-packages (reqired-packages)
-  (unless (reqired-packages-installed-p reqired-packages)
+(defun install-required-packages (required-packages)
+  (unless (required-packages-installed-p required-packages)
     
     ;; check for new packages (package versions)    
     (if (not package-is-refreshed)
@@ -35,7 +35,7 @@
           (message "%s" " done.")))
     
     ;; install the missing packages
-    (dolist (package reqired-packages)
+    (dolist (package required-packages)
       (unless (package-installed-p package)
         (prompt-package-install package)))))
 

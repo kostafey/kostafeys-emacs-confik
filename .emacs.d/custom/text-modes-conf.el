@@ -7,7 +7,17 @@
 (require 'htmlize)
 (setq htmlize-output-type (quote css))
 
+; This will complete the appropriate close tag after you type </
 (setq nxml-slash-auto-complete-flag t)
+
+(require 'hl-tags-mode)
+(add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))
+(add-hook 'nxml-mode-hook (lambda () (hl-tags-mode 1)))
+
+;;-----------------------------------------------------------------------------
+; dos-mode
+(autoload 'dos-mode "dos" "Edit Dos scripts." t)
+(add-to-list 'auto-mode-alist '("\\.bat$" . dos-mode))
 
 ;;-----------------------------------------------------------------------------
 ; log4j-mode

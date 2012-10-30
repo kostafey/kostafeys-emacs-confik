@@ -106,7 +106,6 @@
 (global-set-key (kbd "C-o") 'bookmark-set)
 (global-set-key (kbd "C-p") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
-(require 'goto-last-change)
 (global-set-key (kbd "C-x x") 'goto-last-change)
 ;;-----------------------------------------------------------------------------
 ;; Search & replace
