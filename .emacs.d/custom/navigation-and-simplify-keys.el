@@ -1,11 +1,6 @@
 
 (require 'elpa-conf)
 
-(defvar nav-keys-required-packages
-  (list 'goto-last-change)
-  "Required packages for navigation-and-simplify-keys.")
-
-(install-required-packages nav-keys-required-packages)
 
 (require 'goto-last-change)
 

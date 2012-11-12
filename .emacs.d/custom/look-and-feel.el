@@ -1,12 +1,5 @@
 ﻿(require 'elpa-conf)
 
-(defvar laf-required-packages
-  (list 'fill-column-indicator
-        'highlight-parentheses)
-  "Required packages for look-and-feel.")
-
-(install-required-packages laf-required-packages)
-
 ;;-----------------------------------------------------------------------------
 ;; Font
 (set-face-attribute 'default nil :family "Consolas" :height 110)

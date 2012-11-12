@@ -39,5 +39,42 @@
       (unless (package-installed-p package)
         (prompt-package-install package)))))
 
+
+(defvar text-modes-required-packages
+  (list 'log4j-mode)
+  "Required packages for text-modes-conf.")
+
+(defvar bte-required-packages
+  (list (browse-kill-ring 
+         wrap-region))
+  "Required packages for basic-text-editing.")
+
+(defvar clojure-packages '(clojure-mode
+                           nrepl)
+  "Required packages for clojure coding.")
+
+(defvar ac-required-packages
+  (list 'popup
+        'auto-complete
+        'yasnippet)
+  "Required packages for autocompletition.")
+
+(defvar laf-required-packages
+  (list 'fill-column-indicator
+        'highlight-parentheses)
+  "Required packages for look-and-feel.")
+
+(defvar nav-keys-required-packages
+  (list 'goto-last-change)
+  "Required packages for navigation-and-simplify-keys.")
+
+(install-required-packages (append 
+                            bte-required-packages
+                            text-modes-required-packages
+                            clojure-packages
+                            ac-required-packages
+                            laf-required-packages
+                            nav-keys-required-packages))
+
 (provide 'elpa-conf)
 

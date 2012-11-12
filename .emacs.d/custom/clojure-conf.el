@@ -1,6 +1,5 @@
-(require 'package)
-(defvar clojure-packages '(clojure-mode
-                           nrepl))
+(require 'elpa-conf)
+
 ;; (dolist (p clojure-packages)
 ;;   (when (not (package-installed-p p))
 ;;     (package-install p)))

@@ -154,6 +154,7 @@
 ;;-----------------------------------------------------------------------------
 ;; Upcase/downcase
 (global-set-key (kbd "C-c w") 'toggle-letter-case)
+(global-set-key (kbd "C-S-<up>") 'toggle-letter-case)
 ;; (global-unset-key "\C-\M-c")
 (global-set-key (kbd "C-M-a l") 'downcase-region)
 (global-set-key (kbd "C-M-a d") 'downcase-region)

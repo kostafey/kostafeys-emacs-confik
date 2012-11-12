@@ -1,13 +1,5 @@
 (require 'elpa-conf)
 
-(defvar ac-required-packages
-  (list 'popup
-        'auto-complete
-        'yasnippet)
-  "Required packages for autocompletition.")
-
-(install-required-packages ac-required-packages)
-
 ;;=============================================================================
 ;; Yet Another Snippet extension
 ;;=============================================================================

@@ -1,3 +1,5 @@
+(require 'elpa-conf)
+
 ;;-----------------------------------------------------------------------------
 ;; nxhtml
 ;; (load (concat site-lisp-path "nxhtml/autostart.el"))

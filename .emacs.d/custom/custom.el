@@ -15,7 +15,7 @@
  '(mouse-wheel-up-event (quote wheel-down))
  '(safe-local-variable-values (quote ((whitespace-line-column . 80) (whitespace-style face trailing lines-tail))))
  '(session-use-package t nil (session))
- '(show-trailing-whitespace t)
+ '(show-trailing-whitespace nil)
  '(visible-bell t))
 
 (custom-set-faces
