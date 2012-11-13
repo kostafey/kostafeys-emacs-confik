@@ -2,12 +2,8 @@
 ;;
 ;;Настройки AucTeX
 ;;
-(setq auctex-version "11.86-e23.1-msw")
-(add-to-list 'load-path (format "~/.emacs.d/auctex-%s/site-lisp/" auctex-version))
-(add-to-list 'load-path (format "~/.emacs.d/auctex-%s/site-lisp/auctex/" auctex-version))
-(add-to-list 'load-path (format "~/.emacs.d/auctex-%s/site-lisp/site-start.d/" auctex-version))
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
+;; (load "auctex.el" nil t t)
+;; (load "preview-latex.el" nil t t)
 
 ;\mathtext.sty
 ;tex\latex\cyrillic\t2aenc.def
@@ -54,7 +50,7 @@
 			'TeX-run-command nil t))))
 ;;
 ;;Настройки PreviewLatex
-(load "preview-latex.el" nil t t) 
+;; (load "preview-latex.el" nil t t) 
 
 ;; (setenv "PATH" (concat "/usr/local/texlive/2011/bin/x86_64-linux/:" (getenv "PATH")))
 ;; (add-to-list 'exec-path "/usr/local/texlive/2011/bin/x86_64-linux/")
@@ -62,3 +58,4 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'auctex-conf)
+

@@ -45,8 +45,8 @@
   "Required packages for text-modes-conf.")
 
 (defvar bte-required-packages
-  (list (browse-kill-ring 
-         wrap-region))
+  (list 'browse-kill-ring 
+        'wrap-region)
   "Required packages for basic-text-editing.")
 
 (defvar clojure-packages '(clojure-mode
@@ -61,7 +61,8 @@
 
 (defvar laf-required-packages
   (list 'fill-column-indicator
-        'highlight-parentheses)
+        'highlight-parentheses
+        'popwin)
   "Required packages for look-and-feel.")
 
 (defvar nav-keys-required-packages
@@ -74,7 +75,8 @@
                             clojure-packages
                             ac-required-packages
                             laf-required-packages
-                            nav-keys-required-packages))
+                            nav-keys-required-packages
+                            (list 'auctex)))
 
 (provide 'elpa-conf)
 
