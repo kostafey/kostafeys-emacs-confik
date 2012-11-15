@@ -78,7 +78,6 @@ If `save-without-query' is t, saves current file without query."
   "Compiles the rst file to html via sphinx and shows the output in a buffer.
 Without `arg' saves current file."
   (interactive "P")
-  (message (sphinx-get-build-command-html))
   (sphinx-build (not arg) (sphinx-get-build-command-html)))
 
 (defun sphinx-build-latex (arg)

@@ -7,7 +7,7 @@
 
 ;;=============================================================================
 
-(add-to-list 'load-path (concat site-lisp-path "jdee-2.4.0.1/lisp/"))
+;; (add-to-list 'load-path (concat site-lisp-path "artifacts/"))
 ;; (add-to-list 'load-path (concat site-lisp-path "ejsql/"))
 (require 'beanshell)
 

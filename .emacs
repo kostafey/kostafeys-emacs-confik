@@ -12,6 +12,7 @@
 ;;
 
 (server-start)
+(defvar *emacs-load-start* (current-time))
 ;;=============================================================================
 ;; Указываем где будут лежать файлы расширений
 ;;=============================================================================
@@ -79,6 +80,11 @@
   (message "Praise Emacs...")
   (sit-for 2)
   (message "Amen."))
+
+(message "My .emacs loaded in %ds" 
+         (destructuring-bind (hi lo ms) (current-time)
+           (- (+ hi lo) (+ (first *emacs-load-start*) 
+                           (second *emacs-load-start*)))))
 
 (message "*************************")
 (message "*** .emacs loaded OK. ***")

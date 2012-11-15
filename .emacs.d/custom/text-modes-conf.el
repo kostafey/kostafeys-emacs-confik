@@ -55,4 +55,8 @@
   (sql-mode)
   (sql-set-product "ansi"))
 
+(eval-after-load "sql"
+  '(progn
+     (sql-set-product "ansi")))
+
 (provide 'text-modes-conf)
