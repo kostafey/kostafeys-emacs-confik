@@ -209,6 +209,7 @@
 (add-hook 'js-mode-hook 'highlight-parentheses-mode)
 (add-hook 'java-mode-hook 'highlight-parentheses-mode)
 (add-hook 'clojure-mode-hook 'highlight-parentheses-mode)
+(add-hook 'sql-mode-hook 'highlight-parentheses-mode)
 
 (setq hl-paren-colors '("#326B6B"))
 (setq hl-paren-background-colors '(

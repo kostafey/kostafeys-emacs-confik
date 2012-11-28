@@ -44,7 +44,7 @@
 (require 'text-modes-conf)
 
 ; (require 'version-control)
-;; (require 'ide)
+(require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
 (require 'emacs-lisp-conf)

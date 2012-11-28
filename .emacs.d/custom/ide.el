@@ -1,37 +1,72 @@
 ;;-----------------------------------------------------------------------------
+;; Configuration is partially stolen from https://gist.github.com/3930120
+;; See also: http://alexott.net/ru/writings/emacs-devenv/EmacsCedet.html
+;;
+;;=============================================================================
 ;; Cedet
-;; (setq cedet-version "1.0")
-;; (add-to-list 'load-path (format "~/.emacs.d/cedet-%s/common/" cedet-version))
-;; (add-to-list 'load-path (format "~/.emacs.d/cedet-%s/semantic/" cedet-version))
-;; (setq semantic-load-turn-useful-things-on t)
-;; (load-file (format "~/.emacs.d/cedet-%s/common/cedet.el" cedet-version))
+(defvar cedet-root-path 
+  (file-name-as-directory (expand-file-name "cedet_20121119" site-lisp-path)))
+(load-file (concat cedet-root-path "cedet-devel-load.el"))
+(add-to-list 'load-path (concat cedet-root-path "contrib"))
 
-(require 'cedet)
-;(global-set-key [?\C- ] 'semantic-ia-complete-symbol)
+;; select which submodes we want to activate
+
+;; включает глобальную поддержку Semanticdb;
+(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+
+;; включает режим автоматического запоминания информации о редактируемых тагах,
+;; так что вы можете перейти к ним позднее с помощью команды
+;; semantic-mrub-switch-tags; 
+(add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+
+;; активирует контекстное меню привязанное к правой клавише мыши;
+(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+
+;; активирует показ названия текущего тага в верхней строке буфера;
+;; (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+
+;; активирует подстветку первой строки текущего тага (функции, класса и т.п.);
+;; (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+
+;; активирует автоматический анализ кода в буферах когда Emacs "свободен" и
+;; ожидает ввода данных от пользователя (idle time);
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+
+;; включает подсветку вхождений локальных переменных чье имя совпадает с именем
+;; текущего тага;
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
+
+;; Activate semantic
+(semantic-mode 1)
+
+;; load contrib library
+(require 'eassist)
+
+;; Чтобы использовать возможности по дополнению имен и показу информации о
+;; функциях и классах, вам необходимо загрузить пакет semantic/ia с помощью
+;; следующей команды:
+(require 'semantic/ia)
+
+(require 'semantic/db-javap)
 
 (defun my-semantic-hook ()
-  (progn 
-	 (semantic-tag-folding-mode 1)))
+  ;; (global-semantic-tag-folding-mode 1)
+  (imenu-add-to-menubar "TAGS"))
 (add-hook 'semantic-init-hooks 'my-semantic-hook)
 
+;; (setq global-semantic-tag-folding-mode t)
+
 (setq speedbar-tag-split-minimum-length 200)
+;;
+;;=============================================================================
 
-;;-----------------------------------------------------------------------------
-
-;;-----------------------------------------------------------------------------
+;;=============================================================================
 ;; ECB
+(add-to-list 'load-path (file-name-as-directory 
+                         (expand-file-name "alexott-ecb" site-lisp-path)))
 
-(setq ecb-layout-window-sizes (quote (("my-left" (0.25 . 0.66) (0.25 . 0.34))))
-	  ecb-auto-activate t	  
-	  ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1)
-	  ecb-source-path (quote ("c:"))
-	  ecb-tar-setup (quote cons)
-	  ecb-tip-of-the-day nil
-	  ecb-options-version "2.40")
-
-(add-to-list 'load-path "~/.emacs.d/alexott-ecb/")
 (require 'ecb)
-(global-set-key (kbd "\e\el") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "ESC M-l") 'ecb-toggle-ecb-windows)
 (global-set-key (kbd "C-x C-a") 'ecb-activate)
 (global-set-key (kbd "C-x C-q") 'ecb-deactivate)
 ;(global-set-key "\M-m" 'ecb-goto-window-methods)
@@ -45,7 +80,6 @@
 
 (setq speedbar-use-imenu-flag nil)
 
-
 (ecb-layout-define "my-left" left nil
   (ecb-split-ver 0.6666666666666666 t)
   (if (fboundp (quote ecb-set-history-buffer)) (ecb-set-history-buffer) (ecb-set-default-ecb-buffer))
@@ -58,8 +92,20 @@
   (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
   )
 
-(setq ecb-layout-name "my-left"
-      ecb-options-version "2.40")
+(setq ecb-layout-name "my-left")
+
+(setq ecb-layout-window-sizes 
+      (quote 
+       (("my-left" 
+         (ecb-methods-buffer-name 0.25 . 0.66) 
+         (ecb-history-buffer-name 0.25 . 0.34)))))
+
+(setq ecb-auto-activate t	  
+	  ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1)
+	  ecb-source-path (quote ("c:"))
+	  ecb-tar-setup (quote cons)
+	  ecb-tip-of-the-day nil
+	  ecb-options-version "2.40")
 
 (ecb-redraw-layout-full)
 
@@ -67,12 +113,12 @@
 
 ;;-----------------------------------------------------------------------------
 ; ELScreen
-(add-to-list 'load-path (concat site-lisp-path "apel-10.7/"))
-(require 'alist)
-;(load "elscreen" "ElScreen" t)
-(setq elscreen-prefix-key "\C-t")
-(require 'elscreen)
-(elscreen-create)
-(elscreen-toggle-display-tab)
+;; (add-to-list 'load-path (concat site-lisp-path "apel-10.7/"))
+;; (require 'alist)
+;; (load "elscreen" "ElScreen" t)
+;; (setq elscreen-prefix-key "\C-t")
+;; (require 'elscreen)
+;; (elscreen-create)
+;; (elscreen-toggle-display-tab)
 
 (provide 'ide)
