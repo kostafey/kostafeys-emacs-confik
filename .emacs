@@ -41,7 +41,7 @@
 (require 'communications)
 (require 'reencoding-file)
 
-;(require 'copy-paste-clipboard-linux)
+(require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 
 (require 'history-conf)
