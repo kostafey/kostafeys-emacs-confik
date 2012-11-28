@@ -27,6 +27,9 @@
 ;;-----------------------------------------------------------------------------
 (defvar custom-conf-lisp-path (concat site-lisp-path "custom/"))
 (add-to-list 'load-path custom-conf-lisp-path)
+(defvar solutions-path
+  (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
+(add-to-list 'load-path solutions-path)
 
 (require 'look-and-feel)
 
@@ -38,6 +41,7 @@
 (require 'communications)
 (require 'reencoding-file)
 
+;(require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 
 (require 'history-conf)

@@ -17,9 +17,6 @@
 ;; Region selection:
 (setq transient-mark-mode t)
 
-(when (eq system-type 'gnu/linux)
-  (setq x-select-enable-clipboard t)
-  (setq interprogram-paste-function 'x-cut-buffer-or-selection-value))
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-S-v") 'cua-paste-pop)
 (global-set-key (kbd "M-S-v") '(lambda() (interactive) (cua-paste-pop -1)))

@@ -2,7 +2,11 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Font
-(set-face-attribute 'default nil :family "Consolas" :height 110)
+(when (eq system-type 'windows-nt)
+  (set-face-attribute 'default nil :family "Consolas" :height 110))
+
+(when (eq 'gnu/linux system-type)
+  (set-face-attribute 'default nil :family "Consolas" :height 130))
 
 ;;=============================================================================
 ;; Change font size
