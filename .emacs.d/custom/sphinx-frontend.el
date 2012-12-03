@@ -87,9 +87,27 @@ Without `arg' saves current file."
   (sphinx-build (not arg) (sphinx-get-build-command-latex)))
 
 (defun sphinx-run-pdflatex ()
+  "Ad-hoc call pdflatex for LaTeX-builded documentation."
   (interactive)
   (cd (expand-file-name sphinx-output-dir-pdf (sphinx-get-root-document-dir)))
   (compile "pdflatex -interaction=nonstopmode *.tex"))
+
+(defun sphinx--clean (sphinx-output-dir)
+  "Removes directory `sphinx-output-dir' in the documentation root path."
+  (delete-directory
+   (file-name-as-directory 
+    (expand-file-name sphinx-output-dir
+                      (sphinx-get-root-document-dir))) t t))
+
+(defun sphinx-clean-html ()
+  "Removes `sphinx-output-dir-html' dir."
+  (interactive)
+  (sphinx--clean sphinx-output-dir-html))
+
+(defun sphinx-clean-pdf ()
+  "Removes `sphinx-output-dir-pdf' dir."
+  (interactive)
+  (sphinx--clean sphinx-output-dir-pdf))
 
 (require 'rst)
 

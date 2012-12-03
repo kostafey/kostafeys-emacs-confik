@@ -41,7 +41,8 @@
 
 
 (defvar text-modes-required-packages
-  (list 'log4j-mode)
+  (list 'log4j-mode
+        'lorem-ipsum)
   "Required packages for text-modes-conf.")
 
 (defvar bte-required-packages
@@ -50,7 +51,8 @@
   "Required packages for basic-text-editing.")
 
 (defvar clojure-packages '(clojure-mode
-                           nrepl)
+                           nrepl
+                           ac-nrepl)
   "Required packages for clojure coding.")
 
 (defvar ac-required-packages
@@ -69,6 +71,10 @@
   (list 'goto-last-change)
   "Required packages for navigation-and-simplify-keys.")
 
+(defvar misc-packages
+  (list)
+  "Packages, not requred by configuration files.")
+
 (install-required-packages (append 
                             bte-required-packages
                             text-modes-required-packages
@@ -76,7 +82,8 @@
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
-                            (list 'auctex)))
+                            (list 'auctex)
+                            misc-packages))
 
 (provide 'elpa-conf)
 
