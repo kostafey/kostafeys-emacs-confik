@@ -6,7 +6,8 @@
   (set-face-attribute 'default nil :family "Consolas" :height 110))
 
 (when (eq 'gnu/linux system-type)
-  (set-face-attribute 'default nil :family "Consolas" :height 130))
+  ;; (set-face-attribute 'default nil :family "Consolas" :height 130)
+  (set-face-font 'default "Consolas-13.5:antialias=subpixel"))
 
 ;;=============================================================================
 ;; Change font size
