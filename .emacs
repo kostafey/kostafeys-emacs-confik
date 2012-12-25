@@ -60,6 +60,7 @@
 (require 'aj-compilation)
 (require 'sphinx-frontend)
 ;; (require 'python-conf)
+(require 'ejc-sql-conf nil 'noerror)
 
 ;; (require 'misc-swarm)
 
