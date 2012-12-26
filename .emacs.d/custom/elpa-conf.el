@@ -64,6 +64,7 @@
 (defvar laf-required-packages
   (list 'fill-column-indicator
         'highlight-parentheses
+        'idle-highlight-mode
         'popwin)
   "Required packages for look-and-feel.")
 

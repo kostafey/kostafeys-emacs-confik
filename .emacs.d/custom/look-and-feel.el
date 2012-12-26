@@ -207,14 +207,18 @@
 ;; (set-face-background 'hi-list-face "#E3F2A1")
 ;; (add-hook 'emacs-lisp-mode-hook 'hi-list-mode)
 
+(defun my-coding-hook ()
+  (highlight-parentheses-mode t)
+  (idle-highlight-mode t))
+
 (require 'highlight-parentheses)
-(add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
-(add-hook 'python-mode-hook 'highlight-parentheses-mode)
-(add-hook 'comint-mode-hook 'highlight-parentheses-mode)
-(add-hook 'js-mode-hook 'highlight-parentheses-mode)
-(add-hook 'java-mode-hook 'highlight-parentheses-mode)
-(add-hook 'clojure-mode-hook 'highlight-parentheses-mode)
-(add-hook 'sql-mode-hook 'highlight-parentheses-mode)
+(add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
+(add-hook 'python-mode-hook 'my-coding-hook)
+(add-hook 'comint-mode-hook 'my-coding-hook)
+(add-hook 'js-mode-hook 'my-coding-hook)
+(add-hook 'java-mode-hook 'my-coding-hook)
+(add-hook 'clojure-mode-hook 'my-coding-hook)
+(add-hook 'sql-mode-hook 'my-coding-hook)
 
 (setq hl-paren-colors '("#326B6B"))
 (setq hl-paren-background-colors '(
