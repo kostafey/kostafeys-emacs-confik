@@ -40,8 +40,8 @@
   (forward-same-syntax 1))
 
 (defun step-backward-word ()
-  (interactive)
   "Like odinary editors, C-<left> moves backward word."
+  (interactive)  
   (skip-chars-backward " \t")
   (forward-same-syntax -1))
 
