@@ -7,7 +7,7 @@
  '(bongo-mplayer-audio-driver nil)
  '(bongo-mplayer-interactive nil)
  '(default-input-method "russian-computer")
- '(ecb-layout-name "my-left")
+ '(ecb-layout-name "my-left4")
  '(ecb-options-version "2.40")
  '(jde-jdk-registry (quote (("1.6.0" . "C:\\Java\\jdk1.6.0_24\\"))))
  '(mouse-wheel-down-event (quote wheel-up))

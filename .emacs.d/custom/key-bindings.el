@@ -334,6 +334,16 @@
 ;;=============================================================================
 
 ;;=============================================================================
+;; ecb
+(global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "M-w") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "C-x C-a") 'ecb-activate)
+(global-set-key (kbd "C-x C-q") 'ecb-deactivate)
+;; (global-set-key "\M-m" 'ecb-goto-window-methods)
+;;
+;;=============================================================================
+
+;;=============================================================================
 ;;                               Mouse
 ;;
 ;; Select by mouse and shift

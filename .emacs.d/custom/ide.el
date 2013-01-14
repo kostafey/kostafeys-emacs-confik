@@ -66,10 +66,6 @@
                          (expand-file-name "alexott-ecb" site-lisp-path)))
 
 (require 'ecb)
-(global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
-(global-set-key (kbd "C-x C-a") 'ecb-activate)
-(global-set-key (kbd "C-x C-q") 'ecb-deactivate)
-;(global-set-key "\M-m" 'ecb-goto-window-methods)
 ;Перезагрузка окна методов после каждого сохранения
 (setq imenu-auto-rescan 1)
 ;Imenu auto-rescan is disabled in buffers larger than this size (in bytes).
@@ -80,25 +76,14 @@
 
 (setq speedbar-use-imenu-flag nil)
 
-(ecb-layout-define "my-left" left nil
-  (ecb-split-ver 0.6666666666666666 t)
-  (if (fboundp (quote ecb-set-history-buffer)) (ecb-set-history-buffer) (ecb-set-default-ecb-buffer))
-  (dotimes (i 1) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
-  (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
-  (if (fboundp (quote ecb-set-methods-buffer)) (ecb-set-methods-buffer) (ecb-set-default-ecb-buffer))
-  (dotimes (i 1) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
-  (if (fboundp (quote ecb-set-history-buffer)) (ecb-set-history-buffer) (ecb-set-default-ecb-buffer))
-  (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
-  (dotimes (i 2) (other-window 1) (if (equal (selected-window) ecb-compile-window) (other-window 1)))
-  )
-
-(setq ecb-layout-name "my-left")
+(setq ecb-compile-window-height nil)
 
 (setq ecb-layout-window-sizes 
-      (quote 
-       (("my-left" 
-         (ecb-methods-buffer-name 0.25 . 0.66) 
-         (ecb-history-buffer-name 0.25 . 0.34)))))
+      (quote (("my-left4" 
+               (ecb-methods-buffer-name 0.25 . 0.66) 
+               (ecb-sources-buffer-name 0.25 . 0.34)))))
+
+(setq ecb-layout-name "my-left4")
 
 (setq ecb-auto-activate t	  
 	  ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1)

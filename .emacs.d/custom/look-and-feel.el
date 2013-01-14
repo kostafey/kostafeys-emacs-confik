@@ -239,7 +239,8 @@
 ;;-----------------------------------------------------------------------------
 
 (require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
+;; Since popwin-el is conflicing with ECB.
+;; (setq display-buffer-function 'popwin:display-buffer)
 (global-set-key (kbd "C-x p") popwin:keymap)
 
 (push "*Kill Ring*" popwin:special-display-config)
