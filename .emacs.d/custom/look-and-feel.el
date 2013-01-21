@@ -161,8 +161,8 @@
 (setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
-;; (scroll-bar-mode t)
+;; (scroll-bar-mode -1)
+(scroll-bar-mode t)
 
 ;;=============================================================================
 ;; fringes
