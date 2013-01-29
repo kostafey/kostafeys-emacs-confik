@@ -3,13 +3,13 @@
 ;;=============================================================================
 ;; Yet Another Snippet extension
 ;;=============================================================================
-(require 'yasnippet)
+;(require 'yasnippet)
 ;; personal snippets
-(setq yas-snippet-dirs
-      (append yas-snippet-dirs 
-              (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
+;(setq yas-snippet-dirs
+;     (append yas-snippet-dirs 
+;             (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
 
-(yas-global-mode 1)
+;(yas-global-mode 1)
 
 ;;=============================================================================
 ;; auto-complete

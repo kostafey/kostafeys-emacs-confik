@@ -161,8 +161,9 @@
 (setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
-;; (scroll-bar-mode t)
+;; (scroll-bar-mode -1)
+(scroll-bar-mode t)
+(set-scroll-bar-mode 'right) ; replace 'right with 'left to place it to the left
 
 ;;=============================================================================
 ;; fringes

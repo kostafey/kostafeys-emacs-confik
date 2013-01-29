@@ -41,8 +41,8 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Org-mode settings
-(add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
-(require 'org-install)
+;; (add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
+;; (require 'org-install)
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)

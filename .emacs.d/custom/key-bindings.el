@@ -343,6 +343,18 @@
 ;;
 ;;=============================================================================
 
+;;============================================================================
+;; Nrepl
+(global-unset-key (kbd "C-n"))
+(defun kostafey-clojure-mode-hook ()
+  (define-key clojure-mode-map (kbd "C-n j") 'nrepl-jack-in)
+  (define-key clojure-mode-map (kbd "C-n e b") 'nrepl-eval-buffer)
+  (define-key clojure-mode-map (kbd "C-n q") 'nrepl-quit))
+(add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
+;;
+;;============================================================================
+
+
 ;;=============================================================================
 ;;                               Mouse
 ;;

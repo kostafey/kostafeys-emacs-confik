@@ -87,8 +87,10 @@
   (message "Amen."))
 
 (message "My .emacs loaded in %ds" 
-         (destructuring-bind (hi lo ms) (current-time)
-           (- (+ hi lo) (+ (first *emacs-load-start*) 
+         (destructuring-bind 
+             (hi lo ms ps) 
+             (current-time)
+           (- (+ hi lo) (+ (first *emacs-load-start*)
                            (second *emacs-load-start*)))))
 
 (message "*************************")
