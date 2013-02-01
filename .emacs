@@ -87,11 +87,18 @@
   (message "Amen."))
 
 (message "My .emacs loaded in %ds" 
-         (destructuring-bind 
-             (hi lo ms ps) 
-             (current-time)
-           (- (+ hi lo) (+ (first *emacs-load-start*)
-                           (second *emacs-load-start*)))))
+         (if (and (>= emacs-major-version 24)
+                  (>= emacs-minor-version 3))
+             (destructuring-bind              
+                 (hi lo ms ps)
+                 (current-time)
+               (- (+ hi lo) (+ (first *emacs-load-start*)
+                               (second *emacs-load-start*))))
+           (destructuring-bind              
+               (hi lo ms)
+               (current-time)
+             (- (+ hi lo) (+ (first *emacs-load-start*)
+                             (second *emacs-load-start*))))))
 
 (message "*************************")
 (message "*** .emacs loaded OK. ***")
