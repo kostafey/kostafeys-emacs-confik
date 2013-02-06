@@ -84,7 +84,8 @@
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
-                            (list 'auctex)
+                            (list 'auctex
+                                  'multiple-cursors)
                             misc-packages))
 
 (provide 'elpa-conf)
