@@ -70,7 +70,8 @@
   "Required packages for look-and-feel.")
 
 (defvar nav-keys-required-packages
-  (list 'goto-last-change)
+  (list 'goto-last-change
+        'dired+)
   "Required packages for navigation-and-simplify-keys.")
 
 (defvar misc-packages
