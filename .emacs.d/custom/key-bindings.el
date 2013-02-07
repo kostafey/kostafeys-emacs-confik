@@ -19,7 +19,13 @@
 
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-S-v") 'cua-paste-pop)
-(global-set-key (kbd "M-S-v") '(lambda() (interactive) (cua-paste-pop -1)))
+(global-set-key (kbd "C-M-v") '(lambda() (interactive) (cua-paste-pop -1)))
+
+(global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r") 
+                                 (append-to-buffer "temp" beg end)
+                                 (save-excursion
+                                   (set-buffer "temp")
+                                   (insert "\n"))))
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-e") 'cua-exchange-point-and-mark)
 (global-set-key (kbd "C-S-e") '(lambda() (interactive) (cua-exchange-point-and-mark 1)))
@@ -150,6 +156,7 @@
 (global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
 (global-set-key (kbd "C-M-a v") 'string-insert-rectangle)
 (global-set-key (kbd "C-M-a c") 'copy-rectangle-to-clipboard)
+(global-set-key (kbd "C-M-a r") 'yank-rectangle)
 ;(global-set-key (kbd "M-u") 'cua-upcase-rectangle) - default
 ;;-----------------------------------------------------------------------------
 ;; Upcase/downcase
@@ -165,6 +172,7 @@
 ;; Region & misc operations
 (global-set-key (kbd "C-M-a :") 'align-by-column)
 (global-set-key (kbd "C-M-a '") 'align-by-quote)
+(global-set-key (kbd "C-M-a a") 'align-regexp)
 
 (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
 (global-set-key (kbd "C-/") 'comment-or-uncomment-this)
@@ -354,6 +362,20 @@
 ;;
 ;;============================================================================
 
+;;----------------------------------------------------------------------
+;; multiple-cursors
+;;
+(when (require 'multiple-cursors nil 'noerror)
+  ;; When you have an active region that spans multiple lines, the following will
+  ;; add a cursor to each line:
+  (global-set-key (kbd "C-S-m") 'mc/edit-lines)
+  ;; When you want to add multiple cursors not based on continuous lines, but
+  ;; based on keywords in the buffer, use:
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+;;
+;;----------------------------------------------------------------------
 
 ;;=============================================================================
 ;;                               Mouse

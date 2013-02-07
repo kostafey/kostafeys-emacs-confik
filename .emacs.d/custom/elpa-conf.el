@@ -44,12 +44,12 @@
   (list 'log4j-mode
         'lorem-ipsum
         'markdown-mode)
-  "Required packages for text-modes-conf.")
+  "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
   (list 'browse-kill-ring 
         'wrap-region)
-  "Required packages for basic-text-editing.")
+  "Required packages for `basic-text-editing'.")
 
 (defvar clojure-packages '(clojure-mode
                            nrepl
@@ -67,12 +67,13 @@
         'highlight-parentheses
         'idle-highlight-mode
         'popwin)
-  "Required packages for look-and-feel.")
+  "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages
   (list 'goto-last-change
+        'multiple-cursors        
         'dired+)
-  "Required packages for navigation-and-simplify-keys.")
+  "Required packages for `navigation-and-simplify-keys' and `key-bindings'.")
 
 (defvar misc-packages
   (list)
@@ -85,8 +86,7 @@
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
-                            (list 'auctex
-                                  'multiple-cursors)
+                            (list 'auctex)
                             misc-packages))
 
 (provide 'elpa-conf)
