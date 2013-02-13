@@ -62,4 +62,7 @@
   '(progn
      (sql-set-product "ansi")))
 
+;;typing game
+(autoload 'typing-of-emacs "The Typing Of Emacs, a game." t)
+
 (provide 'text-modes-conf)

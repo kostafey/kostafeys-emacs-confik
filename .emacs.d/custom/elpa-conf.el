@@ -43,7 +43,8 @@
 (defvar text-modes-required-packages
   (list 'log4j-mode
         'lorem-ipsum
-        'markdown-mode)
+        'markdown-mode
+        'typing)
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
