@@ -42,6 +42,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
       (organic-builtin-fg "MediumPurple3")
       (minor-green-highlight-background "#D5F0D5")
       (minor-grey-highlight-background "#DAEADA")
+      (minor-yellow-highlight-background "#F2FFC0")
    
 
       (choc-1 "#e9b96e") (choc-2 "#c17d11") (choc-3 "#8f5902")
@@ -170,7 +171,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
    '(speedbar-tag-face ((t (:foreground "DarkSlateGray4"))))
    '(yas/field-highlight-face ((t (:background "#DDEE00"))))
-
+   `(idle-highlight ((t (:background ,minor-yellow-highlight-background))) t)
    ))
 
 (provide-theme 'organic-green)
