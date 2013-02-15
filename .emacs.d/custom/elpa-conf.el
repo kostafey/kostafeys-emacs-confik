@@ -1,7 +1,8 @@
 (require 'cl)
 (require 'package)
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+(setq package-archives '(("ELPA" . "http://tromey.com/elpa/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
@@ -67,7 +68,8 @@
   (list 'fill-column-indicator
         'highlight-parentheses
         'idle-highlight-mode
-        'popwin)
+        'popwin
+        'nlinum)
   "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages
@@ -87,7 +89,8 @@
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
-                            (list 'auctex)
+                            (list 'auctex
+                                  'js-comint)
                             misc-packages))
 
 (provide 'elpa-conf)
