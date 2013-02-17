@@ -88,7 +88,7 @@
 
 (message "My .emacs loaded in %ds" 
          (if (and (>= emacs-major-version 24)
-                  (>= emacs-minor-version 3))
+                  (>= emacs-minor-version 2))
              (destructuring-bind              
                  (hi lo ms ps)
                  (current-time)
