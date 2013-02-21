@@ -58,7 +58,10 @@
 (setq frame-title-format "%S: %f")
 
 ;;-----------------------------------------------------------------------------
-(global-linum-mode) ; Нумерация строк
+(require 'nlinum)
+(global-linum-mode -1) ; Нумерация строк
+(nlinum-mode 1)        ; используя nlinum
+(add-hook 'find-file-hook (lambda () (nlinum-mode 1)))
 
 (require 'minimap)
 
