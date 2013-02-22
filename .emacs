@@ -86,19 +86,23 @@
   (sit-for 2)
   (message "Amen."))
 
+
 (message "My .emacs loaded in %ds" 
-         (if (and (>= emacs-major-version 24)
-                  (>= emacs-minor-version 2))
+         (let ((emacs-sub-version 
+                (string-to-number (nth 2 (split-string emacs-version "\\.")))))
+           (if (and (>= emacs-major-version 24)
+                    (>= emacs-minor-version 2)
+                    (> emacs-sub-version 1))
+               (destructuring-bind              
+                   (hi lo ms ps)
+                   (current-time)
+                 (- (+ hi lo) (+ (first *emacs-load-start*)
+                                 (second *emacs-load-start*))))
              (destructuring-bind              
-                 (hi lo ms ps)
+                 (hi lo ms)
                  (current-time)
                (- (+ hi lo) (+ (first *emacs-load-start*)
-                               (second *emacs-load-start*))))
-           (destructuring-bind              
-               (hi lo ms)
-               (current-time)
-             (- (+ hi lo) (+ (first *emacs-load-start*)
-                             (second *emacs-load-start*))))))
+                               (second *emacs-load-start*)))))))
 
 (message "*************************")
 (message "*** .emacs loaded OK. ***")
