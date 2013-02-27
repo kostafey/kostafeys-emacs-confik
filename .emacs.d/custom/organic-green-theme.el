@@ -30,8 +30,11 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 (let ((class '((class color) (min-colors 89)))
       ;; Organic-green palette colors.
 
-      (butter-1 "#fce94f") (butter-2 "#edd400") (butter-3 "#c4a000")
-      (orange-1 "#fcaf3e") (orange-2 "#f57900") (orange-3 "#ce5c00")
+      ;; ;green palette
+      ;; ;#A0F0A0 ;#7FFF00 ;#95E454 ;green1 ;green4
+      ;; ;#32CD32 ;#53AD2F ;#73CD4F ;green2 ;"#339933"
+      ;; ;#66CC66 ;#339966 ;#66CDAA ;green3
+      ;; ;"#73CDF4"
 
       (organic-fg "#326B6B")
       (organic-bg "#F0FFF0")
@@ -41,10 +44,11 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
       (organic-constant-fg "#3465BD")
       (organic-builtin-fg "MediumPurple3")
       (minor-green-highlight-background "#D5F0D5")
-      (minor-grey-highlight-background "#DAEADA")
-      (minor-yellow-highlight-background "#F2FFC0")
-   
+      (minor-grey-highlight-background "#DAEADA")   ;#E3F2E1
+      (minor-yellow-highlight-background "#F2FFC0") ;#E3F2A1
 
+      (butter-1 "#fce94f") (butter-2 "#edd400") (butter-3 "#c4a000")
+      (orange-1 "#fcaf3e") (orange-2 "#f57900") (orange-3 "#ce5c00")   
       (choc-1 "#e9b96e") (choc-2 "#c17d11") (choc-3 "#8f5902")
       (cham-1 "#8ae234") (cham-2 "#73d216") (cham-3 "#4e9a06")
       (blue-1 "#729fcf") (blue-2 "#3465a4") (blue-3 "#204a87")
@@ -68,6 +72,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(fringe ((,class (:background "#E5E5E5" :foreground "gray40"))))
    `(highlight ((,class (:background ,minor-green-highlight-background))))
    `(region ((,class (:foreground ,organic-fg :background ,"#EEEEA0"))))
+   `(cua-rectangle ((,class (:foreground ,organic-fg :background ,"#83DDFF"))))   
    `(secondary-selection ((,class (:background ,blue-0))))
    `(isearch ((,class (:foreground ,organic-fg :background "yellow" :inverse-video nil))))
    `(lazy-highlight ((,class (:background "#DDEE00" :inverse-video nil))))
@@ -167,11 +172,17 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(whitespace-space-before-tab ((t (:background ,organic-bg :foreground "lightgray"))) t)
    `(whitespace-trailing ((t (:background ,organic-bg :foreground "lightgray"))) t)
 
+   ;; magit
+   '(magit-diff-add ((t (:foreground "#339933"))) t)
+   `(magit-diff-del ((t (:foreground ,red-2))) t)
+   '(magit-item-highlight ((t (:background "#E3F2E1"))) t)
+
    ;; misc
    '(nxml-element-local-name ((t (:foreground "#0066CC" :weight normal))) t)
    '(speedbar-tag-face ((t (:foreground "DarkSlateGray4"))))
    '(yas/field-highlight-face ((t (:background "#DDEE00"))))
    `(idle-highlight ((t (:foreground ,organic-fg :background ,minor-yellow-highlight-background))) t)
+
    ))
 
 (provide-theme 'organic-green)

@@ -21,21 +21,11 @@
 ;; Font decorations
 ;;=============================================================================
 (setq font-lock-maximum-decoration t)
-(global-font-lock-mode 1)
+(global-font-lock-mode t)
 
 ; Maximum size of a buffer for buffer fontification.
 (if (< emacs-major-version 24)
     (setq font-lock-maximum-size 2560000))
-
-(require 'font-lock)
-(if (fboundp 'global-font-lock-mode)
-    (global-font-lock-mode t))
-(make-face 'trailing-spaces-face "Face to display trailing spaces in.")
-(add-hook 'font-lock-mode-hook     ; Show trailing spaces and make fixme tags standout
-          (lambda ()
-            (font-lock-add-keywords nil
-             '(("[ \t]+$" 0 'trailing-spaces-face t)
-               ("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 0 'font-lock-warning-face t)))))
 
 ;;=============================================================================
 ;; bell
@@ -212,11 +202,19 @@
 ;; (set-face-background 'hi-list-face "#E3F2A1")
 ;; (add-hook 'emacs-lisp-mode-hook 'hi-list-mode)
 
-(defun my-coding-hook ()
-  (highlight-parentheses-mode t)
-  (idle-highlight-mode t))
+(defun font-lock-warn-todo ()
+  "Make fixme tags standout."
+  (font-lock-add-keywords nil
+                          '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 
+                             0 'font-lock-warning-face t))))
 
 (require 'highlight-parentheses)
+
+(defun my-coding-hook ()
+  (highlight-parentheses-mode t)
+  (idle-highlight-mode t)
+  (font-lock-warn-todo))
+
 (add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
 (add-hook 'python-mode-hook 'my-coding-hook)
 (add-hook 'comint-mode-hook 'my-coding-hook)

@@ -78,6 +78,10 @@
         'dired+)
   "Required packages for `navigation-and-simplify-keys' and `key-bindings'.")
 
+(defvar vc-packages
+  (list 'magit)
+  "Required packages for `version-control'.")
+
 (defvar misc-packages
   (list)
   "Packages, not requred by configuration files.")
@@ -91,6 +95,7 @@
                             nav-keys-required-packages
                             (list 'auctex
                                   'js-comint)
+                            vc-packages
                             misc-packages))
 
 (provide 'elpa-conf)

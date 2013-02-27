@@ -47,7 +47,7 @@
 (require 'history-conf)
 (require 'text-modes-conf)
 
-; (require 'version-control)
+(require 'version-control)
 (require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
