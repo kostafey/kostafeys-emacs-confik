@@ -30,11 +30,29 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 (let ((class '((class color) (min-colors 89)))
       ;; Organic-green palette colors.
 
-      ;; ;green palette
-      ;; ;#A0F0A0 ;#7FFF00 ;#95E454 ;green1 ;green4
-      ;; ;#32CD32 ;#53AD2F ;#73CD4F ;green2 ;"#339933"
-      ;; ;#66CC66 ;#339966 ;#66CDAA ;green3
-      ;; ;"#73CDF4"
+      ;; green palette
+      ;; ;#A0F0A0 ;#7FFF00 ;#95E454 ;green1  ;green4
+      ;; ;#32CD32 ;#53AD2F ;#73CD4F ;green2  ;
+      ;; ;#66CC66 ;  ;green3  
+
+      (green-tea         "#D0F0C0")
+      (gray-green        "#ACE1AF")
+      (мох               "#ADDFAD")
+      (yellow-green      "#ADFF2F")
+      (lime              "#BFFF00")      
+      (yellow-chartreuse "#DFFF00")
+      (lime-pulp         "#D1E189")
+      (emerald           "#50C878")
+      (sea-eye           "#00A86B") ; http://en.wikipedia.org/wiki/Sea_Eye_Lake
+      (sea-green         "#2E8B57")
+      (geep-sea-green    "#339966")
+                         
+      (dark-green        "#339933")
+      
+      ;; blue palette
+      (blue-green        "#66CDAA")
+      ;; ;#73CDF4
+      ;; ;#83DDFF  
 
       (organic-fg "#326B6B")
       (organic-bg "#F0FFF0")
@@ -44,7 +62,8 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
       (organic-constant-fg "#3465BD")
       (organic-builtin-fg "MediumPurple3")
       (minor-green-highlight-background "#D5F0D5")
-      (minor-grey-highlight-background "#DAEADA")   ;#E3F2E1
+      (tiny-green-highlight-background "#E3F2E1")      
+      (minor-grey-highlight-background "#DAEADA")   ;
       (minor-yellow-highlight-background "#F2FFC0") ;#E3F2A1
 
       (butter-1 "#fce94f") (butter-2 "#edd400") (butter-3 "#c4a000")
@@ -72,7 +91,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(fringe ((,class (:background "#E5E5E5" :foreground "gray40"))))
    `(highlight ((,class (:background ,minor-green-highlight-background))))
    `(region ((,class (:foreground ,organic-fg :background ,"#EEEEA0"))))
-   `(cua-rectangle ((,class (:foreground ,organic-fg :background ,"#83DDFF"))))   
+   `(cua-rectangle ((,class (:foreground ,organic-fg :background ,"#BFFF00"))))   
    `(secondary-selection ((,class (:background ,blue-0))))
    `(isearch ((,class (:foreground ,organic-fg :background "yellow" :inverse-video nil))))
    `(lazy-highlight ((,class (:background "#DDEE00" :inverse-video nil))))
