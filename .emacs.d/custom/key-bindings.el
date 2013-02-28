@@ -122,6 +122,8 @@
 
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
+
+(global-set-key (kbd "C-M-f") 'rgrep)
 ;;
 ;;=============================================================================
 
