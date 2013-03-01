@@ -3,13 +3,31 @@
 ;;=============================================================================
 ;; Yet Another Snippet extension
 ;;=============================================================================
-;(require 'yasnippet)
+(require 'yasnippet)
 ;; personal snippets
-;(setq yas-snippet-dirs
-;     (append yas-snippet-dirs 
-;             (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
+(setq yas-snippet-dirs
+    (append yas-snippet-dirs 
+            (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
 
-;(yas-global-mode 1)
+(yas-global-mode 1)
+
+(defun yas/next-field-or-maybe-expand-1 ()
+  (interactive)
+  (let ((yas/fallback-behavior 'return-nil))
+    (unless (yas/expand)
+      (yas/next-field))))
+
+(defun open-line-or-yas ()
+  (interactive)
+  (cond ((and (looking-back " ") (looking-at "[\s\n}]+"))
+     (insert "\n\n")
+     (indent-according-to-mode)
+     (previous-line)
+     (indent-according-to-mode))
+    ((expand-abbrev))
+    (t 
+     (setq *yas-invokation-point* (point))
+     (yas/next-field-or-maybe-expand-1))))
 
 ;;=============================================================================
 ;; auto-complete

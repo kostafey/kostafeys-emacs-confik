@@ -251,8 +251,6 @@
 
 ;;-----------------------------------------------------------------------------
 ;; tabbar - switch buffers by tabs 
-(global-set-key [S-tab] 'tabbar-forward-tab)
-(global-set-key [C-S-tab] 'tabbar-backward-tab)
 (global-set-key [(meta shift left)] 'tabbar-backward-tab)
 (global-set-key [(meta shift right)] 'tabbar-forward-tab)
 ;;-----------------------------------------------------------------------------
@@ -340,6 +338,9 @@
 (global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
 (global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
 (global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
+
+(global-set-key (kbd "S-<tab>") 'open-line-or-yas)
+(global-set-key (kbd "C-S-<tab>") 'yas-prev-field)
 ;;
 ;;=============================================================================
 
