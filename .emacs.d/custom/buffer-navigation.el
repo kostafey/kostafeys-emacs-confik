@@ -66,5 +66,19 @@
             (setq auto-complete-mode t))
         (switch-to-buffer temp-buffer-name)))))
 
+(defun copy-to-clipboard-buffer-file-path ()
+  (interactive)
+  "Copy current file path to the clipboard."
+  (let ((result (kill-new (buffer-file-name))))
+    (message result)
+    result))
+
+(defun copy-to-clipboard-buffer-file-name ()
+  (interactive)
+  "Copy current file name to the clipboard."
+  (let ((result (kill-new (file-name-nondirectory (buffer-file-name)))))
+    (message result)
+    result))
+
 (provide 'buffer-navigation)
 

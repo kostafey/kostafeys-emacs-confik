@@ -233,6 +233,8 @@
 ;;
 (global-set-key (kbd "C-?") 'describe-char)
 (global-set-key "\C-\M-a\C-c" 'count-words-region)
+(global-set-key (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
+(global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
 ;;
 ;;=============================================================================
 
