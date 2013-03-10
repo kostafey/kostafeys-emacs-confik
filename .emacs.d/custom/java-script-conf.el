@@ -7,7 +7,8 @@
 
 (require 'js-comint)
 ;; Use node as our repl
-(setq inferior-js-program-command "C:/Progra~1/nodejs/node")
+;; (setq inferior-js-program-command "C:/Progra~1/nodejs/node")
+(setq inferior-js-program-command "nodejs")
  
 (setq inferior-js-mode-hook
       (lambda ()
@@ -16,7 +17,8 @@
         ;; Deal with some prompt nonsense
         (add-to-list 'comint-preoutput-filter-functions
                      (lambda (output)
-                       (replace-regexp-in-string ".*1G\.\.\..*5G" "..."
-                                                 (replace-regexp-in-string ".*1G.*3G" "&gt;" output))))))
+                       (replace-regexp-in-string 
+                        ".*1G\.\.\..*5G" "..."
+                        (replace-regexp-in-string ".*1G.*3G" "&gt;" output))))))
 
 (provide 'java-script-conf)

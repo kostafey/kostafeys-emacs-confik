@@ -19,6 +19,11 @@
 (defvar site-lisp-path "~/.emacs.d/")
 (add-to-list 'load-path site-lisp-path)
 
+;; Third-party *.el files (in general low-supporded, misplaced in ELPA)
+;; without any patching or with tiny patches, stored in this repo.
+(defvar third-party-lisp-path (concat site-lisp-path "artifacts/"))
+(add-to-list 'load-path third-party-lisp-path)
+
 ;;-----------------------------------------------------------------------------
 ;auto-customized custom-set-variables
 (setq custom-file (concat site-lisp-path "custom/custom.el"))
@@ -38,6 +43,7 @@
 (require 'switch-language)
 (require 'ispell-conf)
 (require 'completition-conf)
+(require 'ack-conf)
 (require 'communications)
 (require 'reencoding-file)
 
@@ -64,7 +70,7 @@
 
 ;; (require 'misc-swarm)
 
-(require 'el-get-conf)
+;; (require 'el-get-conf)
 ;;-----------------------------------------------------------------------------
 (add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
 (require 'calc-time)

@@ -20,7 +20,9 @@
 ;;=============================================================================
 ;; Font decorations
 ;;=============================================================================
-(setq font-lock-maximum-decoration '((java-mode . 1) (t . t)))
+(setq font-lock-maximum-decoration 
+      '((java-mode . (if (eq system-type 'windows-nt) 1 t))
+        (t . t)))
 (global-font-lock-mode t)
 
 ; Maximum size of a buffer for buffer fontification.

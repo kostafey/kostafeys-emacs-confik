@@ -60,4 +60,8 @@ Pages up through completion menu."
 
 ;;=============================================================================
 
+;; minibuffer autocompletition.
+(require 'icomplete+)
+(icomplete-mode)
+
 (provide 'completition-conf)

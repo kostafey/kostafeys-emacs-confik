@@ -61,7 +61,8 @@
 (defvar ac-required-packages
   (list 'popup
         'auto-complete
-        'yasnippet)
+        'yasnippet
+        'icomplete+)
   "Required packages for autocompletition.")
 
 (defvar laf-required-packages
@@ -69,7 +70,9 @@
         'highlight-parentheses
         'idle-highlight-mode
         'popwin
-        'nlinum)
+        'nlinum
+        'rainbow-mode
+        'highlight-symbol)
   "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages
@@ -79,7 +82,9 @@
   "Required packages for `navigation-and-simplify-keys' and `key-bindings'.")
 
 (defvar vc-packages
-  (list 'magit)
+  (list 'magit
+        ;; 'ack
+        )
   "Required packages for `version-control'.")
 
 (defvar misc-packages
