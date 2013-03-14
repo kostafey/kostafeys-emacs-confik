@@ -4,6 +4,7 @@
 
 ;; Author: Philip Jackson <phil@shellarchive.co.uk>
 ;; Version: 0.4
+;; Patched 2013 by kostafey
 
 ;; This file is not currently part of GNU Emacs.
 
@@ -36,6 +37,7 @@
 
 (require 'compile)
 (require 'grep)
+(require 'ido)
 
 (defvar ack-guess-type nil
   "Setting this value to `t' will have `ack' do its best to fill
@@ -66,8 +68,10 @@ in the --type argument to the ack command")
 (defun ack-build-command ()
   (let ((type (ack-find-type-for-mode)))
     (concat ack-command
-            (when (and ack-guess-type type)
-              (concat " --type=" type)) " -- ")))
+            (if (and ack-guess-type type)
+              (concat " --type=" type)
+              " --type=text") 
+            " -- ")))
 
 (define-compilation-mode ack-mode "Ack"
   "Ack compilation mode."
@@ -76,13 +80,29 @@ in the --type argument to the ack command")
        grep-hit-face))
 
 ;;;###autoload
-(defun ack (command-args)
-  (interactive
-   (list (read-from-minibuffer "Run ack (like this): "
+(defun ack-with-prompt (search-dir command-args)
+  (interactive   
+   (list
+    (ido-read-directory-name "Base dir for search: ")
+    (read-from-minibuffer "Run ack (like this): "
                                (ack-build-command)
                                nil
                                nil
                                'ack-history)))
-   (compilation-start command-args 'ack-mode))
+  (setq default-directory search-dir)
+  (compilation-start command-args 'ack-mode))
+
+;;;###autoload
+(defun ack (search-dir command-args)
+  (interactive   
+   (list
+    (ido-read-directory-name "Base dir for search: ")
+    (read-from-minibuffer "Search for: " 
+                          (symbol-name (symbol-at-point))
+                          nil 
+                          nil 
+                          'ack-history)))
+  (setq default-directory search-dir)
+  (compilation-start (concat (ack-build-command) command-args) 'ack-mode))
 
 (provide 'ack)

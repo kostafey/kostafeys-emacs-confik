@@ -123,7 +123,7 @@
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
 
-(global-set-key (kbd "C-M-f") 'rgrep)
+(global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
 
 (when (require 'highlight-symbol nil 'noerror)
   (eval-after-load "highlight-symbol"
