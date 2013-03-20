@@ -98,7 +98,7 @@
                 (string-to-number (nth 2 (split-string emacs-version "\\.")))))
            (if (and (>= emacs-major-version 24)
                     (>= emacs-minor-version 2)
-                    (> emacs-sub-version 1))
+                    (>= emacs-sub-version 1))
                (destructuring-bind              
                    (hi lo ms ps)
                    (current-time)
