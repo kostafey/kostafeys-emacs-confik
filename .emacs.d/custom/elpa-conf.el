@@ -87,6 +87,11 @@
         )
   "Required packages for `version-control'.")
 
+(defvar prog-modes-packages
+  (list 'auctex    
+        'js-comint)
+  "Packages, requred by misc programming modes.")
+
 (defvar misc-packages
   (list)
   "Packages, not requred by configuration files.")
@@ -98,8 +103,7 @@
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
-                            (list 'auctex
-                                  'js-comint)
+                            prog-modes-packages
                             vc-packages
                             misc-packages))
 
