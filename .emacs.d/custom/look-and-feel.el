@@ -250,5 +250,8 @@
 
 (push "*Kill Ring*" popwin:special-display-config)
 
+;; Disable bidirectional text support
+(setq-default bidi-display-reordering nil)
+
 (provide 'look-and-feel)
 
