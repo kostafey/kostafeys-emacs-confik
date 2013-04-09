@@ -295,6 +295,10 @@
                 '(lambda () (interactive) (find-file "~/.org.gpg")))
 (global-set-key (concat change-buffer-prefix "k") 
                 '(lambda () (interactive) (find-file "~/.keys.org")))
+(global-set-key (concat change-buffer-prefix "k") 
+                '(lambda () (interactive) (find-file "~/.keys.org")))
+(global-set-key (kbd "C-x m")
+                '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
 ;;
 ;;=============================================================================

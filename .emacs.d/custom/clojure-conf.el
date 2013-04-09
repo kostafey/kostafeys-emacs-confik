@@ -1,4 +1,5 @@
 (require 'elpa-conf)
+(require 'clojure-offline)
 
 ;; (dolist (p clojure-packages)
 ;;   (when (not (package-installed-p p))

@@ -36,6 +36,7 @@
   (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
 (add-to-list 'load-path solutions-path)
 
+(require 'functions)
 (require 'look-and-feel)
 
 (require 'elpa-conf)
@@ -91,7 +92,6 @@
   (message "Praise Emacs...")
   (sit-for 2)
   (message "Amen."))
-
 
 (message "My .emacs loaded in %ds" 
          (let ((emacs-sub-version 
