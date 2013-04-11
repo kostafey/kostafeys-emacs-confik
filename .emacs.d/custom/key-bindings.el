@@ -338,6 +338,7 @@
 (global-set-key [f8] 'recode-buffer-rotate-ring)
 
 (global-set-key [f1] 'ispell-word)
+(global-set-key [f2] 'ido-switch-buffer)
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
 ;; (global-set-key [f8] 'ispell-region)
 (global-set-key [f9] 'auto-fill-mode); вкл/выкл автозаполнения
