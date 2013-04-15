@@ -88,9 +88,15 @@
   "Required packages for `version-control'.")
 
 (defvar prog-modes-packages
-  (list 'auctex    
-        'js-comint)
+  (list 'auctex)
   "Packages, requred by misc programming modes.")
+
+(defvar js-packages
+  (list 'simple-httpd
+        'js2-mode
+        'skewer-mode)
+  "Required packages for `java-script-conf'.")
+
 
 (defvar misc-packages
   (list)
@@ -105,7 +111,8 @@
                             nav-keys-required-packages
                             prog-modes-packages
                             vc-packages
-                            misc-packages))
+                            misc-packages
+                            js-packages))
 
 (provide 'elpa-conf)
 

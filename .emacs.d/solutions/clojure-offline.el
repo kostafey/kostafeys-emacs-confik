@@ -20,6 +20,15 @@
 ;;; How to work with clojure offline
 ;;; --------------------------------
 ;;
+;; Short story
+;; ===========
+;;
+;; `clj-off-create-script'
+;; e.g. (clj-off-create-script [[ring/ring-core "1.1.8"]])
+;;
+;; Long story
+;; ==========
+;;
 ;; 1. Install leiningen
 ;; --------------------
 ;;
@@ -72,7 +81,7 @@
 ;;
 ;; There is no guarantee that the file is located in the printed path.
 ;; E.g. https://clojars.org/repo/org/clojure/clojure/1.5.1/clojure-1.5.1.jaris
-;; a wrong path since clojure language jars is not hosted in the clojars.org
+;; a wrong path since clojure-1.5.1.jar is not hosted in the clojars.org
 ;; (yet). So, you should find it manually. But if the jar is hosted in the
 ;; clojars.org, the printed url is likely correct.
 ;;
@@ -153,7 +162,7 @@ Ouptut format, e.g.:
           ;; lein format, e.g. [org.clojure/clojure "1.5.1"]
           (progn
             (setq group-and-artifact
-                  (split-string (force-symbol-name (elt artifact-name 0)) 
+                  (split-string (force-symbol-name (elt artifact-name 0))
                                 "/"))
             (setq group-id (nth 0 group-and-artifact))
             (setq artifact-id (if (> (length group-and-artifact) 1)
@@ -181,7 +190,7 @@ scope."
 ;;----------------------------------------------------------------------
 ;;
 ;;;###autoload
-(defun clj-off-get-clojars-url (artifact-name)
+(defun clj-off-get-jar-urls (artifact-name)
   "Convert from maven's `artifact-name' to probably jar url location on
 clojars.
 E.g. convert from
@@ -190,13 +199,15 @@ to
 https://clojars.org/repo/lein-ring/lein-ring/0.8.2/lein-ring-0.8.2.jar"
   (clj-off-with-artifact
    artifact-name
-   (concat "https://clojars.org/repo/"
-           (mapconcat 'identity (split-string group-id "\\.") "/") "/"
-           artifact-id "/" version "/"
-           artifact-id "-" version ".jar")))
+   (let ((art-path (concat (mapconcat 'identity 
+                                      (split-string group-id "\\.") "/") "/"
+                           artifact-id "/" version "/"
+                           artifact-id "-" version ".jar")))
+     (concat "https://clojars.org/repo/" art-path "\n"
+             "http://repo1.maven.org/maven2/" art-path))))
 
 (defun clj-off-get-list-clojars-url (artifact-names-array)
-  (map 'list 'clj-off-get-clojars-url artifact-names-array))
+  (map 'list 'clj-off-get-jar-urls artifact-names-array))
 
 ;;----------------------------------------------------------------------
 ;;
@@ -254,14 +265,21 @@ mvn deploy:deploy-file -DgroupId=lein-ring -DartifactId=lein-ring \
     (read-from-minibuffer "Clojure artifact: "
                           (buffer-substring (mark) (point)) nil nil
                           'clj-off-artifact-name-history)))
-  (message (clj-off-get-clojars-url artifact-name)))
+  (message (clj-off-get-jar-urls artifact-name)))
 
 (defun clj-off-create-script-buffer ()
   "Create buffer dedicated to output configure required clojure jars."
-  (get-buffer-create clojure-offline-script-buffer-name))
+  (let ((buf (get-buffer-create clojure-offline-script-buffer-name)))
+    (save-excursion
+      (set-buffer buf)
+      (toggle-truncate-lines nil)
+      buf)))
 
 ;;;###autoload
-(defun clj-off-create-script (artifact-names-array &optional install)
+(defun clj-off-create-script (artifact-names-array &optional install clear)
+  "
+`install': nil, 'maven
+`clear': nil, t"
   (interactive
    (list
     (read-from-minibuffer "Clojure artifacts list: "
@@ -272,10 +290,14 @@ mvn deploy:deploy-file -DgroupId=lein-ring -DartifactId=lein-ring \
                                   (read (trim-string artifact-names-array))
                                 artifact-names-array)))
     (set-buffer (clj-off-create-script-buffer))
-    (erase-buffer)
-    (toggle-truncate-lines nil)
-    (mapc (lambda (art) (insert (concat "wget " art "\n")))
-          (clj-off-get-list-clojars-url artifact-names-array))
+    (if (equal clear nil)
+        (insert "\n\n")
+      (erase-buffer))
+    (mapc
+     (lambda (art) (mapc
+               (lambda (a) (insert (concat "wget " a "\n")))
+               (split-string art)))
+     (clj-off-get-list-clojars-url artifact-names-array))
     (insert "\n")
     (if (and (equal install nil) (equal install 'maven))
         (progn

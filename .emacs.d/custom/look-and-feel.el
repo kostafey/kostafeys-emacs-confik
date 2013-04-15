@@ -253,5 +253,11 @@
 ;; Disable bidirectional text support
 (setq-default bidi-display-reordering nil)
 
+;; Windows shell (cmd) correct encoding
+(when (eq system-type 'windows-nt)
+  (defadvice shell (after my-shell-advice)
+    (set-buffer-process-coding-system 'cp1251 'cp1251))
+  (ad-activate 'shell))
+
 (provide 'look-and-feel)
 
