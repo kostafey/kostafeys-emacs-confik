@@ -170,7 +170,6 @@
 ;(global-set-key (kbd "M-u") 'cua-upcase-rectangle) - default
 ;;-----------------------------------------------------------------------------
 ;; Upcase/downcase
-(global-set-key (kbd "C-c w") 'toggle-letter-case)
 (global-set-key (kbd "C-S-<up>") 'toggle-letter-case)
 ;; (global-unset-key "\C-\M-c")
 (global-set-key (kbd "C-M-a l") 'downcase-region)
@@ -250,6 +249,8 @@
 ;; Buffers navigation
 ;;
 (global-set-key "\C-w" 'prh:kill-current-buffer)
+(global-set-key (kbd "C-c w") 'kill-other-buffers)
+
 (global-set-key (kbd "C-x w") 'kill-buffer)
 (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
 
@@ -268,6 +269,7 @@
 (require 'ido)
 (ido-mode t)
 (global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-x C-r") 'sudo-edit)
 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
 (global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)
 ;;-----------------------------------------------------------------------------
@@ -300,6 +302,8 @@
 (global-set-key (kbd "C-x m")
                 '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
+(global-set-key (kbd "C-x t") 'visit-term-buffer)
+(global-set-key (kbd "C-c g") 'google)
 ;;
 ;;=============================================================================
 
@@ -381,6 +385,7 @@
   (define-key clojure-mode-map (kbd "C-n e b") 'nrepl-eval-buffer)
   (define-key clojure-mode-map (kbd "C-n q") 'nrepl-quit))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
+(global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;
 ;;----------------------------------------------------------------------
 ;; Magit

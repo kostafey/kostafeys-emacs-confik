@@ -34,4 +34,15 @@
 (add-hook 'nrepl-mode-hook 'set-auto-complete-as-completion-at-point-function)
 (add-hook 'nrepl-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
+(add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
+
+(defun initialize-cljs-repl ()
+  (interactive)
+  (insert "(require 'cljs.repl.browser)")
+  (nrepl-return)
+  (insert "(cemerick.piggieback/cljs-repl
+:repl-env (doto (cljs.repl.browser/repl-env :port 9000)
+cljs.repl/-setup))")
+  (nrepl-return))
+
 (provide 'clojure-conf)

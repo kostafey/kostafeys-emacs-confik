@@ -40,6 +40,10 @@
                 ("\\.rest$" . rst-mode)) auto-mode-alist))
 
 ;;-----------------------------------------------------------------------------
+;; Markdown
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+
+;;-----------------------------------------------------------------------------
 ;; Org-mode settings
 ;; (add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
 ;; (require 'org-install)
