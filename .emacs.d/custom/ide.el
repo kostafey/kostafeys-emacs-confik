@@ -4,13 +4,8 @@
 ;;
 ;;=============================================================================
 ;; Cedet
-(defvar cedet-root-path 
-  (file-name-as-directory (expand-file-name "cedet_20121119" site-lisp-path)))
-(load-file (concat cedet-root-path "cedet-devel-load.el"))
-(add-to-list 'load-path (concat cedet-root-path "contrib"))
-
 ;; select which submodes we want to activate
-
+;;
 ;; включает глобальную поддержку Semanticdb;
 (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
 
@@ -20,7 +15,7 @@
 (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
 
 ;; активирует контекстное меню привязанное к правой клавише мыши;
-(add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+;; (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
 
 ;; активирует показ названия текущего тага в верхней строке буфера;
 ;; (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
@@ -40,14 +35,14 @@
 (semantic-mode 1)
 
 ;; load contrib library
-(require 'eassist)
+;; (require 'eassist)
 
 ;; Чтобы использовать возможности по дополнению имен и показу информации о
 ;; функциях и классах, вам необходимо загрузить пакет semantic/ia с помощью
 ;; следующей команды:
 (require 'semantic/ia)
 
-(require 'semantic/db-javap)
+;; (require 'semantic/db-javap)
 
 (defun my-semantic-hook ()
   ;; (global-semantic-tag-folding-mode 1)
@@ -62,9 +57,7 @@
 
 ;;=============================================================================
 ;; ECB
-(add-to-list 'load-path (file-name-as-directory 
-                         (expand-file-name "alexott-ecb" site-lisp-path)))
-
+;;
 (require 'ecb)
 ;Перезагрузка окна методов после каждого сохранения
 (setq imenu-auto-rescan 1)

@@ -88,7 +88,8 @@
   "Required packages for `version-control'.")
 
 (defvar prog-modes-packages
-  (list 'auctex)
+  (list 'auctex
+        'ecb)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages
