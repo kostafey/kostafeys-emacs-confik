@@ -25,14 +25,14 @@
 
 ;; активирует автоматический анализ кода в буферах когда Emacs "свободен" и
 ;; ожидает ввода данных от пользователя (idle time);
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
 
 ;; включает подсветку вхождений локальных переменных чье имя совпадает с именем
 ;; текущего тага;
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
 
 ;; Activate semantic
-(semantic-mode 1)
+;; (semantic-mode 1)
 
 ;; load contrib library
 ;; (require 'eassist)

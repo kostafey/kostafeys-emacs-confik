@@ -3,7 +3,8 @@
 ;;-----------------------------------------------------------------------------
 ;; Font
 (when (eq system-type 'windows-nt)
-  (set-face-attribute 'default nil :family "Consolas" :height 110))
+  ;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 120)
+  (set-face-font 'default "Consolas-14.0:antialias=subpixel"))
 
 (when (eq 'gnu/linux system-type)
   ;; (set-face-attribute 'default nil :family "Consolas" :height 130)
