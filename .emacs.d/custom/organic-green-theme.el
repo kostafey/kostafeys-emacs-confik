@@ -1,6 +1,6 @@
 ﻿;;; organic-green-theme.el --- Non-contrast green color theme.
 
-;;; Copyright © 2009-2012 - Kostafey <kostafey@gmail.com>
+;;; Copyright © 2009-2013 - Kostafey <kostafey@gmail.com>
 
 ;; This file is not [yet] part of GNU Emacs, but is distributed under
 ;; the same terms.
@@ -27,56 +27,68 @@
   "Non-contrast green color theme.
 Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 
-(let ((class '((class color) (min-colors 89)))
-      ;; Organic-green palette colors.
+(let* ((class '((class color) (min-colors 89)))
+       ;; Organic-green palette colors.
 
-      ;; green palette
-      ;; ;#A0F0A0 ;#7FFF00 ;#95E454 ;green1  ;green4
-      ;; ;#32CD32 ;#53AD2F ;#73CD4F ;green2  ;
-      ;; ;#66CC66 ;  ;green3  
+       ;; green palette
+       ;; green1 ;green2 ;green3 ;green4
+       ;; http://en.wikipedia.org/wiki/Sea_Eye_Lake
+       (green-tea      "#D0F0C0") (lime         "#BFFF00")
+       (gray-green     "#ACE1AF") (yellow-green "#ADFF2F")
+       (мох            "#ADDFAD") (warm-green   "#95E454")
+       (light-green    "#A0F0A0") (sun-green    "#7FFF00")
+       (emerald        "#50C878") (cham-1       "#8ae234")                                    
+       (sea-eye        "#00A86B") (cham-2       "#73d216")       
+       (sea-green      "#2E8B57") (cham-3       "#4e9a06")
+       (geep-sea-green "#339966") (cham-4       "#346604")
+       (medium-green   "#66CC66") (oak-green    "#53AD2F")
+       (dark-green     "#339933") (grass-green  "#32CD32")
+       (green-a        "#73CD4F")                                   
 
-      (green-tea         "#D0F0C0")
-      (gray-green        "#ACE1AF")
-      (мох               "#ADDFAD")
-      (yellow-green      "#ADFF2F")
-      (lime              "#BFFF00")      
-      (yellow-chartreuse "#DFFF00")
-      (lime-pulp         "#D1E189")
-      (emerald           "#50C878")
-      (sea-eye           "#00A86B") ; http://en.wikipedia.org/wiki/Sea_Eye_Lake
-      (sea-green         "#2E8B57")
-      (geep-sea-green    "#339966")
-                         
-      (dark-green        "#339933")
-      
-      ;; blue palette
-      (blue-green        "#66CDAA")
-      ;; ;#73CDF4
-      ;; ;#83DDFF  
+       ;; blue palette
+       (blue-green        "#66CDAA")
+       ;; ;#73CDF4
+       ;; ;#83DDFF  
+       (blue-0            "#8cc4ff")
+       (blue-1            "#729fcf") 
+       (blue-2            "#3465a4") 
+       (blue-3            "#204a87")
 
-      (organic-fg "#326B6B")
-      (organic-bg "#F0FFF0")
-      (organic-cursor-fg "#225522")
-      (organic-comment-fg "gray50")
-      (organic-string-fg "#119911")
-      (organic-constant-fg "#3465BD")
-      (organic-builtin-fg "MediumPurple3")
-      (minor-green-highlight-background "#D5F0D5")
-      (tiny-green-highlight-background "#E3F2E1")      
-      (minor-grey-highlight-background "#DAEADA")   ;
-      (minor-yellow-highlight-background "#F2FFC0") ;#E3F2A1
-
-      (butter-1 "#fce94f") (butter-2 "#edd400") (butter-3 "#c4a000")
-      (orange-1 "#fcaf3e") (orange-2 "#f57900") (orange-3 "#ce5c00")   
-      (choc-1 "#e9b96e") (choc-2 "#c17d11") (choc-3 "#8f5902")
-      (cham-1 "#8ae234") (cham-2 "#73d216") (cham-3 "#4e9a06")
-      (blue-1 "#729fcf") (blue-2 "#3465a4") (blue-3 "#204a87")
-      (plum-1 "#ad7fa8") (plum-2 "#75507b") (plum-3 "#5c3566")
-      (red-1 "#ef2929")  (red-2 "#cc0000")  (red-3 "#a40000")
-      (alum-1 "#eeeeec") (alum-2 "#d3d7cf") (alum-3 "#babdb6")
-      (alum-4 "#888a85") (alum-5 "#5f615c") (alum-6 "#2e3436")
-      ;; Not in Tango palette; used for better contrast.
-      (cham-4 "#346604") (blue-0 "#8cc4ff") (orange-4 "#b35000"))
+       ;; yellow palette
+       (lime-pulp         "#D1E189")
+       (yellow-chartreuse "#DFFF00")
+       (butter-1          "#fce94f") 
+       (butter-2          "#edd400") 
+       (butter-3          "#c4a000")
+       (dark-yellow       "#808000")
+   
+       ;; misc palette
+       (orange-1 "#fcaf3e") (plum-1   "#ad7fa8")
+       (orange-2 "#f57900") (plum-2   "#75507b")
+       (orange-3 "#ce5c00") (plum-3   "#5c3566")
+       (choc-1   "#e9b96e") (red-1    "#ef2929")
+       (choc-2   "#c17d11") (red-2    "#cc0000")
+       (choc-3   "#8f5902") (red-3    "#a40000")
+       (alum-1   "#eeeeec")
+       (alum-2   "#d3d7cf") 
+       (alum-3   "#babdb6")
+       (alum-4   "#888a85") 
+       (alum-5   "#5f615c") 
+       (alum-6   "#2e3436")
+       
+       ;; basic colors
+       (organic-fg "#326B6B")
+       (organic-bg "#F0FFF0")
+       (organic-cursor-fg "#225522")
+       (organic-comment-fg "gray50")
+       (organic-string-fg "#119911")
+       (organic-constant-fg "#3465BD")
+       (organic-builtin-fg "#0066AA") ;"MediumPurple3" blue-2 
+       (minor-green-highlight-background "#D5F0D5")
+       (tiny-green-highlight-background "#E3F2E1")      
+       (minor-grey-highlight-background "#DAEADA")
+       (minor-yellow-highlight-background "#F2FFC0") ;#E3F2A1
+       (minor-blue-highlight-background "#C0E0FF"))
 
   (custom-theme-set-faces
    'organic-green
@@ -168,11 +180,12 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 
    ;; rst
    '(rst-definition ((t (:inherit font-lock-constant-face))) t)
-   `(rst-level-2-face ((t (:background ,minor-grey-highlight-background))))
-   `(rst-level-3-face ((t (:background ,minor-grey-highlight-background))))
-   `(rst-level-4-face ((t (:background ,minor-grey-highlight-background))))
-   `(rst-level-5-face ((t (:background ,minor-grey-highlight-background))))
-   `(rst-level-6-face ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-1 ((t (:background ,minor-green-highlight-background))) t)   
+   `(rst-level-2 ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-3 ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-4 ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-5 ((t (:background ,minor-grey-highlight-background))))
+   `(rst-level-6 ((t (:background ,minor-grey-highlight-background))))
    '(rst-block ((t (:inherit font-lock-function-name-face :bold t))) t)
    '(rst-external ((t (:inherit font-lock-constant-face))) t)
    '(rst-directive ((t (:inheit font-lock-builtin-face))) t)

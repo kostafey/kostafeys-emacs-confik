@@ -23,8 +23,8 @@
 ;; Short story
 ;; ===========
 ;;
-;; `clj-off-create-script'
-;; e.g. (clj-off-create-script [[ring/ring-core "1.1.8"]])
+;; `clojure-offline-create-script'
+;; e.g. (clojure-offline-create-script [[ring/ring-core "1.1.8"]])
 ;;
 ;; The resolving all dependences offline, in general, is hard, so this resource
 ;; tries to help with it: `https://clojureoffline-kostafey.rhcloud.com'
@@ -51,7 +51,7 @@
 ;; Download `lein-localrepo-<version>.jar' file. The probable location of the
 ;; file can be obtained by evaluating the following elisp script:
 ;;
-;; (clj-off-guess-clojars-url [lein-localrepo "0.4.1"])
+;; (clojure-offline-guess-clojars-url [lein-localrepo "0.4.1"])
 ;;
 ;; Place it to the %HOME%\.m2\repository\<group-id>\<artifact-id>\<version>\
 ;; folder, e.g. %HOME%\.m2\repository\lein-localrepo\lein-localrepo\0.4.1\
@@ -79,7 +79,7 @@
 ;;                 [korma "0.3.0-RC5"]
 ;;                 [lib-noir "0.4.9"]]#
 ;;
-;; Run M-x clj-off-create-script RET RET
+;; Run M-x clojure-offline-create-script RET RET
 ;;
 ;; WARNING!
 ;;
@@ -117,7 +117,7 @@
 ;; | This could be due to a typo in :dependencies or network issues.
 ;;
 ;; So, it should be installed:
-;; (clj-off-create-script ["org.clojure:clojure:pom:1.5.1"])
+;; (clojure-offline-create-script ["org.clojure:clojure:pom:1.5.1"])
 ;;
 ;; Or several artifacts is needed:
 ;;
@@ -130,7 +130,7 @@
 ;; | This could be due to a typo in :dependencies or network issues.
 ;;
 ;; Again:
-;; (clj-off-create-script ["org.clojure:tools.nrepl:pom:0.2.1"
+;; (clojure-offline-create-script ["org.clojure:tools.nrepl:pom:0.2.1"
 ;;                         "clojure-complete:clojure-complete:pom:0.2.2"])
 ;; 
 ;; Don't forget to create *.pom files every time!
@@ -187,24 +187,14 @@
 ;;
 ;;
 
+(require 'functions)
+
 (defvar clojure-offline-script-buffer-name "*clojure-offline*")
-
-(defun force-symbol-name (some-symbol)
-  "Return lisp symbol `some-symbol' as a string at all costs!"
-  (mapconcat 'char-to-string
-             (string-to-list (symbol-name some-symbol)) ""))
-
-(defun trim-string (string)
-  "Remove white spaces in beginning and ending of STRING.
-White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
-  (replace-regexp-in-string
-   "\\`[ \t\n]*" ""
-   (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
 
 ;;----------------------------------------------------------------------
 ;;
 ;;;###autoload
-(defun clj-off-parse-artifact (artifact-name)
+(defun clojure-offline-parse-artifact (artifact-name)
   "Parse `artifact-name' to list (`group-id' `artifact-id' `version')
 Input formats, e.g.:
  [org.clojure/clojure \"1.5.1\"]
@@ -245,10 +235,10 @@ Ouptut format, e.g.:
       (list group-id artifact-id version))))
 
 ;;;###autoload
-(defmacro clj-off-with-artifact (artifact-name &rest body)
+(defmacro clojure-offline-with-artifact (artifact-name &rest body)
   "Inject `group-id' `artifact-id' `version' local variables to the `body'
 scope."
-  `(let* ((artifact (clj-off-parse-artifact ,artifact-name))
+  `(let* ((artifact (clojure-offline-parse-artifact ,artifact-name))
           (group-id (nth 0 artifact))
           (artifact-id (nth 1 artifact))
           (version (nth 2 artifact)))
@@ -257,14 +247,14 @@ scope."
 ;;----------------------------------------------------------------------
 ;;
 ;;;###autoload
-(defun clj-off-get-jar-urls (artifact-name)
+(defun clojure-offline-get-jar-urls (artifact-name)
   "Convert from maven's `artifact-name' to probably jar url location on
 clojars.
 E.g. convert from
 lein-ring:lein-ring:pom:0.8.2
 to
 https://clojars.org/repo/lein-ring/lein-ring/0.8.2/lein-ring-0.8.2.jar"
-  (clj-off-with-artifact
+  (clojure-offline-with-artifact
    artifact-name
    (let ((art-path (concat (mapconcat 'identity 
                                       (split-string group-id "\\.") "/") "/"
@@ -273,13 +263,13 @@ https://clojars.org/repo/lein-ring/lein-ring/0.8.2/lein-ring-0.8.2.jar"
      (concat "https://clojars.org/repo/" art-path "\n"
              "http://repo1.maven.org/maven2/" art-path))))
 
-(defun clj-off-get-list-clojars-url (artifact-names-array)
-  (map 'list 'clj-off-get-jar-urls artifact-names-array))
+(defun clojure-offline-get-list-clojars-url (artifact-names-array)
+  (map 'list 'clojure-offline-get-jar-urls artifact-names-array))
 
 ;;----------------------------------------------------------------------
 ;;
 ;;;###autoload
-(defun clj-off-get-localrepo-install (artifact-name)
+(defun clojure-offline-get-localrepo-install (artifact-name)
   "Convert from maven's `artifact-name' to local maven repository creation
 script.
 lein localrepo install <filename> <[groupId/]artifactId> <version>
@@ -288,27 +278,27 @@ E.g. convert from
 lein-ring:lein-ring:pom:0.8.2
 to
 lein localrepo install foo-1.0.6.jar com.example/foo 1.0.6"
-  (clj-off-with-artifact
+  (clojure-offline-with-artifact
    artifact-name
    (let ((jar-file-name ))
      (concat "lein localrepo install "
              artifact-id "-" version ".jar "
              group-id "/" artifact-id " " version))))
 
-(defun clj-off-get-list-localrepo-install (artifact-names-array)
-  (map 'list 'clj-off-get-localrepo-install artifact-names-array))
+(defun clojure-offline-get-list-localrepo-install (artifact-names-array)
+  (map 'list 'clojure-offline-get-localrepo-install artifact-names-array))
 
 ;;----------------------------------------------------------------------
 ;;
-(defun clj-off-get-file-name (artifact-name extension)
-  (clj-off-with-artifact
+(defun clojure-offline-get-file-name (artifact-name extension)
+  (clojure-offline-with-artifact
    artifact-name
    (concat artifact-id "-" version "." extension)))
 
-(clj-off-get-file-name [org.clojure/clojure "1.5.1"] "jar")
+(clojure-offline-get-file-name [org.clojure/clojure "1.5.1"] "jar")
 
 ;;;###autoload
-(defun clj-off-get-mvn-deploy (artifact-name)
+(defun clojure-offline-get-mvn-deploy (artifact-name)
   "Convert from maven's `artifact-name' to local maven repository creation
 script.
 E.g. convert from
@@ -317,80 +307,65 @@ to
 mvn deploy:deploy-file -DgroupId=lein-ring -DartifactId=lein-ring \
     -Dversion=0.8.2 -Dpackaging=jar -Dfile=lein-ring-0.8.2.jar \
     -Durl=file:maven_repository"
-  (clj-off-with-artifact
+  (clojure-offline-with-artifact
    artifact-name
    (concat "mvn deploy:deploy-file "
            "-DgroupId=" group-id " "
            "-DartifactId=" artifact-id " "
            "-Dversion=" version " "
            "-Dpackaging=" "jar" " "
-           "-Dfile=" (clj-off-get-file-name artifact-name "jar") " "
+           "-Dfile=" (clojure-offline-get-file-name artifact-name "jar") " "
            "-Durl=" "file:maven_repository")))
 
-(defun clj-off-get-list-mvn-deploy (artifact-names-array)
-  (map 'list 'clj-off-get-mvn-deploy artifact-names-array))
+(defun clojure-offline-get-list-mvn-deploy (artifact-names-array)
+  (map 'list 'clojure-offline-get-mvn-deploy artifact-names-array))
 
 ;;----------------------------------------------------------------------
 ;;
-(defun concat-path (root &rest folders)
-"
-E.g. 
- (concat-path (getenv \"HOME\") \".m2\" \"repository\")"
-  (let ((path (file-name-as-directory root)))
-    (while folders
-      (setq path (file-name-as-directory (concat path (car folders))))
-      (setq folders (cdr folders)))
-    path))
-
-
-(defun clj-off-get-m2-path (artifact-name)
-  (clj-off-with-artifact
+(defun clojure-offline-get-m2-path (artifact-name)
+  (clojure-offline-with-artifact
    artifact-name
    (let* ((home (if (equal (file-name-base (getenv "HOME")) "Application Data")
                     (expand-file-name ".." (getenv "HOME"))
                   (getenv "HOME")))
           (m2 (concat-path home ".m2" "repository"))
-          (sep (if (eq system-type 'windows-nt) "\\" "/")))
+          (sep (if (eq system-type 'windows-nt) "\\\\" "/")))
      (concat-path m2
                   (replace-regexp-in-string "\\." sep group-id) 
                   artifact-id 
                   version))))
 
-;; (replace-regexp-in-string "\\." "/" "com.github.insubstantial")
-;; (clj-off-get-m2-path "clojure-complete:clojure-complete:pom:0.2.2")
-;; (clj-off-get-m2-path [org.clojure/clojure "1.5.1"])
-
-
-(defun clj-off-get-copy-pom (artifact-name)
-  (clj-off-with-artifact
+(defun clojure-offline-get-copy-pom (artifact-name)
+  (clojure-offline-with-artifact
    artifact-name
-   (concat "7z e -yo" (clj-off-get-m2-path artifact-name) " "
-           (clj-off-get-file-name artifact-name "jar") " "
+   (concat "7z e -yo\"" (clojure-offline-get-m2-path artifact-name) "\" "
+           (clojure-offline-get-file-name artifact-name "jar") " "
            (directory-file-name 
-            (concat-path "/" "META-INF" "maven" group-id artifact-id "pom.xml"))
+            (concat-path "META-INF" "maven" group-id artifact-id "pom.xml"))
            "\n"
            "rename " 
-           "\"" (clj-off-get-m2-path artifact-name) "pom.xml""\" "
-           (clj-off-get-file-name artifact-name "pom"))))
+           "\"" (if (eq system-type 'windows-nt) 
+                    (replace-regexp-in-string 
+                     "/" "\\\\" 
+                     (clojure-offline-get-m2-path artifact-name)) 
+                  (clojure-offline-get-m2-path artifact-name)) "pom.xml""\" "
+           (clojure-offline-get-file-name artifact-name "pom"))))
 
-;; 7z e -yoC:\temp C:\Distrib\Clojure\clojure-complete-0.2.2.jar META-INF\maven\clojure-complete\clojure-complete\pom.xml
-;; rename pom.xml qwe.pom
-;; (insert (clj-off-get-copy-pom [org.clojure/clojure "1.5.1"]))
-;; 7z e -yo/home/kostafey/.m2/repository/org/clojure/clojure/1.5.1/ clojure-1.5.1.jar /META-INF/maven/org.clojure/clojure/pom.xml
-;; rename "/home/kostafey/.m2/repository/org/clojure/clojure/1.5.1/pom.xml" clojure-1.5.1.pom
+(defun clojure-offline-get-list-copy-pom (artifact-names-array)
+  (map 'list 'clojure-offline-get-copy-pom artifact-names-array))
 
 ;;----------------------------------------------------------------------
 ;;
 ;;;###autoload
-(defun clj-off-guess-clojars-url (artifact-name)
+(defun clojure-offline-guess-clojars-url (artifact-name)
   (interactive
    (list
     (read-from-minibuffer "Clojure artifact: "
                           (buffer-substring (mark) (point)) nil nil
-                          'clj-off-artifact-name-history)))
-  (message (clj-off-get-jar-urls artifact-name)))
+                          'clojure-offline-artifact-name-history)))
+  (message (clojure-offline-get-jar-urls artifact-name)))
 
-(defun clj-off-create-script-buffer ()
+(defun clojure-offline-create-script-buffer ()
   "Create buffer dedicated to output configure required clojure jars."
   (let ((buf (get-buffer-create clojure-offline-script-buffer-name)))
     (save-excursion
@@ -399,7 +374,8 @@ E.g.
       buf)))
 
 ;;;###autoload
-(defun clj-off-create-script (artifact-names-array &optional install clear)
+(defun clojure-offline-create-script 
+  (artifact-names-array &optional install clear)
   "
 `install': nil, 'maven
 `clear': nil, t"
@@ -407,28 +383,34 @@ E.g.
    (list
     (read-from-minibuffer "Clojure artifacts list: "
                           (buffer-substring (mark) (point)) nil nil
-                          'clj-off-artifacts-list-history)))
+                          'clojure-offline-artifacts-list-history)))
   (let ((artifact-names-array (if (and (not (vectorp artifact-names-array))
                                        (stringp artifact-names-array))
                                   (read (trim-string artifact-names-array))
                                 artifact-names-array)))
-    (set-buffer (clj-off-create-script-buffer))
+    (set-buffer (clojure-offline-create-script-buffer))
     (if (equal clear nil)
         (insert "\n\n")
       (erase-buffer))
+    (end-of-buffer)
+    ; Downloads script
     (mapc
      (lambda (art) (mapc
                (lambda (a) (insert (concat "wget " a "\n")))
                (split-string art)))
-     (clj-off-get-list-clojars-url artifact-names-array))
+     (clojure-offline-get-list-clojars-url artifact-names-array))
+    ; Copy jars script
     (insert "\n")
     (if (and (equal install nil) (equal install 'maven))
-        (progn
-          (mapc (lambda (art) (insert (concat art "\n")))
-                (clj-off-get-list-mvn-deploy artifact-names-array)))
-      (progn
         (mapc (lambda (art) (insert (concat art "\n")))
-              (clj-off-get-list-localrepo-install artifact-names-array))))
-    (switch-to-buffer (clj-off-create-script-buffer))))
+              (clojure-offline-get-list-mvn-deploy artifact-names-array))
+      (mapc (lambda (art) (insert (concat art "\n")))
+            (clojure-offline-get-list-localrepo-install 
+             artifact-names-array)))
+    ; Extract *.pom script
+    (insert "\n")
+    (mapc (lambda (art) (insert (concat art "\n")))
+              (clojure-offline-get-list-copy-pom artifact-names-array))
+    (switch-to-buffer (clojure-offline-create-script-buffer))))
 
 (provide 'clojure-offline)
