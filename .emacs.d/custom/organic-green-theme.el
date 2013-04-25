@@ -83,7 +83,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        (organic-comment-fg "gray50")
        (organic-string-fg "#119911")
        (organic-constant-fg "#3465BD")
-       (organic-builtin-fg "#0066AA") ;"MediumPurple3" blue-2 
+       (organic-builtin-fg "#009080") ; "#0066AA" "MediumPurple3" blue-2
        (minor-green-highlight-background "#D5F0D5")
        (tiny-green-highlight-background "#E3F2E1")      
        (minor-grey-highlight-background "#DAEADA")

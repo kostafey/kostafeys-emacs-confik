@@ -86,6 +86,12 @@
 (global-set-key [(meta control down)] 'forward-sentence)
 (global-set-key [(meta control up)]   'backward-sentence)
 ;;-----------------------------------------------------------------------------
+;; html tags navigation
+(defun kostafey-html-mode-hook ()
+  (define-key html-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
+  (define-key html-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
+(add-hook 'html-mode-hook 'kostafey-html-mode-hook)
+;;-----------------------------------------------------------------------------
 (require 'pager)
 ;; Bind scrolling functions from pager library.
 (global-set-key [next] 	   'pager-page-down)
@@ -429,3 +435,4 @@
 ;;=============================================================================
 
 (provide 'key-bindings)
+
