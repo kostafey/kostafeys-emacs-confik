@@ -83,12 +83,13 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        (organic-comment-fg "gray50")
        (organic-string-fg "#119911")
        (organic-constant-fg "#3465BD")
-       (organic-builtin-fg "#009080") ; "#0066AA" "MediumPurple3" blue-2
+       (organic-builtin-fg "#009292") ; "#009494" "#008C8C" "MediumPurple3"
        (minor-green-highlight-background "#D5F0D5")
        (tiny-green-highlight-background "#E3F2E1")      
        (minor-grey-highlight-background "#DAEADA")
        (minor-yellow-highlight-background "#F2FFC0") ;#E3F2A1
-       (minor-blue-highlight-background "#C0E0FF"))
+       (minor-blue-highlight-background "#C0E0FF")
+       (minor-red-highlight-background "#FFF0F0"))
 
   (custom-theme-set-faces
    'organic-green
@@ -202,7 +203,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(whitespace-line ((t (:background ,organic-bg :foreground "lightgray"))) t)
    `(whitespace-space ((t (:background ,organic-bg :foreground "lightgray"))) t)
    `(whitespace-space-before-tab ((t (:background ,organic-bg :foreground "lightgray"))) t)
-   `(whitespace-trailing ((t (:background ,organic-bg :foreground "lightgray"))) t)
+   `(whitespace-trailing ((t (:background ,organic-bg :foreground ,plum-1))) t)
 
    ;; magit
    '(magit-diff-add ((t (:foreground "#339933"))) t)
