@@ -215,7 +215,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(speedbar-tag-face ((t (:foreground "DarkSlateGray4"))))
    '(yas/field-highlight-face ((t (:background "#DDEE00"))))
    `(idle-highlight ((t (:foreground ,organic-fg :background ,minor-yellow-highlight-background))) t)
-
+   `(comint-highlight-prompt ((t (:foreground ,organic-constant-fg :weight bold))) t)
    ))
 
 (provide-theme 'organic-green)
