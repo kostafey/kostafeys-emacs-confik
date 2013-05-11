@@ -79,30 +79,37 @@ in the --type argument to the ack command")
   (set (make-local-variable 'compilation-error-face)
        grep-hit-face))
 
+(defun ack-run (search-dir command-args)
+  "Actually run ack program."
+  (setq default-directory search-dir)
+  (compilation-start (concat (ack-build-command)
+                             command-args
+                             (when (eq system-type 'windows-nt)
+                               (concat " < " null-device)))
+                     'ack-mode))
+
 ;;;###autoload
 (defun ack-with-prompt (search-dir command-args)
-  (interactive   
+  (interactive
    (list
     (ido-read-directory-name "Base dir for search: ")
     (read-from-minibuffer "Run ack (like this): "
-                               (ack-build-command)
-                               nil
-                               nil
-                               'ack-history)))
-  (setq default-directory search-dir)
-  (compilation-start command-args 'ack-mode))
+                          (ack-build-command)
+                          nil
+                          nil
+                          'ack-history)))
+  (ack-run search-dir command-args))
 
 ;;;###autoload
 (defun ack (search-dir command-args)
-  (interactive   
+  (interactive
    (list
     (ido-read-directory-name "Base dir for search: ")
-    (read-from-minibuffer "Search for: " 
+    (read-from-minibuffer "Search for: "
                           (symbol-name (symbol-at-point))
-                          nil 
-                          nil 
+                          nil
+                          nil
                           'ack-history)))
-  (setq default-directory search-dir)
-  (compilation-start (concat (ack-build-command) command-args) 'ack-mode))
+  (ack-run search-dir command-args))
 
 (provide 'ack)

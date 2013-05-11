@@ -192,6 +192,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(rst-directive ((t (:inheit font-lock-builtin-face))) t)
    '(rst-literal ((t (:inheit font-lock-string-face))))
    '(rst-emphasis1 ((t (:inherit italic))) t)
+   `(rst-adornment ((t (:bold t :foreground ,blue-2))))
 
    ;; whitespace-mode
    `(whitespace-empty ((t (:background ,organic-bg :foreground "lightgray"))) t)
