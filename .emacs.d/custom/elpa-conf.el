@@ -70,7 +70,7 @@
         'highlight-parentheses
         'idle-highlight-mode
         'popwin
-        'nlinum
+        'tabbar
         'rainbow-mode
         'highlight-symbol)
   "Required packages for `look-and-feel'.")

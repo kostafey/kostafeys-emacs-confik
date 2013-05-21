@@ -1,3 +1,6 @@
+;;-----------------------------------------------------------------------------
+;; ibuffer sorting
+(setq-default ibuffer-default-sorting-mode 'major-mode)
 
 ;;-----------------------------------------------------------------------------
 ;; Here's a handy function that kills the current buffer and removes

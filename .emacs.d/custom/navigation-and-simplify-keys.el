@@ -88,6 +88,20 @@
     (mark-line arg)
     (kill-ring-save (point) (mark))))
 
+(defun copy-url (&optional arg)
+  "Copy a url under the cursor"
+  (interactive "p")
+  (let* ((beg (save-excursion
+                (search-backward " " nil t arg)
+                (right-char)
+                (point)))
+         (end (save-excursion
+                (end-of-line)
+                (point)))
+         (url (buffer-substring beg end)))
+    (kill-new url)
+    (message (concat "Copied to buffer: " url))))
+
 ;;=============================================================================
 ;; Поиск и замена
 ;;=============================================================================
