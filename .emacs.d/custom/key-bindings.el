@@ -80,8 +80,8 @@
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-<right>")   'step-forward-word)
 (global-set-key (kbd "C-<left>")    'step-backward-word)
-(global-set-key (kbd "C-S-<right>") 'step-forward-select)
-(global-set-key (kbd "C-S-<left>")  'step-backward-select)
+(put 'step-forward-word 'CUA 'move)
+(put 'step-backward-word 'CUA 'move)
 ;;-----------------------------------------------------------------------------
 (global-set-key [(meta control down)] 'forward-sentence)
 (global-set-key [(meta control up)]   'backward-sentence)
@@ -281,6 +281,9 @@
 (require 'ido)
 (ido-mode t)
 (global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-x f") ; the plain prompt for file path
+                '(lambda () (interactive)
+                   (find-file (read-from-minibuffer "Enter file path: "))))
 (global-set-key (kbd "C-x C-r") 'sudo-edit)
 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
 (global-set-key (concat change-buffer-prefix "b") 'switch-to-buffer)

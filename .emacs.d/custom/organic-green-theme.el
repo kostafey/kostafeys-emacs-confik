@@ -47,8 +47,8 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 
        ;; blue palette
        (blue-green        "#66CDAA")
-       ;; ;#73CDF4
-       ;; ;#83DDFF  
+       ;; ;#73CDF4        "#3030DF" 
+       ;; ;#83DDFF        "#4045F0"   
        (blue-0            "#8cc4ff")
        (blue-1            "#729fcf") 
        (blue-2            "#3465a4") 
