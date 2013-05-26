@@ -2,6 +2,12 @@
 ;; History
 ;; To have a menu of recently opened files
 (recentf-mode 1)
+(setq recentf-max-saved-items 300)
+
+(defun ido-choose-from-recentf ()
+  "Use ido to select a recently opened file from the `recentf-list'"
+  (interactive)
+  (find-file (ido-completing-read "Open file: " recentf-list nil t)))
 
 ;; Mode for automatic saving of minibuffer history.
 (savehist-mode 1)
@@ -24,3 +30,4 @@
 
 
 (provide 'history-conf)
+

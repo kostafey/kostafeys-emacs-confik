@@ -75,9 +75,9 @@ in the --type argument to the ack command")
 
 (define-compilation-mode ack-mode "Ack"
   "Ack compilation mode."
+  (set (make-local-variable 'truncate-lines) t)
   (set (make-local-variable 'compilation-disable-input) t)
-  (set (make-local-variable 'compilation-error-face)
-       grep-hit-face))
+  (set (make-local-variable 'compilation-error-face) grep-hit-face))
 
 (defun ack-quote (arg)
   (concat "\"" arg "\""))
@@ -121,7 +121,7 @@ in the --type argument to the ack command")
    (list
     (ido-read-directory-name "Base dir for search: ")
     (read-from-minibuffer "Search for file name: "
-                          (symbol-name (symbol-at-point))
+                          (file-name-nondirectory (buffer-file-name))
                           nil
                           nil
                           'ack-history)))

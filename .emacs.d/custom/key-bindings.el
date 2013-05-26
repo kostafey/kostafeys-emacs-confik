@@ -135,6 +135,7 @@
 (global-set-key (kbd "M-r") 'replace-string)
 
 (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+(global-set-key (kbd "C-c C-x") 'ack-file)
 
 (when (require 'highlight-symbol nil 'noerror)
   (eval-after-load "highlight-symbol"
@@ -237,8 +238,6 @@
 (global-set-key [(meta return)] 'toggle-fullscreen)
 ;; Folding
 (global-set-key [(control meta tab)] 'fold-dwim-toggle-selective-display)
-(global-set-key "\C-cf" 'semantic-tag-folding-fold-block)
-(global-set-key "\C-cs" 'semantic-tag-folding-show-block)
 ;; Change font size
 (global-set-key (kbd "C-+")      '(lambda nil (interactive) (djcb-zoom 1)))
 (global-set-key [C-kp-add]       '(lambda nil (interactive) (djcb-zoom 1)))
@@ -281,6 +280,7 @@
 (require 'ido)
 (ido-mode t)
 (global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-c f") 'ido-choose-from-recentf)
 (global-set-key (kbd "C-x f") ; the plain prompt for file path
                 '(lambda () (interactive)
                    (find-file (read-from-minibuffer "Enter file path: "))))
@@ -295,9 +295,9 @@
 (global-set-key (kbd "C-x C-n") 'bs-show)
 ;;-----------------------------------------------------------------------------
 ;; lusty-explorer
-(when (require 'lusty-explorer nil 'noerror)
-  (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
-  (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
+;; (when (require 'lusty-explorer nil 'noerror)
+;;   (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
+;;   (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
 ;;-----------------------------------------------------------------------------
 ;; buffers shortcuts
 (global-set-key (concat selected-area-prefix "\C-e") 
