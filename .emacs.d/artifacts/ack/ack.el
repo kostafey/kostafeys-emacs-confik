@@ -69,9 +69,9 @@ in the --type argument to the ack command")
   (let ((type (ack-find-type-for-mode)))
     (concat ack-command
             (if (and ack-guess-type type)
-              (concat " --type=" type)
-              " --type=text") 
-            " -- ")))
+                (concat " --type=" type)
+              " --type=text")
+            " --ignore-case --flush -- ")))
 
 (define-compilation-mode ack-mode "Ack"
   "Ack compilation mode."

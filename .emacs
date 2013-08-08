@@ -41,6 +41,14 @@
 
 (require 'elpa-conf)
 
+(add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
+(require 'popup-switcher)
+
+(add-to-list 'load-path
+             (concat site-lisp-path 
+                     "clomacs/src/elisp/"))
+(require 'clomacs)
+
 (require 'switch-language)
 (require 'ispell-conf)
 (require 'completition-conf)
@@ -67,7 +75,7 @@
 (require 'aj-compilation)
 (require 'sphinx-frontend)
 ;; (require 'python-conf)
-(require 'ejc-sql-conf nil 'noerror)
+;; (require 'ejc-sql-conf nil 'noerror)
 
 ;; (require 'misc-swarm)
 

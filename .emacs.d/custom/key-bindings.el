@@ -86,16 +86,6 @@
 (global-set-key [(meta control down)] 'forward-sentence)
 (global-set-key [(meta control up)]   'backward-sentence)
 ;;-----------------------------------------------------------------------------
-;; html/xml tags navigation
-(defun kostafey-html-mode-hook ()
-  (define-key html-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
-  (define-key html-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
-(add-hook 'html-mode-hook 'kostafey-html-mode-hook)
-(defun kostafey-nxml-mode-hook ()
-  (require 'sgml-mode)
-  (define-key nxml-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
-  (define-key nxml-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
-(add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 ;;-----------------------------------------------------------------------------
 (require 'pager)
 ;; Bind scrolling functions from pager library.
@@ -135,7 +125,7 @@
 (global-set-key (kbd "M-r") 'replace-string)
 
 (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
-(global-set-key (kbd "C-c C-x") 'ack-file)
+(global-set-key (kbd "C-c C-f") 'ack-file)
 
 (when (require 'highlight-symbol nil 'noerror)
   (eval-after-load "highlight-symbol"
@@ -148,8 +138,40 @@
 ;;=============================================================================
 
 ;;=============================================================================
+;;                           Intellectual point jumps
+;;
+;;-----------------------------------------------------------------------------
+;; html/xml tags navigation
+(defun kostafey-html-mode-hook ()
+  (define-key html-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
+  (define-key html-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
+(add-hook 'html-mode-hook 'kostafey-html-mode-hook)
+(defun kostafey-nxml-mode-hook ()
+  (require 'sgml-mode)
+  (define-key nxml-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
+  (define-key nxml-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
+(add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
+;;-----------------------------------------------------------------------------
+;; elisp goto definition
+(define-key emacs-lisp-mode-map (kbd "C-M-d") 'find-function-jump-at-point)
+;;
+;;=============================================================================
+
+;;=============================================================================
+;;                              Command executions
+;; smex configuration
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;;
+;;=============================================================================
+
+;;=============================================================================
 ;;                        Text transformations
 ;;
+(global-set-key (kbd "C-n") 'newline)
+(global-set-key (kbd "C-S-n") 'open-line)
 ;;-----------------------------------------------------------------------------
 ;; Word operations
 (global-set-key (kbd "M-t") 'transpose-words)
@@ -350,8 +372,8 @@
 (define-key ac-complete-mode-map [prior] 'ac-page-previous)
 (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
 
-(global-set-key [f1] 'ibuffer)
-(global-set-key [f2] 'ido-switch-buffer)
+(global-set-key [f1] 'psw-switch-buffer)
+(global-set-key [f2] 'psw-switch-recentf)
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
 ;; (global-set-key [f8] 'ispell-region); 'ispell-word
 (global-set-key [f4] 'shell)
@@ -403,12 +425,16 @@
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;
 ;;----------------------------------------------------------------------
-;; Magit
+;; Magit & ahg
 ;;
 (global-unset-key (kbd "M-a"))
-(eval-after-load "magit"
+(eval-after-load "version-control"
   '(progn
-     (global-set-key (kbd "M-a") 'magit-status)))
+     (global-set-key (kbd "M-a") 'get-vc-status)))
+
+(eval-after-load "ahg"
+  '(progn
+     (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
 ;;
 ;;----------------------------------------------------------------------
 ;; multiple-cursors

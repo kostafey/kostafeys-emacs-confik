@@ -67,6 +67,8 @@
 ;; StatusBar config
 ;;
 (require 'mode-line-conf)
+;; (require 'powerline)
+;; (powerline-default-theme)
 ;;
 ;;=============================================================================
 

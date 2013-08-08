@@ -55,6 +55,18 @@
 (when (> emacs-major-version 21) (savehist-mode t))
 ;;=============================================================================
 
+;;----------------------------------------------------------------------
+;; flx configuration - fuzzy matching files and paths via ido
+;;
+(require 'flx-ido)
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-use-faces nil)
+;;
+;;----------------------------------------------------------------------
+
 (defun switch-to-temp-buffer ()
   "Swithes to temp buffer."
   (interactive)

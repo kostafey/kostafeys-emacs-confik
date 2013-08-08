@@ -72,18 +72,23 @@
         'popwin
         'tabbar
         'rainbow-mode
-        'highlight-symbol)
+        'highlight-symbol
+        ;; 'powerline
+        )
   "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages
   (list 'goto-last-change
         'multiple-cursors        
-        'dired+)
-  "Required packages for `navigation-and-simplify-keys' and `key-bindings'.")
+        'dired+
+        'flx
+        'smex)
+  "Required packages for `navigation-and-simplify-keys', `key-bindings'
+and `buffer-navigation'.")
 
 (defvar vc-packages
   (list 'magit
-        ;; 'ack
+        'ahg
         )
   "Required packages for `version-control'.")
 

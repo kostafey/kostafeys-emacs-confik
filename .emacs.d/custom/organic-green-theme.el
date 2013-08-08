@@ -35,7 +35,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        ;; http://en.wikipedia.org/wiki/Sea_Eye_Lake
        (green-tea      "#D0F0C0") (lime         "#BFFF00")
        (gray-green     "#ACE1AF") (yellow-green "#ADFF2F")
-       (мох            "#ADDFAD") (warm-green   "#95E454")
+       (mox            "#ADDFAD") (warm-green   "#95E454")
        (light-green    "#A0F0A0") (sun-green    "#7FFF00")
        (emerald        "#50C878") (cham-1       "#8ae234")                                    
        (sea-eye        "#00A86B") (cham-2       "#73d216")       
@@ -132,7 +132,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(font-lock-string-face ((,class (:foreground ,organic-string-fg))))
    `(font-lock-type-face ((,class (:slant italic :foreground "ForestGreen"))))
    `(font-lock-variable-name-face ((,class (:width condensed :foreground "DarkGoldenrod"))))
-   `(font-lock-warning-face ((,class (:foreground "#AA0000"))))
+   `(font-lock-warning-face ((,class (:foreground "#AA0000" :weight bold))))
 
    ;; Button and link faces
    `(link ((,class (:underline t :foreground ,blue-3))))
@@ -217,6 +217,14 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(yas/field-highlight-face ((t (:background "#DDEE00"))))
    `(idle-highlight ((t (:foreground ,organic-fg :background ,minor-yellow-highlight-background))) t)
    `(comint-highlight-prompt ((t (:foreground ,organic-constant-fg :weight bold))) t)
+
+   '(flx-highlight-face  ((t (:foreground "#0066CC" :bold t :underline t))) t)
+
+   ;; powerline
+   `(powerline-active1 ((t (:background ,alum-3 :inherit mode-line))) t)
+   `(powerline-active2 ((t (:background ,alum-2 :inherit mode-line))) t)
+   '(powerline-inactive1  ((t (:background "grey70" :inherit mode-line-inactive))) t)
+   '(powerline-inactive2  ((t (:background "grey80" :inherit mode-line-inactive))) t)
    ))
 
 (provide-theme 'organic-green)
