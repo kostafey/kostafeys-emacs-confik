@@ -86,6 +86,19 @@
 (global-set-key [(meta control down)] 'forward-sentence)
 (global-set-key [(meta control up)]   'backward-sentence)
 ;;-----------------------------------------------------------------------------
+;; cua-mode in org-mode
+(eval-after-load "org"
+  '(progn
+    (define-key org-mode-map (kbd "S-<left>") nil)
+    (define-key org-mode-map (kbd "S-<right>") nil)
+    (define-key org-mode-map (kbd "C-S-<left>") nil)
+    (define-key org-mode-map (kbd "C-S-<right>") nil)
+    (define-key org-mode-map (kbd "S-<up>") nil)
+    (define-key org-mode-map (kbd "S-<down>") nil)    
+    (define-key org-mode-map (kbd "M-<up>") nil)
+    (define-key org-mode-map (kbd "M-<down>") nil)
+    (define-key org-mode-map (kbd "M-<left>") nil)
+    (define-key org-mode-map (kbd "M-<right>") nil)))
 ;;-----------------------------------------------------------------------------
 (require 'pager)
 ;; Bind scrolling functions from pager library.
@@ -295,8 +308,8 @@
 
 ;;-----------------------------------------------------------------------------
 ;; tabbar - switch buffers by tabs 
-(global-set-key [(meta shift left)] 'tabbar-backward-tab)
-(global-set-key [(meta shift right)] 'tabbar-forward-tab)
+(global-set-key [(shift super left)] 'tabbar-backward-tab)
+(global-set-key [(shift super right)] 'tabbar-forward-tab)
 ;;-----------------------------------------------------------------------------
 ;; ido - switch buffers by completiotion
 (require 'ido)
