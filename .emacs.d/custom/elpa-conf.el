@@ -73,6 +73,7 @@
         'tabbar
         'rainbow-mode
         'highlight-symbol
+        'minimap
         ;; 'powerline
         )
   "Required packages for `look-and-feel'.")
