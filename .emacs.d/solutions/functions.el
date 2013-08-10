@@ -49,4 +49,27 @@ E.g.
       (setq path (file-name-as-directory (concat path folder))))
     path))
 
+(defun kostafey-export-keys ()
+  "Export my Emacs keybindings configuration."
+  (interactive)
+  (let* ((keys-file-dir custom-conf-lisp-path)
+         (src-filename "key-bindings.org")
+         (el-filename "key-bindings.el")
+         (md-filename "key-bindings.md")         
+         (readme-filename "README.md"))
+    (save-restriction
+      (save-excursion
+        (widen)
+        (with-current-buffer
+            (find-file-noselect 
+             (expand-file-name src-filename keys-file-dir))
+          (org-babel-tangle-file 
+           buffer-file-name
+           (expand-file-name el-filename keys-file-dir) 
+           "emacs-lisp")
+          (org-md-export-to-markdown nil))
+        (rename-file (expand-file-name md-filename keys-file-dir)
+                     (expand-file-name readme-filename "~/")
+                     t)))))
+
 (provide 'functions)

@@ -1,9 +1,11 @@
 ;;=============================================================================
-;;Человеку свойственно ошибаться, но для нечеловеческих ляпов нужен компьютер.
+;; Человеку свойственно ошибаться, но для нечеловеческих ляпов нужен компьютер.
 ;;                                                                  Пол Эрлих
+;; To err is human, but to really foul things up you need a computer.
+;;                                                               Paul Ehrlich
 ;;
-;;Kostafey's emacs confik :) 
-;;started from 08.08.2008, 22:45:25
+;; Kostafey's emacs confik :) 
+;; started from 08.08.2008, 22:45:25
 ;;
 ;;    ___ _ __ ___   __ _  ___ ___
 ;;   / _ \ '_ ` _ \ / _` |/ __/ __|
@@ -14,27 +16,27 @@
 (server-start)
 (defvar *emacs-load-start* (current-time))
 ;;=============================================================================
-;; Указываем где будут лежать файлы расширений
+;; Elisp extensions paths
 ;;=============================================================================
-(defvar site-lisp-path "~/.emacs.d/")
+(defvar site-lisp-path "~/.emacs.d/") ; root extensions folder
 (add-to-list 'load-path site-lisp-path)
-
+;;-----------------------------------------------------------------------------
 ;; Third-party *.el files (in general low-supporded, misplaced in ELPA)
 ;; without any patching or with tiny patches, stored in this repo.
 (defvar third-party-lisp-path (concat site-lisp-path "artifacts/"))
 (add-to-list 'load-path third-party-lisp-path)
-
-;;-----------------------------------------------------------------------------
-;auto-customized custom-set-variables
-(setq custom-file (concat site-lisp-path "custom/custom.el"))
-(load custom-file)
-
-;;-----------------------------------------------------------------------------
+;; Personal customization
 (defvar custom-conf-lisp-path (concat site-lisp-path "custom/"))
 (add-to-list 'load-path custom-conf-lisp-path)
+;; Reusable customization
 (defvar solutions-path
   (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
 (add-to-list 'load-path solutions-path)
+;;-----------------------------------------------------------------------------
+;auto-customized custom-set-variables
+(setq custom-file (concat site-lisp-path "custom.el"))
+(load custom-file)
+;;-----------------------------------------------------------------------------
 
 (require 'functions)
 (require 'look-and-feel)

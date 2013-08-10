@@ -1,4 +1,6 @@
+* Kostafey's keybindings
 
+#+begin_src emacs-lisp
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
 ;;; Commentary:
@@ -103,8 +105,8 @@
 ;;-----------------------------------------------------------------------------
 (require 'pager)
 ;; Bind scrolling functions from pager library.
-(global-set-key [next]     'pager-page-down)
-(global-set-key [prior]    'pager-page-up)
+(global-set-key [next] 	   'pager-page-down)
+(global-set-key [prior]	   'pager-page-up)
 ;;-----------------------------------------------------------------------------
 ;; Scrolling without point movement
 (global-set-key (kbd "C-l") 'recenter-top-bottom)
@@ -248,7 +250,7 @@
 ;; Meta - Навигация
 ;;=============================================================================
 (global-set-key "\M-g" 'goto-line)
-;;l - влево j - вправо i - вверх k - вниз   
+;;l - влево j - вправо i - вверх k - вниз	
 (global-set-key "\M-i" 'previous-line)
 (global-set-key "\M-k" 'next-line)
 (global-set-key "\M-j" 'backward-char)
@@ -304,8 +306,8 @@
 ;(global-set-key (kbd "C-x <right>") 'next-buffer) - default
 ;(global-set-key (kbd "C-x <left>") 'previous-buffer) - default
 
-(global-set-key [(control next)] 'next-buffer)      ; C-Page Up
-(global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
+(global-set-key [(control next)] 'next-buffer) 		; C-Page Up
+(global-set-key [(control prior)] 'previous-buffer)	; C-Page Down
 
 ;;-----------------------------------------------------------------------------
 ;; tabbar - switch buffers by tabs 
@@ -484,3 +486,5 @@
 ;;=============================================================================
 
 (provide 'key-bindings)
+#+end_src
+
