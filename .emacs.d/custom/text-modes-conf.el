@@ -58,6 +58,14 @@
 
 (setq org-hide-leading-stars t)
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((perl . t)         
+   (ruby . t)
+   (sh . t)
+   (python . t)
+   (emacs-lisp . t)))
+
 (defun sql-ansi-mode ()
   (interactive)
   (sql-mode)

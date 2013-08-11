@@ -34,6 +34,7 @@
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "M-s") 'set-mark-command)
 ;;-----------------------------------------------------------------------------
+
 (require 'redo)
 (global-unset-key "\C-_")
 
@@ -83,9 +84,9 @@
 (global-set-key (kbd "C-<left>")    'step-backward-word)
 (put 'step-forward-word 'CUA 'move)
 (put 'step-backward-word 'CUA 'move)
-;;-----------------------------------------------------------------------------
-(global-set-key [(meta control down)] 'forward-sentence)
-(global-set-key [(meta control up)]   'backward-sentence)
+;;-----------------------------------------------------------------------------  
+(global-set-key (kbd "C-M-<down>") 'forward-sentence)
+(global-set-key (kbd "C-M-<up>") 'backward-sentence)
 ;;-----------------------------------------------------------------------------
 ;; cua-mode in org-mode
 (eval-after-load "org"
