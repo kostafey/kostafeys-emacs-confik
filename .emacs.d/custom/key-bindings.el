@@ -1,4 +1,3 @@
-
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
 ;;; Commentary:

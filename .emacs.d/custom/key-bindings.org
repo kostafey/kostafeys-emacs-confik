@@ -8,7 +8,7 @@
 | M-z          | iconify-or-deiconify-frame |             |
 | M-&lt;f4&gt; | save-buffers-kill-terminal |             |
 
-#+begin_src emacs-lisp :exports none
+#+begin_src emacs-lisp :exports none :padline no
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
 ;;; Commentary:
