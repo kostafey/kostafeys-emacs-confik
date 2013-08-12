@@ -50,6 +50,7 @@
              (concat site-lisp-path 
                      "clomacs/src/elisp/"))
 (require 'clomacs)
+(require 'ejc-sql-conf)
 
 (require 'switch-language)
 (require 'ispell-conf)

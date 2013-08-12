@@ -164,7 +164,13 @@
       (define-key org-mode-map (kbd "M-<up>") nil)
       (define-key org-mode-map (kbd "M-<down>") nil)
       (define-key org-mode-map (kbd "M-<left>") nil)
-      (define-key org-mode-map (kbd "M-<right>") nil)))
+      (define-key org-mode-map (kbd "M-<right>") nil)
+      (define-key org-mode-map (kbd "C-a") nil)
+      (define-key org-mode-map (kbd "M-a") nil)))
+
+  (defun kostafey-java-mode-hook ()
+    (define-key java-mode-map (kbd "C-a") nil))
+  (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
   ;;-----------------------------------------------------------------------------
   (require 'pager)
   ;; Bind scrolling functions from pager library.

@@ -13,19 +13,19 @@
 ;;=============================================================================
 ;; eclim
 ;;
-(require 'eclim)
-(global-eclim-mode)
-(require 'eclimd)
-(custom-set-variables
- '(eclim-eclipse-dirs '("/opt/eclipse_64")))
+;; (require 'eclim)
+;; (global-eclim-mode)
+;; (require 'eclimd)
+;; (custom-set-variables
+;;  '(eclim-eclipse-dirs '("/opt/eclipse_64")))
 
-(setq help-at-pt-display-when-idle t)
-(setq help-at-pt-timer-delay 0.1)
-(help-at-pt-set-timer)
+;; (setq help-at-pt-display-when-idle t)
+;; (setq help-at-pt-timer-delay 0.1)
+;; (help-at-pt-set-timer)
 
-;; add the emacs-eclim source
-(require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)
+;; ;; add the emacs-eclim source
+;; (require 'ac-emacs-eclim-source)
+;; (ac-emacs-eclim-config)
 ;;
 ;;=============================================================================
 
