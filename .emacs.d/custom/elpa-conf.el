@@ -45,7 +45,8 @@
 
 
 (defvar text-modes-required-packages
-  (list 'log4j-mode
+  (list 'org
+        'log4j-mode
         'lorem-ipsum
         'markdown-mode
         'typing)

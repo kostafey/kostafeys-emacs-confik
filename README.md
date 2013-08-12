@@ -6,10 +6,11 @@
 <ul>
 <li><a href="#sec-1-1">1.1. Humane emacs</a>
 <ul>
-<li><a href="#sec-1-1-1">1.1.1. Select Copy Paste</a></li>
-<li><a href="#sec-1-1-2">1.1.2. Undo/redo</a></li>
-<li><a href="#sec-1-1-3">1.1.3. Delete/insert char</a></li>
-<li><a href="#sec-1-1-4">1.1.4. Save/revert</a></li>
+<li><a href="#sec-1-1-1">1.1.1. Exit/hide emacs</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Select Copy Paste</a></li>
+<li><a href="#sec-1-1-3">1.1.3. Undo/redo</a></li>
+<li><a href="#sec-1-1-4">1.1.4. Delete/insert char</a></li>
+<li><a href="#sec-1-1-5">1.1.5. Save/revert</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-2">1.2. Basic point movements &amp; change buffer's position</a></li>
@@ -22,6 +23,8 @@
 # Kostafey's keybindings
 
 ## Humane emacs
+
+### Exit/hide emacs
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 

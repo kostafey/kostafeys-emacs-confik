@@ -92,7 +92,7 @@
 
 (setq ecb-layout-name "my-left")
 
-(setq ecb-auto-activate t	  
+(setq ecb-auto-activate nil	  
 	  ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1)
 	  ecb-source-path (quote ("c:"))
 	  ecb-tar-setup (quote cons)
