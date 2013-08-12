@@ -34,7 +34,7 @@
 (add-to-list 'load-path solutions-path)
 ;;-----------------------------------------------------------------------------
 ;auto-customized custom-set-variables
-(setq custom-file (concat site-lisp-path "custom.el"))
+(setq custom-file (concat custom-conf-lisp-path "custom.el"))
 (load custom-file)
 ;;-----------------------------------------------------------------------------
 

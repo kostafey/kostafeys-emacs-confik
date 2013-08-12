@@ -1,6 +1,9 @@
 (require 'cl)
 (require 'package)
 
+(if (equal system-name "MSK-006937")
+    (setq url-proxy-services '(("http" . "10.144.14.205:3128"))))
+
 (setq package-archives '(("ELPA" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
