@@ -1,8 +1,10 @@
 #+TITLE: Kostafey's Emacs configuration
 #+OPTIONS: toc:4 h:4
+#+STARTUP: content
 
 * Kostafey's keybindings
 ** Humane emacs
+*** Exit/hide emacs
 | Key          | Command                    | Description |
 |--------------+----------------------------+-------------|
 | M-z          | iconify-or-deiconify-frame |             |
