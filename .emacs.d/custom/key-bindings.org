@@ -46,8 +46,8 @@
   ;;-----------------------------------------------------------------------------
   (global-set-key (kbd "C-S-v") 'cua-paste-pop)
   (global-set-key (kbd "C-M-v") '(lambda() (interactive) (cua-paste-pop -1)))
-  
-  (global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r") 
+
+  (global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r")
                                    (append-to-buffer "temp" beg end)
                                    (save-excursion
                                      (set-buffer "temp")
@@ -67,15 +67,15 @@
 | C-z   | undo    |             |
 | C-S-z | redo    |             |
 | C-'   | repeat  |             |
-  
+
 #+begin_src emacs-lisp :exports none
   (require 'redo)
   (global-unset-key "\C-_")
-  
+
   (global-set-key (kbd "C-z") 'undo)              ; Undo C-z
   (global-set-key [(meta backspace)] 'undo)
   (global-set-key (kbd "C-S-z") 'redo)            ; Redo C-S-z
-  
+
   (global-unset-key (kbd "C-'"))
   (global-set-key (kbd "C-'") 'repeat)
 #+end_src
@@ -101,7 +101,7 @@
 | C-x r     | revert-buffer                    |             |
 | C-x RET r | revert-buffer-with-coding-system |             |
 
-#+begin_src emacs-lisp :exports none  
+#+begin_src emacs-lisp :exports none
   ;;-----------------------------------------------------------------------------
   (global-set-key (kbd "C-s") 'save-buffer)
   ;; Cancel all changes from last save
@@ -109,14 +109,14 @@
   (global-set-key (kbd "C-x RET r") 'revert-buffer-with-coding-system)
 #+end_src
 
-#+begin_src emacs-lisp :exports none  
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;; Keyboard prefixes
   ;;
   (global-unset-key "\C-\M-a")
   (defvar selected-area-prefix "\C-\M-a")
   (defvar change-buffer-prefix "\C-c\C-b")
-  
+
   (require 'buffer-navigation)
   (require 'navigation-and-simplify-keys)
   (require 'basic-text-editing)
@@ -138,7 +138,7 @@
   ;; move up down end begin over the real visible screen lines
   (require 'physical-line)
   (physical-line-mode 1)
-  
+
   (global-set-key (kbd "<up>")   'previous-line)
   (global-set-key (kbd "<down>") 'next-line)
   (global-set-key (kbd "<end>")  'end-of-line)
@@ -148,7 +148,7 @@
   (global-set-key (kbd "C-<left>")    'step-backward-word)
   (put 'step-forward-word 'CUA 'move)
   (put 'step-backward-word 'CUA 'move)
-  ;;-----------------------------------------------------------------------------  
+  ;;-----------------------------------------------------------------------------
   (global-set-key (kbd "C-M-<down>") 'forward-sentence)
   (global-set-key (kbd "C-M-<up>") 'backward-sentence)
   ;;-----------------------------------------------------------------------------
@@ -160,7 +160,7 @@
       (define-key org-mode-map (kbd "C-S-<left>") nil)
       (define-key org-mode-map (kbd "C-S-<right>") nil)
       (define-key org-mode-map (kbd "S-<up>") nil)
-      (define-key org-mode-map (kbd "S-<down>") nil)    
+      (define-key org-mode-map (kbd "S-<down>") nil)
       (define-key org-mode-map (kbd "M-<up>") nil)
       (define-key org-mode-map (kbd "M-<down>") nil)
       (define-key org-mode-map (kbd "M-<left>") nil)
@@ -179,7 +179,7 @@
   ;;-----------------------------------------------------------------------------
   ;; Scrolling without point movement
   (global-set-key (kbd "C-l") 'recenter-top-bottom)
-  
+
   (if (< emacs-major-version 24)
       (progn
       (global-set-key [(control down)] (lambda () (interactive) (scroll-up 1))) ; [C-down]
@@ -189,7 +189,7 @@
       (global-set-key [(control up)] 'scroll-down-line))) ; [C-up]
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;;                         Point hyper-jumps
   ;;
@@ -205,13 +205,13 @@
   (global-set-key (kbd "C-f") 'isearch-forward)
   (global-set-key (kbd "C-r") 'isearch-backward)
   ;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
-  
+
   (global-unset-key (kbd "M-r"))
   (global-set-key (kbd "M-r") 'replace-string)
-  
+
   (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
   (global-set-key (kbd "C-c C-f") 'ack-file)
-  
+
   (when (require 'highlight-symbol nil 'noerror)
     (eval-after-load "highlight-symbol"
       '(progn
@@ -221,7 +221,7 @@
          (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;;                           Intellectual point jumps
   ;;
@@ -241,7 +241,7 @@
   (define-key emacs-lisp-mode-map (kbd "C-M-d") 'find-function-jump-at-point)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;;                              Command executions
   ;; smex configuration
@@ -251,7 +251,7 @@
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;;                        Text transformations
   ;;
@@ -266,12 +266,12 @@
   (global-set-key (kbd "C-j") 'join-next-line-space-n)
   (global-set-key (kbd "C-c j") 'join-next-line-n)
   (global-set-key (kbd "C-c C-j") 'join-next-line-semicolon-n)
-  
+
   (global-set-key (kbd "C-c c") 'center-line)
-  
+
   (global-set-key (kbd "C-M-k") 'kill-whole-line)
   (global-set-key (kbd "C-k") 'kill-line)
-  
+
   (global-set-key (kbd "C-S-c") 'copy-line)
   (global-set-key (kbd "C-S-l") 'mark-line)
   (global-set-key (kbd "C-c u") 'copy-url)
@@ -302,43 +302,43 @@
   (global-set-key (kbd "C-M-a :") 'align-by-column)
   (global-set-key (kbd "C-M-a '") 'align-by-quote)
   (global-set-key (kbd "C-M-a a") 'align-regexp)
-  
+
   (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
   (global-set-key (kbd "C-/") 'comment-or-uncomment-this)
-  
+
   (global-set-key (kbd "C-`") 'u:en/ru-recode-region)
-  
+
   (global-set-key (kbd "C-M-R") 'replace-regexp)
   (global-set-key (kbd "M-R") 'query-replace)
   (global-set-key (kbd "C-M-a k") 'keep-lines)
   (global-set-key (kbd "C-M-a f") 'flush-lines)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Meta - Навигация
   ;;=============================================================================
   (global-set-key "\M-g" 'goto-line)
-  ;;l - влево j - вправо i - вверх k - вниз   
+  ;;l - влево j - вправо i - вверх k - вниз
   (global-set-key "\M-i" 'previous-line)
   (global-set-key "\M-k" 'next-line)
   (global-set-key "\M-j" 'backward-char)
   (global-set-key "\M-l" 'forward-char)
-  
+
   (global-set-key "\C-cr" 'reposition-window)
   (global-unset-key "\M-\C-l")
   (global-set-key "\M-\C-j" 'backward-word)
   (global-set-key "\M-\C-l" 'forward-word)
-  
+
   (global-set-key "\M-o" 'end-of-line)
   (global-set-key "\M-u" 'beginning-of-line)
-  
+
   (global-set-key "\M-m" 'scroll-up)
   (global-set-key "\M-," 'scroll-down)
-  
+
   (global-set-key "\M-M" '(lambda () (interactive) (scroll-up 1)))
   (global-set-key "\M-<" '(lambda () (interactive) (scroll-down 1)))
-  
+
   ;;=============================================================================
   ;; Look changes
   ;;
@@ -352,7 +352,7 @@
   (global-set-key [C-kp-subtract]  '(lambda nil (interactive) (djcb-zoom -1)))
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Gathering information
   ;;
@@ -362,24 +362,24 @@
   (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Buffers navigation
   ;;
   (global-set-key "\C-w" 'prh:kill-current-buffer)
   (global-set-key (kbd "C-c w") 'kill-other-buffers)
-  
+
   (global-set-key (kbd "C-x w") 'kill-buffer)
   (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
-  
+
   ;(global-set-key (kbd "C-x <right>") 'next-buffer) - default
   ;(global-set-key (kbd "C-x <left>") 'previous-buffer) - default
-  
+
   (global-set-key [(control next)] 'next-buffer)      ; C-Page Up
   (global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
-  
+
   ;;-----------------------------------------------------------------------------
-  ;; tabbar - switch buffers by tabs 
+  ;; tabbar - switch buffers by tabs
   (global-set-key [(shift super left)] 'tabbar-backward-tab)
   (global-set-key [(shift super right)] 'tabbar-forward-tab)
   ;;-----------------------------------------------------------------------------
@@ -407,47 +407,47 @@
   ;;   (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
   ;;-----------------------------------------------------------------------------
   ;; buffers shortcuts
-  (global-set-key (concat selected-area-prefix "\C-e") 
+  (global-set-key (concat selected-area-prefix "\C-e")
                   '(lambda () (interactive) (find-file "~/.emacs")))
-  (global-set-key (concat change-buffer-prefix "e") 
+  (global-set-key (concat change-buffer-prefix "e")
                   '(lambda () (interactive) (find-file "~/.emacs")))
-  
+
   (global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
   (global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
-  
-  (global-set-key (concat change-buffer-prefix "p") 
+
+  (global-set-key (concat change-buffer-prefix "p")
                   '(lambda () (interactive) (find-file "~/.org.gpg")))
-  (global-set-key (concat change-buffer-prefix "k") 
+  (global-set-key (concat change-buffer-prefix "k")
                   '(lambda () (interactive) (find-file "~/.keys.org")))
-  (global-set-key (concat change-buffer-prefix "k") 
+  (global-set-key (concat change-buffer-prefix "k")
                   '(lambda () (interactive) (find-file "~/.keys.org")))
   (global-set-key (kbd "C-x m")
                   '(lambda () (interactive) (switch-to-buffer "*Messages*")))
-  
+
   (global-set-key (kbd "C-x t") 'visit-term-buffer)
   (global-set-key (kbd "C-c g") 'google)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Windows navigation
   ;;
   (global-unset-key "\C-u")
   (global-set-key "\C-u" 'swap-windows)
-         
+
   (global-unset-key (kbd "M-m"))
   (global-set-key (kbd "M-m") 'mirror-window)
-  
+
   (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
   (windmove-default-keybindings 'meta)           ; M-up/down/left/right
-  
+
   (global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
   (global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
   (global-set-key (kbd "s-<down>") 'shrink-window)
   (global-set-key (kbd "s-<up>") 'enlarge-window)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Modes enabling
   ;;
@@ -456,9 +456,10 @@
   (define-key ac-complete-mode-map [next] 'ac-page-next)
   (define-key ac-complete-mode-map [prior] 'ac-page-previous)
   (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
-  
+
   (global-set-key [f1] 'psw-switch-buffer)
-  (global-set-key [f2] 'psw-switch-recentf)
+  (eval-after-load "eassist"
+    '(global-set-key [f2] 'psw-switch-function))
   ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
   ;; (global-set-key [f8] 'ispell-region); 'ispell-word
   (global-set-key [f4] 'shell)
@@ -471,7 +472,7 @@
   (global-set-key [f10] 'flyspell-english)
   (global-set-key [f11] 'flyspell-russian)
   (global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
-  
+
   ;; yasnippet
   (defvar yasnippet-prefix "\C-y")
   (global-unset-key yasnippet-prefix)
@@ -479,12 +480,12 @@
   (global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
   (global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
   (global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
-  
+
   (global-set-key (kbd "S-<tab>") 'open-line-or-yas)
   (global-set-key (kbd "C-S-<tab>") 'yas-prev-field)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; ecb
   (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
@@ -494,7 +495,7 @@
   ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Mode keys
   ;;
@@ -516,7 +517,7 @@
   (eval-after-load "version-control"
     '(progn
        (global-set-key (kbd "M-a") 'get-vc-status)))
-  
+
   (eval-after-load "ahg"
     '(progn
        (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
@@ -535,7 +536,7 @@
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;;                               Mouse
   ;;
@@ -553,7 +554,6 @@
   (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
   ;;
   ;;=============================================================================
-  
+
   (provide 'key-bindings)
 #+end_src
-

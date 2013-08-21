@@ -29,20 +29,21 @@
 
 ;; включает подсветку вхождений локальных переменных чье имя совпадает с именем
 ;; текущего тага;
-;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
+(add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
 
 ;; Activate semantic
-;; (semantic-mode 1)
+(semantic-mode 1)
 
 ;; load contrib library
-;; (require 'eassist)
+(add-to-list 'load-path (concat site-lisp-path "cedet/contrib/"))
+(require 'eassist)
 
 ;; Чтобы использовать возможности по дополнению имен и показу информации о
 ;; функциях и классах, вам необходимо загрузить пакет semantic/ia с помощью
 ;; следующей команды:
 (require 'semantic/ia)
 
-;; (require 'semantic/db-javap)
+(require 'semantic/db-javap)
 
 (defun my-semantic-hook ()
   ;; (global-semantic-tag-folding-mode 1)

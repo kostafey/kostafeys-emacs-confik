@@ -21,6 +21,9 @@
 (defvar site-lisp-path "~/.emacs.d/") ; root extensions folder
 (add-to-list 'load-path site-lisp-path)
 ;;-----------------------------------------------------------------------------
+(add-to-list 'load-path (concat site-lisp-path "cedet/"))
+(load (concat site-lisp-path "cedet/cedet-devel-load"))
+;;-----------------------------------------------------------------------------
 ;; Third-party *.el files (in general low-supporded, misplaced in ELPA)
 ;; without any patching or with tiny patches, stored in this repo.
 (defvar third-party-lisp-path (concat site-lisp-path "artifacts/"))
