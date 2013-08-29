@@ -557,3 +557,20 @@
 
   (provide 'key-bindings)
 #+end_src
+
+** Menu
+*** header_name
+    | Key | Command     | Description |
+    |-----+-------------+-------------|
+    | M-` | tmm-menubar | Text menu   |
+ 
+** Org-mode
+*** Time schedule
+    | Key         | Command          | Description                         |
+    |-------------+------------------+-------------------------------------|
+    | C-c C-t     | org-todo         | Change the TODO state of an item    |
+    | C-c C-x C-i | org-clock-in     | Start the clock on the current item |
+    | C-c C-x C-o | org-clock-out    | Stop the currently running clock    |
+    | C-c C-x C-r | org-clock-report | Create a table containing a report  |
+    |             |                  | about clocked time                  |
+
