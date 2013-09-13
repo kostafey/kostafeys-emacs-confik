@@ -221,7 +221,15 @@
          (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
   ;;
   ;;=============================================================================
+#+end_src
 
+*** Intellectual point jumps
+    | Key | Command           | Description          |
+    |-----+-------------------+----------------------|
+    |     | sgml-pretty-print | Format selected xml. |
+    |     |                   |                      |
+  
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;;                           Intellectual point jumps
   ;;
