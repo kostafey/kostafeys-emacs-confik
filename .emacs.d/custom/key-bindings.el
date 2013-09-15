@@ -21,7 +21,7 @@
 (global-set-key (kbd "C-S-v") 'cua-paste-pop)
 (global-set-key (kbd "C-M-v") '(lambda() (interactive) (cua-paste-pop -1)))
 
-(global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r") 
+(global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r")
                                  (append-to-buffer "temp" beg end)
                                  (save-excursion
                                    (set-buffer "temp")
@@ -83,7 +83,7 @@
 (global-set-key (kbd "C-<left>")    'step-backward-word)
 (put 'step-forward-word 'CUA 'move)
 (put 'step-backward-word 'CUA 'move)
-;;-----------------------------------------------------------------------------  
+;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-M-<down>") 'forward-sentence)
 (global-set-key (kbd "C-M-<up>") 'backward-sentence)
 ;;-----------------------------------------------------------------------------
@@ -95,7 +95,7 @@
     (define-key org-mode-map (kbd "C-S-<left>") nil)
     (define-key org-mode-map (kbd "C-S-<right>") nil)
     (define-key org-mode-map (kbd "S-<up>") nil)
-    (define-key org-mode-map (kbd "S-<down>") nil)    
+    (define-key org-mode-map (kbd "S-<down>") nil)
     (define-key org-mode-map (kbd "M-<up>") nil)
     (define-key org-mode-map (kbd "M-<down>") nil)
     (define-key org-mode-map (kbd "M-<left>") nil)
@@ -254,7 +254,7 @@
 ;; Meta - Навигация
 ;;=============================================================================
 (global-set-key "\M-g" 'goto-line)
-;;l - влево j - вправо i - вверх k - вниз   
+;;l - влево j - вправо i - вверх k - вниз
 (global-set-key "\M-i" 'previous-line)
 (global-set-key "\M-k" 'next-line)
 (global-set-key "\M-j" 'backward-char)
@@ -314,7 +314,7 @@
 (global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
 
 ;;-----------------------------------------------------------------------------
-;; tabbar - switch buffers by tabs 
+;; tabbar - switch buffers by tabs
 (global-set-key [(shift super left)] 'tabbar-backward-tab)
 (global-set-key [(shift super right)] 'tabbar-forward-tab)
 ;;-----------------------------------------------------------------------------
@@ -342,19 +342,19 @@
 ;;   (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
 ;;-----------------------------------------------------------------------------
 ;; buffers shortcuts
-(global-set-key (concat selected-area-prefix "\C-e") 
+(global-set-key (concat selected-area-prefix "\C-e")
                 '(lambda () (interactive) (find-file "~/.emacs")))
-(global-set-key (concat change-buffer-prefix "e") 
+(global-set-key (concat change-buffer-prefix "e")
                 '(lambda () (interactive) (find-file "~/.emacs")))
 
 (global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
 (global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
 
-(global-set-key (concat change-buffer-prefix "p") 
+(global-set-key (concat change-buffer-prefix "p")
                 '(lambda () (interactive) (find-file "~/.org.gpg")))
-(global-set-key (concat change-buffer-prefix "k") 
+(global-set-key (concat change-buffer-prefix "k")
                 '(lambda () (interactive) (find-file "~/.keys.org")))
-(global-set-key (concat change-buffer-prefix "k") 
+(global-set-key (concat change-buffer-prefix "k")
                 '(lambda () (interactive) (find-file "~/.keys.org")))
 (global-set-key (kbd "C-x m")
                 '(lambda () (interactive) (switch-to-buffer "*Messages*")))
@@ -369,7 +369,7 @@
 ;;
 (global-unset-key "\C-u")
 (global-set-key "\C-u" 'swap-windows)
-       
+
 (global-unset-key (kbd "M-m"))
 (global-set-key (kbd "M-m") 'mirror-window)
 

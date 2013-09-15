@@ -13,7 +13,21 @@
 <li><a href="#sec-1-1-5">1.1.5. Save/revert</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">1.2. Basic point movements &amp; change buffer's position</a></li>
+<li><a href="#sec-1-2">1.2. Basic point movements &amp; change buffer's position</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1. Intellectual point jumps</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3. Menu</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. header<sub>name</sub></a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4. Org-mode</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1. Time schedule</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -306,6 +320,132 @@
 <td class="left">C-M-&lt;up&gt;</td>
 <td class="left">backward-sentence</td>
 <td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+### Intellectual point jumps
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">sgml-pretty-print</td>
+<td class="left">Format selected xml.</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+## Menu
+
+### header<sub>name</sub>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">M-\`</td>
+<td class="left">tmm-menubar</td>
+<td class="left">Text menu</td>
+</tr>
+</tbody>
+</table>
+
+## Org-mode
+
+### Time schedule
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-c C-t</td>
+<td class="left">org-todo</td>
+<td class="left">Change the TODO state of an item</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-x C-i</td>
+<td class="left">org-clock-in</td>
+<td class="left">Start the clock on the current item</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-x C-o</td>
+<td class="left">org-clock-out</td>
+<td class="left">Stop the currently running clock</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-x C-r</td>
+<td class="left">org-clock-report</td>
+<td class="left">Create a table containing a report</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">about clocked time</td>
 </tr>
 </tbody>
 </table>
