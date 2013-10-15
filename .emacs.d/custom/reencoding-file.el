@@ -1,5 +1,8 @@
 ;; emacswiki.org - GnuEmacsRussification
 
+;; Write in UNIX format regardless of the platform on which Emacs is running
+(setq default-buffer-file-coding-system 'utf-8-unix)
+
 ;; Следующий фрагмент позволяет переключать кодировки в буфере по
 ;; нажатию одной и той же комбинации клавиш.
 
