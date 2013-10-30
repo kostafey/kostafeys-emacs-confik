@@ -20,11 +20,16 @@
 ;;; How to work with clojure offline
 ;;; --------------------------------
 ;;
+;; Initial point: you want to work with clojure from the PC without direct
+;; internet connection.
+;;
 ;; Short story
 ;; ===========
 ;;
-;; `clojure-offline-create-script'
-;; e.g. (clojure-offline-create-script [[ring/ring-core "1.1.8"]])
+;; Use `clojure-offline-create-script' elisp function
+;; e.g. (clojure-offline-create-script [[ring/ring-core "1.2.0"]])
+;; or just select (mark) [[ring/ring-core "1.2.0"]] and run 
+;; M-x clojure-offline-create-script RET RET
 ;;
 ;; The resolving all dependences offline, in general, is hard, so this resource
 ;; tries to help with it: `https://clojureoffline-kostafey.rhcloud.com'
@@ -51,20 +56,24 @@
 ;; Download `lein-localrepo-<version>.jar' file. The probable location of the
 ;; file can be obtained by evaluating the following elisp script:
 ;;
-;; (clojure-offline-guess-clojars-url [lein-localrepo "0.4.1"])
+;; (clojure-offline-create-script [[lein-localrepo "0.5.2"] [org.clojure/tools.cli "0.2.2"]])
+
+;; (clojure-offline-guess-clojars-url [lein-localrepo "0.5.2"])
+;; (clojure-offline-guess-clojars-url [org.clojure/tools.cli "0.2.2"])
 ;;
-;; Place it to the %HOME%\.m2\repository\<group-id>\<artifact-id>\<version>\
-;; folder, e.g. %HOME%\.m2\repository\lein-localrepo\lein-localrepo\0.4.1\
-;; Create the `lein-localrepo-0.4.1.pom' file in the same folder (this file 
-;; can be empty).
+;; Place jar and pom files to the 
+;; %HOME%\.m2\repository\<group-id>\<artifact-id>\<version>\ folder, e.g. 
+;; %HOME%\.m2\repository\lein-localrepo\lein-localrepo\0.5.2\
 ;;
-;; Install as a global plugin in ~/.lein/profiles.clj:
+;; Install it as a global plugin in ~/.lein/profiles.clj:
 ;;
-;; {:user {:plugins [[lein-localrepo "0.4.1"]]}}
+;; {:user {:plugins [[lein-localrepo "0.5.2"]]}}
 ;;
 ;; To ensure lein-localrepo is installed correctly you can run the shell:
 ;;
 ;; lein localrepo help
+;;
+;; So, the required environment is installed.
 ;;
 ;; 3. Download and install all required libraries
 ;; ----------------------------------------------
@@ -81,25 +90,24 @@
 ;;
 ;; Run M-x clojure-offline-create-script RET RET
 ;;
+;; The "wget part" of this script shold be executed on the internet-connected
+;; computer. Then copy the received *.jar and *.pom files to the target computer
+;; and run the rest part of the script from the directory with this files.
+;; 
+;; Repeat this for :plugins and :dev :dependencies sections, if required.
+;;
 ;; WARNING!
+;; --------
 ;;
 ;; There is no guarantee that the file is located in the printed path.
-;; E.g. https://clojars.org/repo/org/clojure/clojure/1.5.1/clojure-1.5.1.jaris
+;; E.g. https://clojars.org/repo/org/clojure/clojure/1.5.1/clojure-1.5.1.jar is
 ;; a wrong path since clojure-1.5.1.jar is not hosted in the clojars.org
-;; (yet). So, you should find it manually. But if the jar is hosted in the
+;; (yet). In this case, it is locatid in the maven central. If the both of this
+;; paths are worng, you should find it manually. But if the jar is hosted in the
 ;; clojars.org, the printed url is likely correct.
 ;;
-;; Repeat this for :plugins and :dev :dependencies sections.
-;;
-;; 4. Create *.pom files
-;; ---------------------
-;;
-;; Create *.pom files in all apropriate .m2 subfolders (like in the point 2).
-;;
-;; Try to run M-x nrepl-jack-in RET
-;;
-;; 5. Correct errors
-;; -----------------
+;; CAVEEATS 
+;; --------
 ;; 
 ;; The problems and ideas to solve them during installations of the 
 ;; [lein-ring "0.8.3"] plugin (as an example) are described below:
@@ -246,10 +254,16 @@ scope."
 
 ;;----------------------------------------------------------------------
 ;;
+(defun clojure-offline-form-urls (art-path)
+  (concat "https://clojars.org/repo/" art-path ".jar" "\n"
+          "https://clojars.org/repo/" art-path ".pom" "\n"
+          "http://repo1.maven.org/maven2/" art-path ".jar" "\n"
+          "http://repo1.maven.org/maven2/" art-path ".pom"))
+
 ;;;###autoload
 (defun clojure-offline-get-jar-urls (artifact-name)
-  "Convert from maven's `artifact-name' to probably jar url location on
-clojars.
+  "Convert from maven's `artifact-name' to probably jar and pom url locations
+on clojars and maven central.
 E.g. convert from
 lein-ring:lein-ring:pom:0.8.2
 to
@@ -259,9 +273,8 @@ https://clojars.org/repo/lein-ring/lein-ring/0.8.2/lein-ring-0.8.2.jar"
    (let ((art-path (concat (mapconcat 'identity 
                                       (split-string group-id "\\.") "/") "/"
                            artifact-id "/" version "/"
-                           artifact-id "-" version ".jar")))
-     (concat "https://clojars.org/repo/" art-path "\n"
-             "http://repo1.maven.org/maven2/" art-path))))
+                           artifact-id "-" version)))
+     (clojure-offline-form-urls art-path))))
 
 (defun clojure-offline-get-list-clojars-url (artifact-names-array)
   (map 'list 'clojure-offline-get-jar-urls artifact-names-array))
@@ -325,7 +338,9 @@ mvn deploy:deploy-file -DgroupId=lein-ring -DartifactId=lein-ring \
 (defun clojure-offline-get-m2-path (artifact-name)
   (clojure-offline-with-artifact
    artifact-name
-   (let* ((home (if (equal (file-name-base (getenv "HOME")) "Application Data")
+   (let* ((home (if (equal (file-name-base 
+                            (directory-file-name (getenv "HOME"))) 
+                           "Application Data")
                     (expand-file-name ".." (getenv "HOME"))
                   (getenv "HOME")))
           (m2 (concat-path home ".m2" "repository"))
@@ -335,24 +350,23 @@ mvn deploy:deploy-file -DgroupId=lein-ring -DartifactId=lein-ring \
                   artifact-id 
                   version))))
 
-(defun clojure-offline-get-copy-pom (artifact-name)
+(defun clojure-offline-get-manual-copy (artifact-name)
   (clojure-offline-with-artifact
    artifact-name
-   (concat "7z e -yo\"" (clojure-offline-get-m2-path artifact-name) "\" "
-           (clojure-offline-get-file-name artifact-name "jar") " "
-           (directory-file-name 
-            (concat-path "META-INF" "maven" group-id artifact-id "pom.xml"))
-           "\n"
-           "rename " 
-           "\"" (if (eq system-type 'windows-nt) 
-                    (replace-regexp-in-string 
-                     "/" "\\\\" 
-                     (clojure-offline-get-m2-path artifact-name)) 
-                  (clojure-offline-get-m2-path artifact-name)) "pom.xml""\" "
-           (clojure-offline-get-file-name artifact-name "pom"))))
+   (let ((artifact-m2-path (if (eq system-type 'windows-nt) 
+                               (replace-regexp-in-string 
+                                "/" "\\\\" 
+                                (clojure-offline-get-m2-path artifact-name)) 
+                             (clojure-offline-get-m2-path artifact-name)))
+         (artifact-jar-filename
+          (clojure-offline-get-file-name artifact-name "jar"))
+         (artifact-pom-filename 
+          (clojure-offline-get-file-name artifact-name "pom")))
+     (concat "copy " artifact-jar-filename " \"" artifact-m2-path "\"\n"
+             "copy " artifact-pom-filename " \"" artifact-m2-path "\""))))
 
-(defun clojure-offline-get-list-copy-pom (artifact-names-array)
-  (map 'list 'clojure-offline-get-copy-pom artifact-names-array))
+(defun clojure-offline-get-list-manual-copy (artifact-names-array)
+  (map 'list 'clojure-offline-get-manual-copy artifact-names-array))
 
 ;;----------------------------------------------------------------------
 ;;
@@ -410,7 +424,7 @@ mvn deploy:deploy-file -DgroupId=lein-ring -DartifactId=lein-ring \
     ; Extract *.pom script
     (insert "\n")
     (mapc (lambda (art) (insert (concat art "\n")))
-              (clojure-offline-get-list-copy-pom artifact-names-array))
+              (clojure-offline-get-list-manual-copy artifact-names-array))
     (switch-to-buffer (clojure-offline-create-script-buffer))))
 
 (provide 'clojure-offline)
