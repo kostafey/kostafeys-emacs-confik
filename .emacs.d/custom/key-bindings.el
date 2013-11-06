@@ -130,8 +130,8 @@
 ;;
 ;;-----------------------------------------------------------------------------
 ; bookmarks
-(global-set-key (kbd "C-o") 'bookmark-set)
-(global-set-key (kbd "C-p") 'bookmark-jump)
+(global-set-key (kbd "C-b") 'bookmark-set)
+(global-set-key (kbd "M-b") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-x x") 'goto-last-change)
 ;;-----------------------------------------------------------------------------
@@ -191,7 +191,7 @@
 ;;                        Text transformations
 ;;
 (global-set-key (kbd "C-n") 'newline)
-(global-set-key (kbd "C-S-n") 'open-line)
+(global-set-key (kbd "C-o") 'open-line)
 ;;-----------------------------------------------------------------------------
 ;; Word operations
 (global-set-key (kbd "M-t") 'transpose-words)
@@ -393,6 +393,7 @@
 (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
 
 (global-set-key [f1] 'psw-switch-buffer)
+(global-set-key (kbd "C-S-n") 'psw-switch-projectile)
 (eval-after-load "eassist"
   '(global-set-key [f2] 'psw-switch-function))
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
