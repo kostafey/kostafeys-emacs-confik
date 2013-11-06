@@ -87,6 +87,7 @@
         'multiple-cursors        
         'dired+
         'flx
+        'flx-ido
         'smex)
   "Required packages for `navigation-and-simplify-keys', `key-bindings'
 and `buffer-navigation'.")
