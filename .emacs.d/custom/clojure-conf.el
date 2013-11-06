@@ -1,4 +1,6 @@
 (require 'elpa-conf)
+
+(add-to-list 'load-path (concat site-lisp-path "clojure-offline/src/elisp/"))
 (require 'clojure-offline)
 
 ;; (dolist (p clojure-packages)

@@ -105,13 +105,7 @@
 ;;=============================================================================
 
 ;;-----------------------------------------------------------------------------
-; ELScreen
-;; (add-to-list 'load-path (concat site-lisp-path "apel-10.7/"))
-;; (require 'alist)
-;; (load "elscreen" "ElScreen" t)
-;; (setq elscreen-prefix-key "\C-t")
-;; (require 'elscreen)
-;; (elscreen-create)
-;; (elscreen-toggle-display-tab)
+;; projectile
+(projectile-global-mode)
 
 (provide 'ide)
