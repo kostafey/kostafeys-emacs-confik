@@ -79,6 +79,7 @@
         'highlight-symbol
         'minimap
         ;; 'powerline
+        'popup-switcher
         )
   "Required packages for `look-and-feel'.")
 

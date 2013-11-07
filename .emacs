@@ -46,8 +46,8 @@
 
 (require 'elpa-conf)
 
-(add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
-(require 'popup-switcher)
+;; (add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
+;; (require 'popup-switcher)
 
 (add-to-list 'load-path
              (concat site-lisp-path 
