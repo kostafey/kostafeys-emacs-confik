@@ -3,6 +3,9 @@
 (custom-set-variables
  '(magit-save-some-buffers (quote dontask)))
 
+(setq magit-emacsclient-executable
+      (shell-quote-argument magit-emacsclient-executable))
+
 (require 'ahg)
 
 (defun get-vc-status ()
