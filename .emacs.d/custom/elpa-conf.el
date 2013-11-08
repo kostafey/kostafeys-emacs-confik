@@ -58,7 +58,7 @@
   "Required packages for `basic-text-editing'.")
 
 (defvar clojure-packages '(clojure-mode
-                           nrepl
+                           cider
                            ac-nrepl)
   "Required packages for clojure coding.")
 

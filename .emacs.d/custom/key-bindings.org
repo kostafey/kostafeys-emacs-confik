@@ -509,13 +509,13 @@
   ;; Mode keys
   ;;
   ;;----------------------------------------------------------------------
-  ;; Nrepl
+  ;; CIDER - Nrepl
   ;;
   (global-unset-key (kbd "C-n"))
   (defun kostafey-clojure-mode-hook ()
-    (define-key clojure-mode-map (kbd "C-n j") 'nrepl-jack-in)
-    (define-key clojure-mode-map (kbd "C-n e b") 'nrepl-eval-buffer)
-    (define-key clojure-mode-map (kbd "C-n q") 'nrepl-quit))
+    (define-key clojure-mode-map (kbd "C-n j") cider-jack-in)
+    (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
+    (define-key clojure-mode-map (kbd "C-n q") cider-quit))
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
   (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
   ;;
