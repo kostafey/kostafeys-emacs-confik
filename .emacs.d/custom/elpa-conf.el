@@ -80,6 +80,7 @@
         'minimap
         ;; 'powerline
         'popup-switcher
+        'sr-speedbar
         )
   "Required packages for `look-and-feel'.")
 

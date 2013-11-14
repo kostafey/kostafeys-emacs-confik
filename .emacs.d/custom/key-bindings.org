@@ -494,6 +494,17 @@
   (global-set-key (kbd "C-S-<tab>") 'yas-prev-field)
   ;;
   ;;=============================================================================
+#+end_src
+
+ 
+** IDE
+    | Key | Command            | Description |
+    |-----+--------------------+-------------|
+    | s-s | sr-speedbar-toggle |             |
+
+#+begin_src emacs-lisp :exports none
+  ;; speedbar
+  (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 
   ;;=============================================================================
   ;; ecb

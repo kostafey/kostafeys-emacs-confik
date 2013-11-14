@@ -11,6 +11,7 @@
 
 ; This will complete the appropriate close tag after you type </
 (setq nxml-slash-auto-complete-flag t)
+(add-hook 'html-mode-hook #'(lambda nil (setq sgml-xml-mode t)))
 
 (require 'hl-tags-mode)
 (add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))

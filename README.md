@@ -2,30 +2,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. Kostafey's keybindings</a>
+<li><a href="#sec-1">Kostafey's keybindings</a>
 <ul>
-<li><a href="#sec-1-1">1.1. Humane emacs</a>
+<li><a href="#sec-1-1">Humane emacs</a>
 <ul>
-<li><a href="#sec-1-1-1">1.1.1. Exit/hide emacs</a></li>
-<li><a href="#sec-1-1-2">1.1.2. Select Copy Paste</a></li>
-<li><a href="#sec-1-1-3">1.1.3. Undo/redo</a></li>
-<li><a href="#sec-1-1-4">1.1.4. Delete/insert char</a></li>
-<li><a href="#sec-1-1-5">1.1.5. Save/revert</a></li>
+<li><a href="#sec-1-1-1">Exit/hide emacs</a></li>
+<li><a href="#sec-1-1-2">Select Copy Paste</a></li>
+<li><a href="#sec-1-1-3">Undo/redo</a></li>
+<li><a href="#sec-1-1-4">Delete/insert char</a></li>
+<li><a href="#sec-1-1-5">Save/revert</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">1.2. Basic point movements &amp; change buffer's position</a>
+<li><a href="#sec-1-2">Basic point movements &amp; change buffer's position</a>
 <ul>
-<li><a href="#sec-1-2-1">1.2.1. Intellectual point jumps</a></li>
+<li><a href="#sec-1-2-1">Intellectual point jumps</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-3">1.3. Menu</a>
+<li><a href="#sec-1-3">IDE</a></li>
+<li><a href="#sec-1-4">Menu</a>
 <ul>
-<li><a href="#sec-1-3-1">1.3.1. header<sub>name</sub></a></li>
+<li><a href="#sec-1-4-1">header<sub>name</sub></a></li>
 </ul>
 </li>
-<li><a href="#sec-1-4">1.4. Org-mode</a>
+<li><a href="#sec-1-5">Org-mode</a>
 <ul>
-<li><a href="#sec-1-4-1">1.4.1. Time schedule</a></li>
+<li><a href="#sec-1-5-1">Time schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -355,6 +356,35 @@
 <tr>
 <td class="left">&#xa0;</td>
 <td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+## IDE
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">s-s</td>
+<td class="left">sr-speedbar-toggle</td>
 <td class="left">&#xa0;</td>
 </tr>
 </tbody>

@@ -258,5 +258,13 @@
     (set-buffer-process-coding-system 'cp1251 'cp1251))
   (ad-activate 'shell))
 
+;;=============================================================================
+;; Speedbar
+;;=============================================================================
+(require 'sr-speedbar)
+(setq sr-speedbar-right-side t)
+(setq speedbar-use-images nil)
+(setq speedbar-show-unknown-files t)
+
 (provide 'look-and-feel)
 
