@@ -10,6 +10,14 @@
 (require 'beanshell)
 (setq bsh-jar (find-file-in-load-path "bsh-2.0b4.jar"))
 
+;; skeeto/javadoc-lookup
+;; Path example: `~/Java/jdk/docs/api/'
+(let ((javadoc-env (getenv "JAVADOC")))
+  (when javadoc-env
+    (apply 'javadoc-add-roots (split-string javadoc-env ";"))))
+
+;; skeeto/ant-project-mode
+
 ;;=============================================================================
 ;; eclim
 ;;

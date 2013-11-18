@@ -13,20 +13,32 @@
 <li><a href="#sec-1-1-5">Save/revert</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">Basic point movements &amp; change buffer's position</a>
+<li><a href="#sec-1-2">Basic point movements &amp; change buffer's position</a></li>
+<li><a href="#sec-1-3">Point hyper-jumps</a>
 <ul>
-<li><a href="#sec-1-2-1">Intellectual point jumps</a></li>
+<li><a href="#sec-1-3-1">Bookmarks</a></li>
+<li><a href="#sec-1-3-2">Search &amp; replace</a></li>
+<li><a href="#sec-1-3-3">Intellectual point jumps</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-3">IDE</a></li>
-<li><a href="#sec-1-4">Menu</a>
+<li><a href="#sec-1-4">Command executions</a></li>
+<li><a href="#sec-1-5">Text transformations</a>
 <ul>
-<li><a href="#sec-1-4-1">header<sub>name</sub></a></li>
+<li><a href="#sec-1-5-1">Basic text transformations</a></li>
+<li><a href="#sec-1-5-2">Rectangle operations</a></li>
+<li><a href="#sec-1-5-3">Upcase/downcase</a></li>
+<li><a href="#sec-1-5-4">Region &amp; misc operations</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-5">Org-mode</a>
+<li><a href="#sec-1-6">IDE</a></li>
+<li><a href="#sec-1-7">Menu</a>
 <ul>
-<li><a href="#sec-1-5-1">Time schedule</a></li>
+<li><a href="#sec-1-7-1">header<sub>name</sub></a></li>
+</ul>
+</li>
+<li><a href="#sec-1-8">Org-mode</a>
+<ul>
+<li><a href="#sec-1-8-1">Time schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -325,6 +337,128 @@
 </tbody>
 </table>
 
+## Point hyper-jumps
+
+### Bookmarks
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-b</td>
+<td class="left">bookmark-set</td>
+</tr>
+
+
+<tr>
+<td class="left">M-b</td>
+<td class="left">bookmark-jump</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-x x</td>
+<td class="left">goto-last-change</td>
+</tr>
+</tbody>
+</table>
+
+### Search & replace
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-f</td>
+<td class="left">isearch-forward</td>
+</tr>
+
+
+<tr>
+<td class="left">C-r</td>
+<td class="left">isearch-backward</td>
+</tr>
+
+
+<tr>
+<td class="left">M-e</td>
+<td class="left">isearch-edit-string</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">M-r</td>
+<td class="left">replace-string</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-M-f</td>
+<td class="left">ack</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-f</td>
+<td class="left">ack-file</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">control F3</td>
+<td class="left">highlight-symbol-at-point</td>
+</tr>
+
+
+<tr>
+<td class="left">F3</td>
+<td class="left">highlight-symbol-next</td>
+</tr>
+
+
+<tr>
+<td class="left">shift F3</td>
+<td class="left">highlight-symbol-prev</td>
+</tr>
+
+
+<tr>
+<td class="left">meta F3</td>
+<td class="left">highlight-symbol-remove-all</td>
+</tr>
+</tbody>
+</table>
+
 ### Intellectual point jumps
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -354,9 +488,347 @@
 
 
 <tr>
+<td class="left">C-n</td>
+<td class="left">sgml-skip-tag-forward</td>
 <td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">C-b</td>
+<td class="left">sgml-skip-tag-backward</td>
 <td class="left">&#xa0;</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-M-d</td>
+<td class="left">find-function-jump-at-point</td>
+<td class="left">Jump to elisp definition</td>
+</tr>
+</tbody>
+</table>
+
+## Command executions
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">M-x</td>
+<td class="left">smex</td>
 <td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">M-X</td>
+<td class="left">smex-major-mode-commands</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-c M-x</td>
+<td class="left">execute-extended-command</td>
+<td class="left">This is your old M-x</td>
+</tr>
+</tbody>
+</table>
+
+## Text transformations
+
+### Basic text transformations
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-n</td>
+<td class="left">newline</td>
+</tr>
+
+
+<tr>
+<td class="left">C-o</td>
+<td class="left">open-line</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">M-t</td>
+<td class="left">transpose-words</td>
+</tr>
+
+
+<tr>
+<td class="left">M-y</td>
+<td class="left">transpose-words -1</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-j</td>
+<td class="left">join-next-line-space-n</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c j</td>
+<td class="left">join-next-line-n</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-j</td>
+<td class="left">join-next-line-semicolon-n</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-c c</td>
+<td class="left">center-line</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-M-k</td>
+<td class="left">kill-whole-line</td>
+</tr>
+
+
+<tr>
+<td class="left">C-k</td>
+<td class="left">kill-line</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-S-c</td>
+<td class="left">copy-line</td>
+</tr>
+
+
+<tr>
+<td class="left">C-S-l</td>
+<td class="left">mark-line</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c u</td>
+<td class="left">copy-url</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c d</td>
+<td class="left">duplicate-line</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-c C-l</td>
+<td class="left">toggle-truncate-lines</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-c q</td>
+<td class="left">unfill-paragraph</td>
+</tr>
+</tbody>
+</table>
+
+### Rectangle operations
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-M-a n</td>
+<td class="left">rectangle-number-lines</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-a v</td>
+<td class="left">string-insert-rectangle</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-a c</td>
+<td class="left">copy-rectangle-to-clipboard</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-a r</td>
+<td class="left">yank-rectangle</td>
+</tr>
+
+
+<tr>
+<td class="left">M-u</td>
+<td class="left">cua-upcase-rectangle</td>
+</tr>
+</tbody>
+</table>
+
+### Upcase/downcase
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-S-<up></td>
+<td class="left">toggle-letter-case</td>
+</tr>
+</tbody>
+</table>
+
+### Region & misc operations
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-M-a :</td>
+<td class="left">align-by-column</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-a '</td>
+<td class="left">align-by-quote</td>
+</tr>
+
+
+<tr>
+<td class="left">align-regexp</td>
+<td class="left">align-regexp</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-;</td>
+<td class="left">comment-or-uncomment-this</td>
+</tr>
+
+
+<tr>
+<td class="left">C-/</td>
+<td class="left">comment-or-uncomment-this</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-\`</td>
+<td class="left">u:en/ru-recode-region</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-M-R</td>
+<td class="left">replace-regexp</td>
+</tr>
+
+
+<tr>
+<td class="left">M-R</td>
+<td class="left">query-replace</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-a k</td>
+<td class="left">keep-lines</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-a f</td>
+<td class="left">flush-lines</td>
 </tr>
 </tbody>
 </table>

@@ -103,7 +103,8 @@ and `buffer-navigation'.")
 (defvar prog-modes-packages
   (list 'auctex
         'ecb
-        'projectile)
+        'projectile
+        'javadoc-lookup)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages

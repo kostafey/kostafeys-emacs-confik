@@ -168,9 +168,6 @@
       (define-key org-mode-map (kbd "C-a") nil)
       (define-key org-mode-map (kbd "M-a") nil)))
 
-  (defun kostafey-java-mode-hook ()
-    (define-key java-mode-map (kbd "C-a") nil))
-  (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
   ;;-----------------------------------------------------------------------------
   (require 'pager)
   ;; Bind scrolling functions from pager library.
@@ -189,7 +186,17 @@
       (global-set-key [(control up)] 'scroll-down-line))) ; [C-up]
   ;;
   ;;=============================================================================
+#+end_src
 
+** Point hyper-jumps
+*** Bookmarks
+    | Key   | Command          |
+    |-------+------------------|
+    | C-b   | bookmark-set     |
+    | M-b   | bookmark-jump    |
+    |-------+------------------|
+    | C-x x | goto-last-change |
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;;                         Point hyper-jumps
   ;;
@@ -199,6 +206,25 @@
   (global-set-key (kbd "M-b") 'bookmark-jump)
   ;;-----------------------------------------------------------------------------
   (global-set-key (kbd "C-x x") 'goto-last-change)
+#+end_src
+
+*** Search & replace
+    | Key        | Command                     |
+    |------------+-----------------------------|
+    | C-f        | isearch-forward             |
+    | C-r        | isearch-backward            |
+    | M-e        | isearch-edit-string         |
+    |------------+-----------------------------|
+    | M-r        | replace-string              |
+    |------------+-----------------------------|
+    | C-M-f      | ack                         |
+    | C-c C-f    | ack-file                    |
+    |------------+-----------------------------|
+    | control F3 | highlight-symbol-at-point   |
+    | F3         | highlight-symbol-next       |
+    | shift F3   | highlight-symbol-prev       |
+    | meta F3    | highlight-symbol-remove-all |
+#+begin_src emacs-lisp :exports none
   ;;-----------------------------------------------------------------------------
   ;; Search & replace
   (global-unset-key (kbd "C-f"))
@@ -224,11 +250,13 @@
 #+end_src
 
 *** Intellectual point jumps
-    | Key | Command           | Description          |
-    |-----+-------------------+----------------------|
-    |     | sgml-pretty-print | Format selected xml. |
-    |     |                   |                      |
-  
+    | Key   | Command                     | Description              |
+    |-------+-----------------------------+--------------------------|
+    |       | sgml-pretty-print           | Format selected xml.     |
+    | C-n   | sgml-skip-tag-forward       |                          |
+    | C-b   | sgml-skip-tag-backward      |                          |
+    |-------+-----------------------------+--------------------------|
+    | C-M-d | find-function-jump-at-point | Jump to elisp definition |
 #+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;;                           Intellectual point jumps
@@ -249,7 +277,15 @@
   (define-key emacs-lisp-mode-map (kbd "C-M-d") 'find-function-jump-at-point)
   ;;
   ;;=============================================================================
+#+end_src
 
+** Command executions
+    | Key         | Command                  | Description          |
+    |-------------+--------------------------+----------------------|
+    | M-x         | smex                     |                      |
+    | M-X         | smex-major-mode-commands |                      |
+    | C-c C-c M-x | execute-extended-command | This is your old M-x |
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;;                              Command executions
   ;; smex configuration
@@ -259,10 +295,40 @@
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
   ;;
   ;;=============================================================================
+#+end_src
 
+** Text transformations
+*** Basic text transformations
+    | Key     | Command                    |
+    |---------+----------------------------|
+    | C-n     | newline                    |
+    | C-o     | open-line                  |
+    |---------+----------------------------|
+    | M-t     | transpose-words            |
+    | M-y     | transpose-words -1         |
+    |---------+----------------------------|
+    | C-j     | join-next-line-space-n     |
+    | C-c j   | join-next-line-n           |
+    | C-c C-j | join-next-line-semicolon-n |
+    |---------+----------------------------|
+    | C-c c   | center-line                |
+    |---------+----------------------------|
+    | C-M-k   | kill-whole-line            |
+    | C-k     | kill-line                  |
+    |---------+----------------------------|
+    | C-S-c   | copy-line                  |
+    | C-S-l   | mark-line                  |
+    | C-c u   | copy-url                   |
+    | C-c d   | duplicate-line             |
+    |---------+----------------------------|
+    | C-c C-l | toggle-truncate-lines      |
+    |---------+----------------------------|
+    | C-c q   | unfill-paragraph           |
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;;                        Text transformations
-  ;;
+  ;;-----------------------------------------------------------------------------
+  ;; Basic text transformations
   (global-set-key (kbd "C-n") 'newline)
   (global-set-key (kbd "C-o") 'open-line)
   ;;-----------------------------------------------------------------------------
@@ -289,6 +355,17 @@
   ;;-----------------------------------------------------------------------------
   ;; Paragraph operations
   (global-set-key (kbd "C-c q")  'unfill-paragraph)
+#+end_src
+
+*** Rectangle operations
+    | Key     | Command                     |
+    |---------+-----------------------------|
+    | C-M-a n | rectangle-number-lines      |
+    | C-M-a v | string-insert-rectangle     |
+    | C-M-a c | copy-rectangle-to-clipboard |
+    | C-M-a r | yank-rectangle              |
+    | M-u     | cua-upcase-rectangle        |
+#+begin_src emacs-lisp :exports none
   ;;-----------------------------------------------------------------------------
   ;; Rectangle operations
   (global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
@@ -296,6 +373,13 @@
   (global-set-key (kbd "C-M-a c") 'copy-rectangle-to-clipboard)
   (global-set-key (kbd "C-M-a r") 'yank-rectangle)
   ;(global-set-key (kbd "M-u") 'cua-upcase-rectangle) - default
+#+end_src
+
+*** Upcase/downcase
+    | Key      | Command            |
+    |----------+--------------------|
+    | C-S-<up> | toggle-letter-case |
+#+begin_src emacs-lisp :exports none
   ;;-----------------------------------------------------------------------------
   ;; Upcase/downcase
   (global-set-key (kbd "C-S-<up>") 'toggle-letter-case)
@@ -305,6 +389,25 @@
   (global-set-key (kbd "C-M-a u") 'upcase-region)
   (global-set-key (concat selected-area-prefix "u") 'upcase-region)
   (global-set-key (concat selected-area-prefix "l") 'downcase-region)
+#+end_src
+
+*** Region & misc operations
+    | Key          | Command                   |
+    |--------------+---------------------------|
+    | C-M-a :      | align-by-column           |
+    | C-M-a '      | align-by-quote            |
+    | align-regexp | align-regexp              |
+    |--------------+---------------------------|
+    | C-;          | comment-or-uncomment-this |
+    | C-/          | comment-or-uncomment-this |
+    |--------------+---------------------------|
+    | C-`          | u:en/ru-recode-region     |
+    |--------------+---------------------------|
+    | C-M-R        | replace-regexp            |
+    | M-R          | query-replace             |
+    | C-M-a k      | keep-lines                |
+    | C-M-a f      | flush-lines               |
+#+begin_src emacs-lisp :exports none
   ;;-----------------------------------------------------------------------------
   ;; Region & misc operations
   (global-set-key (kbd "C-M-a :") 'align-by-column)
@@ -495,8 +598,6 @@
   ;;
   ;;=============================================================================
 #+end_src
-
- 
 ** IDE
     | Key | Command            | Description |
     |-----+--------------------+-------------|
@@ -520,13 +621,20 @@
   ;; Mode keys
   ;;
   ;;----------------------------------------------------------------------
+  ;; Java
+    (defun kostafey-java-mode-hook ()
+      (define-key java-mode-map (kbd "C-a") nil)
+      (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup))
+    (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
+  ;;----------------------------------------------------------------------
   ;; CIDER - Nrepl.el
   ;;
   (global-unset-key (kbd "C-n"))
   (defun kostafey-clojure-mode-hook ()
     (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
     (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
-    (define-key clojure-mode-map (kbd "C-n q") 'cider-quit))
+    (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
+    (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup))
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
   (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
   ;;

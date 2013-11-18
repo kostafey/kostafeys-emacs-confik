@@ -103,9 +103,6 @@
     (define-key org-mode-map (kbd "C-a") nil)
     (define-key org-mode-map (kbd "M-a") nil)))
 
-(defun kostafey-java-mode-hook ()
-  (define-key java-mode-map (kbd "C-a") nil))
-(add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 ;;-----------------------------------------------------------------------------
 (require 'pager)
 ;; Bind scrolling functions from pager library.
@@ -134,6 +131,7 @@
 (global-set-key (kbd "M-b") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-x x") 'goto-last-change)
+
 ;;-----------------------------------------------------------------------------
 ;; Search & replace
 (global-unset-key (kbd "C-f"))
@@ -189,7 +187,8 @@
 
 ;;=============================================================================
 ;;                        Text transformations
-;;
+;;-----------------------------------------------------------------------------
+;; Basic text transformations
 (global-set-key (kbd "C-n") 'newline)
 (global-set-key (kbd "C-o") 'open-line)
 ;;-----------------------------------------------------------------------------
@@ -216,6 +215,7 @@
 ;;-----------------------------------------------------------------------------
 ;; Paragraph operations
 (global-set-key (kbd "C-c q")  'unfill-paragraph)
+
 ;;-----------------------------------------------------------------------------
 ;; Rectangle operations
 (global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
@@ -223,6 +223,7 @@
 (global-set-key (kbd "C-M-a c") 'copy-rectangle-to-clipboard)
 (global-set-key (kbd "C-M-a r") 'yank-rectangle)
 ;(global-set-key (kbd "M-u") 'cua-upcase-rectangle) - default
+
 ;;-----------------------------------------------------------------------------
 ;; Upcase/downcase
 (global-set-key (kbd "C-S-<up>") 'toggle-letter-case)
@@ -232,6 +233,7 @@
 (global-set-key (kbd "C-M-a u") 'upcase-region)
 (global-set-key (concat selected-area-prefix "u") 'upcase-region)
 (global-set-key (concat selected-area-prefix "l") 'downcase-region)
+
 ;;-----------------------------------------------------------------------------
 ;; Region & misc operations
 (global-set-key (kbd "C-M-a :") 'align-by-column)
@@ -439,13 +441,20 @@
 ;; Mode keys
 ;;
 ;;----------------------------------------------------------------------
+;; Java
+  (defun kostafey-java-mode-hook ()
+    (define-key java-mode-map (kbd "C-a") nil)
+    (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup))
+  (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
+;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
 ;;
 (global-unset-key (kbd "C-n"))
 (defun kostafey-clojure-mode-hook ()
   (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
   (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
-  (define-key clojure-mode-map (kbd "C-n q") 'cider-quit))
+  (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
+  (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;
