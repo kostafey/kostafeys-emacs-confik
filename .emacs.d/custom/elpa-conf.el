@@ -104,7 +104,8 @@ and `buffer-navigation'.")
   (list 'auctex
         'ecb
         'projectile
-        'javadoc-lookup)
+        'javadoc-lookup
+        'web-mode)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages

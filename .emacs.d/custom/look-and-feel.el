@@ -216,6 +216,10 @@
   (idle-highlight-mode t)
   (font-lock-warn-todo))
 
+(defun web-mode-hook () 
+  "Hooks for Web mode."  
+  (highlight-parentheses-mode t))
+
 (add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
 (add-hook 'python-mode-hook 'my-coding-hook)
 (add-hook 'comint-mode-hook 'my-coding-hook)
@@ -223,6 +227,7 @@
 (add-hook 'java-mode-hook 'my-coding-hook)
 (add-hook 'clojure-mode-hook 'my-coding-hook)
 (add-hook 'sql-mode-hook 'my-coding-hook)
+(add-hook 'web-mode-hook 'web-mode-hook)
 
 (setq hl-paren-colors '("#326B6B"))
 (setq hl-paren-background-colors '(
