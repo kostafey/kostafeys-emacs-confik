@@ -21,7 +21,7 @@
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-;; (setq web-mode-enable-current-element-highlight t)
+(setq web-mode-enable-current-element-highlight t)
 (setq web-mode-markup-indent-offset 4)
 
 ;;=============================================================================

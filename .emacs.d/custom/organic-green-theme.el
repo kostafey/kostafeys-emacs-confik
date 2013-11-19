@@ -37,31 +37,31 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        (gray-green     "#ACE1AF") (yellow-green "#ADFF2F")
        (mox            "#ADDFAD") (warm-green   "#95E454")
        (light-green    "#A0F0A0") (sun-green    "#7FFF00")
-       (emerald        "#50C878") (cham-1       "#8ae234")                                    
-       (sea-eye        "#00A86B") (cham-2       "#73d216")       
+       (emerald        "#50C878") (cham-1       "#8ae234")
+       (sea-eye        "#00A86B") (cham-2       "#73d216")
        (sea-green      "#2E8B57") (cham-3       "#4e9a06")
        (geep-sea-green "#339966") (cham-4       "#346604")
        (medium-green   "#66CC66") (oak-green    "#53AD2F")
        (dark-green     "#339933") (grass-green  "#32CD32")
-       (green-a        "#73CD4F")                                   
+       (green-a        "#73CD4F")
 
        ;; blue palette
        (blue-green        "#66CDAA")
-       ;; ;#73CDF4        "#3030DF" 
-       ;; ;#83DDFF        "#4045F0"   
+       ;; ;#73CDF4        "#3030DF"
+       ;; ;#83DDFF        "#4045F0"
        (blue-0            "#8cc4ff")
-       (blue-1            "#729fcf") 
-       (blue-2            "#3465a4") 
+       (blue-1            "#729fcf")
+       (blue-2            "#3465a4")
        (blue-3            "#204a87")
 
        ;; yellow palette
        (lime-pulp         "#D1E189")
        (yellow-chartreuse "#DFFF00")
-       (butter-1          "#fce94f") 
-       (butter-2          "#edd400") 
+       (butter-1          "#fce94f")
+       (butter-2          "#edd400")
        (butter-3          "#c4a000")
        (dark-yellow       "#808000")
-   
+
        ;; misc palette
        (orange-1 "#fcaf3e") (plum-1   "#ad7fa8")
        (orange-2 "#f57900") (plum-2   "#75507b")
@@ -70,12 +70,12 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        (choc-2   "#c17d11") (red-2    "#cc0000")
        (choc-3   "#8f5902") (red-3    "#a40000")
        (alum-1   "#eeeeec")
-       (alum-2   "#d3d7cf") 
+       (alum-2   "#d3d7cf")
        (alum-3   "#babdb6")
-       (alum-4   "#888a85") 
-       (alum-5   "#5f615c") 
+       (alum-4   "#888a85")
+       (alum-5   "#5f615c")
        (alum-6   "#2e3436")
-       
+
        ;; basic colors
        (organic-fg "#326B6B")
        (organic-bg "#F0FFF0")
@@ -85,7 +85,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        (organic-constant-fg "#3465BD")
        (organic-builtin-fg "#009292") ; "#009494" "#008C8C" "MediumPurple3"
        (minor-green-highlight-background "#D5F0D5")
-       (tiny-green-highlight-background "#E3F2E1")      
+       (tiny-green-highlight-background "#E3F2E1")
        (minor-grey-highlight-background "#DAEADA")
        (minor-yellow-highlight-background "#F2FFC0") ;#E3F2A1
        (minor-blue-highlight-background "#C0E0FF")
@@ -104,7 +104,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(fringe ((,class (:background "#E5E5E5" :foreground "gray40"))))
    `(highlight ((,class (:background ,minor-green-highlight-background))))
    `(region ((,class (:foreground ,organic-fg :background ,"#EEEEA0"))))
-   `(cua-rectangle ((,class (:foreground ,organic-fg :background ,"#BFFF00"))))   
+   `(cua-rectangle ((,class (:foreground ,organic-fg :background ,"#BFFF00"))))
    `(secondary-selection ((,class (:background ,blue-0))))
    `(isearch ((,class (:foreground ,organic-fg :background "yellow" :inverse-video nil))))
    `(lazy-highlight ((,class (:background "#DDEE00" :inverse-video nil))))
@@ -112,9 +112,9 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 
    ;; Mode line faces
    `(mode-line ((,class (:box (:line-width -1 :style released-button)
-			 :background ,alum-2 :foreground ,alum-6))))
+             :background ,alum-2 :foreground ,alum-6))))
    `(mode-line-inactive ((,class (:box (:line-width -1 :style released-button)
-				  :background ,alum-1 :foreground ,alum-6))))
+                  :background ,alum-1 :foreground ,alum-6))))
 
    ;; Escape and prompt faces
    `(minibuffer-prompt ((,class (:weight bold :foreground ,blue-3))))
@@ -181,7 +181,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
 
    ;; rst
    '(rst-definition ((t (:inherit font-lock-constant-face))) t)
-   `(rst-level-1 ((t (:background ,minor-green-highlight-background))) t)   
+   `(rst-level-1 ((t (:background ,minor-green-highlight-background))) t)
    `(rst-level-2 ((t (:background ,minor-grey-highlight-background))))
    `(rst-level-3 ((t (:background ,minor-grey-highlight-background))))
    `(rst-level-4 ((t (:background ,minor-grey-highlight-background))))
@@ -225,6 +225,13 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(powerline-active2 ((t (:background ,alum-2 :inherit mode-line))) t)
    '(powerline-inactive1  ((t (:background "grey70" :inherit mode-line-inactive))) t)
    '(powerline-inactive2  ((t (:background "grey80" :inherit mode-line-inactive))) t)
+
+   ;; web-mode
+   `(web-mode-current-element-highlight-face ((,class (:background ,minor-green-highlight-background))))
+   '(web-mode-html-tag-face ((t (:foreground "grey28"))) t)
+   '(web-mode-html-attr-name-face ((t (:foreground "#4045F0"))) t)
+   `(web-mode-doctype-face ((t (:foreground ,organic-constant-fg))) t)
+   `(web-mode-comment-face ((t (:foreground ,organic-comment-fg))) t)
    ))
 
 (provide-theme 'organic-green)
