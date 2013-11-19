@@ -11,6 +11,7 @@
 (setq bsh-jar (find-file-in-load-path "bsh-2.0b4.jar"))
 
 ;; skeeto/javadoc-lookup
+(require 'javadoc-lookup)
 ;; Path example: `~/Java/jdk/docs/api/'
 (let ((javadoc-env (getenv "JAVADOC")))
   (when javadoc-env
