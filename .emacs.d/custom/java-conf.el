@@ -9,20 +9,81 @@
 ;;
 (require 'beanshell)
 (setq bsh-jar (find-file-in-load-path "bsh-2.0b4.jar"))
-
+;;-----------------------------------------------------------------------------
 ;; skeeto/javadoc-lookup
 (require 'javadoc-lookup)
 ;; Path example: `~/Java/jdk/docs/api/'
 (let ((javadoc-env (getenv "JAVADOC")))
   (when javadoc-env
     (apply 'javadoc-add-roots (split-string javadoc-env ";"))))
-
+;;-----------------------------------------------------------------------------
 ;; skeeto/ant-project-mode
-
+;; TODO: add
+;;-----------------------------------------------------------------------------
+;; maven
+(defun maven-tomcat-deploy ()
+  (interactive)
+  (cd (projectile-project-root))
+  (compile "mvn tomcat7:redeploy" t))
+;;-----------------------------------------------------------------------------
+;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-markup-indent-offset 4)
+
+;;=============================================================================
+;; tomacat
+(defvar tomcat-process nil "Process running tomcat")
+(defvar tomcat-buffer nil "Buffer containing tomcat-process")
+(defvar tomcat-is-running nil "Is tomcat running ?")
+
+(defvar tomcat-script
+  (let* ((catalina-home (getenv "CATALINA_HOME"))
+         ;; or set `default-directory' variable
+         (catalina-bin (concat-path catalina-home "bin")))
+    (expand-file-name "catalina.bat"
+                      catalina-bin))
+  "Script to start or stop tomcat")
+
+(defun tomcat-start ()
+  (switch-to-buffer "*tomcat*")
+  (setq tomcat-buffer (current-buffer))
+  (erase-buffer)
+  (log4j-mode)
+  (setq tomcat-process
+        (start-process "tomcat" (current-buffer)
+                       tomcat-script "run"))
+  (setq tomcat-is-running t)
+  (beginning-of-buffer)
+  (message "Tomcat started."))
+
+(defun tomcat-stop ()
+  (message "Stopping Tomcat ...")
+  (save-excursion
+    (switch-to-buffer "*tomcat*")
+    (goto-char (point-max)))
+  (call-process tomcat-script nil "*tomcat-stop*" t "stop")
+  (setq tomcat-is-running nil)
+  (kill-buffer "*tomcat-stop*")
+  (message "Tomcat stopped"))
+
+(defun tomcat-toggle()
+  "Stop or start Tomcat"
+  (interactive)
+  (if tomcat-is-running
+      (tomcat-stop)
+    (tomcat-start)))
+
+(defun tomcat-stop ()
+  (message "Stopping Tomcat ...")
+  (save-excursion
+    (switch-to-buffer "*tomcat*")
+    (goto-char (point-max)))
+  (call-process tomcat-script nil "*tomcat-stop*" t "stop")
+  (setq tomcat-is-running nil)
+  (kill-buffer "*tomcat-stop*")
+  (message "Tomcat stopped"))
 
 ;;=============================================================================
 ;; eclim
