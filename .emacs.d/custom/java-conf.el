@@ -75,16 +75,6 @@
       (tomcat-stop)
     (tomcat-start)))
 
-(defun tomcat-stop ()
-  (message "Stopping Tomcat ...")
-  (save-excursion
-    (switch-to-buffer "*tomcat*")
-    (goto-char (point-max)))
-  (call-process tomcat-script nil "*tomcat-stop*" t "stop")
-  (setq tomcat-is-running nil)
-  (kill-buffer "*tomcat-stop*")
-  (message "Tomcat stopped"))
-
 ;;=============================================================================
 ;; eclim
 ;;
