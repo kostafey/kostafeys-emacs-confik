@@ -1,5 +1,9 @@
 ;;; java-conf.el
 
+;; Envieronment variables in use are:
+;; - `JAVADOC'
+;; - `CATALINA_HOME'
+
 (defun my-indent-setup ()
   (c-set-offset 'arglist-intro '+))
 (add-hook 'java-mode-hook 'my-indent-setup)
@@ -42,7 +46,9 @@
   (let* ((catalina-home (getenv "CATALINA_HOME"))
          ;; or set `default-directory' variable
          (catalina-bin (concat-path catalina-home "bin")))
-    (expand-file-name "catalina.bat"
+    (expand-file-name (if (eq system-type 'windows-nt) 
+                          "catalina.bat"
+                        "catalina.sh")
                       catalina-bin))
   "Script to start or stop tomcat")
 
