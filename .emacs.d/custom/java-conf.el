@@ -25,10 +25,17 @@
 ;; TODO: add
 ;;-----------------------------------------------------------------------------
 ;; maven
-(defun maven-tomcat-deploy ()
-  (interactive)
-  (cd (projectile-project-root))
-  (compile "mvn tomcat7:redeploy" t))
+(defmacro maven-def-task (name command)
+  `(defun ,name ()
+     (interactive)
+     (cd (projectile-project-root))
+     (compile ,command t)))
+
+(maven-def-task maven-tomcat-deploy "mvn tomcat7:redeploy")
+(maven-def-task maven-compile "mvn compile")
+(maven-def-task maven-clean "mvn clean")
+(maven-def-task maven-package "mvn package")
+
 ;;-----------------------------------------------------------------------------
 ;; web-mode
 (require 'web-mode)
