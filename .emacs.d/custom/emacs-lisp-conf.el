@@ -66,11 +66,4 @@
                   (setq i (1+ i)))))
             (split-string doc) " ")))))
 
-(defun find-function-jump-at-point ()
-  "Find directly the function at point in the same window."
-  (interactive)
-  (let ((symb (function-called-at-point)))
-    (when symb
-      (find-function symb))))
-
 (provide 'emacs-lisp-conf)

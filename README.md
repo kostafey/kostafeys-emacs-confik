@@ -859,6 +859,13 @@
 <td class="left">sr-speedbar-toggle</td>
 <td class="left">&#xa0;</td>
 </tr>
+
+
+<tr>
+<td class="left">C-x B</td>
+<td class="left">semantic-mrub-switch-tag</td>
+<td class="left">Backward after semantic-ia-fast-jump</td>
+</tr>
 </tbody>
 </table>
 

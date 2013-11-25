@@ -444,7 +444,8 @@
 ;; Java
   (defun kostafey-java-mode-hook ()
     (define-key java-mode-map (kbd "C-a") nil)
-    (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup))
+    (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
+    (define-key java-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
   (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
   (global-set-key (kbd "C-<f9>") 'tomcat-toggle)

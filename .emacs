@@ -1,4 +1,4 @@
-;;=============================================================================
+﻿;;=============================================================================
 ;; Человеку свойственно ошибаться, но для нечеловеческих ляпов нужен компьютер.
 ;;                                                                  Пол Эрлих
 ;; To err is human, but to really foul things up you need a computer.
@@ -21,9 +21,6 @@
 (defvar site-lisp-path "~/.emacs.d/") ; root extensions folder
 (add-to-list 'load-path site-lisp-path)
 ;;-----------------------------------------------------------------------------
-(add-to-list 'load-path (concat site-lisp-path "cedet/"))
-(load (concat site-lisp-path "cedet/cedet-devel-load"))
-;;-----------------------------------------------------------------------------
 ;; Third-party *.el files (in general low-supporded, misplaced in ELPA)
 ;; without any patching or with tiny patches, stored in this repo.
 (defvar third-party-lisp-path (concat site-lisp-path "artifacts/"))
@@ -36,6 +33,8 @@
   (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
 (add-to-list 'load-path solutions-path)
 ;;-----------------------------------------------------------------------------
+(require 'cedet-conf)
+;;-----------------------------------------------------------------------------
 ;auto-customized custom-set-variables
 (setq custom-file (concat custom-conf-lisp-path "custom.el"))
 (load custom-file)
@@ -45,7 +44,7 @@
 (require 'look-and-feel)
 
 (require 'elpa-conf)
-
+(require 'ide)
 ;; (add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
 ;; (require 'popup-switcher)
 
@@ -69,7 +68,6 @@
 (require 'text-modes-conf)
 
 (require 'version-control)
-(require 'ide)
 ;; (require 'maxima-conf)
 ;; (require 'haskell-conf)
 (require 'emacs-lisp-conf)

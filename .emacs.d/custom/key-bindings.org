@@ -599,9 +599,10 @@
   ;;=============================================================================
 #+end_src
 ** IDE
-    | Key | Command            | Description |
-    |-----+--------------------+-------------|
-    | s-s | sr-speedbar-toggle |             |
+    | Key   | Command                  | Description                          |
+    |-------+--------------------------+--------------------------------------|
+    | s-s   | sr-speedbar-toggle       |                                      |
+    | C-x B | semantic-mrub-switch-tag | Backward after semantic-ia-fast-jump |
 
 #+begin_src emacs-lisp :exports none
   ;; speedbar
@@ -624,7 +625,8 @@
   ;; Java
     (defun kostafey-java-mode-hook ()
       (define-key java-mode-map (kbd "C-a") nil)
-      (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup))
+      (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
+      (define-key java-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
     (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
     (global-set-key (kbd "C-<f9>") 'tomcat-toggle)

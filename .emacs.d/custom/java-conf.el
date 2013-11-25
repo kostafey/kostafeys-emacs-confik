@@ -35,6 +35,7 @@
 (maven-def-task maven-compile "mvn compile")
 (maven-def-task maven-clean "mvn clean")
 (maven-def-task maven-package "mvn package")
+(maven-def-task maven-all "mvn clean package tomcat7:redeploy")
 
 ;;-----------------------------------------------------------------------------
 ;; web-mode

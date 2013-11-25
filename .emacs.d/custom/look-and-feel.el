@@ -270,6 +270,8 @@
 (setq sr-speedbar-right-side t)
 (setq speedbar-use-images nil)
 (setq speedbar-show-unknown-files t)
+(setq speedbar-tag-split-minimum-length 200)
+(setq speedbar-use-imenu-flag nil)
 
 (provide 'look-and-feel)
 
