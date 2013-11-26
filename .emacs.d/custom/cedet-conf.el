@@ -56,7 +56,7 @@
 (add-hook 'semantic-init-hooks 'my-semantic-hook)
 
 (when (cedet-ectag-version-check t)
-(semantic-load-enable-primary-ectags-support))
+  (semantic-load-enable-primary-ectags-support))
 
 ;; (setq global-semantic-tag-folding-mode t)
 

@@ -639,7 +639,8 @@
     (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
     (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
     (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
-    (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup))
+    (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
+    (define-key clojure-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
   (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
   ;;
