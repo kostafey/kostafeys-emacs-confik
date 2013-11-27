@@ -59,6 +59,7 @@
 (defun find-function-jump-at-point (point)
   "Find directly the function at point in the same window."
   (interactive "d")
+  (push-mark)
   (let ((mode (buffer-mode (current-buffer))))
     (cond
      ((equal mode 'emacs-lisp-mode)

@@ -131,6 +131,7 @@
 (global-set-key (kbd "M-b") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-x x") 'goto-last-change)
+(global-set-key (kbd "C-c <left>") 'pop-global-mark)
 
 ;;-----------------------------------------------------------------------------
 ;; Search & replace
@@ -505,6 +506,7 @@
 (global-unset-key (kbd "<C-S-down-mouse-1>"))
 (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
+(global-set-key (kbd "<C-down-mouse-1>") 'find-function-jump-at-point)
 ;;
 ;;=============================================================================
 

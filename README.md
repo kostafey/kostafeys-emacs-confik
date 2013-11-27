@@ -374,6 +374,12 @@
 <td class="left">C-x x</td>
 <td class="left">goto-last-change</td>
 </tr>
+
+
+<tr>
+<td class="left">C-c left</td>
+<td class="left">pop-global-mark</td>
+</tr>
 </tbody>
 </table>
 
