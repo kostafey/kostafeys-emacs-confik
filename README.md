@@ -2,43 +2,43 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">Kostafey's keybindings</a>
+<li><a href="#sec-1">1. Kostafey's keybindings</a>
 <ul>
-<li><a href="#sec-1-1">Humane emacs</a>
+<li><a href="#sec-1-1">1.1. Humane emacs</a>
 <ul>
-<li><a href="#sec-1-1-1">Exit/hide emacs</a></li>
-<li><a href="#sec-1-1-2">Select Copy Paste</a></li>
-<li><a href="#sec-1-1-3">Undo/redo</a></li>
-<li><a href="#sec-1-1-4">Delete/insert char</a></li>
-<li><a href="#sec-1-1-5">Save/revert</a></li>
+<li><a href="#sec-1-1-1">1.1.1. Exit/hide emacs</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Select Copy Paste</a></li>
+<li><a href="#sec-1-1-3">1.1.3. Undo/redo</a></li>
+<li><a href="#sec-1-1-4">1.1.4. Delete/insert char</a></li>
+<li><a href="#sec-1-1-5">1.1.5. Save/revert</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">Basic point movements &amp; change buffer's position</a></li>
-<li><a href="#sec-1-3">Point hyper-jumps</a>
+<li><a href="#sec-1-2">1.2. Basic point movements &amp; change buffer's position</a></li>
+<li><a href="#sec-1-3">1.3. Point hyper-jumps</a>
 <ul>
-<li><a href="#sec-1-3-1">Bookmarks</a></li>
-<li><a href="#sec-1-3-2">Search &amp; replace</a></li>
-<li><a href="#sec-1-3-3">Intellectual point jumps</a></li>
+<li><a href="#sec-1-3-1">1.3.1. Bookmarks</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Search &amp; replace</a></li>
+<li><a href="#sec-1-3-3">1.3.3. Intellectual point jumps</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-4">Command executions</a></li>
-<li><a href="#sec-1-5">Text transformations</a>
+<li><a href="#sec-1-4">1.4. Command executions</a></li>
+<li><a href="#sec-1-5">1.5. Text transformations</a>
 <ul>
-<li><a href="#sec-1-5-1">Basic text transformations</a></li>
-<li><a href="#sec-1-5-2">Rectangle operations</a></li>
-<li><a href="#sec-1-5-3">Upcase/downcase</a></li>
-<li><a href="#sec-1-5-4">Region &amp; misc operations</a></li>
+<li><a href="#sec-1-5-1">1.5.1. Basic text transformations</a></li>
+<li><a href="#sec-1-5-2">1.5.2. Rectangle operations</a></li>
+<li><a href="#sec-1-5-3">1.5.3. Upcase/downcase</a></li>
+<li><a href="#sec-1-5-4">1.5.4. Region &amp; misc operations</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-6">IDE</a></li>
-<li><a href="#sec-1-7">Menu</a>
+<li><a href="#sec-1-6">1.6. IDE</a></li>
+<li><a href="#sec-1-7">1.7. Menu</a>
 <ul>
-<li><a href="#sec-1-7-1">header<sub>name</sub></a></li>
+<li><a href="#sec-1-7-1">1.7.1. header<sub>name</sub></a></li>
 </ul>
 </li>
-<li><a href="#sec-1-8">Org-mode</a>
+<li><a href="#sec-1-8">1.8. Org-mode</a>
 <ul>
-<li><a href="#sec-1-8-1">Time schedule</a></li>
+<li><a href="#sec-1-8-1">1.8.1. Time schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -378,7 +378,13 @@
 
 <tr>
 <td class="left">C-c left</td>
-<td class="left">pop-global-mark</td>
+<td class="left">winner-undo</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c right</td>
+<td class="left">winner-redo</td>
 </tr>
 </tbody>
 </table>

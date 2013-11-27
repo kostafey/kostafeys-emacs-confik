@@ -190,13 +190,14 @@
 
 ** Point hyper-jumps
 *** Bookmarks
-    | Key      | Command          |
-    |----------+------------------|
-    | C-b      | bookmark-set     |
-    | M-b      | bookmark-jump    |
-    |----------+------------------|
-    | C-x x    | goto-last-change |
-    | C-c left | pop-global-mark  |   
+    | Key       | Command          |
+    |-----------+------------------|
+    | C-b       | bookmark-set     |
+    | M-b       | bookmark-jump    |
+    |-----------+------------------|
+    | C-x x     | goto-last-change |
+    | C-c left  | winner-undo      |
+    | C-c right | winner-redo      |
 #+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;;                         Point hyper-jumps
@@ -206,8 +207,7 @@
   (global-set-key (kbd "C-b") 'bookmark-set)
   (global-set-key (kbd "M-b") 'bookmark-jump)
   ;;-----------------------------------------------------------------------------
-  (global-set-key (kbd "C-x x") 'goto-last-change)
-  (global-set-key (kbd "C-c <left>") 'pop-global-mark)
+  (global-set-key (kbd "C-x x") 'goto-last-change)  
 #+end_src
 
 *** Search & replace

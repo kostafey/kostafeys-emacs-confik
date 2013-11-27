@@ -131,7 +131,6 @@
 (global-set-key (kbd "M-b") 'bookmark-jump)
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-x x") 'goto-last-change)
-(global-set-key (kbd "C-c <left>") 'pop-global-mark)
 
 ;;-----------------------------------------------------------------------------
 ;; Search & replace

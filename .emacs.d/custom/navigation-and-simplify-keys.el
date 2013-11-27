@@ -228,5 +228,8 @@
 ;;
 ;;=============================================================================
 
+(when (fboundp 'winner-mode)
+  (winner-mode 1))
+
 (provide 'navigation-and-simplify-keys)
 
