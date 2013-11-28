@@ -65,6 +65,7 @@
 (defvar ac-required-packages
   (list 'popup
         'auto-complete
+        'ac-etags
         'yasnippet
         'icomplete+)
   "Required packages for autocompletition.")

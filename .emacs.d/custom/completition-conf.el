@@ -42,6 +42,16 @@
 (setq ac-auto-start 2)
 (setq ac-dwim t)               ; Do what i mean
 
+(setq ac-etags-requires 2)
+(eval-after-load "etags"
+  '(progn
+     (ac-etags-setup)))
+
+(defun my-java-ac-mode-common-hook ()
+  (add-to-list 'ac-sources 'ac-source-etags))
+
+(add-hook 'java-mode-hook 'my-java-ac-mode-common-hook)
+
 (defun ac-page-next ()
   "Select next completion candidate per `ac-menu-height' range.
 Pages down through completion menu."
