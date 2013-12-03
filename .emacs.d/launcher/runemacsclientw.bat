@@ -10,7 +10,12 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 @echo off
 :: Set the path to where the Emacs binaries are
-set binpath=c:\Program Files\emacs-24.1\bin
+set default_binpath=c:\Program Files\emacs\bin
+if exist default_binpath (
+   set binpath=default_binpath
+) else (
+   set binpath=%EMACS%\bin
+)
 :: If no arg is given set filename to desktop
 if "%~1"=="" (
   set filename=%HOMEPATH%\temp

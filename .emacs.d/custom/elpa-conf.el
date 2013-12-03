@@ -117,7 +117,7 @@ and `buffer-navigation'.")
 
 
 (defvar misc-packages
-  (list)
+  (list 'noflet)
   "Packages, not requred by configuration files.")
 
 (install-required-packages (append 

@@ -38,6 +38,21 @@
 (maven-def-task maven-all "mvn clean package tomcat7:redeploy")
 
 ;;-----------------------------------------------------------------------------
+;; jdibug
+;; (add-to-list 'load-path
+;;              (concat site-lisp-path 
+;;                      "jdibug"))
+;; (require 'semantic/lex)
+;; (require 'semantic/senator)
+;; (require 'semantic/java)
+;; (require 'semantic/ia)
+;; (require 'semantic/ctxt)
+;; (require 'semantic/wisent)
+;; (require 'semantic/wisent/comp)
+;; (require 'semantic/wisent/java-tags)
+;; (require 'jdibug)
+
+;;-----------------------------------------------------------------------------
 ;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))

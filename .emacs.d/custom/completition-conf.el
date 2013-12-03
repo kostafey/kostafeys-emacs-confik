@@ -45,12 +45,20 @@
 (setq ac-etags-requires 2)
 (eval-after-load "etags"
   '(progn
-     (ac-etags-setup)))
-
-(defun my-java-ac-mode-common-hook ()
-  (add-to-list 'ac-sources 'ac-source-etags))
-
-(add-hook 'java-mode-hook 'my-java-ac-mode-common-hook)
+     (ac-etags-setup)
+     (defun etags-toggle-enable ()
+       (interactive)
+       (if (member 'ac-source-etags ac-sources)
+           (progn
+             (setq ac-sources (remove 'ac-source-etags ac-sources))
+             (message "etags autocomplete off."))
+         (progn
+           (add-to-list 'ac-sources 'ac-source-etags)
+           (message "etags autocomplete on."))))
+     ;; (defun my-java-ac-mode-common-hook ()
+     ;;   (add-to-list 'ac-sources 'ac-source-etags))
+     ;; (add-hook 'java-mode-hook 'my-java-ac-mode-common-hook)
+     ))
 
 (defun ac-page-next ()
   "Select next completion candidate per `ac-menu-height' range.

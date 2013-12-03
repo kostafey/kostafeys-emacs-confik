@@ -217,6 +217,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    '(yas/field-highlight-face ((t (:background "#DDEE00"))))
    `(idle-highlight ((t (:foreground ,organic-fg :background ,minor-yellow-highlight-background))) t)
    `(comint-highlight-prompt ((t (:foreground ,organic-constant-fg :weight bold))) t)
+   `(speedbar-selected-face ((t (:foreground ,geep-sea-green :underline t))) t)   
 
    '(flx-highlight-face  ((t (:foreground "#0066CC" :bold t :underline t))) t)
 
