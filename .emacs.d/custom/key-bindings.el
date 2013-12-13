@@ -448,8 +448,8 @@
     (define-key java-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
   (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
-  (global-set-key (kbd "C-<f9>") 'tomcat-toggle)
-  (global-set-key (kbd "C-<f10>") 'maven-tomcat-deploy)
+  (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
+  (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
 ;;
