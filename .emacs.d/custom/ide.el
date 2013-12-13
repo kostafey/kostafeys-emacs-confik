@@ -56,6 +56,12 @@
   (with-current-buffer buffer-or-string
      major-mode))
 
+(defun find-function-jump-mouse (start-event)
+  "Jump to function's definition by mouse click."
+  (interactive "e")
+  (mouse-drag-region start-event)
+  (find-function-jump-at-point (point)))
+
 (defun find-function-jump-at-point (point)
   "Find directly the function at point in the same window."
   (interactive "d")
