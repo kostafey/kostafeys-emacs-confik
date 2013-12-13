@@ -60,12 +60,6 @@
   (set-text-properties 0 (length txt) nil txt)
       txt)
 
-(defun find-definition-jump-mouse (start-event)
-  "Jump to entity definition by mouse click."
-  (interactive "e")
-  (mouse-drag-region start-event)
-  (find-function-jump-at-point (point)))
-
 (defun jump-default-tag ()
   (let ((default (funcall (or find-tag-default-function
                               (get major-mode 'find-tag-default-function)
@@ -74,7 +68,7 @@
         (find-tag default))))
 
 (defun find-definition-jump-at-point (point)
-  "Jump to entity definition."
+  "Jump to the entity definition."
   (interactive "d")
   (push-mark)
   (let ((mode (buffer-mode (current-buffer))))
@@ -92,6 +86,12 @@
               (semantic-ia-fast-jump point)
             (error (jump-default-tag)))
         (jump-default-tag))))))
+
+(defun find-definition-jump-mouse (start-event)
+  "Jump to the entity definition by mouse click."
+  (interactive "e")
+  (mouse-drag-region start-event)
+  (find-definition-jump-at-point (point)))
 
 (provide 'ide)
 
