@@ -56,26 +56,42 @@
   (with-current-buffer buffer-or-string
      major-mode))
 
-(defun find-function-jump-mouse (start-event)
-  "Jump to function's definition by mouse click."
+(defun strip-text-properties (txt)
+  (set-text-properties 0 (length txt) nil txt)
+      txt)
+
+(defun find-definition-jump-mouse (start-event)
+  "Jump to entity definition by mouse click."
   (interactive "e")
   (mouse-drag-region start-event)
   (find-function-jump-at-point (point)))
 
-(defun find-function-jump-at-point (point)
-  "Find directly the function at point in the same window."
+(defun jump-default-tag ()
+  (let ((default (funcall (or find-tag-default-function
+                              (get major-mode 'find-tag-default-function)
+                              'find-tag-default))))
+    (if default 
+        (find-tag default))))
+
+(defun find-definition-jump-at-point (point)
+  "Jump to entity definition."
   (interactive "d")
   (push-mark)
   (let ((mode (buffer-mode (current-buffer))))
     (cond
-     ((equal mode 'emacs-lisp-mode)
-      (let ((symb (function-called-at-point)))
+     ((equal 'emacs-lisp-mode mode)
+      (let ((symb (read (strip-text-properties 
+                         (thing-at-point 'symbol)))))
         (when symb
-          (find-function symb))))
-     ((equal mode 'java-mode)
-      (semantic-ia-fast-jump point))
-     (t
-      (semantic-ia-fast-jump point)))))
+          (cond
+           ((functionp symb) (find-function symb))
+           (t (find-variable symb))))))
+     (t ; other modes
+      (if (semantic-active-p)
+          (condition-case nil
+              (semantic-ia-fast-jump point)
+            (error (jump-default-tag)))
+        (jump-default-tag))))))
 
 (provide 'ide)
 

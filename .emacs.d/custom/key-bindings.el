@@ -171,7 +171,7 @@
 (add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 ;;-----------------------------------------------------------------------------
 ;; elisp goto definition
-(define-key emacs-lisp-mode-map (kbd "C-M-d") 'find-function-jump-at-point)
+(define-key emacs-lisp-mode-map (kbd "C-M-d") 'find-definition-jump-at-point)
 ;;
 ;;=============================================================================
 
@@ -505,7 +505,7 @@
 (global-unset-key (kbd "<C-S-down-mouse-1>"))
 (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-(global-set-key (kbd "<C-down-mouse-1>") 'find-function-jump-mouse)
+(global-set-key (kbd "<C-down-mouse-1>") 'find-definition-jump-mouse)
 ;;
 ;;=============================================================================
 
