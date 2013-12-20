@@ -12,6 +12,7 @@
 ;;=============================================================================
 ;; CUA - the core of the emacs humane ;)
 ;;
+(require 'cua-base)
 (cua-mode t)
 ;;
 ;; Region selection:
@@ -497,11 +498,13 @@
 ;;-----------------------------------------------------------------------------
 ;; shift + click select region
 (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
-(define-key global-map (kbd "<S-mouse-1>") 'mouse-set-point)
-(put 'mouse-set-point 'CUA 'move)
+(define-key global-map (kbd "<S-mouse-1>") '(lambda (e) 
+                                              (interactive "e")                                              
+                                              (if (not mark-active)
+                                                  (cua-set-mark))
+                                              (mouse-set-point e)))
 ;;-----------------------------------------------------------------------------
 ;; ctrl + shift + click select rectange region
-(require 'cua-base)
 (global-unset-key (kbd "<C-S-down-mouse-1>"))
 (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
