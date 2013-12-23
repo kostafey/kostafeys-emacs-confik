@@ -14,6 +14,7 @@
 ;;
 (require 'cua-base)
 (cua-mode t)
+(setq cua-prefix-override-inhibit-delay 0.1)
 ;;
 ;; Region selection:
 (setq transient-mark-mode t)
@@ -397,6 +398,7 @@
 
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
+(global-set-key (kbd "s-q") 'psw-navigate-files)
 (eval-after-load "eassist"
   '(global-set-key [f2] 'psw-switch-function))
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере

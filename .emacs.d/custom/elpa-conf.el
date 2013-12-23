@@ -49,7 +49,8 @@
         'log4j-mode
         'lorem-ipsum
         'markdown-mode
-        'typing)
+        'typing
+        'sphinx-frontend)
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
