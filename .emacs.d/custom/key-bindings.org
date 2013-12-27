@@ -716,3 +716,9 @@
     | C-c C-x C-o | org-clock-out    | Stop the currently running clock    |
     | C-c C-x C-r | org-clock-report | Create a table containing a report  |
     |             |                  | about clocked time                  |
+** Emacs OS
+*** elfeed
+#+begin_src emacs-lisp :exports none
+   ;; see https://github.com/skeeto/elfeed for details.
+   (global-set-key (kbd "M-<f2>") 'elfeed)
+#+end_src

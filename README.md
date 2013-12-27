@@ -41,6 +41,11 @@
 <li><a href="#sec-1-8-1">1.8.1. Time schedule</a></li>
 </ul>
 </li>
+<li><a href="#sec-1-9">1.9. Emacs OS</a>
+<ul>
+<li><a href="#sec-1-9-1">1.9.1. elfeed</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -970,3 +975,7 @@
 </tr>
 </tbody>
 </table>
+
+## Emacs OS
+
+### elfeed

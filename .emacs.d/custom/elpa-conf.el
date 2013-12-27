@@ -50,7 +50,9 @@
         'lorem-ipsum
         'markdown-mode
         'typing
-        'sphinx-frontend)
+        'sphinx-frontend
+        ;; news reader
+        'elfeed)
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages

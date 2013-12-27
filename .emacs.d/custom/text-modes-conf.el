@@ -79,4 +79,13 @@
 ;;typing game
 (autoload 'typing-of-emacs "The Typing Of Emacs, a game." t)
 
+;;--------------------------------------------------------------------
+;; elfeed
+(setq elfeed-feeds
+      '("http://nullprogram.com/feed/"
+        "http://batsov.com/atom.xml"
+        "http://www.masteringemacs.org/feed/"
+        "http://planet.emacsen.org/atom.xml"
+        "http://planet.emacsen.org/ru/atom.xml"))
+
 (provide 'text-modes-conf)

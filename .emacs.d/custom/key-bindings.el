@@ -516,3 +516,6 @@
 ;;=============================================================================
 
 (provide 'key-bindings)
+
+;; see https://github.com/skeeto/elfeed for details.
+(global-set-key (kbd "M-<f2>") 'elfeed)
