@@ -6,7 +6,10 @@
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
 ;; Stop the error buffer from popping up while working in the REPL buffer
-(setq cider-popup-stacktraces nil)
+(setq cider-popup-stacktraces t)
+
+;; Enable error buffer popping also in the REPL
+(setq cider-repl-popup-stacktraces t)
 
 ;; Make C-c C-z switch to the *nrepl* buffer in the current window
 (add-to-list 'same-window-buffer-names "*nrepl*")
