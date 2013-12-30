@@ -109,7 +109,8 @@ and `buffer-navigation'.")
         'ecb
         'projectile
         'javadoc-lookup
-        'web-mode)
+        'web-mode
+        'diff-hl)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages
