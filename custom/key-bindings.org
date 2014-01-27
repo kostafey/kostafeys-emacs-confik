@@ -1,6 +1,11 @@
 #+TITLE: Kostafey's Emacs configuration
 #+OPTIONS: toc:4 h:4
 #+STARTUP: content
+* Initial setup
+
+Add to .emacs:
+
+(load-file "~/.emacs.d/init.el")
 
 * Kostafey's keybindings
 ** Humane emacs

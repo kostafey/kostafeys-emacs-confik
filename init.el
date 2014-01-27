@@ -84,8 +84,6 @@
 ;; (require 'misc-swarm)
 
 ;; (require 'el-get-conf)
-;;-----------------------------------------------------------------------------
-(add-to-list 'load-path (concat site-lisp-path "my-task-centric/"))
 (require 'calc-time)
 (require 'hibernate-mapping)
 
