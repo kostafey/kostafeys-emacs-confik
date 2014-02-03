@@ -85,6 +85,7 @@
         ;; 'powerline
         'popup-switcher
         'sr-speedbar
+        'organic-green-theme
         )
   "Required packages for `look-and-feel'.")
 

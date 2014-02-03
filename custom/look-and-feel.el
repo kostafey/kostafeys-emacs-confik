@@ -53,13 +53,8 @@
 ;;-----------------------------------------------------------------------------
 (global-linum-mode) ; Нумерация строк
 
-(require 'minimap)
-
-;; (require 'rainbow-mode)
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color themes path
-(add-to-list 'custom-theme-load-path "~/.emacs.d/organic-green-theme")
-
 (load-theme 'organic-green t)
 ;;-----------------------------------------------------------------------------
 
@@ -80,9 +75,6 @@
 (blink-cursor-mode -1)
 ;;
 ;;=============================================================================
-
-(require 'window-number)
-(window-number-mode)
 
 ;;=============================================================================
 ;; full screen toggle using command+[RET]

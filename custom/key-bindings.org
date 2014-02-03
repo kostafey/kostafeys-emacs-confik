@@ -521,11 +521,6 @@ Add to .emacs:
   (require 'bs) ;; other list of buffers
   (global-set-key (kbd "C-x C-n") 'bs-show)
   ;;-----------------------------------------------------------------------------
-  ;; lusty-explorer
-  ;; (when (require 'lusty-explorer nil 'noerror)
-  ;;   (global-set-key (kbd "C-c C-f") 'lusty-file-explorer)
-  ;;   (global-set-key (kbd "C-c C-x")   'lusty-buffer-explorer))
-  ;;-----------------------------------------------------------------------------
   ;; buffers shortcuts
   (global-set-key (concat selected-area-prefix "\C-e")
                   '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
