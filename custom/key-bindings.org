@@ -528,9 +528,9 @@ Add to .emacs:
   ;;-----------------------------------------------------------------------------
   ;; buffers shortcuts
   (global-set-key (concat selected-area-prefix "\C-e")
-                  '(lambda () (interactive) (find-file "~/.emacs")))
+                  '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
   (global-set-key (concat change-buffer-prefix "e")
-                  '(lambda () (interactive) (find-file "~/.emacs")))
+                  '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
   
   (global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
   (global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)

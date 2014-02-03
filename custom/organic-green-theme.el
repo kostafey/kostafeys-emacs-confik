@@ -127,7 +127,7 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
    `(font-lock-builtin-face ((,class (:foreground ,organic-builtin-fg))))
    `(font-lock-comment-face ((,class (:foreground ,organic-comment-fg))))
    `(font-lock-constant-face ((,class (:foreground ,organic-constant-fg))))
-   `(font-lock-function-name-face ((,class (:weight extra-bold :foreground "blue"))))
+   `(font-lock-function-name-face ((,class (:weight extra-bold :foreground "#3032FF")))) ;"blue"
    `(font-lock-keyword-face ((,class (:weight semi-bold :foreground "purple"))))
    `(font-lock-string-face ((t (:foreground ,organic-string-fg))) t) ; "ForestGreen"
    `(font-lock-type-face ((t (:foreground ,organic-builtin-fg :weight bold))))

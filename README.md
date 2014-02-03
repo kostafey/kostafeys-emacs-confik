@@ -2,48 +2,49 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. Kostafey's keybindings</a>
+<li><a href="#sec-1">1. Initial setup</a></li>
+<li><a href="#sec-2">2. Kostafey's keybindings</a>
 <ul>
-<li><a href="#sec-1-1">1.1. Humane emacs</a>
+<li><a href="#sec-2-1">2.1. Humane emacs</a>
 <ul>
-<li><a href="#sec-1-1-1">1.1.1. Exit/hide emacs</a></li>
-<li><a href="#sec-1-1-2">1.1.2. Select Copy Paste</a></li>
-<li><a href="#sec-1-1-3">1.1.3. Undo/redo</a></li>
-<li><a href="#sec-1-1-4">1.1.4. Delete/insert char</a></li>
-<li><a href="#sec-1-1-5">1.1.5. Save/revert</a></li>
+<li><a href="#sec-2-1-1">2.1.1. Exit/hide emacs</a></li>
+<li><a href="#sec-2-1-2">2.1.2. Select Copy Paste</a></li>
+<li><a href="#sec-2-1-3">2.1.3. Undo/redo</a></li>
+<li><a href="#sec-2-1-4">2.1.4. Delete/insert char</a></li>
+<li><a href="#sec-2-1-5">2.1.5. Save/revert</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-2">1.2. Basic point movements &amp; change buffer's position</a></li>
-<li><a href="#sec-1-3">1.3. Point hyper-jumps</a>
+<li><a href="#sec-2-2">2.2. Basic point movements &amp; change buffer's position</a></li>
+<li><a href="#sec-2-3">2.3. Point hyper-jumps</a>
 <ul>
-<li><a href="#sec-1-3-1">1.3.1. Bookmarks</a></li>
-<li><a href="#sec-1-3-2">1.3.2. Search &amp; replace</a></li>
-<li><a href="#sec-1-3-3">1.3.3. Intellectual point jumps</a></li>
+<li><a href="#sec-2-3-1">2.3.1. Bookmarks</a></li>
+<li><a href="#sec-2-3-2">2.3.2. Search &amp; replace</a></li>
+<li><a href="#sec-2-3-3">2.3.3. Intellectual point jumps</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-4">1.4. Command executions</a></li>
-<li><a href="#sec-1-5">1.5. Text transformations</a>
+<li><a href="#sec-2-4">2.4. Command executions</a></li>
+<li><a href="#sec-2-5">2.5. Text transformations</a>
 <ul>
-<li><a href="#sec-1-5-1">1.5.1. Basic text transformations</a></li>
-<li><a href="#sec-1-5-2">1.5.2. Rectangle operations</a></li>
-<li><a href="#sec-1-5-3">1.5.3. Upcase/downcase</a></li>
-<li><a href="#sec-1-5-4">1.5.4. Region &amp; misc operations</a></li>
+<li><a href="#sec-2-5-1">2.5.1. Basic text transformations</a></li>
+<li><a href="#sec-2-5-2">2.5.2. Rectangle operations</a></li>
+<li><a href="#sec-2-5-3">2.5.3. Upcase/downcase</a></li>
+<li><a href="#sec-2-5-4">2.5.4. Region &amp; misc operations</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-6">1.6. IDE</a></li>
-<li><a href="#sec-1-7">1.7. Menu</a>
+<li><a href="#sec-2-6">2.6. IDE</a></li>
+<li><a href="#sec-2-7">2.7. Menu</a>
 <ul>
-<li><a href="#sec-1-7-1">1.7.1. header<sub>name</sub></a></li>
+<li><a href="#sec-2-7-1">2.7.1. header<sub>name</sub></a></li>
 </ul>
 </li>
-<li><a href="#sec-1-8">1.8. Org-mode</a>
+<li><a href="#sec-2-8">2.8. Org-mode</a>
 <ul>
-<li><a href="#sec-1-8-1">1.8.1. Time schedule</a></li>
+<li><a href="#sec-2-8-1">2.8.1. Time schedule</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-9">1.9. Emacs OS</a>
+<li><a href="#sec-2-9">2.9. Emacs OS</a>
 <ul>
-<li><a href="#sec-1-9-1">1.9.1. elfeed</a></li>
+<li><a href="#sec-2-9-1">2.9.1. elfeed</a></li>
 </ul>
 </li>
 </ul>
@@ -51,6 +52,13 @@
 </ul>
 </div>
 </div>
+
+
+# Initial setup
+
+Add to .emacs:
+
+(load-file "~/.emacs.d/init.el")
 
 # Kostafey's keybindings
 

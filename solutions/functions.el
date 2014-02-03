@@ -1,6 +1,6 @@
 ;;; functions.el -- The collection of misc elisp helper functions.
 
-;;; Copyright © 2013 - Kostafey <kostafey@gmail.com>
+;;; Copyright © 2013-2014 - Kostafey <kostafey@gmail.com>
 
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ E.g.
            "emacs-lisp")
           (org-md-export-to-markdown nil))
         (rename-file (expand-file-name md-filename keys-file-dir)
-                     (expand-file-name readme-filename "~/")
+                     (expand-file-name readme-filename "~/.emacs.d")
                      t)))))
 
 (provide 'functions)

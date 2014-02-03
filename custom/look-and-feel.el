@@ -58,7 +58,7 @@
 ;; (require 'rainbow-mode)
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color themes path
-(add-to-list 'custom-theme-load-path "~/.emacs.d/custom")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/organic-green-theme")
 
 (load-theme 'organic-green t)
 ;;-----------------------------------------------------------------------------
@@ -235,11 +235,6 @@
 (add-hook 'clojure-mode-hook 'my-coding-hook)
 (add-hook 'sql-mode-hook 'my-coding-hook)
 (add-hook 'web-mode-hook 'web-mode-hook)
-
-(setq hl-paren-colors '("#326B6B"))
-(setq hl-paren-background-colors '(
-      "#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" 
-      "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
 
 (setq query-replace-highlight t)
 
