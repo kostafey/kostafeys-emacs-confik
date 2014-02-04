@@ -176,7 +176,6 @@
 (setq-default fill-column 80)
 (setq-default fci-rule-column fill-column)
 (setq fci-rule-width 1)
-(setq fci-rule-color "gray80")
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
 (global-fci-mode 1)
 
@@ -212,7 +211,7 @@
 
 (defun my-coding-hook ()
   (highlight-parentheses-mode t)
-  (idle-highlight-mode t)
+  ;; (idle-highlight-mode t)
   (font-lock-warn-todo))
 
 (defun web-mode-hook () 
