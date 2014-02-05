@@ -16,26 +16,26 @@ Add to .emacs:
 | M-&lt;f4&gt; | save-buffers-kill-terminal |             |
 
 #+begin_src emacs-lisp :exports none :padline no
-;;; key-bindings.el -- A collection of key bindings (default and custom).
-
-;;; Commentary:
-
-;; Attempting to make emacs a little bit humane.
-
-;;=============================================================================
-;; Exit & iconify emacs
-(global-set-key (kbd "M-z") 'iconify-or-deiconify-frame)    ; Hide emacs frame
-(global-set-key (kbd "M-<f4>") 'save-buffers-kill-terminal)
-
-;;=============================================================================
-;; CUA - the core of the emacs humane ;)
-;;
-(require 'cua-base)
-(cua-mode t)
-(setq cua-prefix-override-inhibit-delay 0.1)
-;;
-;; Region selection:
-(setq transient-mark-mode t)
+  ;;; key-bindings.el -- A collection of key bindings (default and custom).
+  
+  ;;; Commentary:
+  
+  ;; Attempting to make emacs a little bit humane.
+  
+  ;;=============================================================================
+  ;; Exit & iconify emacs
+  (global-set-key (kbd "M-z") 'iconify-or-deiconify-frame)    ; Hide emacs frame
+  (global-set-key (kbd "M-<f4>") 'save-buffers-kill-terminal)
+  
+  ;;=============================================================================
+  ;; CUA - the core of the emacs humane ;)
+  ;;
+  (require 'cua-base)
+  (cua-mode t)
+  (setq cua-prefix-override-inhibit-delay 0.1)
+  ;;
+  ;; Region selection:
+  (setq transient-mark-mode t)
 #+end_src
 
 *** Select Copy Paste
@@ -53,7 +53,7 @@ Add to .emacs:
   ;;-----------------------------------------------------------------------------
   (global-set-key (kbd "C-S-v") 'cua-paste-pop)
   (global-set-key (kbd "C-M-v") '(lambda() (interactive) (cua-paste-pop -1)))
-
+  
   (global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r")
                                    (append-to-buffer "temp" beg end)
                                    (save-excursion
@@ -123,7 +123,7 @@ Add to .emacs:
   (global-unset-key "\C-\M-a")
   (defvar selected-area-prefix "\C-\M-a")
   (defvar change-buffer-prefix "\C-c\C-b")
-
+  
   (require 'buffer-navigation)
   (require 'navigation-and-simplify-keys)
   (require 'basic-text-editing)
@@ -612,7 +612,7 @@ Add to .emacs:
 #+begin_src emacs-lisp :exports none
   ;; speedbar
   (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
-
+  
   ;;=============================================================================
   ;; ecb
   (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
@@ -622,7 +622,7 @@ Add to .emacs:
   ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
   ;;
   ;;=============================================================================
-
+  
   ;;=============================================================================
   ;; Mode keys & programming language specific keys.
   ;;
@@ -634,7 +634,7 @@ Add to .emacs:
       (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
       (define-key java-mode-map (kbd "C-M-d") 'find-definition-jump-at-point))
     (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
-
+  
     (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
     (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
   ;;----------------------------------------------------------------------
@@ -649,6 +649,13 @@ Add to .emacs:
     (define-key clojure-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
   (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+  ;;----------------------------------------------------------------------
+  ;; SQL
+  ;;
+  (when (require 'ejc-sql nil 'noerror)
+    (eval-after-load "ejc-sql"
+      '(progn
+         (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
   ;;
   ;;----------------------------------------------------------------------
   ;; Magit & ahg
@@ -657,7 +664,7 @@ Add to .emacs:
   (eval-after-load "version-control"
     '(progn
        (global-set-key (kbd "M-a") 'get-vc-status)))
-
+  
   (eval-after-load "ahg"
     '(progn
        (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
@@ -676,7 +683,7 @@ Add to .emacs:
     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
   ;;
   ;;=============================================================================
-
+  
   ;;=============================================================================
   ;;                               Mouse
   ;;
@@ -697,7 +704,7 @@ Add to .emacs:
   (global-set-key (kbd "<C-down-mouse-1>") 'find-definition-jump-mouse)
   ;;
   ;;=============================================================================
-
+  
   (provide 'key-bindings)
 #+end_src
 

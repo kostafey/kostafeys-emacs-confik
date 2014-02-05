@@ -461,6 +461,13 @@
   (define-key clojure-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+;;----------------------------------------------------------------------
+;; SQL
+;;
+(when (require 'ejc-sql nil 'noerror)
+  (eval-after-load "ejc-sql"
+    '(progn
+       (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
 ;;
 ;;----------------------------------------------------------------------
 ;; Magit & ahg
