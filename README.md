@@ -482,6 +482,13 @@ Add to .emacs:
 <td class="left">highlight-symbol-remove-all</td>
 </tr>
 </tbody>
+
+<tbody>
+<tr>
+<td class="left">M-a</td>
+<td class="left">ace-jump-mode</td>
+</tr>
+</tbody>
 </table>
 
 ### Intellectual point jumps

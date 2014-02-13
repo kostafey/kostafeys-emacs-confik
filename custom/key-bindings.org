@@ -233,6 +233,8 @@ Add to .emacs:
     | F3         | highlight-symbol-next       |
     | shift F3   | highlight-symbol-prev       |
     | meta F3    | highlight-symbol-remove-all |
+    |------------+-----------------------------|
+    | M-a        | ace-jump-mode               |
 #+begin_src emacs-lisp :exports none
   ;;-----------------------------------------------------------------------------
   ;; Search & replace
@@ -240,13 +242,13 @@ Add to .emacs:
   (global-set-key (kbd "C-f") 'isearch-forward)
   (global-set-key (kbd "C-r") 'isearch-backward)
   ;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
-
+  
   (global-unset-key (kbd "M-r"))
   (global-set-key (kbd "M-r") 'replace-string)
-
+  
   (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
   (global-set-key (kbd "C-c C-f") 'ack-file)
-
+  
   (when (require 'highlight-symbol nil 'noerror)
     (eval-after-load "highlight-symbol"
       '(progn
@@ -254,6 +256,10 @@ Add to .emacs:
          (global-set-key [f3] 'highlight-symbol-next)
          (global-set-key [(shift f3)] 'highlight-symbol-prev)
          (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
+  
+  ;; ace-jump-mode
+  (global-unset-key (kbd "M-a"))
+  (define-key global-map (kbd "M-a") 'ace-jump-mode)
   ;;
   ;;=============================================================================
 #+end_src
@@ -659,11 +665,11 @@ Add to .emacs:
   ;;
   ;;----------------------------------------------------------------------
   ;; Magit & ahg
-  ;;
-  (global-unset-key (kbd "M-a"))
+  ;;  
+  (global-unset-key (kbd "M-w"))
   (eval-after-load "version-control"
     '(progn
-       (global-set-key (kbd "M-a") 'get-vc-status)))
+       (global-set-key (kbd "M-w") 'get-vc-status)))
   
   (eval-after-load "ahg"
     '(progn

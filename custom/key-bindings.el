@@ -154,6 +154,10 @@
        (global-set-key [f3] 'highlight-symbol-next)
        (global-set-key [(shift f3)] 'highlight-symbol-prev)
        (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
+
+;; ace-jump-mode
+(global-unset-key (kbd "M-a"))
+(define-key global-map (kbd "M-a") 'ace-jump-mode)
 ;;
 ;;=============================================================================
 
@@ -471,11 +475,11 @@
 ;;
 ;;----------------------------------------------------------------------
 ;; Magit & ahg
-;;
-(global-unset-key (kbd "M-a"))
+;;  
+(global-unset-key (kbd "M-w"))
 (eval-after-load "version-control"
   '(progn
-     (global-set-key (kbd "M-a") 'get-vc-status)))
+     (global-set-key (kbd "M-w") 'get-vc-status)))
 
 (eval-after-load "ahg"
   '(progn

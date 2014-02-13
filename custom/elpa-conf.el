@@ -95,7 +95,8 @@
         'dired+
         'flx
         'flx-ido
-        'smex)
+        'smex
+        'ace-jump-mode)
   "Required packages for `navigation-and-simplify-keys', `key-bindings'
 and `buffer-navigation'.")
 
