@@ -231,5 +231,10 @@
 (when (fboundp 'winner-mode)
   (winner-mode 1))
 
+(defadvice ace-jump-char-category (around adv-ace-jump-support-umlauts activate)
+  (unless (= (char-syntax (ad-get-arg 0)) ?w)
+    ad-do-it)
+  (setq ad-return-value 'alpha))
+
 (provide 'navigation-and-simplify-keys)
 
