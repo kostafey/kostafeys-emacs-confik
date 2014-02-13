@@ -157,7 +157,8 @@
 
 ;; ace-jump-mode
 (global-unset-key (kbd "M-a"))
-(define-key global-map (kbd "M-a") 'ace-jump-mode)
+(when (require 'ace-jump-mode nil 'noerror)
+  (define-key global-map (kbd "M-a") 'ace-jump-mode))
 ;;
 ;;=============================================================================
 

@@ -236,32 +236,33 @@ Add to .emacs:
     |------------+-----------------------------|
     | M-a        | ace-jump-mode               |
 #+begin_src emacs-lisp :exports none
-  ;;-----------------------------------------------------------------------------
-  ;; Search & replace
-  (global-unset-key (kbd "C-f"))
-  (global-set-key (kbd "C-f") 'isearch-forward)
-  (global-set-key (kbd "C-r") 'isearch-backward)
-  ;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
-  
-  (global-unset-key (kbd "M-r"))
-  (global-set-key (kbd "M-r") 'replace-string)
-  
-  (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
-  (global-set-key (kbd "C-c C-f") 'ack-file)
-  
-  (when (require 'highlight-symbol nil 'noerror)
-    (eval-after-load "highlight-symbol"
-      '(progn
-         (global-set-key [(control f3)] 'highlight-symbol-at-point)
-         (global-set-key [f3] 'highlight-symbol-next)
-         (global-set-key [(shift f3)] 'highlight-symbol-prev)
-         (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
-  
-  ;; ace-jump-mode
-  (global-unset-key (kbd "M-a"))
-  (define-key global-map (kbd "M-a") 'ace-jump-mode)
-  ;;
-  ;;=============================================================================
+    ;;-----------------------------------------------------------------------------
+    ;; Search & replace
+    (global-unset-key (kbd "C-f"))
+    (global-set-key (kbd "C-f") 'isearch-forward)
+    (global-set-key (kbd "C-r") 'isearch-backward)
+    ;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
+    
+    (global-unset-key (kbd "M-r"))
+    (global-set-key (kbd "M-r") 'replace-string)
+    
+    (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+    (global-set-key (kbd "C-c C-f") 'ack-file)
+    
+    (when (require 'highlight-symbol nil 'noerror)
+      (eval-after-load "highlight-symbol"
+        '(progn
+           (global-set-key [(control f3)] 'highlight-symbol-at-point)
+           (global-set-key [f3] 'highlight-symbol-next)
+           (global-set-key [(shift f3)] 'highlight-symbol-prev)
+           (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
+    
+    ;; ace-jump-mode
+    (global-unset-key (kbd "M-a"))
+    (when (require 'ace-jump-mode nil 'noerror)
+      (define-key global-map (kbd "M-a") 'ace-jump-mode))
+    ;;
+    ;;=============================================================================
 #+end_src
 
 *** Intellectual point jumps
