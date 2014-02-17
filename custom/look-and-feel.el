@@ -240,12 +240,11 @@
 
 ;;-----------------------------------------------------------------------------
 
-(require 'popwin)
-;; Since popwin-el is conflicing with ECB.
-;; (setq display-buffer-function 'popwin:display-buffer)
-(global-set-key (kbd "C-x p") popwin:keymap)
-
-(push "*Kill Ring*" popwin:special-display-config)
+;; (require 'popwin)
+;; ;; Since popwin-el is conflicing with ECB.
+;; ;; (setq display-buffer-function 'popwin:display-buffer)
+;; (global-set-key (kbd "C-x p") popwin:keymap)
+;; (push "*Kill Ring*" popwin:special-display-config)
 
 ;; Disable bidirectional text support
 (setq-default bidi-display-reordering nil)

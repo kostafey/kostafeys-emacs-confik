@@ -77,7 +77,7 @@
   (list 'fill-column-indicator
         'highlight-parentheses
         'idle-highlight-mode
-        'popwin
+        ;; 'popwin
         'tabbar
         'rainbow-mode
         'highlight-symbol
