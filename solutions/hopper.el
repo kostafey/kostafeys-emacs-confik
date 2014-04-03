@@ -1,7 +1,18 @@
+;;; hopper.el - simplify code navigation.
+
 ;;; Usage:
 ;;
 ;; (global-set-key (kbd "C-M-d") 'hop-at-point)
 ;; (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
+
+(defun hop-buffer-mode (buffer-or-string)
+  "Returns the major mode associated with a buffer."
+  (with-current-buffer buffer-or-string
+     major-mode))
+
+(defun hop-strip-text-properties (txt)
+  (set-text-properties 0 (length txt) nil txt)
+      txt)
 
 (defun hop-default-tag ()
   (let ((default (funcall (or find-tag-default-function
@@ -16,11 +27,11 @@
   "Jump to the entity definition."
   (interactive "d")
   (push-mark)
-  (let ((mode (buffer-mode (current-buffer))))
+  (let ((mode (hop-buffer-mode (current-buffer))))
     (cond
      ;; emacs-lisp-mode
      ((equal 'emacs-lisp-mode mode)
-      (let ((symb (read (strip-text-properties 
+      (let ((symb (read (hop-strip-text-properties 
                          (thing-at-point 'symbol)))))
         (when symb
           (cond

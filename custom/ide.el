@@ -49,16 +49,5 @@
 (projectile-global-mode)
 (setq projectile-indexing-method 'native)
 
-;;-----------------------------------------------------------------------------
-;; code navigation
-(defun buffer-mode (buffer-or-string)
-  "Returns the major mode associated with a buffer."
-  (with-current-buffer buffer-or-string
-     major-mode))
-
-(defun strip-text-properties (txt)
-  (set-text-properties 0 (length txt) nil txt)
-      txt)
-
 (provide 'ide)
 
