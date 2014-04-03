@@ -13,6 +13,7 @@
 ;; CUA - the core of the emacs humane ;)
 ;;
 (require 'cua-base)
+(require 'hopper)
 (cua-mode t)
 (setq cua-prefix-override-inhibit-delay 0.1)
 ;;
@@ -178,7 +179,7 @@
 (add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 ;;-----------------------------------------------------------------------------
 ;; elisp goto definition
-(define-key emacs-lisp-mode-map (kbd "C-M-d") 'find-definition-jump-at-point)
+(define-key emacs-lisp-mode-map (kbd "C-M-d") 'hop-at-point)
 ;;
 ;;=============================================================================
 
@@ -449,7 +450,7 @@
     (define-key java-mode-map (kbd "C-a") nil)
     (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
     (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
-    (define-key java-mode-map (kbd "C-M-d") 'find-definition-jump-at-point))
+    (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
   (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
   (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
@@ -463,7 +464,7 @@
   (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
   (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
-  (define-key clojure-mode-map (kbd "C-M-d") 'find-function-jump-at-point))
+  (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;----------------------------------------------------------------------
@@ -518,7 +519,7 @@
 (global-unset-key (kbd "<C-S-down-mouse-1>"))
 (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-(global-set-key (kbd "<C-down-mouse-1>") 'find-definition-jump-mouse)
+(global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
 ;;
 ;;=============================================================================
 

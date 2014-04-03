@@ -211,7 +211,7 @@
 
 (defun my-coding-hook ()
   (highlight-parentheses-mode t)
-  ;; (idle-highlight-mode t)
+  (idle-highlight-mode t)
   (font-lock-warn-todo))
 
 (defun web-mode-hook () 

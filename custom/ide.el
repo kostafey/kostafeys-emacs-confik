@@ -60,38 +60,5 @@
   (set-text-properties 0 (length txt) nil txt)
       txt)
 
-(defun jump-default-tag ()
-  (let ((default (funcall (or find-tag-default-function
-                              (get major-mode 'find-tag-default-function)
-                              'find-tag-default))))
-    (if default 
-        (find-tag default))))
-
-(defun find-definition-jump-at-point (point)
-  "Jump to the entity definition."
-  (interactive "d")
-  (push-mark)
-  (let ((mode (buffer-mode (current-buffer))))
-    (cond
-     ((equal 'emacs-lisp-mode mode)
-      (let ((symb (read (strip-text-properties 
-                         (thing-at-point 'symbol)))))
-        (when symb
-          (cond
-           ((functionp symb) (find-function symb))
-           (t (find-variable symb))))))
-     (t ; other modes
-      (if (semantic-active-p)
-          (condition-case nil
-              (semantic-ia-fast-jump point)
-            (error (jump-default-tag)))
-        (jump-default-tag))))))
-
-(defun find-definition-jump-mouse (start-event)
-  "Jump to the entity definition by mouse click."
-  (interactive "e")
-  (mouse-drag-region start-event)
-  (find-definition-jump-at-point (point)))
-
 (provide 'ide)
 

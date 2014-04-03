@@ -536,7 +536,7 @@ Add to .emacs:
 <tbody>
 <tr>
 <td class="left">C-M-d</td>
-<td class="left">find-definition-jump-at-point</td>
+<td class="left">hop-at-point</td>
 <td class="left">Jump to elisp definition</td>
 </tr>
 </tbody>
