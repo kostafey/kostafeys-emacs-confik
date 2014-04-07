@@ -334,5 +334,14 @@ buffer is not visiting a file."
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
+(defun json-format ()
+  "Pretty print json string."
+  (interactive)
+  (beginning-of-buffer)
+  (replace-string "," ",\n")
+  (js-mode)
+  (mark-whole-buffer)  
+  (indent-for-tab-command))
+
 (provide 'basic-text-editing)
 
