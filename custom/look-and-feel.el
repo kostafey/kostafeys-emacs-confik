@@ -210,13 +210,15 @@
 (require 'highlight-parentheses)
 
 (defun my-coding-hook ()
-  (highlight-parentheses-mode t)
+  ;; (highlight-parentheses-mode t)
   (idle-highlight-mode t)
   (font-lock-warn-todo))
 
 (defun web-mode-hook () 
   "Hooks for Web mode."  
   (highlight-parentheses-mode t))
+
+(global-rainbow-delimiters-mode)
 
 (add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
 (add-hook 'python-mode-hook 'my-coding-hook)
