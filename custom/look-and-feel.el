@@ -218,14 +218,63 @@
   "Hooks for Web mode."  
   (highlight-parentheses-mode t))
 
-(global-rainbow-delimiters-mode)
+;;=============================================================================
+;; Paredit customization
+;;
+(put 'paredit-forward 'CUA 'move)
+(eval-after-load "paredit"
+  '(progn
+    (define-key paredit-mode-map (kbd "C-M-f") nil)
+    (define-key paredit-mode-map (kbd "C-<left>") nil)  ; C-}
+    (define-key paredit-mode-map (kbd "C-M-<left>") nil)
+    (define-key paredit-mode-map (kbd "C-<right>") nil) ; C-)
+    (define-key paredit-mode-map (kbd "C-M-<right>") nil)
+    (define-key paredit-mode-map (kbd "C-M-<up>") nil)
+    (define-key paredit-mode-map (kbd "C-j") nil)
+    (define-key paredit-mode-map (kbd "C-n") 'paredit-newline)
+    (define-key paredit-mode-map (kbd "C-d") nil)
+    (define-key paredit-mode-map (kbd "<delete>") nil)
+    (define-key paredit-mode-map (kbd "<deletechar>") nil)
+    (define-key paredit-mode-map (kbd "<backspace>") nil)))
 
+(global-set-key [(meta super right)] 'transpose-sexps)
+(global-set-key [(meta super left)] (lambda () (interactive) (transpose-sexps -1)))
+
+;; Refcard:
+;;
+;; paredit-wrap-round	         "M-S-("   (foo |bar baz)
+;;                                             --->
+;;                                         (foo (|bar) baz)
+;;
+;; paredit-splice-sexp	         "M-S-s"   (foo (bar| baz) quux)
+;;                                             --->
+;;                                         (foo bar| baz quux)
+;;
+;; paredit-forward-slurp-sexp    "C-S-)"   (foo (bar |baz) quux zot)
+;;                                             --->
+;;                                         (foo (bar |baz quux) zot)
+;;                                          
+;; paredit-forward-barf-sexp     "C-S-}"   (foo (bar |baz quux) zot)
+;;                                             --->
+;;                                         (foo (bar |baz) quux zot)
+;;                                          
+;; paredit-backward-slurp-sexp	 "C-S-("   (foo bar (baz| quux) zot)
+;;                                             --->
+;;                                         (foo (bar baz| quux) zot)
+;;                                          
+;; paredit-backward-barf-sexp    "C-S-{"   (foo (bar baz |quux) zot)
+;;                                             --->
+;;                                         (foo bar (baz |quux) zot)
+
+(global-rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
+(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'python-mode-hook 'my-coding-hook)
 (add-hook 'comint-mode-hook 'my-coding-hook)
 (add-hook 'js-mode-hook 'my-coding-hook)
 (add-hook 'java-mode-hook 'my-coding-hook)
 (add-hook 'clojure-mode-hook 'my-coding-hook)
+(add-hook 'clojure-mode-hook #'enable-paredit-mode)
 (add-hook 'sql-mode-hook 'my-coding-hook)
 (add-hook 'web-mode-hook 'web-mode-hook)
 
@@ -233,7 +282,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Заменяет lambda на λ.
-(font-lock-add-keywords 
+(font-lock-add-keywords
  'emacs-lisp-mode
  '(("(\\(lambda\\)\\>" (0 (prog1 ()
                        (compose-region (match-beginning 1)
