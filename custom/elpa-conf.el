@@ -87,6 +87,7 @@
         'sr-speedbar
         'rainbow-delimiters
         'organic-green-theme
+        'cl-lib-highlight
         )
   "Required packages for `look-and-feel'.")
 

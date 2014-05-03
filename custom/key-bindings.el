@@ -428,6 +428,35 @@
 ;;
 ;;=============================================================================
 
+;;============================================================================
+;; Paredit customization
+;;
+(put 'paredit-forward 'CUA 'move)
+(eval-after-load "paredit"
+  '(progn
+    (define-key paredit-mode-map (kbd "C-M-f") nil)
+    (define-key paredit-mode-map (kbd "C-<left>") nil)  ; C-}
+    (define-key paredit-mode-map (kbd "C-M-<left>") nil)
+    (define-key paredit-mode-map (kbd "C-<right>") nil) ; C-)
+    (define-key paredit-mode-map (kbd "C-M-<right>") nil)
+    (define-key paredit-mode-map (kbd "C-M-<up>") nil)
+    (define-key paredit-mode-map (kbd "M-<up>") nil)
+    (define-key paredit-mode-map (kbd "M-<down>") nil)
+    (define-key paredit-mode-map (kbd "C-j") nil)
+    (define-key paredit-mode-map (kbd "C-S-M-n") 'paredit-newline)
+    (define-key paredit-mode-map (kbd "C-d") nil)
+    (define-key paredit-mode-map (kbd "<delete>") nil)
+    (define-key paredit-mode-map (kbd "<deletechar>") nil)
+    (define-key paredit-mode-map (kbd "<backspace>") nil)
+    (define-key paredit-mode-map (kbd "M-r") nil)
+    (define-key paredit-mode-map (kbd "M-C-'") 'paredit-raise-sexp)
+    ))
+
+(global-set-key [(meta super right)] 'transpose-sexps)
+(global-set-key [(meta super left)] (lambda () (interactive) (transpose-sexps -1)))
+;;
+;;============================================================================
+
 ;; speedbar
 (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 

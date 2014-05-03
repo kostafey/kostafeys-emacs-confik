@@ -29,6 +29,7 @@
 <li><a href="#sec-2-5-2">2.5.2. Rectangle operations</a></li>
 <li><a href="#sec-2-5-3">2.5.3. Upcase/downcase</a></li>
 <li><a href="#sec-2-5-4">2.5.4. Region &amp; misc operations</a></li>
+<li><a href="#sec-2-5-5">2.5.5. Paredit customization</a></li>
 </ul>
 </li>
 <li><a href="#sec-2-6">2.6. IDE</a></li>
@@ -861,6 +862,174 @@ Add to .emacs:
 <tr>
 <td class="left">C-M-a f</td>
 <td class="left">flush-lines</td>
+</tr>
+</tbody>
+</table>
+
+### Paredit customization
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">M-S-(</td>
+<td class="left">paredit-wrap-round</td>
+<td class="left">(foo  #bar baz)</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2014;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo (#bar) baz)</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">M-S-s</td>
+<td class="left">paredit-splice-sexp</td>
+<td class="left">(foo (bar# baz) quux)</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2014;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo bar# baz quux)</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-S-)</td>
+<td class="left">paredit-forward-slurp-sexp</td>
+<td class="left">(foo (bar #baz) quux zot)</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2014;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo (bar #baz quux) zot)</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-S-}</td>
+<td class="left">paredit-forward-barf-sexp</td>
+<td class="left">(foo (bar #baz quux) zot)</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2014;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo (bar #baz) quux zot)</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-S-(</td>
+<td class="left">paredit-backward-slurp-sexp</td>
+<td class="left">(foo bar (baz# quux) zot)</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2014;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo (bar baz# quux) zot)</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">C-S-{</td>
+<td class="left">paredit-backward-barf-sexp</td>
+<td class="left">(foo (bar baz #quux) zot)</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2014;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo bar (baz #quux) zot)</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="left">M-s-<right></td>
+<td class="left">transpose-sexps</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">M-s-<left></td>
+<td class="left">(transpose-sexps -1)</td>
+<td class="left">&#xa0;</td>
 </tr>
 </tbody>
 </table>

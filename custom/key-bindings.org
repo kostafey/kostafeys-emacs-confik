@@ -611,6 +611,68 @@ Add to .emacs:
   ;;
   ;;=============================================================================
 #+end_src
+
+*** Paredit customization
+    | Key         | Command                     | Description               |
+    |-------------+-----------------------------+---------------------------|
+    | M-S-(       | paredit-wrap-round          | (foo  #bar baz)           |
+    |             |                             | --->                      |
+    |             |                             | (foo (#bar) baz)          |
+    |-------------+-----------------------------+---------------------------|
+    | M-S-s       | paredit-splice-sexp         | (foo (bar# baz) quux)     |
+    |             |                             | --->                      |
+    |             |                             | (foo bar# baz quux)       |
+    |-------------+-----------------------------+---------------------------|
+    | C-S-)       | paredit-forward-slurp-sexp  | (foo (bar #baz) quux zot) |
+    |             |                             | --->                      |
+    |             |                             | (foo (bar #baz quux) zot) |
+    |-------------+-----------------------------+---------------------------|
+    | C-S-}       | paredit-forward-barf-sexp   | (foo (bar #baz quux) zot) |
+    |             |                             | --->                      |
+    |             |                             | (foo (bar #baz) quux zot) |
+    |-------------+-----------------------------+---------------------------|
+    | C-S-(       | paredit-backward-slurp-sexp | (foo bar (baz# quux) zot) |
+    |             |                             | --->                      |
+    |             |                             | (foo (bar baz# quux) zot) |
+    |-------------+-----------------------------+---------------------------|
+    | C-S-{       | paredit-backward-barf-sexp  | (foo (bar baz #quux) zot) |
+    |             |                             | --->                      |
+    |             |                             | (foo bar (baz #quux) zot) |
+    |-------------+-----------------------------+---------------------------|
+    | M-s-<right> | transpose-sexps             |                           |
+    | M-s-<left>  | (transpose-sexps -1)        |                           |
+    |-------------+-----------------------------+---------------------------|
+#+begin_src emacs-lisp :exports none
+  ;;============================================================================
+  ;; Paredit customization
+  ;;
+  (put 'paredit-forward 'CUA 'move)
+  (eval-after-load "paredit"
+    '(progn
+      (define-key paredit-mode-map (kbd "C-M-f") nil)
+      (define-key paredit-mode-map (kbd "C-<left>") nil)  ; C-}
+      (define-key paredit-mode-map (kbd "C-M-<left>") nil)
+      (define-key paredit-mode-map (kbd "C-<right>") nil) ; C-)
+      (define-key paredit-mode-map (kbd "C-M-<right>") nil)
+      (define-key paredit-mode-map (kbd "C-M-<up>") nil)
+      (define-key paredit-mode-map (kbd "M-<up>") nil)
+      (define-key paredit-mode-map (kbd "M-<down>") nil)
+      (define-key paredit-mode-map (kbd "C-j") nil)
+      (define-key paredit-mode-map (kbd "C-S-M-n") 'paredit-newline)
+      (define-key paredit-mode-map (kbd "C-d") nil)
+      (define-key paredit-mode-map (kbd "<delete>") nil)
+      (define-key paredit-mode-map (kbd "<deletechar>") nil)
+      (define-key paredit-mode-map (kbd "<backspace>") nil)
+      (define-key paredit-mode-map (kbd "M-r") nil)
+      (define-key paredit-mode-map (kbd "M-C-'") 'paredit-raise-sexp)
+      ))
+
+  (global-set-key [(meta super right)] 'transpose-sexps)
+  (global-set-key [(meta super left)] (lambda () (interactive) (transpose-sexps -1)))
+  ;;
+  ;;============================================================================
+#+end_src
+
 ** IDE
     | Key   | Command                  | Description                          |
     |-------+--------------------------+--------------------------------------|

@@ -1,4 +1,12 @@
 ;;-----------------------------------------------------------------------------
+;; popup-switcher
+(defun psw-org-mode-hook ()
+  (if (equal major-mode 'org-mode)
+      (show-all)))
+(add-hook 'psw-before-menu-hook 'psw-org-mode-hook)
+(setq psw-use-flx t)
+
+;;-----------------------------------------------------------------------------
 ;; ibuffer sorting
 (setq-default ibuffer-default-sorting-mode 'major-mode)
 
