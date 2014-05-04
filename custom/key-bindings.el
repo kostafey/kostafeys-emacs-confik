@@ -132,8 +132,11 @@
 ; bookmarks
 (global-set-key (kbd "C-b") 'bookmark-set)
 (global-set-key (kbd "M-b") 'bookmark-jump)
-;;-----------------------------------------------------------------------------
+;;----------------------------------------------------------------------------
 (global-set-key (kbd "C-x x") 'goto-last-change)
+
+(global-set-key (kbd "M-<left>") 'meta-left)
+(global-set-key (kbd "M-<right>") 'meta-right)
 
 ;;-----------------------------------------------------------------------------
 ;; Search & replace

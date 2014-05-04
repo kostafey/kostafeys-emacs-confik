@@ -228,8 +228,31 @@
 ;;
 ;;=============================================================================
 
+;; Jump back to the last position of the cursor
 (when (fboundp 'winner-mode)
   (winner-mode 1))
+
+(defun meta-left ()
+  (interactive)
+  (condition-case err
+      (windmove-left)
+    (error 
+     (if (equal err '(error "No window left from selected window"))
+         (progn           
+           (winner-undo)
+           (setq this-command 'winner-undo))
+       (message "%s" err)))))
+
+(defun meta-right ()
+  (interactive)
+  (condition-case err
+      (windmove-right)
+    (error 
+     (if (equal err '(error "No window right from selected window"))
+         (progn           
+           (winner-redo)
+           (setq this-command 'winner-redo))
+       (message "%s" err)))))
 
 (defadvice ace-jump-char-category (around adv-ace-jump-support-umlauts activate)
   (unless (= (char-syntax (ad-get-arg 0)) ?w)
