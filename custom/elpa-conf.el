@@ -1,8 +1,10 @@
 (require 'cl)
 (require 'package)
 
-(if (equal system-name "MSK-006937")
-    (setq url-proxy-services '(("http" . "10.144.14.205:3128"))))
+(if (equal system-name "kgsedykh-pc")
+    (setq url-proxy-services
+          (list (let ((proxy (split-string (getenv "http_proxy") "://")))
+                  (cons (car proxy) (cadr proxy))))))
 
 (setq package-archives '(("ELPA" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
@@ -23,21 +25,21 @@
         when (not (package-installed-p p)) do (return nil)
         finally (return t)))
 
-(defun prompt-package-install (package)  
+(defun prompt-package-install (package)
   (if (y-or-n-p (format "Package %s is missing. Install it? " package))
       (package-install package)))
 
 (defun install-required-packages (required-packages)
   (unless (required-packages-installed-p required-packages)
-    
-    ;; check for new packages (package versions)    
+
+    ;; check for new packages (package versions)
     (if (not package-is-refreshed)
         (progn
           (message "%s" "Emacs is now refreshing its package database...")
           (package-refresh-contents)
           (setq package-is-refreshed t)
           (message "%s" " done.")))
-    
+
     ;; install the missing packages
     (dolist (package required-packages)
       (unless (package-installed-p package)
@@ -56,7 +58,7 @@
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
-  (list 'browse-kill-ring 
+  (list 'browse-kill-ring
         'wrap-region)
   "Required packages for `basic-text-editing'.")
 
@@ -93,7 +95,7 @@
 
 (defvar nav-keys-required-packages
   (list 'goto-last-change
-        'multiple-cursors        
+        'multiple-cursors
         'dired+
         'flx
         'flx-ido
@@ -114,7 +116,8 @@ and `buffer-navigation'.")
         'projectile
         'javadoc-lookup
         'web-mode
-        'diff-hl)
+        'diff-hl
+        'paredit)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages
@@ -129,7 +132,7 @@ and `buffer-navigation'.")
         'jabber)
   "Packages, not requred by configuration files.")
 
-(install-required-packages (append 
+(install-required-packages (append
                             bte-required-packages
                             text-modes-required-packages
                             clojure-packages
@@ -142,4 +145,3 @@ and `buffer-navigation'.")
                             js-packages))
 
 (provide 'elpa-conf)
-

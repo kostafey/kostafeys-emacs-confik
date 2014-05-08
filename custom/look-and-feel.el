@@ -221,6 +221,8 @@
   "Hooks for Web mode."  
   (highlight-parentheses-mode t))
 
+(require 'paredit)
+
 (add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'python-mode-hook 'my-coding-hook)
