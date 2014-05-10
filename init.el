@@ -52,13 +52,13 @@
              (concat site-lisp-path 
                      "clomacs/src/elisp/"))
 (require 'clomacs)
-;(require 'ejc-sql-conf)
+(require 'ejc-sql-conf nil 'noerror)
 
 (require 'switch-language)
 (require 'ispell-conf)
 (require 'completition-conf)
 (require 'ack-conf)
-;(require 'communications)
+(require 'communications nil 'noerror)
 (require 'reencoding-file)
 
 (require 'copy-paste-clipboard-linux)
