@@ -216,9 +216,6 @@ Add to .emacs:
   (global-set-key (kbd "M-b") 'bookmark-jump)
   ;;----------------------------------------------------------------------------
   (global-set-key (kbd "C-x x") 'goto-last-change)
-
-  (global-set-key (kbd "M-<left>") 'meta-left)
-  (global-set-key (kbd "M-<right>") 'meta-right)
 #+end_src
 
 *** Search & replace
@@ -566,6 +563,9 @@ Add to .emacs:
   
   (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
   (windmove-default-keybindings 'meta)           ; M-up/down/left/right
+
+  (global-set-key (kbd "M-<left>") 'meta-left)
+  (global-set-key (kbd "M-<right>") 'meta-right)
   
   (global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
   (global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)

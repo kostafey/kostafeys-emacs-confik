@@ -135,9 +135,6 @@
 ;;----------------------------------------------------------------------------
 (global-set-key (kbd "C-x x") 'goto-last-change)
 
-(global-set-key (kbd "M-<left>") 'meta-left)
-(global-set-key (kbd "M-<right>") 'meta-right)
-
 ;;-----------------------------------------------------------------------------
 ;; Search & replace
 (global-unset-key (kbd "C-f"))
@@ -383,6 +380,9 @@
 
 (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
 (windmove-default-keybindings 'meta)           ; M-up/down/left/right
+
+(global-set-key (kbd "M-<left>") 'meta-left)
+(global-set-key (kbd "M-<right>") 'meta-right)
 
 (global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
