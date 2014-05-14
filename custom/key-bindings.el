@@ -453,6 +453,7 @@
     (define-key paredit-mode-map (kbd "<backspace>") nil)
     (define-key paredit-mode-map (kbd "M-r") nil)
     (define-key paredit-mode-map (kbd "M-C-'") 'paredit-raise-sexp)
+    (define-key paredit-mode-map (kbd ")") 'nil)
     ))
 
 (global-set-key [(meta super right)] 'transpose-sexps)
