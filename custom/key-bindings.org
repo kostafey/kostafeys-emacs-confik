@@ -664,11 +664,13 @@ Add to .emacs:
       (define-key paredit-mode-map (kbd "C-S-M-n") 'paredit-newline)
       (define-key paredit-mode-map (kbd "C-d") nil)
       (define-key paredit-mode-map (kbd "<delete>") nil)
+      (define-key paredit-mode-map (kbd "<DEL>") nil)
       (define-key paredit-mode-map (kbd "<deletechar>") nil)
       (define-key paredit-mode-map (kbd "<backspace>") nil)
       (define-key paredit-mode-map (kbd "M-r") nil)
       (define-key paredit-mode-map (kbd "M-C-'") 'paredit-raise-sexp)
       (define-key paredit-mode-map (kbd ")") 'nil)
+      (define-key paredit-mode-map (kbd "\\") 'nil)
       ))
 
   (global-set-key [(meta super right)] 'transpose-sexps)
