@@ -456,6 +456,7 @@
     (define-key paredit-mode-map (kbd "M-C-'") 'paredit-raise-sexp)
     (define-key paredit-mode-map (kbd ")") 'nil)
     (define-key paredit-mode-map (kbd "\\") 'nil)
+    (define-key paredit-mode-map (kbd "\"") 'nil)
     ))
 
 (global-set-key [(meta super right)] 'transpose-sexps)
