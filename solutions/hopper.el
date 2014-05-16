@@ -37,6 +37,9 @@
           (cond
            ((or (functionp symb) (fboundp symb)) (find-function symb))
            (t (find-variable symb))))))
+     ;; clojure-mode
+     ((and (equal 'clojure-mode mode) (require 'cider nil 'noerror))
+      (cider-jump nil))
      ;; other modes
      (t
       (if (semantic-active-p)
