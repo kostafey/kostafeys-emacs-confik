@@ -455,6 +455,7 @@
     (define-key paredit-mode-map (kbd "M-r") nil)
     (define-key paredit-mode-map (kbd "M-C-'") 'paredit-raise-sexp)
     (define-key paredit-mode-map (kbd ")") 'nil)
+    (define-key paredit-mode-map (kbd "]") 'nil)
     (define-key paredit-mode-map (kbd "\\") 'nil)
     (define-key paredit-mode-map (kbd "\"") 'nil)
     ))
