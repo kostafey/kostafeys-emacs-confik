@@ -17,7 +17,6 @@
           t)
 (fset 'html-mode 'nxml-mode)
 
-
 (require 'hl-tags-mode)
 (add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))
 (add-hook 'nxml-mode-hook (lambda () (hl-tags-mode 1)))

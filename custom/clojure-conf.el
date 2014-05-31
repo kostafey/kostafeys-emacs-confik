@@ -46,11 +46,10 @@
 (defun initialize-cljs-repl ()
   (interactive)
   (insert "(require 'cljs.repl.browser)")
-  (nrepl-return)
+  (cider-repl-return)
   (insert "(cemerick.piggieback/cljs-repl
-:repl-env (doto (cljs.repl.browser/repl-env :port 9000)
-cljs.repl/-setup))")
-  (nrepl-return))
+  :repl-env (cljs.repl.browser/repl-env :port 9000))")
+  (cider-repl-return))
 
 ;;----------------------------------------------------------------------
 ;; clomacs and elisp-clojure extensions:
