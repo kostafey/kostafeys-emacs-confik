@@ -12,6 +12,11 @@
 ; This will complete the appropriate close tag after you type </
 (setq nxml-slash-auto-complete-flag t)
 (add-hook 'html-mode-hook #'(lambda nil (setq sgml-xml-mode t)))
+(add-hook 'nxml-mode-hook
+          (lambda () (rng-validate-mode 0) )
+          t)
+(fset 'html-mode 'nxml-mode)
+
 
 (require 'hl-tags-mode)
 (add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))
@@ -61,7 +66,7 @@
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((perl . t)         
+ '((perl . t)
    (ruby . t)
    (sh . t)
    (python . t)
