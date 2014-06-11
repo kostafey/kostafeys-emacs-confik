@@ -48,6 +48,8 @@
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
+(require 'markdown-toc)
+
 ;;-----------------------------------------------------------------------------
 ;; Org-mode settings
 ;; (add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
@@ -82,6 +84,9 @@
 
 ;;typing game
 (autoload 'typing-of-emacs "The Typing Of Emacs, a game." t)
+
+;; View Large Files
+(require 'vlf-integrate)
 
 ;;--------------------------------------------------------------------
 ;; elfeed

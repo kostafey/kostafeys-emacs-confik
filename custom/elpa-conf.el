@@ -51,10 +51,13 @@
         'log4j-mode
         'lorem-ipsum
         'markdown-mode
+        'markdown-toc
         'typing
         'sphinx-frontend
         ;; news reader
-        'elfeed)
+        'elfeed
+        ;; View Large Files
+        'vlf)
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
@@ -63,6 +66,7 @@
   "Required packages for `basic-text-editing'.")
 
 (defvar clojure-packages '(clojure-mode
+                           clojure-mode-extra-font-locking
                            cider
                            ac-nrepl)
   "Required packages for clojure coding.")
