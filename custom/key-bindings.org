@@ -17,16 +17,16 @@ Add to .emacs:
 
 #+begin_src emacs-lisp :exports none :padline no
   ;;; key-bindings.el -- A collection of key bindings (default and custom).
-  
+
   ;;; Commentary:
-  
+
   ;; Attempting to make emacs a little bit humane.
-  
+
   ;;=============================================================================
   ;; Exit & iconify emacs
   (global-set-key (kbd "M-z") 'iconify-or-deiconify-frame)    ; Hide emacs frame
   (global-set-key (kbd "M-<f4>") 'save-buffers-kill-terminal)
-  
+
   ;;=============================================================================
   ;; CUA - the core of the emacs humane ;)
   ;;
@@ -54,7 +54,7 @@ Add to .emacs:
   ;;-----------------------------------------------------------------------------
   (global-set-key (kbd "C-S-v") 'cua-paste-pop)
   (global-set-key (kbd "C-M-v") '(lambda() (interactive) (cua-paste-pop -1)))
-  
+
   (global-set-key (kbd "C-M-c") '(lambda(beg end) (interactive "r")
                                    (append-to-buffer "temp" beg end)
                                    (save-excursion
@@ -124,7 +124,7 @@ Add to .emacs:
   (global-unset-key "\C-\M-a")
   (defvar selected-area-prefix "\C-\M-a")
   (defvar change-buffer-prefix "\C-c\C-b")
-  
+
   (require 'buffer-navigation)
   (require 'navigation-and-simplify-keys)
   (require 'basic-text-editing)
@@ -243,13 +243,13 @@ Add to .emacs:
     (global-set-key (kbd "C-f") 'isearch-forward)
     (global-set-key (kbd "C-r") 'isearch-backward)
     ;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
-    
+
     (global-unset-key (kbd "M-r"))
     (global-set-key (kbd "M-r") 'replace-string)
-    
+
     (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
     (global-set-key (kbd "C-c C-f") 'ack-file)
-    
+
     (when (require 'highlight-symbol nil 'noerror)
       (eval-after-load "highlight-symbol"
         '(progn
@@ -257,7 +257,7 @@ Add to .emacs:
            (global-set-key [f3] 'highlight-symbol-next)
            (global-set-key [(shift f3)] 'highlight-symbol-prev)
            (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
-    
+
     ;; ace-jump-mode
     (global-unset-key (kbd "M-a"))
     (when (require 'ace-jump-mode nil 'noerror)
@@ -430,19 +430,19 @@ Add to .emacs:
   (global-set-key (kbd "C-M-a :") 'align-by-column)
   (global-set-key (kbd "C-M-a '") 'align-by-quote)
   (global-set-key (kbd "C-M-a a") 'align-regexp)
-  
+
   (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
   (global-set-key (kbd "C-/") 'comment-or-uncomment-this)
-  
+
   (global-set-key (kbd "C-`") 'u:en/ru-recode-region)
-  
+
   (global-set-key (kbd "C-M-R") 'replace-regexp)
   (global-set-key (kbd "M-R") 'query-replace)
   (global-set-key (kbd "C-M-a k") 'keep-lines)
   (global-set-key (kbd "C-M-a f") 'flush-lines)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Meta - Навигация
   ;;=============================================================================
@@ -452,21 +452,21 @@ Add to .emacs:
   (global-set-key "\M-k" 'next-line)
   (global-set-key "\M-j" 'backward-char)
   (global-set-key "\M-l" 'forward-char)
-  
+
   (global-set-key "\C-cr" 'reposition-window)
   (global-unset-key "\M-\C-l")
   (global-set-key "\M-\C-j" 'backward-word)
   (global-set-key "\M-\C-l" 'forward-word)
-  
+
   (global-set-key "\M-o" 'end-of-line)
   (global-set-key "\M-u" 'beginning-of-line)
-  
+
   (global-set-key "\M-m" 'scroll-up)
   (global-set-key "\M-," 'scroll-down)
-  
+
   (global-set-key "\M-M" '(lambda () (interactive) (scroll-up 1)))
   (global-set-key "\M-<" '(lambda () (interactive) (scroll-down 1)))
-  
+
   ;;=============================================================================
   ;; Look changes
   ;;
@@ -480,7 +480,7 @@ Add to .emacs:
   (global-set-key [C-kp-subtract]  '(lambda nil (interactive) (djcb-zoom -1)))
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Gathering information
   ;;
@@ -490,22 +490,22 @@ Add to .emacs:
   (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Buffers navigation
   ;;
   (global-set-key "\C-w" 'prh:kill-current-buffer)
   (global-set-key (kbd "C-c w") 'kill-other-buffers)
-  
+
   (global-set-key (kbd "C-x w") 'kill-buffer)
   (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
-  
+
   ;(global-set-key (kbd "C-x <right>") 'next-buffer) - default
   ;(global-set-key (kbd "C-x <left>") 'previous-buffer) - default
-  
+
   (global-set-key [(control next)] 'next-buffer)      ; C-Page Up
   (global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
-  
+
   ;;-----------------------------------------------------------------------------
   ;; tabbar - switch buffers by tabs
   (global-set-key [(shift super left)] 'tabbar-backward-tab)
@@ -534,10 +534,10 @@ Add to .emacs:
                   '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
   (global-set-key (concat change-buffer-prefix "e")
                   '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-  
+
   (global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
   (global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
-  
+
   (global-set-key (concat change-buffer-prefix "p")
                   '(lambda () (interactive) (find-file "~/.org.gpg")))
   (global-set-key (concat change-buffer-prefix "k")
@@ -546,34 +546,34 @@ Add to .emacs:
                   '(lambda () (interactive) (find-file "~/.keys.org")))
   (global-set-key (kbd "C-x m")
                   '(lambda () (interactive) (switch-to-buffer "*Messages*")))
-  
+
   (global-set-key (kbd "C-x t") 'visit-term-buffer)
   (global-set-key (kbd "C-c g") 'google)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Windows navigation
   ;;
   (global-unset-key "\C-u")
   (global-set-key "\C-u" 'swap-windows)
-  
+
   (global-unset-key (kbd "M-m"))
   (global-set-key (kbd "M-m") 'mirror-window)
-  
+
   (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
   (windmove-default-keybindings 'meta)           ; M-up/down/left/right
 
   (global-set-key (kbd "M-<left>") 'meta-left)
   (global-set-key (kbd "M-<right>") 'meta-right)
-  
+
   (global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
   (global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
   (global-set-key (kbd "s-<down>") 'shrink-window)
   (global-set-key (kbd "s-<up>") 'enlarge-window)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Modes enabling
   ;;
@@ -582,7 +582,7 @@ Add to .emacs:
   (define-key ac-complete-mode-map [next] 'ac-page-next)
   (define-key ac-complete-mode-map [prior] 'ac-page-previous)
   (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
-  
+
   (global-set-key [f1] 'psw-switch-buffer)
   (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
   (global-set-key (kbd "s-q") 'psw-navigate-files)
@@ -600,7 +600,7 @@ Add to .emacs:
   (global-set-key [f10] 'flyspell-english)
   (global-set-key [f11] 'flyspell-russian)
   (global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
-  
+
   ;; yasnippet
   (defvar yasnippet-prefix "\C-y")
   (global-unset-key yasnippet-prefix)
@@ -608,7 +608,7 @@ Add to .emacs:
   (global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
   (global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
   (global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
-  
+
   (global-set-key (kbd "S-<tab>") 'open-line-or-yas)
   (global-set-key (kbd "C-S-<tab>") 'yas-prev-field)
   ;;
@@ -673,6 +673,7 @@ Add to .emacs:
       (define-key paredit-mode-map (kbd "]") 'nil)
       (define-key paredit-mode-map (kbd "\\") 'nil)
       (define-key paredit-mode-map (kbd "\"") 'nil)
+      (define-key paredit-mode-map (kbd "M-q") 'nil)
       ))
 
   (global-set-key [(meta super right)] 'transpose-sexps)
@@ -688,102 +689,104 @@ Add to .emacs:
     | C-x B | semantic-mrub-switch-tag | Backward after semantic-ia-fast-jump |
 
 #+begin_src emacs-lisp :exports none
-  ;; speedbar
-  (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
-  
-  ;;=============================================================================
-  ;; ecb
-  (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
-  (global-set-key (kbd "M-w") 'ecb-toggle-ecb-windows)
-  (global-set-key (kbd "C-x C-a") 'ecb-activate)
-  (global-set-key (kbd "C-x C-q") 'ecb-deactivate)
-  ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
-  ;;
-  ;;=============================================================================
-  
-  ;;=============================================================================
-  ;; Mode keys & programming language specific keys.
-  ;;
-  ;;----------------------------------------------------------------------
-  ;; Java
-    (defun kostafey-java-mode-hook ()
-      (define-key java-mode-map (kbd "C-a") nil)
-      (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
-      (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
-      (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
-    (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
-  
-    (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
-    (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
-  ;;----------------------------------------------------------------------
-  ;; CIDER - Nrepl.el
-  ;;
-  (global-unset-key (kbd "C-n"))
-  (defun kostafey-clojure-mode-hook ()
-    (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
-    (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
-    (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
-    (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
-    (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point))
-  (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
-  (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
-  ;;----------------------------------------------------------------------
-  ;; SQL
-  ;;
-  (when (require 'ejc-sql nil 'noerror)
-    (eval-after-load "ejc-sql"
+    ;; speedbar
+    (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
+
+    ;;=============================================================================
+    ;; ecb
+    (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
+    (global-set-key (kbd "M-w") 'ecb-toggle-ecb-windows)
+    (global-set-key (kbd "C-x C-a") 'ecb-activate)
+    (global-set-key (kbd "C-x C-q") 'ecb-deactivate)
+    ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
+    ;;
+    ;;=============================================================================
+
+    ;;=============================================================================
+    ;; Mode keys & programming language specific keys.
+    ;;
+    ;;----------------------------------------------------------------------
+    ;; Java
+      (defun kostafey-java-mode-hook ()
+        (define-key java-mode-map (kbd "C-a") nil)
+        (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
+        (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
+        (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
+      (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
+
+      (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
+      (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
+    ;;----------------------------------------------------------------------
+    ;; CIDER - Nrepl.el
+    ;;
+    (global-unset-key (kbd "C-n"))
+    (defun kostafey-clojure-mode-hook ()
+      (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
+      (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
+      (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
+      (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
+      (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
+      (define-key clojure-mode-map (kbd "C-c C-l") nil)
+      (define-key clojure-mode-map (kbd "M-q") 'slice-text))
+    (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
+    (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+    ;;----------------------------------------------------------------------
+    ;; SQL
+    ;;
+    (when (require 'ejc-sql nil 'noerror)
+      (eval-after-load "ejc-sql"
+        '(progn
+           (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
+    ;;
+    ;;----------------------------------------------------------------------
+    ;; Magit & ahg
+    ;;
+    (global-unset-key (kbd "M-w"))
+    (eval-after-load "version-control"
       '(progn
-         (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
-  ;;
-  ;;----------------------------------------------------------------------
-  ;; Magit & ahg
-  ;;  
-  (global-unset-key (kbd "M-w"))
-  (eval-after-load "version-control"
-    '(progn
-       (global-set-key (kbd "M-w") 'get-vc-status)))
-  
-  (eval-after-load "ahg"
-    '(progn
-       (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
-  ;;
-  ;;----------------------------------------------------------------------
-  ;; multiple-cursors
-  ;;
-  (when (require 'multiple-cursors nil 'noerror)
-    ;; When you have an active region that spans multiple lines, the following will
-    ;; add a cursor to each line:
-    (global-set-key (kbd "C-S-m") 'mc/edit-lines)
-    ;; When you want to add multiple cursors not based on continuous lines, but
-    ;; based on keywords in the buffer, use:
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
-  ;;
-  ;;=============================================================================
-  
-  ;;=============================================================================
-  ;;                               Mouse
-  ;;
-  ;; Select by mouse and shift
-  ;;-----------------------------------------------------------------------------
-  ;; shift + click select region
-  (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
-  (define-key global-map (kbd "<S-mouse-1>") '(lambda (e) 
-                                                (interactive "e")                                              
-                                                (if (not mark-active)
-                                                    (cua-set-mark))
-                                                (mouse-set-point e)))
-  ;;-----------------------------------------------------------------------------
-  ;; ctrl + shift + click select rectange region
-  (global-unset-key (kbd "<C-S-down-mouse-1>"))
-  (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-  (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-  (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
-  ;;
-  ;;=============================================================================
-  
-  (provide 'key-bindings)
+         (global-set-key (kbd "M-w") 'get-vc-status)))
+
+    (eval-after-load "ahg"
+      '(progn
+         (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
+    ;;
+    ;;----------------------------------------------------------------------
+    ;; multiple-cursors
+    ;;
+    (when (require 'multiple-cursors nil 'noerror)
+      ;; When you have an active region that spans multiple lines, the following will
+      ;; add a cursor to each line:
+      (global-set-key (kbd "C-S-m") 'mc/edit-lines)
+      ;; When you want to add multiple cursors not based on continuous lines, but
+      ;; based on keywords in the buffer, use:
+      (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+      (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+      (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+    ;;
+    ;;=============================================================================
+
+    ;;=============================================================================
+    ;;                               Mouse
+    ;;
+    ;; Select by mouse and shift
+    ;;-----------------------------------------------------------------------------
+    ;; shift + click select region
+    (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
+    (define-key global-map (kbd "<S-mouse-1>") '(lambda (e)
+                                                  (interactive "e")
+                                                  (if (not mark-active)
+                                                      (cua-set-mark))
+                                                  (mouse-set-point e)))
+    ;;-----------------------------------------------------------------------------
+    ;; ctrl + shift + click select rectange region
+    (global-unset-key (kbd "<C-S-down-mouse-1>"))
+    (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
+    (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
+    (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
+    ;;
+    ;;=============================================================================
+
+    (provide 'key-bindings)
 #+end_src
 
 ** Menu

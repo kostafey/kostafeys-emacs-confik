@@ -4,11 +4,11 @@
 
 (require 'browse-kill-ring)
 
-(defun count-words-region (beginning end arg) 
+(defun count-words-region (beginning end arg)
   "Counting words (chars) in the selected area.
 arg - is a searching word (char)"
   (interactive "r\nMSearching word or char: ")
-  
+
   (message "Counting ... ")
   (save-excursion
     (goto-char beginning)
@@ -19,7 +19,7 @@ arg - is a searching word (char)"
                   (search-forward search-word end t))
         (setq count (1+ count)))
 
-      (message 
+      (message
        "There is %d words in the selected area." count))))
 
 ;;=============================================================================
@@ -39,7 +39,7 @@ arg - is a searching word (char)"
 
 
 ;;=============================================================================
-;;;  insert current date into the buffer at point  
+;;;  insert current date into the buffer at point
 (defun insert-date()
   "Insert a time-stamp according to locale's date and time format."
   (interactive)
@@ -63,34 +63,34 @@ arg - is a searching word (char)"
   "Circle call 'function' 'arg' times, default - once"
   (interactive)
   (progn
-	(if arg
-		(setq times arg)
-	  (setq times 1)) 
-	(let (counter)
-	  (dotimes (counter times)
-		(apply function nil)))))
+    (if arg
+        (setq times arg)
+      (setq times 1))
+    (let (counter)
+      (dotimes (counter times)
+        (apply function nil)))))
 
 (defun join-next-line-space ()
   "Joins next line with current with a space between them"
   (interactive)
-	(progn
-	  (end-of-line)
-	  (next-line)
-	  (join-line)))
+    (progn
+      (end-of-line)
+      (next-line)
+      (join-line)))
 
 (defun join-next-line ()
   "Joins next line with current without space between them"
   (interactive)
   (progn
-	  (join-next-line-space)
-	  (delete-char 1)))
+      (join-next-line-space)
+      (delete-char 1)))
 
 (defun join-next-line-semicolon ()
   "Joins next line with current with semicolon between them"
   (interactive)
   (progn
-	  (join-next-line)
-	  (insert ";")))
+      (join-next-line)
+      (insert ";")))
 
 (defun join-next-line-space-n (&optional arg)
   "Joins number of next lines with current with a space between them"
@@ -185,8 +185,8 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
       (setq i (1+ i)))))
 
 ;;=============================================================================
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph       
-;;; Takes a multi-line paragraph and makes it into a single line of text.       
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+;;; Takes a multi-line paragraph and makes it into a single line of text.
 (defun unfill-paragraph ()
   (interactive)
   (let ((fill-column (point-max)))
@@ -258,7 +258,7 @@ With ARG recode from Russian o English."
     (goto-char beg)
     (do () ((>= (point) end))
       (let* ((en-char (char-after (point)))
-             (ru-char (if arg 
+             (ru-char (if arg
                           (car (rassoc en-char u:*en/ru-table*))
                         (cdr (assoc en-char u:*en/ru-table*)))))
         (delete-char 1)
@@ -340,8 +340,36 @@ buffer is not visiting a file."
   (beginning-of-buffer)
   (replace-string "," ",\n")
   (js-mode)
-  (mark-whole-buffer)  
+  (mark-whole-buffer)
   (indent-for-tab-command))
 
-(provide 'basic-text-editing)
+(defun slice-text-inner (chars border)
+  (let* ((chars (if chars chars 1))
+         (chars (if (stringp chars) (string-to-number chars) chars))
+         (chars (if (> chars 0) chars 1)))
+    (save-excursion
+      (beginning-of-line)
+      (while (< (point) (line-end-position))
+        (insert border)
+        (right-char (min chars (- (line-end-position) (point))))
+        (if (and (= (preceding-char) 92)
+                 (= (following-char) 34)
+                 (> chars 1))
+            (left-char 1))
+        (insert border)
+        (newline 1)))))
 
+(defun slice-text (chars)
+  "Format string of text to square box of text with CHARS width."
+  (interactive "P")
+  (if (equal nil chars)
+      (let ((chars (read-from-minibuffer
+                    "Slice text at char: "
+                    "60" nil nil 'slice-text-char-history))
+            (border (read-from-minibuffer
+                     "Slice text border: "
+                     "\"" nil nil 'slice-text-border-history)))
+        (slice-text-inner chars border))
+    (slice-text-inner chars "")))
+
+(provide 'basic-text-editing)

@@ -458,6 +458,7 @@
     (define-key paredit-mode-map (kbd "]") 'nil)
     (define-key paredit-mode-map (kbd "\\") 'nil)
     (define-key paredit-mode-map (kbd "\"") 'nil)
+    (define-key paredit-mode-map (kbd "M-q") 'nil)
     ))
 
 (global-set-key [(meta super right)] 'transpose-sexps)
@@ -501,7 +502,9 @@
   (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
   (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
-  (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point))
+  (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
+  (define-key clojure-mode-map (kbd "C-c C-l") nil)
+  (Define-key clojure-mode-map (kbd "M-q") 'slice-text))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;----------------------------------------------------------------------
