@@ -311,7 +311,11 @@
 ;;=============================================================================
 ;; Buffers navigation
 ;;
-(global-set-key "\C-w" 'prh:kill-current-buffer)
+(global-set-key (kbd "C-w") 'prh:kill-current-buffer)
+(defun kostafey-magit-mode-hook ()
+  (define-key magit-mode-map (kbd "C-w") 'prh:kill-current-buffer))
+(add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
+
 (global-set-key (kbd "C-c w") 'kill-other-buffers)
 
 (global-set-key (kbd "C-x w") 'kill-buffer)
@@ -459,6 +463,7 @@
     (define-key paredit-mode-map (kbd "\\") 'nil)
     (define-key paredit-mode-map (kbd "\"") 'nil)
     (define-key paredit-mode-map (kbd "M-q") 'nil)
+    (define-key paredit-mode-map (kbd "C-M-d") 'nil)
     ))
 
 (global-set-key [(meta super right)] 'transpose-sexps)
@@ -504,7 +509,7 @@
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
   (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
   (define-key clojure-mode-map (kbd "C-c C-l") nil)
-  (Define-key clojure-mode-map (kbd "M-q") 'slice-text))
+  (define-key clojure-mode-map (kbd "M-q") 'slice-text))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;----------------------------------------------------------------------
@@ -517,7 +522,7 @@
 ;;
 ;;----------------------------------------------------------------------
 ;; Magit & ahg
-;;  
+;;
 (global-unset-key (kbd "M-w"))
 (eval-after-load "version-control"
   '(progn
@@ -549,8 +554,8 @@
 ;;-----------------------------------------------------------------------------
 ;; shift + click select region
 (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
-(define-key global-map (kbd "<S-mouse-1>") '(lambda (e) 
-                                              (interactive "e")                                              
+(define-key global-map (kbd "<S-mouse-1>") '(lambda (e)
+                                              (interactive "e")
                                               (if (not mark-active)
                                                   (cua-set-mark))
                                               (mouse-set-point e)))

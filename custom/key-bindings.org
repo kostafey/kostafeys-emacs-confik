@@ -494,7 +494,11 @@ Add to .emacs:
   ;;=============================================================================
   ;; Buffers navigation
   ;;
-  (global-set-key "\C-w" 'prh:kill-current-buffer)
+  (global-set-key (kbd "C-w") 'prh:kill-current-buffer)
+  (defun kostafey-magit-mode-hook ()
+    (define-key magit-mode-map (kbd "C-w") 'prh:kill-current-buffer))
+  (add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
+
   (global-set-key (kbd "C-c w") 'kill-other-buffers)
 
   (global-set-key (kbd "C-x w") 'kill-buffer)
@@ -674,6 +678,7 @@ Add to .emacs:
       (define-key paredit-mode-map (kbd "\\") 'nil)
       (define-key paredit-mode-map (kbd "\"") 'nil)
       (define-key paredit-mode-map (kbd "M-q") 'nil)
+      (define-key paredit-mode-map (kbd "C-M-d") 'nil)
       ))
 
   (global-set-key [(meta super right)] 'transpose-sexps)
