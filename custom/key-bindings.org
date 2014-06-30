@@ -694,104 +694,106 @@ Add to .emacs:
     | C-x B | semantic-mrub-switch-tag | Backward after semantic-ia-fast-jump |
 
 #+begin_src emacs-lisp :exports none
-    ;; speedbar
-    (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
+  ;; speedbar
+  (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 
-    ;;=============================================================================
-    ;; ecb
-    (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
-    (global-set-key (kbd "M-w") 'ecb-toggle-ecb-windows)
-    (global-set-key (kbd "C-x C-a") 'ecb-activate)
-    (global-set-key (kbd "C-x C-q") 'ecb-deactivate)
-    ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
-    ;;
-    ;;=============================================================================
+  ;;=============================================================================
+  ;; ecb
+  (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
+  (global-set-key (kbd "M-w") 'ecb-toggle-ecb-windows)
+  (global-set-key (kbd "C-x C-a") 'ecb-activate)
+  (global-set-key (kbd "C-x C-q") 'ecb-deactivate)
+  ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
+  ;;
+  ;;=============================================================================
 
-    ;;=============================================================================
-    ;; Mode keys & programming language specific keys.
-    ;;
-    ;;----------------------------------------------------------------------
-    ;; Java
-      (defun kostafey-java-mode-hook ()
-        (define-key java-mode-map (kbd "C-a") nil)
-        (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
-        (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
-        (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
-      (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
+  ;;=============================================================================
+  ;; Mode keys & programming language specific keys.
+  ;;
+  ;;----------------------------------------------------------------------
+  ;; Java
+    (defun kostafey-java-mode-hook ()
+      (define-key java-mode-map (kbd "C-a") nil)
+      (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
+      (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
+      (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
+    (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
-      (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
-      (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
-    ;;----------------------------------------------------------------------
-    ;; CIDER - Nrepl.el
-    ;;
-    (global-unset-key (kbd "C-n"))
-    (defun kostafey-clojure-mode-hook ()
-      (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
-      (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
-      (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
-      (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
-      (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
-      (define-key clojure-mode-map (kbd "C-c C-l") nil)
-      (define-key clojure-mode-map (kbd "M-q") 'slice-text))
-    (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
-    (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
-    ;;----------------------------------------------------------------------
-    ;; SQL
-    ;;
-    (when (require 'ejc-sql nil 'noerror)
-      (eval-after-load "ejc-sql"
-        '(progn
-           (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
-    ;;
-    ;;----------------------------------------------------------------------
-    ;; Magit & ahg
-    ;;
-    (global-unset-key (kbd "M-w"))
-    (eval-after-load "version-control"
+    (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
+    (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
+  ;;----------------------------------------------------------------------
+  ;; CIDER - Nrepl.el
+  ;;
+  (global-unset-key (kbd "C-n"))
+  (defun kostafey-clojure-mode-hook ()
+    (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
+    (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
+    (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
+    (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
+    (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
+    (define-key clojure-mode-map (kbd "C-c C-l") nil)
+    (define-key clojure-mode-map (kbd "M-q") 'slice-text)
+    (define-key clojure-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
+    (define-key clojure-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
+  (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
+  (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+  ;;----------------------------------------------------------------------
+  ;; SQL
+  ;;
+  (when (require 'ejc-sql nil 'noerror)
+    (eval-after-load "ejc-sql"
       '(progn
-         (global-set-key (kbd "M-w") 'get-vc-status)))
+         (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
+  ;;
+  ;;----------------------------------------------------------------------
+  ;; Magit & ahg
+  ;;
+  (global-unset-key (kbd "M-w"))
+  (eval-after-load "version-control"
+    '(progn
+       (global-set-key (kbd "M-w") 'get-vc-status)))
 
-    (eval-after-load "ahg"
-      '(progn
-         (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
-    ;;
-    ;;----------------------------------------------------------------------
-    ;; multiple-cursors
-    ;;
-    (when (require 'multiple-cursors nil 'noerror)
-      ;; When you have an active region that spans multiple lines, the following will
-      ;; add a cursor to each line:
-      (global-set-key (kbd "C-S-m") 'mc/edit-lines)
-      ;; When you want to add multiple cursors not based on continuous lines, but
-      ;; based on keywords in the buffer, use:
-      (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-      (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-      (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
-    ;;
-    ;;=============================================================================
+  (eval-after-load "ahg"
+    '(progn
+       (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
+  ;;
+  ;;----------------------------------------------------------------------
+  ;; multiple-cursors
+  ;;
+  (when (require 'multiple-cursors nil 'noerror)
+    ;; When you have an active region that spans multiple lines, the following will
+    ;; add a cursor to each line:
+    (global-set-key (kbd "C-S-m") 'mc/edit-lines)
+    ;; When you want to add multiple cursors not based on continuous lines, but
+    ;; based on keywords in the buffer, use:
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+  ;;
+  ;;=============================================================================
 
-    ;;=============================================================================
-    ;;                               Mouse
-    ;;
-    ;; Select by mouse and shift
-    ;;-----------------------------------------------------------------------------
-    ;; shift + click select region
-    (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
-    (define-key global-map (kbd "<S-mouse-1>") '(lambda (e)
-                                                  (interactive "e")
-                                                  (if (not mark-active)
-                                                      (cua-set-mark))
-                                                  (mouse-set-point e)))
-    ;;-----------------------------------------------------------------------------
-    ;; ctrl + shift + click select rectange region
-    (global-unset-key (kbd "<C-S-down-mouse-1>"))
-    (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-    (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-    (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
-    ;;
-    ;;=============================================================================
+  ;;=============================================================================
+  ;;                               Mouse
+  ;;
+  ;; Select by mouse and shift
+  ;;-----------------------------------------------------------------------------
+  ;; shift + click select region
+  (define-key global-map (kbd "<S-down-mouse-1>") 'ignore) ; turn off font dialog
+  (define-key global-map (kbd "<S-mouse-1>") '(lambda (e)
+                                                (interactive "e")
+                                                (if (not mark-active)
+                                                    (cua-set-mark))
+                                                (mouse-set-point e)))
+  ;;-----------------------------------------------------------------------------
+  ;; ctrl + shift + click select rectange region
+  (global-unset-key (kbd "<C-S-down-mouse-1>"))
+  (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
+  (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
+  (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
+  ;;
+  ;;=============================================================================
 
-    (provide 'key-bindings)
+  (provide 'key-bindings)
 #+end_src
 
 ** Menu
