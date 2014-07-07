@@ -140,7 +140,7 @@
 (global-unset-key (kbd "C-f"))
 (global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-r") 'isearch-backward)
-;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
+;;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
 
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
@@ -155,6 +155,11 @@
        (global-set-key [f3] 'highlight-symbol-next)
        (global-set-key [(shift f3)] 'highlight-symbol-prev)
        (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
+
+(defun kostafey-markdown-mode-hook ()
+  (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
+  (define-key markdown-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
+(add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
 
 ;; ace-jump-mode
 (global-unset-key (kbd "M-a"))
@@ -462,7 +467,7 @@
     (define-key paredit-mode-map (kbd "]") 'nil)
     (define-key paredit-mode-map (kbd "\\") 'nil)
     (define-key paredit-mode-map (kbd "\"") 'nil)
-    (define-key paredit-mode-map (kbd "M-q") 'nil)
+    ;;(define-key paredit-mode-map (kbd "M-q") 'nil)
     (define-key paredit-mode-map (kbd "C-M-d") 'nil)
     ))
 
@@ -509,7 +514,6 @@
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
   (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
   (define-key clojure-mode-map (kbd "C-c C-l") nil)
-  (define-key clojure-mode-map (kbd "M-q") 'slice-text)
   (define-key clojure-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
   (define-key clojure-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)

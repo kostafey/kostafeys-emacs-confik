@@ -237,33 +237,38 @@ Add to .emacs:
     |------------+-----------------------------|
     | M-a        | ace-jump-mode               |
 #+begin_src emacs-lisp :exports none
-    ;;-----------------------------------------------------------------------------
-    ;; Search & replace
-    (global-unset-key (kbd "C-f"))
-    (global-set-key (kbd "C-f") 'isearch-forward)
-    (global-set-key (kbd "C-r") 'isearch-backward)
-    ;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
+  ;;-----------------------------------------------------------------------------
+  ;; Search & replace
+  (global-unset-key (kbd "C-f"))
+  (global-set-key (kbd "C-f") 'isearch-forward)
+  (global-set-key (kbd "C-r") 'isearch-backward)
+  ;;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
 
-    (global-unset-key (kbd "M-r"))
-    (global-set-key (kbd "M-r") 'replace-string)
+  (global-unset-key (kbd "M-r"))
+  (global-set-key (kbd "M-r") 'replace-string)
 
-    (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
-    (global-set-key (kbd "C-c C-f") 'ack-file)
+  (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+  (global-set-key (kbd "C-c C-f") 'ack-file)
 
-    (when (require 'highlight-symbol nil 'noerror)
-      (eval-after-load "highlight-symbol"
-        '(progn
-           (global-set-key [(control f3)] 'highlight-symbol-at-point)
-           (global-set-key [f3] 'highlight-symbol-next)
-           (global-set-key [(shift f3)] 'highlight-symbol-prev)
-           (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
+  (when (require 'highlight-symbol nil 'noerror)
+    (eval-after-load "highlight-symbol"
+      '(progn
+         (global-set-key [(control f3)] 'highlight-symbol-at-point)
+         (global-set-key [f3] 'highlight-symbol-next)
+         (global-set-key [(shift f3)] 'highlight-symbol-prev)
+         (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
 
-    ;; ace-jump-mode
-    (global-unset-key (kbd "M-a"))
-    (when (require 'ace-jump-mode nil 'noerror)
-      (define-key global-map (kbd "M-a") 'ace-jump-mode))
-    ;;
-    ;;=============================================================================
+  (defun kostafey-markdown-mode-hook ()
+    (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
+    (define-key markdown-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
+  (add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
+
+  ;; ace-jump-mode
+  (global-unset-key (kbd "M-a"))
+  (when (require 'ace-jump-mode nil 'noerror)
+    (define-key global-map (kbd "M-a") 'ace-jump-mode))
+  ;;
+  ;;=============================================================================
 #+end_src
 
 *** Intellectual point jumps
@@ -620,35 +625,39 @@ Add to .emacs:
 #+end_src
 
 *** Paredit customization
-    | Key         | Command                     | Description               |
-    |-------------+-----------------------------+---------------------------|
-    | M-S-(       | paredit-wrap-round          | (foo  #bar baz)           |
-    |             |                             | --->                      |
-    |             |                             | (foo (#bar) baz)          |
-    |-------------+-----------------------------+---------------------------|
-    | M-S-s       | paredit-splice-sexp         | (foo (bar# baz) quux)     |
-    |             |                             | --->                      |
-    |             |                             | (foo bar# baz quux)       |
-    |-------------+-----------------------------+---------------------------|
-    | C-S-)       | paredit-forward-slurp-sexp  | (foo (bar #baz) quux zot) |
-    |             |                             | --->                      |
-    |             |                             | (foo (bar #baz quux) zot) |
-    |-------------+-----------------------------+---------------------------|
-    | C-S-}       | paredit-forward-barf-sexp   | (foo (bar #baz quux) zot) |
-    |             |                             | --->                      |
-    |             |                             | (foo (bar #baz) quux zot) |
-    |-------------+-----------------------------+---------------------------|
-    | C-S-(       | paredit-backward-slurp-sexp | (foo bar (baz# quux) zot) |
-    |             |                             | --->                      |
-    |             |                             | (foo (bar baz# quux) zot) |
-    |-------------+-----------------------------+---------------------------|
-    | C-S-{       | paredit-backward-barf-sexp  | (foo (bar baz #quux) zot) |
-    |             |                             | --->                      |
-    |             |                             | (foo bar (baz #quux) zot) |
-    |-------------+-----------------------------+---------------------------|
-    | M-s-<right> | transpose-sexps             |                           |
-    | M-s-<left>  | (transpose-sexps -1)        |                           |
-    |-------------+-----------------------------+---------------------------|
+    | Key         | Command                              | Description               |
+    |-------------+--------------------------------------+---------------------------|
+    | M-S-(       | paredit-wrap-round                   | (foo  #bar baz)           |
+    |             |                                      | --->                      |
+    |             |                                      | (foo (#bar) baz)          |
+    |-------------+--------------------------------------+---------------------------|
+    | M-S-s       | paredit-splice-sexp                  | (foo (bar# baz) quux)     |
+    |             |                                      | --->                      |
+    |             |                                      | (foo bar# baz quux)       |
+    |-------------+--------------------------------------+---------------------------|
+    | C-S-)       | paredit-forward-slurp-sexp           | (foo (bar #baz) quux zot) |
+    |             |                                      | --->                      |
+    |             |                                      | (foo (bar #baz quux) zot) |
+    |-------------+--------------------------------------+---------------------------|
+    | C-S-}       | paredit-forward-barf-sexp            | (foo (bar #baz quux) zot) |
+    |             |                                      | --->                      |
+    |             |                                      | (foo (bar #baz) quux zot) |
+    |-------------+--------------------------------------+---------------------------|
+    | C-S-(       | paredit-backward-slurp-sexp          | (foo bar (baz# quux) zot) |
+    |             |                                      | --->                      |
+    |             |                                      | (foo (bar baz# quux) zot) |
+    |-------------+--------------------------------------+---------------------------|
+    | C-S-{       | paredit-backward-barf-sexp           | (foo (bar baz #quux) zot) |
+    |             |                                      | --->                      |
+    |             |                                      | (foo bar (baz #quux) zot) |
+    |-------------+--------------------------------------+---------------------------|
+    | ESC <up>    | paredit-splice-sexp-killing-backward | (foo (bar #(sqrt n)))     |
+    |             |                                      | -->                       |
+    |             |                                      | (foo #(sqrt n))           |
+    |-------------+--------------------------------------+---------------------------|
+    | M-s-<right> | transpose-sexps                      |                           |
+    | M-s-<left>  | (transpose-sexps -1)                 |                           |
+    |-------------+--------------------------------------+---------------------------|
 #+begin_src emacs-lisp :exports none
   ;;============================================================================
   ;; Paredit customization
@@ -677,7 +686,7 @@ Add to .emacs:
       (define-key paredit-mode-map (kbd "]") 'nil)
       (define-key paredit-mode-map (kbd "\\") 'nil)
       (define-key paredit-mode-map (kbd "\"") 'nil)
-      (define-key paredit-mode-map (kbd "M-q") 'nil)
+      ;;(define-key paredit-mode-map (kbd "M-q") 'nil)
       (define-key paredit-mode-map (kbd "C-M-d") 'nil)
       ))
 
@@ -732,7 +741,6 @@ Add to .emacs:
     (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
     (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
     (define-key clojure-mode-map (kbd "C-c C-l") nil)
-    (define-key clojure-mode-map (kbd "M-q") 'slice-text)
     (define-key clojure-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
     (define-key clojure-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
