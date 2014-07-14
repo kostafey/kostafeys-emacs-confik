@@ -326,8 +326,8 @@
 (global-set-key (kbd "C-x w") 'kill-buffer)
 (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
 
-;(global-set-key (kbd "C-x <right>") 'next-buffer) - default
-;(global-set-key (kbd "C-x <left>") 'previous-buffer) - default
+;; (global-set-key (kbd "C-x <right>") 'next-buffer) - default
+;; (global-set-key (kbd "C-x <left>") 'previous-buffer) - default
 
 (global-set-key [(control next)] 'next-buffer)      ; C-Page Up
 (global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
@@ -389,6 +389,11 @@
 
 (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
 (windmove-default-keybindings 'meta)           ; M-up/down/left/right
+
+(defun kostafey-markdown-mode-hook ()
+  (define-key markdown-mode-map (kbd "M-<left>") nil)
+  (define-key markdown-mode-map (kbd "M-<right>") nil))
+(add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
 
 (global-set-key (kbd "M-<left>") 'meta-left)
 (global-set-key (kbd "M-<right>") 'meta-right)
