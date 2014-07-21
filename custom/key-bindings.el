@@ -154,7 +154,9 @@
        (global-set-key [(control f3)] 'highlight-symbol-at-point)
        (global-set-key [f3] 'highlight-symbol-next)
        (global-set-key [(shift f3)] 'highlight-symbol-prev)
-       (global-set-key [(meta f3)] 'highlight-symbol-remove-all))))
+       (global-set-key [(meta f3)] 'highlight-symbol-remove-all)
+       (global-set-key (kbd "C-M-<up>") 'highlight-symbol-prev)
+       (global-set-key (kbd "C-M-<down>") 'highlight-symbol-next))))
 
 (defun kostafey-markdown-mode-hook ()
   (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
@@ -523,9 +525,7 @@
   (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
   (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
-  (define-key clojure-mode-map (kbd "C-c C-l") nil)
-  (define-key clojure-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
-  (define-key clojure-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
+  (define-key clojure-mode-map (kbd "C-c C-l") nil))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;----------------------------------------------------------------------

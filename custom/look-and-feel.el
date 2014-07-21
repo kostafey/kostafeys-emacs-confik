@@ -15,13 +15,13 @@
 ;;=============================================================================
 (defun djcb-zoom (n)
   "with positive N, increase the font size, otherwise decrease it"
-  (set-face-attribute 'default (selected-frame) :height 
+  (set-face-attribute 'default (selected-frame) :height
     (+ (face-attribute 'default :height) (* (if (> n 0) 1 -1) 10))))
 
 ;;=============================================================================
 ;; Font decorations
 ;;=============================================================================
-(setq font-lock-maximum-decoration 
+(setq font-lock-maximum-decoration
       '((java-mode . (if (eq system-type 'windows-nt) 1 t))
         (t . t)))
 (global-font-lock-mode t)
@@ -35,12 +35,12 @@
 ;;=============================================================================
 ;; Emacs does not beep when you hit `C-g' in the minibuffer or during
 ;; an `isearch' (http://www.emacswiki.org/cgi-bin/wiki.pl?AlarmBell)
-;; (setq ring-bell-function 
+;; (setq ring-bell-function
 ;;       (lambda ()
-;; 	(unless (memq this-command
-;; 		      '(isearch-abort abort-recursive-edit find-file
-;; 				      exit-minibuffer keyboard-quit))
-;; 	  (ding))))
+;;  (unless (memq this-command
+;;            '(isearch-abort abort-recursive-edit find-file
+;;                    exit-minibuffer keyboard-quit))
+;;    (ding))))
 
 ;;;turn off the bell http://www.emacswiki.org/cgi-bin/wiki?AlarmBell
 (setq ring-bell-function 'ignore)
@@ -80,11 +80,11 @@
 ;; full screen toggle using command+[RET]
 (defvar my-fullscreen-p t "Check if fullscreen is on or off")
 
-(defun toggle-fullscreen () 
-  (interactive) 
+(defun toggle-fullscreen ()
+  (interactive)
   (if (eq system-type 'windows-nt)
       ;; Максимизировать окно - Windows
-      (progn            
+      (progn
         (defun my-non-fullscreen ()
           (interactive)
           (if (fboundp 'w32-send-sys-command)
@@ -106,31 +106,31 @@
               (my-non-fullscreen)
             (my-fullscreen)))
         (my-toggle-fullscreen))
-    ;; Максимизировать окно - Linux 
-    (set-frame-parameter nil 'fullscreen 
-                         (if (frame-parameter nil 'fullscreen) 
-                             nil 
+    ;; Максимизировать окно - Linux
+    (set-frame-parameter nil 'fullscreen
+                         (if (frame-parameter nil 'fullscreen)
+                             nil
                            'fullboth))))
 
 ;; (run-with-idle-timer 0.1 nil 'toggle-fullscreen)
 ;; (setq term-setup-hook 'toggle-fullscreen)
-(setq window-setup-hook 
-      '(lambda() (interactive) 
-         (progn (toggle-fullscreen) 
+(setq window-setup-hook
+      '(lambda() (interactive)
+         (progn (toggle-fullscreen)
                 (previous-buffer))))
 
 (defun fullscreen-linux (&optional f)
        (interactive)
        (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-	    		 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+                 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
        (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-	    		 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
+                 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
 
 (defun toggle-full-screen-win32 ()
  "Toggles full-screen mode for Emacs window on Win32."
  (interactive)
  (shell-command "emacs_fullscreen.exe"))
- 
+
 (global-set-key (kbd "C-M-<return>") 'toggle-full-screen-win32)
 
 ;;=============================================================================
@@ -162,7 +162,7 @@
 ;;=============================================================================
 ;; fringes
 (setq fringe-mode t) ;Show fields
-(setq-default indicate-buffer-boundaries 
+(setq-default indicate-buffer-boundaries
       '((top . left) (bottom . left) (t . right)))
 (setq-default indicate-empty-lines t)
 
@@ -180,9 +180,9 @@
 (global-fci-mode 1)
 
 ;; del `lines' highlight
-(setq whitespace-style 
-      '(face tabs spaces trailing  space-before-tab 
-             newline indentation empty space-after-tab 
+(setq whitespace-style
+      '(face tabs spaces trailing  space-before-tab
+             newline indentation empty space-after-tab
              space-mark tab-mark newline-mark))
 
 ;;=============================================================================
@@ -198,7 +198,7 @@
 (defun font-lock-warn-todo ()
   "Make fixme tags standout."
   (font-lock-add-keywords nil
-                          '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:" 
+                          '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:"
                              0 'font-lock-warning-face t))))
 
 ;; cl-lib-highlight init
@@ -217,14 +217,18 @@
   (idle-highlight-mode t)
   (font-lock-warn-todo))
 
-(defun web-mode-hook () 
-  "Hooks for Web mode."  
-  (highlight-parentheses-mode t))
+(defun my-lisp-coding-hook ()
+  (my-coding-hook)
+  (enable-paredit-mode))
+
+(defun web-mode-hook ()
+  "Hooks for Web mode."
+  (idle-highlight-mode t))
 
 (require 'paredit)
 
-(add-hook 'emacs-lisp-mode-hook 'my-coding-hook)
-(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'my-lisp-coding-hook)
+(add-hook 'scheme-mode-hook 'my-lisp-coding-hook)
 (add-hook 'python-mode-hook 'my-coding-hook)
 (add-hook 'comint-mode-hook 'my-coding-hook)
 (add-hook 'js-mode-hook 'my-coding-hook)
@@ -273,4 +277,3 @@
 (setq speedbar-use-imenu-flag nil)
 
 (provide 'look-and-feel)
-
