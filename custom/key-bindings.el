@@ -499,15 +499,20 @@
 ;;
 ;;----------------------------------------------------------------------
 ;; Java
-  (defun kostafey-java-mode-hook ()
-    (define-key java-mode-map (kbd "C-a") nil)
-    (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
-    (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
-    (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
-  (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
+(defun kostafey-java-mode-hook ()
+  (define-key java-mode-map (kbd "C-a") nil)
+  (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
+  (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
+  (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
+(add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
-  (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
-  (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
+(global-set-key (kbd "C-<f10>") 'tomcat-toggle)
+(global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
+
+;;----------------------------------------------------------------------
+;; lisp
+(global-set-key (kbd "M-e") 'eval-print-last-sexp)
+
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
 ;;

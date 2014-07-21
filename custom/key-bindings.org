@@ -435,19 +435,19 @@ Add to .emacs:
   (global-set-key (kbd "C-M-a :") 'align-by-column)
   (global-set-key (kbd "C-M-a '") 'align-by-quote)
   (global-set-key (kbd "C-M-a a") 'align-regexp)
-  
+
   (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
   (global-set-key (kbd "C-/") 'comment-or-uncomment-this)
-  
+
   (global-set-key (kbd "C-`") 'u:en/ru-recode-region)
-  
+
   (global-set-key (kbd "C-M-R") 'replace-regexp)
   (global-set-key (kbd "M-R") 'query-replace)
   (global-set-key (kbd "C-M-a k") 'keep-lines)
   (global-set-key (kbd "C-M-a f") 'flush-lines)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Meta - Навигация
   ;;=============================================================================
@@ -457,21 +457,21 @@ Add to .emacs:
   (global-set-key "\M-k" 'next-line)
   (global-set-key "\M-j" 'backward-char)
   (global-set-key "\M-l" 'forward-char)
-  
+
   (global-set-key "\C-cr" 'reposition-window)
   (global-unset-key "\M-\C-l")
   (global-set-key "\M-\C-j" 'backward-word)
   (global-set-key "\M-\C-l" 'forward-word)
-  
+
   (global-set-key "\M-o" 'end-of-line)
   (global-set-key "\M-u" 'beginning-of-line)
-  
+
   (global-set-key "\M-m" 'scroll-up)
   (global-set-key "\M-," 'scroll-down)
-  
+
   (global-set-key "\M-M" '(lambda () (interactive) (scroll-up 1)))
   (global-set-key "\M-<" '(lambda () (interactive) (scroll-down 1)))
-  
+
   ;;=============================================================================
   ;; Look changes
   ;;
@@ -485,7 +485,7 @@ Add to .emacs:
   (global-set-key [C-kp-subtract]  '(lambda nil (interactive) (djcb-zoom -1)))
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Gathering information
   ;;
@@ -495,7 +495,7 @@ Add to .emacs:
   (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Buffers navigation
   ;;
@@ -503,18 +503,18 @@ Add to .emacs:
   (defun kostafey-magit-mode-hook ()
     (define-key magit-mode-map (kbd "C-w") 'prh:kill-current-buffer))
   (add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
-  
+
   (global-set-key (kbd "C-c w") 'kill-other-buffers)
-  
+
   (global-set-key (kbd "C-x w") 'kill-buffer)
   (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
-  
+
   ;; (global-set-key (kbd "C-x <right>") 'next-buffer) - default
   ;; (global-set-key (kbd "C-x <left>") 'previous-buffer) - default
-  
+
   (global-set-key [(control next)] 'next-buffer)      ; C-Page Up
   (global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
-  
+
   ;;-----------------------------------------------------------------------------
   ;; tabbar - switch buffers by tabs
   (global-set-key [(shift super left)] 'tabbar-backward-tab)
@@ -543,10 +543,10 @@ Add to .emacs:
                   '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
   (global-set-key (concat change-buffer-prefix "e")
                   '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-  
+
   (global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
   (global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
-  
+
   (global-set-key (concat change-buffer-prefix "p")
                   '(lambda () (interactive) (find-file "~/.org.gpg")))
   (global-set-key (concat change-buffer-prefix "k")
@@ -555,39 +555,39 @@ Add to .emacs:
                   '(lambda () (interactive) (find-file "~/.keys.org")))
   (global-set-key (kbd "C-x m")
                   '(lambda () (interactive) (switch-to-buffer "*Messages*")))
-  
+
   (global-set-key (kbd "C-x t") 'visit-term-buffer)
   (global-set-key (kbd "C-c g") 'google)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Windows navigation
   ;;
   (global-unset-key "\C-u")
   (global-set-key "\C-u" 'swap-windows)
-  
+
   (global-unset-key (kbd "M-m"))
   (global-set-key (kbd "M-m") 'mirror-window)
-  
+
   (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
   (windmove-default-keybindings 'meta)           ; M-up/down/left/right
-  
+
   (defun kostafey-markdown-mode-hook ()
     (define-key markdown-mode-map (kbd "M-<left>") nil)
     (define-key markdown-mode-map (kbd "M-<right>") nil))
   (add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
-  
+
   (global-set-key (kbd "M-<left>") 'meta-left)
   (global-set-key (kbd "M-<right>") 'meta-right)
-  
+
   (global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
   (global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
   (global-set-key (kbd "s-<down>") 'shrink-window)
   (global-set-key (kbd "s-<up>") 'enlarge-window)
   ;;
   ;;=============================================================================
-  
+
   ;;=============================================================================
   ;; Modes enabling
   ;;
@@ -596,7 +596,7 @@ Add to .emacs:
   (define-key ac-complete-mode-map [next] 'ac-page-next)
   (define-key ac-complete-mode-map [prior] 'ac-page-previous)
   (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
-  
+
   (global-set-key [f1] 'psw-switch-buffer)
   (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
   (global-set-key (kbd "s-q") 'psw-navigate-files)
@@ -614,7 +614,7 @@ Add to .emacs:
   (global-set-key [f10] 'flyspell-english)
   (global-set-key [f11] 'flyspell-russian)
   (global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
-  
+
   ;; yasnippet
   (defvar yasnippet-prefix "\C-y")
   (global-unset-key yasnippet-prefix)
@@ -622,7 +622,7 @@ Add to .emacs:
   (global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
   (global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
   (global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
-  
+
   (global-set-key (kbd "S-<tab>") 'open-line-or-yas)
   (global-set-key (kbd "C-S-<tab>") 'yas-prev-field)
   ;;
@@ -726,15 +726,20 @@ Add to .emacs:
   ;;
   ;;----------------------------------------------------------------------
   ;; Java
-    (defun kostafey-java-mode-hook ()
-      (define-key java-mode-map (kbd "C-a") nil)
-      (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
-      (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
-      (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
-    (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
+  (defun kostafey-java-mode-hook ()
+    (define-key java-mode-map (kbd "C-a") nil)
+    (define-key java-mode-map (kbd "C-h j") 'javadoc-lookup)
+    (define-key java-mode-map (kbd "C-<f1>") 'javadoc-lookup)
+    (define-key java-mode-map (kbd "C-M-d") 'hop-at-point))
+  (add-hook 'java-mode-hook 'kostafey-java-mode-hook)
 
-    (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
-    (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
+  (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
+  (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
+
+  ;;----------------------------------------------------------------------
+  ;; lisp
+  (global-set-key (kbd "M-e") 'eval-print-last-sexp)
+
   ;;----------------------------------------------------------------------
   ;; CIDER - Nrepl.el
   ;;
