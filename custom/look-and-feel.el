@@ -219,7 +219,9 @@
 
 (defun my-lisp-coding-hook ()
   (my-coding-hook)
-  (enable-paredit-mode))
+  ;; (if (not (equal " *temp*" (buffer-name (current-buffer))))
+  ;;     (enable-paredit-mode))
+ (enable-paredit-mode))
 
 (defun web-mode-hook ()
   "Hooks for Web mode."
@@ -228,15 +230,15 @@
 (require 'paredit)
 
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-coding-hook)
-(add-hook 'scheme-mode-hook 'my-lisp-coding-hook)
+(add-hook 'scheme-mode-hook     'my-lisp-coding-hook)
+(add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
+(add-hook 'markdown-mode-hook   'my-lisp-coding-hook)
 (add-hook 'python-mode-hook 'my-coding-hook)
 (add-hook 'comint-mode-hook 'my-coding-hook)
-(add-hook 'js-mode-hook 'my-coding-hook)
-(add-hook 'java-mode-hook 'my-coding-hook)
-(add-hook 'clojure-mode-hook 'my-coding-hook)
-(add-hook 'clojure-mode-hook #'enable-paredit-mode)
-(add-hook 'sql-mode-hook 'my-coding-hook)
-(add-hook 'web-mode-hook 'web-mode-hook)
+(add-hook 'js-mode-hook     'my-coding-hook)
+(add-hook 'java-mode-hook   'my-coding-hook)
+(add-hook 'sql-mode-hook    'my-coding-hook)
+(add-hook 'web-mode-hook    'web-mode-hook)
 
 (setq query-replace-highlight t)
 

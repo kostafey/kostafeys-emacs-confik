@@ -116,6 +116,7 @@ and `buffer-navigation'.")
 
 (defvar prog-modes-packages
   (list 'auctex
+        'quack
         'ecb
         'projectile
         'javadoc-lookup
