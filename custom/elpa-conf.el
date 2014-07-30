@@ -9,7 +9,8 @@
 (setq package-archives '(("ELPA" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
 
 (defvar package-is-refreshed nil
@@ -48,6 +49,7 @@
 
 (defvar text-modes-required-packages
   (list 'org
+        'org-plus-contrib
         'log4j-mode
         'lorem-ipsum
         'markdown-mode

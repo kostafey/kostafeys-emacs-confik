@@ -55,17 +55,17 @@
 </div>
 
 
-# Initial setup
+# Initial setup<a id="sec-1" name="sec-1"></a>
 
 Add to .emacs:
 
 (load-file "~/.emacs.d/init.el")
 
-# Kostafey's keybindings
+# Kostafey's keybindings<a id="sec-2" name="sec-2"></a>
 
-## Humane emacs
+## Humane emacs<a id="sec-2-1" name="sec-2-1"></a>
 
-### Exit/hide emacs
+### Exit/hide emacs<a id="sec-2-1-1" name="sec-2-1-1"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -101,7 +101,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Select Copy Paste
+### Select Copy Paste<a id="sec-2-1-2" name="sec-2-1-2"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -172,7 +172,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Undo/redo
+### Undo/redo<a id="sec-2-1-3" name="sec-2-1-3"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -215,7 +215,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Delete/insert char
+### Delete/insert char<a id="sec-2-1-4" name="sec-2-1-4"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -258,7 +258,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Save/revert
+### Save/revert<a id="sec-2-1-5" name="sec-2-1-5"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -301,7 +301,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Basic point movements & change buffer's position
+## Basic point movements & change buffer's position<a id="sec-2-2" name="sec-2-2"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -351,9 +351,9 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Point hyper-jumps
+## Point hyper-jumps<a id="sec-2-3" name="sec-2-3"></a>
 
-### Bookmarks
+### Bookmarks<a id="sec-2-3-1" name="sec-2-3-1"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -403,7 +403,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Search & replace
+### Search & replace<a id="sec-2-3-2" name="sec-2-3-2"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -482,6 +482,18 @@ Add to .emacs:
 <td class="left">meta F3</td>
 <td class="left">highlight-symbol-remove-all</td>
 </tr>
+
+
+<tr>
+<td class="left">C-M-<up></td>
+<td class="left">highlight-symbol-prev</td>
+</tr>
+
+
+<tr>
+<td class="left">C-M-<down></td>
+<td class="left">highlight-symbol-next</td>
+</tr>
 </tbody>
 
 <tbody>
@@ -492,7 +504,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Intellectual point jumps
+### Intellectual point jumps<a id="sec-2-3-3" name="sec-2-3-3"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -543,7 +555,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Command executions
+## Command executions<a id="sec-2-4" name="sec-2-4"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -586,9 +598,9 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Text transformations
+## Text transformations<a id="sec-2-5" name="sec-2-5"></a>
 
-### Basic text transformations
+### Basic text transformations<a id="sec-2-5-1" name="sec-2-5-1"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -710,7 +722,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Rectangle operations
+### Rectangle operations<a id="sec-2-5-2" name="sec-2-5-2"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -759,7 +771,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Upcase/downcase
+### Upcase/downcase<a id="sec-2-5-3" name="sec-2-5-3"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -784,7 +796,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Region & misc operations
+### Region & misc operations<a id="sec-2-5-4" name="sec-2-5-4"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -866,7 +878,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Paredit customization
+### Paredit customization<a id="sec-2-5-5" name="sec-2-5-5"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1020,6 +1032,28 @@ Add to .emacs:
 
 <tbody>
 <tr>
+<td class="left">ESC <up></td>
+<td class="left">paredit-splice-sexp-killing-backward</td>
+<td class="left">(foo (bar #(sqrt n)))</td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#x2013;></td>
+</tr>
+
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">(foo #(sqrt n))</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
 <td class="left">M-s-<right></td>
 <td class="left">transpose-sexps</td>
 <td class="left">&#xa0;</td>
@@ -1034,7 +1068,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-## IDE
+## IDE<a id="sec-2-6" name="sec-2-6"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1070,9 +1104,9 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Menu
+## Menu<a id="sec-2-7" name="sec-2-7"></a>
 
-### header<sub>name</sub>
+### header<sub>name</sub><a id="sec-2-7-1" name="sec-2-7-1"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1101,9 +1135,9 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Org-mode
+## Org-mode<a id="sec-2-8" name="sec-2-8"></a>
 
-### Time schedule
+### Time schedule<a id="sec-2-8-1" name="sec-2-8-1"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1160,6 +1194,6 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Emacs OS
+## Emacs OS<a id="sec-2-9" name="sec-2-9"></a>
 
-### elfeed
+### elfeed<a id="sec-2-9-1" name="sec-2-9-1"></a>
