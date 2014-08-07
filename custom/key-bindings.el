@@ -534,6 +534,7 @@
 (when (require 'ejc-sql nil 'noerror)
   (eval-after-load "ejc-sql"
     '(progn
+       (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
        (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
 ;;
 ;;----------------------------------------------------------------------
