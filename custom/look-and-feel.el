@@ -112,12 +112,7 @@
                              nil
                            'fullboth))))
 
-;; (run-with-idle-timer 0.1 nil 'toggle-fullscreen)
-;; (setq term-setup-hook 'toggle-fullscreen)
-(setq window-setup-hook
-      '(lambda() (interactive)
-         (progn (toggle-fullscreen)
-                (previous-buffer))))
+(setq window-setup-hook 'toggle-fullscreen)
 
 (defun fullscreen-linux (&optional f)
        (interactive)
