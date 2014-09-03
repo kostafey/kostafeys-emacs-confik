@@ -48,12 +48,11 @@
 (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72"))
 
 (setq tabbar-buffer-groups-function
-      (lambda () 
+      (lambda ()
         (list
          (cond
           ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
-          (t "All Buffers"))
-         )))
+          (t "All Buffers")))))
 
 (tabbar-mode t)
 
@@ -81,8 +80,8 @@
   (progn
     (let ((temp-buffer-name "temp"))
       (if (not (get-buffer temp-buffer-name))
-          (progn 
-            (switch-to-buffer temp-buffer-name)            
+          (progn
+            (switch-to-buffer temp-buffer-name)
             (linum-mode t)
             ;; (flyspell-russian)
             (auto-fill-mode t)
@@ -121,15 +120,17 @@ Don't mess with special buffers."
         (ansi-term (getenv "SHELL")))
     (switch-to-buffer-other-window "*ansi-term*")))
 
-(defun google ()
+(defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."
-  (interactive)
+  (interactive "p")
   (browse-url
    (concat
     "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
-    (url-hexify-string (if mark-active
+    (url-hexify-string
+     (if mark-active
          (buffer-substring (region-beginning) (region-end))
-       (read-string "Google: "))))))
+       (read-string "Google: "
+                    (if (not (equal arg 1))
+                        (symbol-name (symbol-at-point)))))))))
 
 (provide 'buffer-navigation)
-

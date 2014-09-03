@@ -377,6 +377,7 @@
 
 (global-set-key (kbd "C-x t") 'visit-term-buffer)
 (global-set-key (kbd "C-c g") 'google)
+(global-set-key (kbd "C-c C-g") '(lambda () (interactive) (google -1)))
 ;;
 ;;=============================================================================
 
