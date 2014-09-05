@@ -124,7 +124,9 @@ and `buffer-navigation'.")
         'javadoc-lookup
         'web-mode
         'diff-hl
-        'paredit)
+        'paredit
+        'lua-mode
+        'erlang)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages
