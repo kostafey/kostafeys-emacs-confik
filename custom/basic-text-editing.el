@@ -343,6 +343,15 @@ buffer is not visiting a file."
   (mark-whole-buffer)
   (indent-for-tab-command))
 
+(defun clojure-format ()
+  "Pretty print clojure string."
+  (interactive)
+  (beginning-of-buffer)
+  (replace-string "(" "\n(")
+  (clojure-mode)
+  (mark-whole-buffer)
+  (indent-for-tab-command))
+
 (defun slice-text-inner (chars border)
   (let* ((chars (if chars chars 1))
          (chars (if (stringp chars) (string-to-number chars) chars))
