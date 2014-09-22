@@ -73,6 +73,10 @@
                            ac-nrepl)
   "Required packages for clojure coding.")
 
+(defvar scala-packages '(ensime
+                         sbt-mode)
+  "Required packages for scala coding.")
+
 (defvar ac-required-packages
   (list 'popup
         'auto-complete
@@ -145,6 +149,7 @@ and `buffer-navigation'.")
                             bte-required-packages
                             text-modes-required-packages
                             clojure-packages
+                            scala-packages
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages

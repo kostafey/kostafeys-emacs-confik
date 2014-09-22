@@ -4,7 +4,7 @@
 ;; To err is human, but to really foul things up you need a computer.
 ;;                                                               Paul Ehrlich
 ;;
-;; Kostafey's emacs confik :) 
+;; Kostafey's Emacs confik :)
 ;; started from 08.08.2008, 22:45:25
 ;;
 ;;    ___ _ __ ___   __ _  ___ ___
@@ -49,7 +49,7 @@
 ;; (require 'popup-switcher)
 
 (add-to-list 'load-path
-             (concat site-lisp-path 
+             (concat site-lisp-path
                      "clomacs/src/elisp/"))
 (require 'clomacs)
 (require 'ejc-sql-conf nil 'noerror)
@@ -73,6 +73,7 @@
 (require 'emacs-lisp-conf)
 (require 'java-conf)
 (require 'clojure-conf)
+(provide 'scala-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
@@ -82,7 +83,6 @@
 
 ;; (require 'misc-swarm)
 
-;; (require 'el-get-conf)
 (require 'calc-time)
 (require 'hibernate-mapping)
 
@@ -102,18 +102,18 @@
   (sit-for 2)
   (message "Amen."))
 
-(message "My .emacs loaded in %ds" 
-         (let ((emacs-sub-version 
+(message "My .emacs loaded in %ds"
+         (let ((emacs-sub-version
                 (string-to-number (nth 2 (split-string emacs-version "\\.")))))
            (if (and (>= emacs-major-version 24)
                     (>= emacs-minor-version 2)
                     (>= emacs-sub-version 1))
-               (destructuring-bind              
+               (destructuring-bind
                    (hi lo ms ps)
                    (current-time)
                  (- (+ hi lo) (+ (first *emacs-load-start*)
                                  (second *emacs-load-start*))))
-             (destructuring-bind              
+             (destructuring-bind
                  (hi lo ms)
                  (current-time)
                (- (+ hi lo) (+ (first *emacs-load-start*)
@@ -126,5 +126,3 @@
 ;; end of .emacs
 ;;
 ;;
-
-
