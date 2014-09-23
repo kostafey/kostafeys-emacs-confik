@@ -526,7 +526,8 @@
   (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
   (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
-  (define-key clojure-mode-map (kbd "C-c C-l") nil))
+  (define-key clojure-mode-map (kbd "C-c C-l") nil)
+  (define-key clojure-mode-map (kbd "C-c C-f") nil))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 ;;----------------------------------------------------------------------
