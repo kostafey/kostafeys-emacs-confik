@@ -73,7 +73,7 @@
 (require 'emacs-lisp-conf)
 (require 'java-conf)
 (require 'clojure-conf)
-(provide 'scala-conf)
+(require 'scala-conf)
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
