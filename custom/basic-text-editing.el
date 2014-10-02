@@ -343,14 +343,23 @@ buffer is not visiting a file."
   (mark-whole-buffer)
   (indent-for-tab-command))
 
-(defun clojure-format ()
-  "Pretty print clojure string."
+(defun sexp-format ()
+  "Pretty print s-expressions data."
   (interactive)
   (beginning-of-buffer)
-  (replace-string "(" "\n(")
-  (clojure-mode)
+  (save-excursion
+    (replace-string "(" "\n("))
+  (delete-char 1)
+  (save-excursion
+    (replace-string "(\n" "("))
+  (save-excursion
+    (replace-regexp "( +(" "(("))
+  (save-excursion
+    (replace-regexp ") +)" "))"))
+  (scheme-mode)
   (mark-whole-buffer)
-  (indent-for-tab-command))
+  (indent-for-tab-command)
+  (whitespace-cleanup))
 
 (defun slice-text-inner (chars border)
   (let* ((chars (if chars chars 1))
