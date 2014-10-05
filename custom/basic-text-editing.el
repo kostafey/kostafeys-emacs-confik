@@ -361,6 +361,27 @@ buffer is not visiting a file."
   (indent-for-tab-command)
   (whitespace-cleanup))
 
+(defun goto-char-zero (char-pos)
+  "Goto char CHAR-POS where position count starts with 0.
+Take into account cr-lf dos line endings."
+  (interactive
+   (list
+    (1+ (string-to-int
+         (read-from-minibuffer
+          "Goto char: " nil nil nil 'goto-char-zero-history)))))
+  (when (string-match "dos" (symbol-name buffer-file-coding-system))
+    (beginning-of-buffer)
+    (let ((cr-lf-pos 0)
+          (offset 0))
+      (while (and (not (eq nil cr-lf-pos)) (< cr-lf-pos char-pos))
+        (setq cr-lf-pos (if (search-forward "\n" nil t)
+                            (- (1+ (point)) offset)
+                          nil))
+        (when (and (not (eq nil cr-lf-pos)) (< cr-lf-pos char-pos))
+          (decf char-pos)
+          (incf offset)))))
+  (goto-char char-pos))
+
 (defun slice-text-inner (chars border)
   (let* ((chars (if chars chars 1))
          (chars (if (stringp chars) (string-to-number chars) chars))
