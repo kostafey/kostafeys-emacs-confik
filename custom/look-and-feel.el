@@ -205,18 +205,15 @@
 ;; Usage: Just enable highlight-parentheses-mode.
 ;; (require 'highlight-parentheses)
 
-(global-rainbow-delimiters-mode)
-
 (defun my-coding-hook ()
   ;; (highlight-parentheses-mode t)
+  (rainbow-delimiters-mode t)
   (idle-highlight-mode t)
   (font-lock-warn-todo))
 
 (defun my-lisp-coding-hook ()
   (my-coding-hook)
-  ;; (if (not (equal " *temp*" (buffer-name (current-buffer))))
-  ;;     (enable-paredit-mode))
- (enable-paredit-mode))
+  (enable-paredit-mode))
 
 (defun web-mode-hook ()
   "Hooks for Web mode."
