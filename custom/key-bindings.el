@@ -531,6 +531,14 @@
   (define-key clojure-mode-map (kbd "C-c C-f") 'ack-file))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+
+;;----------------------------------------------------------------------
+;; ENSIME
+;;
+(defun kostafey-ensime-mode-hook ()
+    (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region))
+(add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
+
 ;;----------------------------------------------------------------------
 ;; SQL
 ;;

@@ -32,7 +32,11 @@
 <li><a href="#sec-2-5-5">2.5.5. Paredit customization</a></li>
 </ul>
 </li>
-<li><a href="#sec-2-6">2.6. IDE</a></li>
+<li><a href="#sec-2-6">2.6. IDE</a>
+<ul>
+<li><a href="#sec-2-6-1">2.6.1. ENSIME</a></li>
+</ul>
+</li>
 <li><a href="#sec-2-7">2.7. Menu</a>
 <ul>
 <li><a href="#sec-2-7-1">2.7.1. header<sub>name</sub></a></li>
@@ -1100,6 +1104,42 @@ Add to .emacs:
 <td class="left">C-x B</td>
 <td class="left">semantic-mrub-switch-tag</td>
 <td class="left">Backward after semantic-ia-fast-jump</td>
+</tr>
+</tbody>
+</table>
+
+### ENSIME<a id="sec-2-6-1" name="sec-2-6-1"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-c C-v z</td>
+<td class="left">ensime-inf-switch</td>
+<td class="left">Start/switch to scala REPL</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-r</td>
+<td class="left">ensime-inf-eval-region</td>
+<td class="left">Send current region to Scala interpreter</td>
 </tr>
 </tbody>
 </table>
