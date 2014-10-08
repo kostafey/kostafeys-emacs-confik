@@ -1130,7 +1130,7 @@ Add to .emacs:
 
 <tbody>
 <tr>
-<td class="left">C-c C-v z</td>
+<td class="left">C-c C-v s</td>
 <td class="left">ensime-sbt-switch</td>
 <td class="left">Switch to the sbt shell</td>
 </tr>
