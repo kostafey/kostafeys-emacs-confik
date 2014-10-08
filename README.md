@@ -1131,6 +1131,13 @@ Add to .emacs:
 <tbody>
 <tr>
 <td class="left">C-c C-v z</td>
+<td class="left">ensime-sbt-switch</td>
+<td class="left">Switch to the sbt shell</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-v z</td>
 <td class="left">ensime-inf-switch</td>
 <td class="left">Start/switch to scala REPL</td>
 </tr>
@@ -1140,6 +1147,13 @@ Add to .emacs:
 <td class="left">C-c C-r</td>
 <td class="left">ensime-inf-eval-region</td>
 <td class="left">Send current region to Scala interpreter</td>
+</tr>
+
+
+<tr>
+<td class="left">C-x C-e</td>
+<td class="left">eval-last-scala-expr</td>
+<td class="left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
