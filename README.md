@@ -1158,6 +1158,13 @@ Add to .emacs:
 
 
 <tr>
+<td class="left">M-e</td>
+<td class="left">ensime-inf-eval-region</td>
+<td class="left">Send current region to Scala interpreter</td>
+</tr>
+
+
+<tr>
 <td class="left">C-x C-e</td>
 <td class="left">eval-last-scala-expr</td>
 <td class="left">&#xa0;</td>
