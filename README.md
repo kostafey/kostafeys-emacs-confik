@@ -1144,6 +1144,13 @@ Add to .emacs:
 
 
 <tr>
+<td class="left">C-c C-v b</td>
+<td class="left">ensime-inf-eval-buffer</td>
+<td class="left">Send whole buffer to Scala interpreter</td>
+</tr>
+
+
+<tr>
 <td class="left">C-c C-r</td>
 <td class="left">ensime-inf-eval-region</td>
 <td class="left">Send current region to Scala interpreter</td>
