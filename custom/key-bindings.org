@@ -765,14 +765,17 @@ Add to .emacs:
 *** ENSIME
     | Key       | Command                | Description                              |
     |-----------+------------------------+------------------------------------------|
+    | C-c C-v z | ensime-sbt-switch      | Switch to the sbt shell                  |
     | C-c C-v z | ensime-inf-switch      | Start/switch to scala REPL               |
     | C-c C-r   | ensime-inf-eval-region | Send current region to Scala interpreter |
+    | C-x C-e   | eval-last-scala-expr   |                                          |
 #+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; ENSIME
   ;;
   (defun kostafey-ensime-mode-hook ()
-      (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region))
+      (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
+      (define-key ensime-mode-map (kbd "C-x C-e") 'eval-last-scala-expr))
   (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 #+end_src
 
