@@ -199,6 +199,9 @@
 ;; cl-lib-highlight init
 (cl-lib-highlight-initialize)
 
+;; Font lock of dash functions in emacs lisp buffers
+(eval-after-load "dash" '(dash-enable-font-lock))
+
 ;;=============================================================================
 ;; Magic lisp parentheses rainbow
 ;;=============================================================================

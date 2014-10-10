@@ -70,7 +70,8 @@
 (defvar clojure-packages '(clojure-mode
                            clojure-mode-extra-font-locking
                            cider
-                           ac-nrepl)
+                           ac-nrepl
+                           clojure-snippets)
   "Required packages for clojure coding.")
 
 (defvar scala-packages '(ensime
