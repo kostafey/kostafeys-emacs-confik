@@ -74,19 +74,20 @@
 ;;
 ;;----------------------------------------------------------------------
 
-(defun switch-to-temp-buffer ()
+(defun switch-to-temp-buffer (&optional num)
   "Swithes to temp buffer."
-  (interactive)
-  (progn
-    (let ((temp-buffer-name "temp"))
-      (if (not (get-buffer temp-buffer-name))
-          (progn
-            (switch-to-buffer temp-buffer-name)
-            (linum-mode t)
-            ;; (flyspell-russian)
-            (auto-fill-mode t)
-            (setq auto-complete-mode t))
-        (switch-to-buffer temp-buffer-name)))))
+  (interactive "P")
+  (let ((temp-buffer-name (if num (concat "temp-"
+                                          (int-to-string num))
+                            "temp")))
+    (if (not (get-buffer temp-buffer-name))
+        (progn
+          (switch-to-buffer temp-buffer-name)
+          (linum-mode t)
+          ;; (flyspell-russian)
+          (auto-fill-mode t)
+          (setq auto-complete-mode t))
+      (switch-to-buffer temp-buffer-name))))
 
 (defun copy-to-clipboard-buffer-file-path ()
   (interactive)
