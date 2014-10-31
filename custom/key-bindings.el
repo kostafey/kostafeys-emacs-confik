@@ -160,7 +160,8 @@
 
 (defun kostafey-markdown-mode-hook ()
   (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
-  (define-key markdown-mode-map (kbd "C-M-<down>") 'highlight-symbol-next))
+  (define-key markdown-mode-map (kbd "C-M-<down>") 'highlight-symbol-next)
+  (define-key markdown-mode-map (kbd "<backspace>") nil))
 (add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
 
 ;; ace-jump-mode

@@ -1,0 +1,18 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!*.el
+!*.org
+!*.md
+
+# ...even if they are in subdirectories
+!artifacts
+!custom
+!launcher
+!solutions
+
+communications.el
+ejc-sql-conf.el
+.mc-lists.el
