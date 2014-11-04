@@ -234,6 +234,7 @@
 (add-hook 'js-mode-hook     'my-coding-hook)
 (add-hook 'java-mode-hook   'my-coding-hook)
 (add-hook 'sql-mode-hook    'my-coding-hook)
+(add-hook 'mql-mode-hook    'my-coding-hook)
 (add-hook 'web-mode-hook    'web-mode-hook)
 
 (setq query-replace-highlight t)
