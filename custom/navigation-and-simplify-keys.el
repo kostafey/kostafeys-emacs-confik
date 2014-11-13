@@ -238,9 +238,9 @@
       (windmove-left)
     (error 
      (if (equal err '(error "No window left from selected window"))
-         (progn           
-           (winner-undo)
-           (setq this-command 'winner-undo))
+         (progn
+           (hop-backward)
+           (setq this-command 'hop-backward))
        (message "%s" err)))))
 
 (defun meta-right ()
@@ -250,8 +250,8 @@
     (error 
      (if (equal err '(error "No window right from selected window"))
          (progn           
-           (winner-redo)
-           (setq this-command 'winner-redo))
+           (hop-forward)
+           (setq this-command 'hop-forward))
        (message "%s" err)))))
 
 (defadvice ace-jump-char-category (around adv-ace-jump-support-umlauts activate)
