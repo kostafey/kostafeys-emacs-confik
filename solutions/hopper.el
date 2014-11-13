@@ -27,6 +27,11 @@
 (defvar hop-positions-max-length 20)
 (defvar hop-current-pos 0)
 
+(defun hop-clear ()
+  (interactive)
+  (setq hop-positions (list))
+  (setq hop-current-pos 0))
+
 (defun hop-update-positions (buffer point reason)
   (let ((new-pos (list buffer point reason)))
     (when (eq reason :hop)
@@ -35,7 +40,8 @@
     (when (eq reason :back)
       (if (eq (nth 2 (nth hop-current-pos hop-positions)) :back)
           (setcar (nthcdr hop-current-pos hop-positions) new-pos)
-        (setq hop-positions (cons new-pos hop-positions))))
+        (if (eq hop-current-pos 0)
+         (setq hop-positions (cons new-pos hop-positions)))))
     (if (> (length hop-positions) hop-positions-max-length)
         (delete (car (last hop-positions)) hop-positions))))
 
@@ -51,8 +57,9 @@
 
 (defun hop-forward ()
   (interactive)
-  (decf hop-current-pos)
-  (hop-in-list))
+  (when (> hop-current-pos 0)
+    (decf hop-current-pos)
+    (hop-in-list)))
 
 (defun hop-at-point (point)
   "Jump to the entity definition."
