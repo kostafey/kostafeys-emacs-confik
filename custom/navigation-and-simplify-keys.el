@@ -1,4 +1,3 @@
-
 (require 'elpa-conf)
 
 
@@ -6,11 +5,11 @@
 
 ;; setting the PC keyboard's various keys to
 ;; Super or Hyper, for emacs running on Windows.
-(setq w32-pass-lwindow-to-system nil 
-      w32-pass-rwindow-to-system nil 
-      w32-pass-apps-to-system nil 
-      w32-lwindow-modifier 'super ; Left Windows key 
-      w32-rwindow-modifier 'super ; Right Windows key 
+(setq w32-pass-lwindow-to-system nil
+      w32-pass-rwindow-to-system nil
+      w32-pass-apps-to-system nil
+      w32-lwindow-modifier 'super ; Left Windows key
+      w32-rwindow-modifier 'super ; Right Windows key
       w32-apps-modifier 'hyper) ; Menu key
 
 ;; ctrl + shift + click select rectange region
@@ -28,7 +27,7 @@
 (put 'downcase-region 'disabled nil)
 
 ;;=============================================================================
-;; Odinary C-<right>, C-<left> movements 
+;; Odinary C-<right>, C-<left> movements
 ;;=============================================================================
 (require 'thingatpt)
 ;; (subword-mode)
@@ -41,7 +40,7 @@
 
 (defun step-backward-word ()
   "Like odinary editors, C-<left> moves backward word."
-  (interactive)  
+  (interactive)
   (skip-chars-backward " \t")
   (forward-same-syntax -1))
 
@@ -106,13 +105,13 @@
 ;; Поиск и замена
 ;;=============================================================================
 (add-hook 'isearch-mode-hook
-		  '(lambda ()
-			 (define-key isearch-mode-map "\C-f"
-			   'isearch-repeat-forward)
-			 (define-key isearch-mode-map "\C-r"
-			   'isearch-repeat-backward)
-			 (define-key isearch-mode-map "\C-v"
-			   'isearch-yank-kill)))
+          '(lambda ()
+             (define-key isearch-mode-map "\C-f"
+               'isearch-repeat-forward)
+             (define-key isearch-mode-map "\C-r"
+               'isearch-repeat-backward)
+             (define-key isearch-mode-map "\C-v"
+               'isearch-yank-kill)))
 
 ;; do not truncate and wrap long lines
 (setq truncate-partial-width-windows nil)
@@ -142,7 +141,7 @@
 
 ;;keyboard
 (setq scroll-step 1)                     ; Шаг прокрутки
-(setq next-screen-context-lines 10)      ; Number of lines of continuity when 
+(setq next-screen-context-lines 10)      ; Number of lines of continuity when
                                          ; scrolling by screenfuls.
 
 ;; Если тока вышла за пределы окна на число не первосходящее данное,
@@ -154,31 +153,31 @@
 ;;=============================================================================
 ;; Someday might want to rotate windows if more than 2 of them
 (defun swap-windows ()
- "If you have 2 windows, it swaps them." 
- (interactive) 
+ "If you have 2 windows, it swaps them."
+ (interactive)
  (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
  (t
  (let* ((w1 (first (window-list)))
-	 (w2 (second (window-list)))
-	 (b1 (window-buffer w1))
-	 (b2 (window-buffer w2))
-	 (s1 (window-start w1))
-	 (s2 (window-start w2)))
+     (w2 (second (window-list)))
+     (b1 (window-buffer w1))
+     (b2 (window-buffer w2))
+     (s1 (window-start w1))
+     (s2 (window-start w2)))
  (set-window-buffer w1 b2)
  (set-window-buffer w2 b1)
  (set-window-start w1 s2)
  (set-window-start w2 s1)))))
 
 (defun mirror-window ()
- "Show the same buffer in the second window as in the active window." 
- (interactive) 
+ "Show the same buffer in the second window as in the active window."
+ (interactive)
  (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
  (t
  (let* ((w1 (first (window-list)))
         (w2 (second (window-list)))
         (b1 (window-buffer w1))
         (s1 (window-start w1)))
-   (set-window-start w2 s1)   
+   (set-window-start w2 s1)
    (set-window-buffer w2 b1)))))
 
 ;;=============================================================================
@@ -187,25 +186,25 @@
 (defun rename-file-and-buffer (new-name)
  "Renames both current buffer and file it's visiting to NEW-NAME." (interactive "sNew name: ")
  (let ((name (buffer-name))
-	(filename (buffer-file-name)))
+    (filename (buffer-file-name)))
  (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
+    (message "Buffer '%s' is not visiting a file!" name)
  (if (get-buffer new-name)
-	 (message "A buffer named '%s' already exists!" new-name)
-	(progn 	 (rename-file name new-name 1) 	 (rename-buffer new-name) 	 (set-visited-file-name new-name) 	 (set-buffer-modified-p nil))))))
+     (message "A buffer named '%s' already exists!" new-name)
+    (progn   (rename-file name new-name 1)   (rename-buffer new-name)    (set-visited-file-name new-name)    (set-buffer-modified-p nil))))))
 
 (defun move-buffer-file (dir)
  "Moves both current buffer and file it's visiting to DIR." (interactive "DNew directory: ")
  (let* ((name (buffer-name))
-	 (filename (buffer-file-name))
-	 (dir
-	 (if (string-match dir "\\(?:/\\|\\\\)$")
-	 (substring dir 0 -1) dir))
-	 (newname (concat dir "/" name)))
+     (filename (buffer-file-name))
+     (dir
+     (if (string-match dir "\\(?:/\\|\\\\)$")
+     (substring dir 0 -1) dir))
+     (newname (concat dir "/" name)))
 
  (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
- (progn 	(copy-file filename newname 1) 	(delete-file filename) 	(set-visited-file-name newname) 	(set-buffer-modified-p nil) 	t)))) 
+    (message "Buffer '%s' is not visiting a file!" name)
+ (progn     (copy-file filename newname 1)  (delete-file filename)  (set-visited-file-name newname)     (set-buffer-modified-p nil)     t))))
 ;;=============================================================================
 
 ;;=============================================================================
@@ -217,7 +216,7 @@
   "Sort dired listings with directories first."
   (save-excursion
     (let (buffer-read-only)
-      (forward-line 2) ;; beyond dir. header 
+      (forward-line 2) ;; beyond dir. header
       (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
     (set-buffer-modified-p nil)))
 
@@ -236,7 +235,7 @@
   (interactive)
   (condition-case err
       (windmove-left)
-    (error 
+    (error
      (if (equal err '(error "No window left from selected window"))
          (progn
            (hop-backward)
@@ -247,9 +246,9 @@
   (interactive)
   (condition-case err
       (windmove-right)
-    (error 
+    (error
      (if (equal err '(error "No window right from selected window"))
-         (progn           
+         (progn
            (hop-forward)
            (setq this-command 'hop-forward))
        (message "%s" err)))))
@@ -260,4 +259,3 @@
   (setq ad-return-value 'alpha))
 
 (provide 'navigation-and-simplify-keys)
-
