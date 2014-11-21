@@ -111,7 +111,8 @@
         'flx
         'flx-ido
         'smex
-        'ace-jump-mode)
+        'ace-jump-mode
+        'flx-isearch)
   "Required packages for `navigation-and-simplify-keys', `key-bindings'
 and `buffer-navigation'.")
 

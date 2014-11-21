@@ -139,7 +139,9 @@
 ;; Search & replace
 (global-unset-key (kbd "C-f"))
 (global-set-key (kbd "C-f") 'isearch-forward)
+(global-set-key (kbd "C-S-f") 'flx-isearch-forward)
 (global-set-key (kbd "C-r") 'isearch-backward)
+(global-set-key (kbd "C-S-r") 'flx-isearch-backward)
 ;;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
 
 (global-unset-key (kbd "M-r"))

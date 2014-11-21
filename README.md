@@ -441,6 +441,18 @@ Add to .emacs:
 <td class="left">M-e</td>
 <td class="left">isearch-edit-string</td>
 </tr>
+
+
+<tr>
+<td class="left">C-S-f</td>
+<td class="left">flx-isearch-forward</td>
+</tr>
+
+
+<tr>
+<td class="left">C-S-r</td>
+<td class="left">flx-isearch-backward</td>
+</tr>
 </tbody>
 
 <tbody>
