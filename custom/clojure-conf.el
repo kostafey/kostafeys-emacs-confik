@@ -52,12 +52,9 @@
   (cider-repl-return))
 
 ;;----------------------------------------------------------------------
-;; clomacs and elisp-clojure extensions:
-;; - clojure-offline
+;; typed-clojure-mode
 ;;
-
-(add-to-list 'load-path (concat site-lisp-path "clojure-offline/src/elisp/"))
-(require 'clojure-offline)
+(add-hook 'clojure-mode-hook 'typed-clojure-mode)
 
 
 (provide 'clojure-conf)

@@ -71,7 +71,8 @@
                            clojure-mode-extra-font-locking
                            cider
                            ac-nrepl
-                           clojure-snippets)
+                           clojure-snippets
+                           typed-clojure-mode)
   "Required packages for clojure coding.")
 
 (defvar scala-packages '(ensime
