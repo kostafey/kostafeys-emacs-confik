@@ -411,4 +411,9 @@ Take into account cr-lf dos line endings."
         (slice-text-inner chars border))
     (slice-text-inner chars "")))
 
+(defun generate-numbers (limit)
+  (interactive "P")
+  (dotimes (number limit)
+    (insert (concat (int-to-string number) ", "))))
+
 (provide 'basic-text-editing)
