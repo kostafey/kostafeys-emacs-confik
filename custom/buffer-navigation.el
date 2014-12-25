@@ -134,4 +134,18 @@ Don't mess with special buffers."
                     (if (not (equal arg 1))
                         (symbol-name (symbol-at-point)))))))))
 
+(defun goto-url (&optional arg)
+  "Go to selected region as URL if any, display a query prompt otherwise."
+  (interactive "p")
+  (browse-url
+   (if mark-active
+       (buffer-substring (region-beginning) (region-end))
+     (let ((entered-str
+            (read-string "Go to URL: "
+                         (if (not (equal arg 1))
+                             (symbol-name (symbol-at-point))))))
+       (if (not (equal "http" (substring entered-str 0 4)))
+           (concat "http://" entered-str)
+         entered-str)))))
+
 (provide 'buffer-navigation)

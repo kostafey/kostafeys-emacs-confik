@@ -61,31 +61,42 @@
     (decf hop-current-pos)
     (hop-in-list)))
 
+(defvar hop-url-regexp
+  (concat "\\s-*\\(\\w\\|\\+\\|-\\)+://\\(\\w\\|\\-\\)+\\(\\.\\w+\\)?"
+          "\\(\\/\\(%[0-9a-fA-F]\\{2\\}\\|[~\\.A-Za-z_+-]*\\)*\\)*"))
+
 (defun hop-at-point (point)
   "Jump to the entity definition."
   (interactive "d")
-  (push-mark)
-  (let ((mode (hop-buffer-mode (current-buffer))))
-    (hop-update-positions (current-buffer) (point) :hop)
-    (cond
-     ;; emacs-lisp-mode
-     ((equal 'emacs-lisp-mode mode)
-      (let ((symb (read (hop-strip-text-properties
-                         (thing-at-point 'symbol)))))
-        (when symb
-          (cond
-           ((or (functionp symb) (fboundp symb)) (find-function symb))
-           (t (find-variable symb))))))
-     ;; clojure-mode
-     ((and (equal 'clojure-mode mode) (require 'cider nil 'noerror))
-      (cider-jump (cider-read-symbol-name "Symbol: " 'identity)))
-     ;; other modes
-     (t
-      (if (semantic-active-p)
-          (condition-case nil
-              (semantic-ia-fast-jump point)
-            (error (hop-default-tag)))
-        (hop-default-tag))))))
+  (if mark-active
+      (browse-url (buffer-substring (region-beginning) (region-end)))
+    (progn
+      (let ((mode (hop-buffer-mode (current-buffer)))
+            (string-at-point (hop-strip-text-properties
+                              (thing-at-point 'symbol))))
+        (if (string-match hop-url-regexp string-at-point)
+            (browse-url string-at-point)
+          (progn
+            (push-mark)
+            (hop-update-positions (current-buffer) (point) :hop)
+            (cond
+             ;; emacs-lisp-mode
+             ((equal 'emacs-lisp-mode mode)
+              (let ((symb (read string-at-point)))
+                (when symb
+                  (cond
+                   ((or (functionp symb) (fboundp symb)) (find-function symb))
+                   (t (find-variable symb))))))
+             ;; clojure-mode
+             ((and (equal 'clojure-mode mode) (require 'cider nil 'noerror))
+              (cider-jump (cider-read-symbol-name "Symbol: " 'identity)))
+             ;; other modes
+             (t
+              (if (semantic-active-p)
+                  (condition-case nil
+                      (semantic-ia-fast-jump point)
+                    (error (hop-default-tag)))
+                (hop-default-tag))))))))))
 
 (defun hop-by-mouse (start-event)
   "Jump to the entity definition by mouse click."
