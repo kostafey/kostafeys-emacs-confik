@@ -229,6 +229,7 @@
 (add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
 (add-hook 'scala-mode-hook      'my-lisp-coding-hook)
 (add-hook 'markdown-mode-hook   'my-lisp-coding-hook)
+(add-hook 'mql-mode-hook        'my-lisp-coding-hook)
 (add-hook 'python-mode-hook 'my-coding-hook)
 (add-hook 'comint-mode-hook 'my-coding-hook)
 (add-hook 'js-mode-hook     'my-coding-hook)

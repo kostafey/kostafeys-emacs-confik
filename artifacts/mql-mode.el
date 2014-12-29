@@ -24,12 +24,13 @@
          ((eq 'windows-nt system-type) "\"C:"))
    "/Program Files (x86)/MetaTrader 4/mql.exe\""))
 
-(defun mql-compile (version)
+(cl-defun mql-compile (version &optional check-only)
   (compile (concat
             mql-compiler-path
             (case version
-              (4 " /mql4")
-              (5 " /mql5"))
+              (4 " /mql4 ")
+              (5 " /mql5 "))
+            (if check-only " /s " "")
             " /i:\""
             (file-name-directory (buffer-file-name)) "\" "
             (file-name-nondirectory (buffer-file-name)))))
@@ -37,12 +38,14 @@
 (defun mql-compile-dispatcher ()
   "Compile mql file."
   (interactive)
-  (let ((extension (file-name-extension (buffer-file-name))))
-    (cond ((or (equal "mq4 "extension)
-               (equal "ex4 "extension)) (mql-compiler 4))
-          ((or (equal "mq5 "extension)
-               (equal "ex5 "extension)) (mql-compiler 5))
-          (t (mql-compiler mql-compiler-default-version)))))
+  (let* ((extension (file-name-extension (buffer-file-name)))
+         (version (cond ((or (equal "mq4 "extension)
+                             (equal "ex4 "extension)) 4)
+                        ((or (equal "mq5 "extension)
+                             (equal "ex5 "extension)) 5)
+                        (t mql-compiler-default-version))))
+    (mql-compile version
+                 (if (equal "mqh" extension) :check-only))))
 
 (defvar mql-mode-hook nil)
 (defvar mql-mode-keywords
