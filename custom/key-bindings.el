@@ -84,6 +84,8 @@
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-<right>")   'step-forward-word)
 (global-set-key (kbd "C-<left>")    'step-backward-word)
+(global-set-key (kbd "C-S-<right>") 'step-forward-select)
+(global-set-key (kbd "C-S-<left>")  'step-backward-select)
 (put 'step-forward-word 'CUA 'move)
 (put 'step-backward-word 'CUA 'move)
 ;;-----------------------------------------------------------------------------
