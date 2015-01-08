@@ -22,7 +22,7 @@
                                        "wine \"/home/" (user-login-name)
                                        "/.wine/dosdevices/c:"))
          ((eq 'windows-nt system-type) "\"C:"))
-   "/Program Files (x86)/MetaTrader 4/mql.exe\""))
+   "/Program Files (x86)/MetaTrader 4/MQL4/mql.exe\""))
 
 (cl-defun mql-compile (version &optional check-only)
   (compile (concat

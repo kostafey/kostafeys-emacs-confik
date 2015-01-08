@@ -19,7 +19,6 @@
 ;; Elisp extensions paths
 ;;=============================================================================
 (defvar site-lisp-path "~/.emacs.d/") ; root extensions folder
-(add-to-list 'load-path site-lisp-path)
 ;;-----------------------------------------------------------------------------
 ;; Third-party *.el files (in general low-supporded, misplaced in ELPA)
 ;; without any patching or with tiny patches, stored in this repo.

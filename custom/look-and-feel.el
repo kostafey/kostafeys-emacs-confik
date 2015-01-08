@@ -112,7 +112,7 @@
                              nil
                            'fullboth))))
 
-(setq window-setup-hook 'toggle-fullscreen)
+;(setq window-setup-hook 'toggle-fullscreen)
 
 (defun fullscreen-linux (&optional f)
        (interactive)

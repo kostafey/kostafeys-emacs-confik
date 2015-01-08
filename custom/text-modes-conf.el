@@ -85,9 +85,6 @@
 ;;typing game
 (autoload 'typing-of-emacs "The Typing Of Emacs, a game." t)
 
-;; View Large Files
-(require 'vlf-integrate)
-
 ;;--------------------------------------------------------------------
 ;; elfeed
 (setq elfeed-feeds
