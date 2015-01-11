@@ -759,6 +759,7 @@ Add to .emacs:
   ;;
   (global-unset-key (kbd "C-n"))
   (defun kostafey-clojure-mode-hook ()
+    (define-key clojure-mode-map (kbd "C-c C-p") 'cider-pprint-eval-last-sexp)
     (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
     (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
     (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
