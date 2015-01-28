@@ -721,6 +721,7 @@ Add to .emacs:
     | s-s   | sr-speedbar-toggle       |                                      |
     | C-x B | semantic-mrub-switch-tag | Backward after semantic-ia-fast-jump |
 
+*** Speedbar
 #+begin_src emacs-lisp :exports none
   ;; speedbar
   (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
@@ -734,7 +735,9 @@ Add to .emacs:
   ;; (global-set-key "\M-m" 'ecb-goto-window-methods)
   ;;
   ;;=============================================================================
-
+#+end_src
+*** Java
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;; Mode keys & programming language specific keys.
   ;;
@@ -749,11 +752,15 @@ Add to .emacs:
 
   (global-set-key (kbd "C-<f10>") 'tomcat-toggle)
   (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
-
+#+end_src
+*** Lisp
+#+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; lisp
   (global-set-key (kbd "M-e") 'eval-print-last-sexp)
-
+#+end_src
+*** Clojure
+#+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; CIDER - Nrepl.el
   ;;
@@ -771,8 +778,12 @@ Add to .emacs:
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
   (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 #+end_src
-
-*** ENSIME
+*** Lua
+    | Key     | Command                  |
+    |---------+--------------------------|
+    | C-c C-l | lua-send-buffer          |
+    | C-c C-f | lua-search-documentation |
+*** Scala
     | Key       | Command                | Description                              |
     |-----------+------------------------+------------------------------------------|
     | C-c C-v s | ensime-sbt-switch      | Switch to the sbt shell                  |

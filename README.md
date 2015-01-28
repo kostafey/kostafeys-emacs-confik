@@ -34,7 +34,12 @@
 </li>
 <li><a href="#sec-2-6">2.6. IDE</a>
 <ul>
-<li><a href="#sec-2-6-1">2.6.1. ENSIME</a></li>
+<li><a href="#sec-2-6-1">2.6.1. Speedbar</a></li>
+<li><a href="#sec-2-6-2">2.6.2. Java</a></li>
+<li><a href="#sec-2-6-3">2.6.3. Lisp</a></li>
+<li><a href="#sec-2-6-4">2.6.4. Clojure</a></li>
+<li><a href="#sec-2-6-5">2.6.5. Lua</a></li>
+<li><a href="#sec-2-6-6">2.6.6. Scala</a></li>
 </ul>
 </li>
 <li><a href="#sec-2-7">2.7. Menu</a>
@@ -1120,7 +1125,46 @@ Add to .emacs:
 </tbody>
 </table>
 
-### ENSIME<a id="sec-2-6-1" name="sec-2-6-1"></a>
+### Speedbar<a id="sec-2-6-1" name="sec-2-6-1"></a>
+
+### Java<a id="sec-2-6-2" name="sec-2-6-2"></a>
+
+### Lisp<a id="sec-2-6-3" name="sec-2-6-3"></a>
+
+### Clojure<a id="sec-2-6-4" name="sec-2-6-4"></a>
+
+### Lua<a id="sec-2-6-5" name="sec-2-6-5"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-c C-l</td>
+<td class="left">lua-send-buffer</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-f</td>
+<td class="left">lua-search-documentation</td>
+</tr>
+</tbody>
+</table>
+
+### Scala<a id="sec-2-6-6" name="sec-2-6-6"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
