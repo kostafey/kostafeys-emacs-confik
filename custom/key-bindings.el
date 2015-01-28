@@ -540,6 +540,11 @@
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 
+(defun kostafey-lua-mode-hook ()
+    (define-key lua-mode-map (kbd "C-c C-c") 'lua-send-current-line)
+    (define-key lua-mode-map (kbd "M-e") 'lua-send-region))
+(add-hook 'lua-mode-hook 'kostafey-lua-mode-hook)
+
 ;;----------------------------------------------------------------------
 ;; ENSIME
 ;;

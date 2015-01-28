@@ -783,6 +783,14 @@ Add to .emacs:
     |---------+--------------------------|
     | C-c C-l | lua-send-buffer          |
     | C-c C-f | lua-search-documentation |
+    | C-c C-c | lua-send-current-line    |
+    | M-e     | lua-send-region          |
+#+begin_src emacs-lisp :exports none
+  (defun kostafey-lua-mode-hook ()
+      (define-key lua-mode-map (kbd "C-c C-c") 'lua-send-current-line)
+      (define-key lua-mode-map (kbd "M-e") 'lua-send-region))
+  (add-hook 'lua-mode-hook 'kostafey-lua-mode-hook)
+#+end_src
 *** Scala
     | Key       | Command                | Description                              |
     |-----------+------------------------+------------------------------------------|

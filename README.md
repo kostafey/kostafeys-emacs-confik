@@ -1161,6 +1161,18 @@ Add to .emacs:
 <td class="left">C-c C-f</td>
 <td class="left">lua-search-documentation</td>
 </tr>
+
+
+<tr>
+<td class="left">C-c C-c</td>
+<td class="left">lua-send-current-line</td>
+</tr>
+
+
+<tr>
+<td class="left">M-e</td>
+<td class="left">lua-send-region</td>
+</tr>
 </tbody>
 </table>
 
