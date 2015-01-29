@@ -14,26 +14,6 @@
       (cua-set-mark))
   (funcall mover))
 
-
-
-(lua-mark-and-move (lambda () (left-char 10)) t)
-
-(left-char 10)
-
-;; (set-mark 3)
-
-;; (progn
-;;   (let ((target-pos (save-excursion
-;;                       (lua-goto-matching-block)
-;;                       (point))))
-;;     (cua-set-mark)
-;;     (goto-char target-pos)))
-
-;; (progn
-;;   (cua-set-mark)
-;;   (goto-char 30))
-
-
 (defun lua-goto-matching (direction &optional mark)
   (let* ((next-str (string (following-char)))
          (prev-str (string (preceding-char)))
@@ -53,12 +33,14 @@
                       ((equal direction :backward)
                        (if (member prev-str '(")" "}" "]"))
                            (lambda () (backward-sexp))
-                         (if (and (lua-is-keyword-here)
+                         (if (and accept-goto
+                                  (lua-is-keyword-here)
                                   (not (member next-str '(" " "	" "\n"))))
                              (lambda () (lua-goto-matching-block))
-                           (if (save-excursion
-                                 (left-char 1)
-                                 (lua-is-keyword-here))
+                           (if (and accept-goto
+                                    (save-excursion
+                                      (left-char 1)
+                                      (lua-is-keyword-here)))
                                (lambda ()
                                  (if (and mark (not mark-active))
                                      (cua-set-mark))
