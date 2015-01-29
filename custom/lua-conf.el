@@ -18,35 +18,44 @@
   (let* ((next-str (string (following-char)))
          (prev-str (string (preceding-char)))
          (possible-goto-point (save-excursion
-                                (lua-goto-matching-block)
-                                (point)))
-         (accept-goto (or (and (equal direction :forward)
-                               (> possible-goto-point (point)))
-                          (and (equal direction :backward)
-                               (< possible-goto-point (point)))))
+                                (if (lua-is-keyword-here)
+                                    (progn
+                                      (lua-goto-matching-block)
+                                      (point))
+                                  nil)))
+         (possible-goto-point-mov (save-excursion
+                                    (if (equal direction :forward)
+                                        (right-char 1)
+                                      (left-char 1))
+                                    (if (lua-is-keyword-here)
+                                        (progn (lua-goto-matching-block)
+                                               (point))
+                                      nil)))
+         (accept-goto (and possible-goto-point
+                           (or (and (equal direction :forward)
+                                    (> possible-goto-point (point)))
+                               (and (equal direction :backward)
+                                    (< possible-goto-point (point))))))
+         (accept-goto-mov (and possible-goto-point-mov
+                               (or (and (equal direction :forward)
+                                        (> possible-goto-point-mov (point)))
+                                   (and (equal direction :backward)
+                                        (< possible-goto-point-mov (point))))))
          (mover (cond ((equal direction :forward)
-                       (if (member next-str '("(" "{" "["))
-                           (lambda () (lua-forward-sexp))
-                         (if (and accept-goto (lua-is-keyword-here))
-                             (lambda () (lua-goto-matching-block))
-                           (lambda () (lua-forward-sexp)))))
+                       (cond ((member next-str '("(" "{" "["))
+                              (lambda () (lua-forward-sexp)))
+                             (accept-goto
+                              (lambda () (goto-char possible-goto-point)))
+                             (accept-goto-mov
+                              (lambda () (goto-char possible-goto-point-mov)))))
                       ((equal direction :backward)
-                       (if (member prev-str '(")" "}" "]"))
-                           (lambda () (backward-sexp))
-                         (if (and accept-goto
-                                  (lua-is-keyword-here)
-                                  (not (member next-str '(" " "	" "\n"))))
-                             (lambda () (lua-goto-matching-block))
-                           (if (and accept-goto
-                                    (save-excursion
-                                      (left-char 1)
-                                      (lua-is-keyword-here)))
-                               (lambda ()
-                                 (if (and mark (not mark-active))
-                                     (cua-set-mark))
-                                 (left-char 1)
-                                 (lua-goto-matching-block))
-                             (lambda () (backward-sexp)))))))))
+                       (cond ((member next-str '(")" "}" "]"))
+                              (lambda () (backward-sexp)))
+                             ((and accept-goto
+                                   (not (member next-str '(" " "	" "\n"))))
+                              (lambda () (goto-char possible-goto-point)))
+                             (accept-goto-mov
+                              (lambda () (goto-char possible-goto-point-mov))))))))
     (lua-mark-and-move mover mark)))
 
 (defun lua-goto-forward ()
