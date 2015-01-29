@@ -79,6 +79,7 @@
 (require 'aj-compilation)
 (require 'sphinx-frontend)
 (require 'mql-mode)
+(require 'lua-conf)
 ;; (require 'python-conf)
 
 ;; (require 'misc-swarm)
