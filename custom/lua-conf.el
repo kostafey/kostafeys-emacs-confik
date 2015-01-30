@@ -18,24 +18,32 @@
   (let* ((next-str (string (following-char)))
          (prev-str (string (preceding-char)))
          (possible-goto-point (save-excursion
-                                (if (lua-is-keyword-here)
-                                    (progn
-                                      (lua-goto-matching-block)
-                                      (point))
-                                  nil)))
-         (possible-goto-point-mov (save-excursion
-                                    (if (equal direction :forward)
-                                        (right-char 1)
-                                      (left-char 1))
+                                (condition-case nil
                                     (if (lua-is-keyword-here)
-                                        (progn (lua-goto-matching-block)
-                                               (point))
-                                      nil)))
+                                        (progn
+                                          (lua-goto-matching-block)
+                                          (point))
+                                      nil)
+                                  (error nil))))
+         ;; (_ (message "1"))
+         (possible-goto-point-mov (save-excursion
+                                    (condition-case nil
+                                        (progn
+                                          (if (equal direction :forward)
+                                              (right-char 1)
+                                            (left-char 1))
+                                          (if (lua-is-keyword-here)
+                                              (progn (lua-goto-matching-block)
+                                                     (point))
+                                            nil))
+                                      (error nil))))
+         ;; (_ (message "2"))
          (accept-goto (and possible-goto-point
                            (or (and (equal direction :forward)
                                     (> possible-goto-point (point)))
                                (and (equal direction :backward)
                                     (< possible-goto-point (point))))))
+         ;; (_ (message (format "accept-goto: %d" 12)))
          (accept-goto-mov (and possible-goto-point-mov
                                (or (and (equal direction :forward)
                                         (> possible-goto-point-mov (point)))
@@ -56,7 +64,7 @@
                               (lambda () (goto-char possible-goto-point)))
                              (accept-goto-mov
                               (lambda () (goto-char possible-goto-point-mov))))))))
-    (lua-mark-and-move mover mark)))
+    (if mover (lua-mark-and-move mover mark))))
 
 (defun lua-goto-forward ()
   (interactive)
