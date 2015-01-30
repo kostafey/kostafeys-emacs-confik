@@ -25,25 +25,28 @@
                                           (point))
                                       nil)
                                   (error nil))))
-         ;; (_ (message "1"))
          (possible-goto-point-mov (save-excursion
-                                    (condition-case nil
-                                        (progn
-                                          (if (equal direction :forward)
+                                    (if (lua-is-keyword-here)
+                                        (or (save-excursion
                                               (right-char 1)
-                                            (left-char 1))
-                                          (if (lua-is-keyword-here)
-                                              (progn (lua-goto-matching-block)
-                                                     (point))
-                                            nil))
-                                      (error nil))))
-         ;; (_ (message "2"))
+                                              (condition-case nil
+                                                  (progn
+                                                    (lua-goto-matching-block)
+                                                    (point))
+                                                (error nil)))
+                                            (save-excursion
+                                              (left-char 1)
+                                              (condition-case nil
+                                                  (progn
+                                                    (lua-goto-matching-block)
+                                                    (point))
+                                                (error nil))))
+                                      nil)))
          (accept-goto (and possible-goto-point
                            (or (and (equal direction :forward)
                                     (> possible-goto-point (point)))
                                (and (equal direction :backward)
                                     (< possible-goto-point (point))))))
-         ;; (_ (message (format "accept-goto: %d" 12)))
          (accept-goto-mov (and possible-goto-point-mov
                                (or (and (equal direction :forward)
                                         (> possible-goto-point-mov (point)))
