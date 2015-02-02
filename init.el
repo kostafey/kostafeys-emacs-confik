@@ -80,6 +80,7 @@
 (require 'sphinx-frontend)
 (require 'mql-mode)
 (require 'lua-conf)
+(require 'xml-conf)
 ;; (require 'python-conf)
 
 ;; (require 'misc-swarm)
