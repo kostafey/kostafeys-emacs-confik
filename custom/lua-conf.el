@@ -60,10 +60,10 @@
                              (accept-goto-mov
                               (lambda () (goto-char possible-goto-point-mov)))))
                       ((equal direction :backward)
-                       (cond ((member next-str '(")" "}" "]"))
+                       (cond ((member prev-str '(")" "}" "]"))
                               (lambda () (backward-sexp)))
                              ((and accept-goto
-                                   (not (member next-str '(" " "	" "\n"))))
+                                   (not (member prev-str '(" " "	" "\n"))))
                               (lambda () (goto-char possible-goto-point)))
                              (accept-goto-mov
                               (lambda () (goto-char possible-goto-point-mov))))))))
