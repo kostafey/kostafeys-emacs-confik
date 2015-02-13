@@ -59,7 +59,7 @@
                               (lambda () (goto-char possible-goto-point)))
                              (accept-goto-mov
                               (lambda () (goto-char possible-goto-point-mov)))
-                             (t (forward-sexp))))
+                             (t (lambda () (forward-sexp)))))
                       ((equal direction :backward)
                        (cond ((member prev-str '(")" "}" "]"))
                               (lambda () (backward-sexp)))
@@ -68,7 +68,7 @@
                               (lambda () (goto-char possible-goto-point)))
                              (accept-goto-mov
                               (lambda () (goto-char possible-goto-point-mov)))
-                             (t (backward-sexp)))))))
+                             (t (lambda () (backward-sexp))))))))
     (if mover (lua-mark-and-move mover mark))))
 
 (defun lua-goto-forward ()
