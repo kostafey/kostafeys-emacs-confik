@@ -95,7 +95,7 @@
         'tabbar
         'rainbow-mode
         'highlight-symbol
-        'minimap
+        ;; 'minimap
         ;; 'powerline
         'popup-switcher
         'sr-speedbar
@@ -145,7 +145,8 @@ and `buffer-navigation'.")
 
 (defvar misc-packages
   (list 'noflet
-        'jabber)
+        'jabber
+        'ag)
   "Packages, not requred by configuration files.")
 
 (install-required-packages (append

@@ -470,7 +470,7 @@ Add to .emacs:
 <tbody>
 <tr>
 <td class="left">C-M-f</td>
-<td class="left">ack</td>
+<td class="left">ag</td>
 </tr>
 
 

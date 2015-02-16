@@ -149,7 +149,8 @@
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
 
-(global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+;; (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+(global-set-key (kbd "C-M-f") 'ag)
 (global-set-key (kbd "C-c C-f") 'ack-file)
 
 (when (require 'highlight-symbol nil 'noerror)

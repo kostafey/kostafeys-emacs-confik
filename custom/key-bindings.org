@@ -231,7 +231,7 @@ Add to .emacs:
     |------------+-----------------------------|
     | M-r        | replace-string              |
     |------------+-----------------------------|
-    | C-M-f      | ack                         |
+    | C-M-f      | ag                          |
     | C-c C-f    | ack-file                    |
     |------------+-----------------------------|
     | control F3 | highlight-symbol-at-point   |
@@ -255,7 +255,8 @@ Add to .emacs:
   (global-unset-key (kbd "M-r"))
   (global-set-key (kbd "M-r") 'replace-string)
 
-  (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+  ;; (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
+  (global-set-key (kbd "C-M-f") 'ag)
   (global-set-key (kbd "C-c C-f") 'ack-file)
 
   (when (require 'highlight-symbol nil 'noerror)

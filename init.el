@@ -76,7 +76,7 @@
 (require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
-(require 'aj-compilation)
+;; (require 'aj-compilation)
 (require 'sphinx-frontend)
 (require 'mql-mode)
 (require 'lua-conf)
