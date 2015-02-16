@@ -261,7 +261,7 @@
 ;; ----------------------------------------------------------------------
 ;; The Silver Searcher - ag
 (when (require 'ag nil 'noerror)
-  (setq ag-reuse-window 't)
+  (setq ag-reuse-window 'nil)
   (setq ag-reuse-buffers 't))
 
 (provide 'navigation-and-simplify-keys)
