@@ -87,6 +87,15 @@
   (interactive)
   (lua-goto-matching :backward :mark))
 
+(defun lua-eval-last-expr ()
+  (interactive)
+  (save-excursion
+    (let ((start (point))
+          (end (progn
+                 (lua-goto-backward)
+                 (point))))
+      (lua-send-region start end))))
+
 (put 'lua-goto-forward-select 'CUA 'move)
 (put 'lua-goto-backward-select 'CUA 'move)
 
