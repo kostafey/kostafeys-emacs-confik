@@ -19,6 +19,19 @@
 ;; Java class and method names.
 (add-hook 'cider-mode-hook 'subword-mode)
 
+(defun my-cider-in-ns ()
+  "Switch current namespace to current buffer namespace."
+  (interactive)
+  (nrepl-send-string-sync
+   (concat "(in-ns '" (cider-current-ns) ")")
+   nil (nrepl-current-session)))
+
+(defun my-cider-eval-buffer (&optional buffer)
+  "Load (eval) BUFFER's file in nREPL and switch current namespace."
+  (interactive)
+  (cider-eval-buffer buffer)
+  (my-cider-in-ns))
+
 ;;----------------------------------------------------------------------
 ;; autocompletition - ac-nrepl
 ;;

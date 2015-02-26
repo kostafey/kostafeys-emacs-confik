@@ -531,7 +531,7 @@
 (defun kostafey-clojure-mode-hook ()
   (define-key clojure-mode-map (kbd "C-c C-p") 'cider-pprint-eval-last-sexp)
   (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
-  (define-key clojure-mode-map (kbd "C-n e b") 'cider-eval-buffer)
+  (define-key clojure-mode-map (kbd "C-n e b") 'my-cider-eval-buffer)
   (define-key clojure-mode-map (kbd "C-x C-e") 'cider-eval-last-sexp)
   (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
