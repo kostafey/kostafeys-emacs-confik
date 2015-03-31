@@ -46,6 +46,8 @@
 (require 'ide)
 ;; (add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
 ;; (require 'popup-switcher)
+(add-to-list 'load-path (concat site-lisp-path "popup-el/"))
+(require 'popup)
 
 (add-to-list 'load-path
              (concat site-lisp-path

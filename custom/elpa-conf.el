@@ -80,7 +80,7 @@
   "Required packages for scala coding.")
 
 (defvar ac-required-packages
-  (list 'popup
+  (list ;'popup
         'auto-complete
         'ac-etags
         'yasnippet
