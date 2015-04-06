@@ -563,6 +563,21 @@
 (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 
 ;;----------------------------------------------------------------------
+;; Tcl
+;;
+(defun kostafey-tcl-mode-hook ()
+  (define-key tcl-mode-map (kbd "M-e") 'tcl-eval-region)
+  (define-key tcl-mode-map (kbd "C-c C-c")
+    '(lambda() (interactive)
+       (save-excursion
+         (let ((beg (point))
+               (end (progn
+                      (beginning-of-line)
+                      (point))))
+           (tcl-eval-region end beg))))))
+(add-hook 'tcl-mode-hook 'kostafey-tcl-mode-hook)
+
+;;----------------------------------------------------------------------
 ;; SQL
 ;;
 (when (require 'ejc-sql nil 'noerror)

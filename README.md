@@ -40,6 +40,7 @@
 <li><a href="#sec-2-6-4">2.6.4. Clojure</a></li>
 <li><a href="#sec-2-6-5">2.6.5. Lua</a></li>
 <li><a href="#sec-2-6-6">2.6.6. Scala</a></li>
+<li><a href="#sec-2-6-7">2.6.7. Tcl</a></li>
 </ul>
 </li>
 <li><a href="#sec-2-7">2.7. Menu</a>
@@ -1235,6 +1236,63 @@ Add to .emacs:
 <tr>
 <td class="left">C-x C-e</td>
 <td class="left">eval-last-scala-expr</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+### Tcl<a id="sec-2-6-7" name="sec-2-6-7"></a>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">C-c C-t</td>
+<td class="left">inferior-tcl</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-f</td>
+<td class="left">tcl-load-file</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-v</td>
+<td class="left">tcl-eval-defun</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">C-c C-x</td>
+<td class="left">tcl-eval-region</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="left">M-e</td>
+<td class="left">tcl-eval-region</td>
 <td class="left">&#xa0;</td>
 </tr>
 </tbody>

@@ -819,6 +819,31 @@ Add to .emacs:
   (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 #+end_src
 
+*** Tcl
+    | Key     | Command         | Description |
+    |---------+-----------------+-------------|
+    | C-c C-t | inferior-tcl    |             |
+    | C-c C-f | tcl-load-file   |             |
+    | C-c C-v | tcl-eval-defun  |             |
+    | C-c C-x | tcl-eval-region |             |
+    | M-e     | tcl-eval-region |             |
+#+begin_src emacs-lisp :exports none
+  ;;----------------------------------------------------------------------
+  ;; Tcl
+  ;;
+  (defun kostafey-tcl-mode-hook ()
+    (define-key tcl-mode-map (kbd "M-e") 'tcl-eval-region)
+    (define-key tcl-mode-map (kbd "C-c C-c")
+      '(lambda() (interactive)
+         (save-excursion
+           (let ((beg (point))
+                 (end (progn
+                        (beginning-of-line)
+                        (point))))
+             (tcl-eval-region end beg))))))
+  (add-hook 'tcl-mode-hook 'kostafey-tcl-mode-hook)
+#+end_src
+
 #+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; SQL
