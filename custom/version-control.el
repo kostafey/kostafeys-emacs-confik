@@ -1,5 +1,8 @@
 (require 'magit)
 
+(setq magit-auto-revert-mode nil)
+(setq magit-last-seen-setup-instructions "1.4.0")
+
 (custom-set-variables
  '(magit-save-some-buffers (quote dontask)))
 
