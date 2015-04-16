@@ -14,12 +14,12 @@
 (add-to-list 'load-path (concat site-lisp-path "cedet/contrib/"))
 
 ;; включает глобальную поддержку Semanticdb;
-(add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
 
 ;; включает режим автоматического запоминания информации о редактируемых тагах,
 ;; так что вы можете перейти к ним позднее с помощью команды
 ;; semantic-mrub-switch-tags; 
-(add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
 
 ;; активирует контекстное меню привязанное к правой клавише мыши;
 ;; (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
@@ -36,10 +36,10 @@
 
 ;; включает подсветку вхождений локальных переменных чье имя совпадает с именем
 ;; текущего тага;
-(add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-local-symbol-highlight-mode)
 
 ;; Activate semantic
-(semantic-mode 1)
+;; (semantic-mode 1)
 
 (require 'eassist)
 
