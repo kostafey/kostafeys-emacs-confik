@@ -65,6 +65,15 @@
   (concat "\\s-*\\(\\w\\|\\+\\|-\\)+://\\(\\w\\|\\-\\)+\\(\\.\\w+\\)?"
           "\\(\\/\\(%[0-9a-fA-F]\\{2\\}\\|[~\\.A-Za-z_+-]*\\)*\\)*"))
 
+(defun hop-nrepl-current-session ()
+  "Return the current nrepl session or nil."
+  (let* ((buff (or nrepl-connection-buffer
+                   (car (nrepl-connection-buffers))))
+         (sess (if buff
+                   (with-current-buffer buff
+                     nrepl-session))))
+    sess))
+
 (defun hop-at-point (point)
   "Jump to the entity definition."
   (interactive "d")
@@ -88,8 +97,9 @@
                    ((or (functionp symb) (fboundp symb)) (find-function symb))
                    (t (find-variable symb))))))
              ;; clojure-mode
-             ((and (equal 'clojure-mode mode) (require 'cider nil 'noerror))
-              (cider-jump-to-var t))
+             ((and (equal 'clojure-mode mode)
+                   (require 'cider nil 'noerror)
+                   (hop-nrepl-current-session)) (cider-jump-to-var t))
              ;; other modes
              (t
               (if (semantic-active-p)
