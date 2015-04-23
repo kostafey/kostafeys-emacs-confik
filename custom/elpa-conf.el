@@ -132,6 +132,7 @@ and `buffer-navigation'.")
         'web-mode
         'diff-hl
         'paredit
+        'paredit-everywhere
         'lua-mode
         'erlang)
   "Packages, requred by misc programming modes.")
