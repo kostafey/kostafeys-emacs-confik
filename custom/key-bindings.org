@@ -737,6 +737,17 @@ Add to .emacs:
   ;;
   ;;=============================================================================
 #+end_src
+
+*** Common prog mode keys
+    | Key        | Command      | Description                           |
+    |------------+--------------+---------------------------------------|
+    | M-S-<left> | hop-backward | Hop backward if M-<left> is uncertain |
+    | M-S-<left> | hop-forward  | Hop forward if M-<right> is uncertain |
+#+begin_src emacs-lisp :exports none
+  (global-set-key (kbd "M-S-<left>") 'hop-backward)
+  (global-set-key (kbd "M-S-<left>") 'hop-backward)
+#+end_src
+
 *** Java
 #+begin_src emacs-lisp :exports none
   ;;=============================================================================
@@ -780,6 +791,7 @@ Add to .emacs:
   (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
   (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 #+end_src
+
 *** Lua
     | Key     | Command                  |
     |---------+--------------------------|
@@ -798,6 +810,7 @@ Add to .emacs:
     (define-key lua-mode-map (kbd "C-M-S-<left>") 'lua-goto-backward-select))
   (add-hook 'lua-mode-hook 'kostafey-lua-mode-hook)
 #+end_src
+
 *** Scala
     | Key       | Command                | Description                              |
     |-----------+------------------------+------------------------------------------|
@@ -812,10 +825,10 @@ Add to .emacs:
   ;; ENSIME
   ;;
   (defun kostafey-ensime-mode-hook ()
-      (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
-      (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
-      (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
-      (define-key ensime-mode-map (kbd "C-x C-e") 'eval-last-scala-expr))
+    (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
+    (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
+    (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
+    (define-key ensime-mode-map (kbd "C-x C-e") 'eval-last-scala-expr))
   (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 #+end_src
 

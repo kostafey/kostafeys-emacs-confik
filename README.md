@@ -35,12 +35,13 @@
 <li><a href="#sec-2-6">2.6. IDE</a>
 <ul>
 <li><a href="#sec-2-6-1">2.6.1. Speedbar</a></li>
-<li><a href="#sec-2-6-2">2.6.2. Java</a></li>
-<li><a href="#sec-2-6-3">2.6.3. Lisp</a></li>
-<li><a href="#sec-2-6-4">2.6.4. Clojure</a></li>
-<li><a href="#sec-2-6-5">2.6.5. Lua</a></li>
-<li><a href="#sec-2-6-6">2.6.6. Scala</a></li>
-<li><a href="#sec-2-6-7">2.6.7. Tcl</a></li>
+<li><a href="#sec-2-6-2">2.6.2. Common prog mode keys</a></li>
+<li><a href="#sec-2-6-3">2.6.3. Java</a></li>
+<li><a href="#sec-2-6-4">2.6.4. Lisp</a></li>
+<li><a href="#sec-2-6-5">2.6.5. Clojure</a></li>
+<li><a href="#sec-2-6-6">2.6.6. Lua</a></li>
+<li><a href="#sec-2-6-7">2.6.7. Scala</a></li>
+<li><a href="#sec-2-6-8">2.6.8. Tcl</a></li>
 </ul>
 </li>
 <li><a href="#sec-2-7">2.7. Menu</a>
@@ -1128,13 +1129,49 @@ Add to .emacs:
 
 ### Speedbar<a id="sec-2-6-1" name="sec-2-6-1"></a>
 
-### Java<a id="sec-2-6-2" name="sec-2-6-2"></a>
+### Common prog mode keys<a id="sec-2-6-2" name="sec-2-6-2"></a>
 
-### Lisp<a id="sec-2-6-3" name="sec-2-6-3"></a>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
-### Clojure<a id="sec-2-6-4" name="sec-2-6-4"></a>
 
-### Lua<a id="sec-2-6-5" name="sec-2-6-5"></a>
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Key</th>
+<th scope="col" class="left">Command</th>
+<th scope="col" class="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="left">M-S-<left></td>
+<td class="left">hop-backward</td>
+<td class="left">Hop backward if M-<left> is uncertain</td>
+</tr>
+
+
+<tr>
+<td class="left">M-S-<left></td>
+<td class="left">hop-forward</td>
+<td class="left">Hop forward if M-<right> is uncertain</td>
+</tr>
+</tbody>
+</table>
+
+### Java<a id="sec-2-6-3" name="sec-2-6-3"></a>
+
+### Lisp<a id="sec-2-6-4" name="sec-2-6-4"></a>
+
+### Clojure<a id="sec-2-6-5" name="sec-2-6-5"></a>
+
+### Lua<a id="sec-2-6-6" name="sec-2-6-6"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1177,7 +1214,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Scala<a id="sec-2-6-6" name="sec-2-6-6"></a>
+### Scala<a id="sec-2-6-7" name="sec-2-6-7"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1241,7 +1278,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-### Tcl<a id="sec-2-6-7" name="sec-2-6-7"></a>
+### Tcl<a id="sec-2-6-8" name="sec-2-6-8"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 

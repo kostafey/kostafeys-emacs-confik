@@ -505,6 +505,9 @@
 ;;
 ;;=============================================================================
 
+(global-set-key (kbd "M-S-<left>") 'hop-backward)
+(global-set-key (kbd "M-S-<left>") 'hop-backward)
+
 ;;=============================================================================
 ;; Mode keys & programming language specific keys.
 ;;
@@ -556,10 +559,10 @@
 ;; ENSIME
 ;;
 (defun kostafey-ensime-mode-hook ()
-    (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
-    (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
-    (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
-    (define-key ensime-mode-map (kbd "C-x C-e") 'eval-last-scala-expr))
+  (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
+  (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
+  (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
+  (define-key ensime-mode-map (kbd "C-x C-e") 'eval-last-scala-expr))
 (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 
 ;;----------------------------------------------------------------------
