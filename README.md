@@ -1158,7 +1158,7 @@ Add to .emacs:
 
 
 <tr>
-<td class="left">M-S-<left></td>
+<td class="left">M-S-<right></td>
 <td class="left">hop-forward</td>
 <td class="left">Hop forward if M-<right> is uncertain</td>
 </tr>

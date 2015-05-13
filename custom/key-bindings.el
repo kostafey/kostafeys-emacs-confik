@@ -506,7 +506,7 @@
 ;;=============================================================================
 
 (global-set-key (kbd "M-S-<left>") 'hop-backward)
-(global-set-key (kbd "M-S-<left>") 'hop-backward)
+(global-set-key (kbd "M-S-<right>") 'hop-forward)
 
 ;;=============================================================================
 ;; Mode keys & programming language specific keys.

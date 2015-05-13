@@ -739,13 +739,13 @@ Add to .emacs:
 #+end_src
 
 *** Common prog mode keys
-    | Key        | Command      | Description                           |
-    |------------+--------------+---------------------------------------|
-    | M-S-<left> | hop-backward | Hop backward if M-<left> is uncertain |
-    | M-S-<left> | hop-forward  | Hop forward if M-<right> is uncertain |
+    | Key         | Command      | Description                           |
+    |-------------+--------------+---------------------------------------|
+    | M-S-<left>  | hop-backward | Hop backward if M-<left> is uncertain |
+    | M-S-<right> | hop-forward  | Hop forward if M-<right> is uncertain |
 #+begin_src emacs-lisp :exports none
   (global-set-key (kbd "M-S-<left>") 'hop-backward)
-  (global-set-key (kbd "M-S-<left>") 'hop-backward)
+  (global-set-key (kbd "M-S-<right>") 'hop-forward)
 #+end_src
 
 *** Java
