@@ -100,6 +100,8 @@
              ((and (equal 'clojure-mode mode)
                    (require 'cider nil 'noerror)
                    (hop-nrepl-current-session)) (cider-jump-to-var t))
+             ;; go-mode
+             ((equal 'go-mode mode) (godef-jump point))
              ;; other modes
              (t
               (if (semantic-active-p)

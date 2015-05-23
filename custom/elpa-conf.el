@@ -76,7 +76,8 @@
   "Required packages for clojure coding.")
 
 (defvar go-packages '(go-mode
-                      )
+                      go-autocomplete
+                      go-eldoc)
   "Required packages for go (golang) coding.")
 
 (defvar scala-packages '(ensime
@@ -132,6 +133,7 @@ and `buffer-navigation'.")
         'quack
         'ecb
         'projectile
+        'flycheck
         'javadoc-lookup
         'web-mode
         'diff-hl

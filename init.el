@@ -83,6 +83,7 @@
 (require 'mql-mode)
 (require 'lua-conf)
 (require 'xml-conf)
+(require 'go-conf)
 ;; (require 'python-conf)
 
 ;; (require 'misc-swarm)
