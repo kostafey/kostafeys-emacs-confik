@@ -75,6 +75,10 @@
                            typed-clojure-mode)
   "Required packages for clojure coding.")
 
+(defvar go-packages '(go-mode
+                      )
+  "Required packages for go (golang) coding.")
+
 (defvar scala-packages '(ensime
                          sbt-mode)
   "Required packages for scala coding.")
@@ -155,6 +159,7 @@ and `buffer-navigation'.")
                             text-modes-required-packages
                             clojure-packages
                             scala-packages
+                            go-packages
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
