@@ -33,4 +33,10 @@
 (require 'go-flymake nil 'noerror)
 (require 'go-flycheck nil 'noerror)
 
+(defun my-go-mode-hook ()
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go generate && go build -ldflags \"-s\" -v && go test -v && go vet")))
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
 (provide 'go-conf)
