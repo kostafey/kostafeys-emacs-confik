@@ -833,6 +833,7 @@ Add to .emacs:
 #+end_src
 
 *** Tcl
+
     | Key     | Command         | Description |
     |---------+-----------------+-------------|
     | C-c C-t | inferior-tcl    |             |
@@ -855,6 +856,14 @@ Add to .emacs:
                         (point))))
              (tcl-eval-region end beg))))))
   (add-hook 'tcl-mode-hook 'kostafey-tcl-mode-hook)
+#+end_src
+
+*** Golang
+#+begin_src emacs-lisp :exports none
+  (require 'go-conf)
+  (define-key go-mode-map (kbd "C-c C-c")
+    (lambda () (interactive)
+      (compile go-compile-command)))
 #+end_src
 
 #+begin_src emacs-lisp :exports none

@@ -191,8 +191,8 @@
   (define-key nxml-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
 (add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 ;;-----------------------------------------------------------------------------
-;; elisp goto definition
-(define-key emacs-lisp-mode-map (kbd "C-M-d") 'hop-at-point)
+;; goto definition
+(global-set-key (kbd "C-M-d") 'hop-at-point)
 ;;
 ;;=============================================================================
 
@@ -579,6 +579,11 @@
                       (point))))
            (tcl-eval-region end beg))))))
 (add-hook 'tcl-mode-hook 'kostafey-tcl-mode-hook)
+
+(require 'go-conf)
+(define-key go-mode-map (kbd "C-c C-c")
+  (lambda () (interactive)
+    (compile go-compile-command)))
 
 ;;----------------------------------------------------------------------
 ;; SQL

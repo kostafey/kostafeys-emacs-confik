@@ -42,6 +42,7 @@
 <li><a href="#sec-2-6-6">2.6.6. Lua</a></li>
 <li><a href="#sec-2-6-7">2.6.7. Scala</a></li>
 <li><a href="#sec-2-6-8">2.6.8. Tcl</a></li>
+<li><a href="#sec-2-6-9">2.6.9. Golang</a></li>
 </ul>
 </li>
 <li><a href="#sec-2-7">2.7. Menu</a>
@@ -1334,6 +1335,8 @@ Add to .emacs:
 </tr>
 </tbody>
 </table>
+
+### Golang<a id="sec-2-6-9" name="sec-2-6-9"></a>
 
 ## Menu<a id="sec-2-7" name="sec-2-7"></a>
 
