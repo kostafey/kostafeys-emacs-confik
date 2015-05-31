@@ -42,4 +42,13 @@
            go-compile-command)))
 (add-hook 'go-mode-hook 'my-go-mode-hook)
 
+(defun go-compile ()
+  (interactive)
+  (compile go-compile-command))
+
+(defun go-run ()
+  (interactive)
+  (compile
+   (format "go run \"%s\""(buffer-file-name))))
+
 (provide 'go-conf)

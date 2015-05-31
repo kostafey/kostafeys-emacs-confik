@@ -581,9 +581,9 @@
 (add-hook 'tcl-mode-hook 'kostafey-tcl-mode-hook)
 
 (require 'go-conf)
-(define-key go-mode-map (kbd "C-c C-c")
-  (lambda () (interactive)
-    (compile go-compile-command)))
+(define-key go-mode-map (kbd "C-c C-c") 'go-compile)
+(define-key go-mode-map (kbd "C-c C-e") 'go-run)
+(define-key go-mode-map (kbd "C-x C-e") 'go-run)
 
 ;;----------------------------------------------------------------------
 ;; SQL
