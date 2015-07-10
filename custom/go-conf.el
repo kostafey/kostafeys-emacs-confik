@@ -24,7 +24,7 @@
 ;; export GOPATH=/opt/go
 ;; PATH=$PATH:$GOROOT/bin:$GOPATH/bin/
 
-
+(require 'go-mode)
 (require 'go-autocomplete)
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 
