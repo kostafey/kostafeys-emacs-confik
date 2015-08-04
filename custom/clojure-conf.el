@@ -69,5 +69,7 @@
 ;;
 (add-hook 'clojure-mode-hook 'typed-clojure-mode)
 
+(setq cider-known-endpoints
+      '(("host-a" "xvm211" "43102")))
 
 (provide 'clojure-conf)

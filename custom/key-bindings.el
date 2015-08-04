@@ -482,9 +482,9 @@
     (define-key paredit-mode-map (kbd "]") 'nil)
     (define-key paredit-mode-map (kbd "\\") 'nil)
     (define-key paredit-mode-map (kbd "\"") 'nil)
-    ;;(define-key paredit-mode-map (kbd "M-q") 'nil)
     (define-key paredit-mode-map (kbd "C-M-d") 'nil)
     (define-key paredit-mode-map (kbd "M-q") 'nil)
+    (define-key paredit-mode-map (kbd "M-r") 'nil)
     ))
 
 (global-set-key [(meta super right)] 'transpose-sexps)
