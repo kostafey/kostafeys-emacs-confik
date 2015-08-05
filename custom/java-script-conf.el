@@ -1,26 +1,22 @@
 ;;-----------------------------------------------------------------------------
 ;; JavaScript IDE
-;; (autoload 'js2-mode "js2" nil t)
-;; (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-;; ;; in Emacs, M-x byte-compile-file RE js2.el RET
-;; ;; (byte-compile-file ".emacs.d/js2.el")
-
-;; (require 'js-comint)
-;; ;; Use node as our repl
-;; ;; (setq inferior-js-program-command "C:/Progra~1/nodejs/node")
-;; (setq inferior-js-program-command "nodejs")
-
-;; (setq inferior-js-mode-hook
-;;       (lambda ()
-;;         ;; We like nice colors
-;;         (ansi-color-for-comint-mode-on)
-;;         ;; Deal with some prompt nonsense
-;;         (add-to-list 'comint-preoutput-filter-functions
-;;                      (lambda (output)
-;;                        (replace-regexp-in-string
-;;                         ".*1G\.\.\..*5G" "..."
-;;                         (replace-regexp-in-string ".*1G.*3G" "&gt;" output))))))
-
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
+
+;;------------------------------------------------------------
+;; skewer-mode
+;;
+(add-hook 'js-mode-hook 'skewer-mode)
+(add-hook 'js2-mode-hook 'skewer-mode)
+(add-hook 'css-mode-hook 'skewer-css-mode)
+(add-hook 'html-mode-hook 'skewer-html-mode)
+
+(defun skewer-eval-region (start end)
+  "Evaluate the region as JavaScript code."
+  (interactive "r")
+  (skewer-eval (buffer-substring-no-properties start end)
+               #'skewer-post-minibuffer))
+;;
+;;------------------------------------------------------------
 
 (provide 'java-script-conf)
