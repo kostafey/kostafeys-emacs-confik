@@ -230,6 +230,7 @@
 (require 'paredit)
 
 (add-to-list 'auto-mode-alist '("\\.iss$" . conf-mode))
+(add-to-list 'auto-mode-alist '("\\.cnf$" . conf-mode))
 
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-coding-hook)
 (add-hook 'scheme-mode-hook     'my-lisp-coding-hook)

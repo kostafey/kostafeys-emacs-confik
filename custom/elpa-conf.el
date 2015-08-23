@@ -140,7 +140,8 @@ and `buffer-navigation'.")
         'paredit
         'paredit-everywhere
         'lua-mode
-        'erlang)
+        'erlang
+        'php-mode)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages
