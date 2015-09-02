@@ -68,7 +68,7 @@
 (defun hop-nrepl-current-session ()
   "Return the current nrepl session or nil."
   (let* ((buff (or nrepl-connection-buffer
-                   (car (nrepl-connection-buffers))))
+                   (cider-current-repl-buffer)))
          (sess (if buff
                    (with-current-buffer buff
                      nrepl-session))))
