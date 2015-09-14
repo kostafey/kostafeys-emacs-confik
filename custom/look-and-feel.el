@@ -235,6 +235,7 @@
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-coding-hook)
 (add-hook 'scheme-mode-hook     'my-lisp-coding-hook)
 (add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
+(add-hook 'cider-mode-hook      'my-lisp-coding-hook)
 (add-hook 'scala-mode-hook    'my-coding-hook)
 (add-hook 'markdown-mode-hook 'my-coding-hook)
 (add-hook 'mql-mode-hook      'my-coding-hook)
