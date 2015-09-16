@@ -383,6 +383,18 @@ Take into account cr-lf dos line endings."
           (incf offset)))))
   (goto-char char-pos))
 
+(defvar relative-char-position 0)
+
+(defun relative-char-position-set (position)
+  (interactive "d")
+  (setq relative-char-position position)
+  (message "Set relative position to: %s" position))
+
+(defun relative-char-position-get (position)
+  (interactive "d")
+  (message "Current relative position: %s"
+           (- position relative-char-position)))
+
 (defun slice-text-inner (chars border)
   (let* ((chars (if chars chars 1))
          (chars (if (stringp chars) (string-to-number chars) chars))
