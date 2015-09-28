@@ -126,7 +126,7 @@ and `buffer-navigation'.")
 (defvar vc-packages
   (list 'magit
         'ahg
-        )
+        'diffview)
   "Required packages for `version-control'.")
 
 (defvar prog-modes-packages
