@@ -75,7 +75,8 @@ Basic, Font Lock, Isearch, Jabber, rst faces are included.")
        (alum-4   "#888a85")
        (alum-5   "#5f615c")
        (alum-6   "#2e3436")
-
+       ;; "coral3" "PaleVioletRed"
+       
        ;; basic colors
        (organic-fg "#326B6B")
        (organic-bg "#F0FFF0")

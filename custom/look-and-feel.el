@@ -203,6 +203,17 @@
                           '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:"
                              0 'font-lock-warning-face t))))
 
+(defface tcl-substitution-char-face '((t :inherit default))
+  "Face used for substitution ($) char in Tcl mode."
+  :group 'tcl)
+
+(defvar tcl-substitution-char-face 'tcl-substitution-char-face
+  "Face used for substitution ($) char in Tcl mode.")
+
+(font-lock-add-keywords
+ 'tcl-mode
+ '(("\\$" . tcl-substitution-char-face)))
+
 ;; cl-lib-highlight init
 (cl-lib-highlight-initialize)
 
