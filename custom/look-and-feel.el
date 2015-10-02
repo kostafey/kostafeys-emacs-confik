@@ -250,6 +250,7 @@
 (add-to-list 'auto-mode-alist '("\\.cnf$" . conf-mode))
 
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-coding-hook)
+(add-hook 'lisp-mode-hook       'my-lisp-coding-hook)
 (add-hook 'scheme-mode-hook     'my-lisp-coding-hook)
 (add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
 (add-hook 'cider-mode-hook      'my-lisp-coding-hook)

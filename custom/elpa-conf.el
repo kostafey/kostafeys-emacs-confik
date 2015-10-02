@@ -76,6 +76,11 @@
                            typed-clojure-mode)
   "Required packages for clojure coding.")
 
+(defvar common-lisp-packages '(slime
+                               elisp-slime-nav
+                               ac-slime)
+  "Required packages for common-lisp coding.")
+
 (defvar go-packages '(go-mode
                       go-autocomplete
                       go-eldoc)
@@ -163,6 +168,7 @@ and `buffer-navigation'.")
                             text-modes-required-packages
                             clojure-packages
                             scala-packages
+                            common-lisp-packages
                             go-packages
                             ac-required-packages
                             laf-required-packages
