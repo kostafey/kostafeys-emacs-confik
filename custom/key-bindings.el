@@ -37,6 +37,21 @@
 (global-set-key (kbd "M-s") 'set-mark-command)
 ;;-----------------------------------------------------------------------------
 
+;;----------------------------------------------------------------------
+;; multiple-cursors
+;;
+(when (require 'multiple-cursors nil 'noerror)
+  ;; When you have an active region that spans multiple lines, the following will
+  ;; add a cursor to each line:
+  (global-set-key (kbd "C-S-m") 'mc/edit-lines)
+  ;; When you want to add multiple cursors not based on continuous lines, but
+  ;; based on keywords in the buffer, use:
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+;;
+;;----------------------------------------------------------------------
+
 (require 'redo)
 (global-unset-key "\C-_")
 
@@ -325,12 +340,7 @@
 ;; Buffers navigation
 ;;
 (global-set-key (kbd "C-w") 'prh:kill-current-buffer)
-(defun kostafey-magit-mode-hook ()
-  (define-key magit-mode-map (kbd "C-w") 'prh:kill-current-buffer))
-(add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
-
 (global-set-key (kbd "C-c w") 'kill-other-buffers)
-
 (global-set-key (kbd "C-x w") 'kill-buffer)
 (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
 
@@ -593,10 +603,34 @@
        (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
        (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
 ;;
+
 ;;----------------------------------------------------------------------
 ;; Magit & ahg
 ;;
 (global-unset-key (kbd "M-w"))
+(defun kostafey-magit-mode-hook ()
+  (define-key magit-mode-map (kbd "C-w") 'prh:kill-current-buffer)
+  (define-key magit-mode-map (kbd "S-M-w") 'magit-copy-buffer-revision)
+  (define-key magit-mode-map (kbd "M-w") 'diffview-current))
+(add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
+
+(eval-after-load "diffview"
+  '(progn
+     (defun kostafey-diffview-mode-hook ()
+       (define-key diffview-mode-map [next]
+         '(lambda nil (interactive)
+            (pager-page-down)
+            (other-window 1)
+            (pager-page-down)
+            (other-window 1)))
+       (define-key diffview-mode-map [prior]
+         '(lambda nil (interactive)
+            (pager-page-up)
+            (other-window 1)
+            (pager-page-up)
+            (other-window 1))))
+     (add-hook 'diffview-mode-hook 'kostafey-diffview-mode-hook)))
+
 (eval-after-load "version-control"
   '(progn
      (global-set-key (kbd "M-w") 'get-vc-status)))
@@ -604,19 +638,6 @@
 (eval-after-load "ahg"
   '(progn
      (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
-;;
-;;----------------------------------------------------------------------
-;; multiple-cursors
-;;
-(when (require 'multiple-cursors nil 'noerror)
-  ;; When you have an active region that spans multiple lines, the following will
-  ;; add a cursor to each line:
-  (global-set-key (kbd "C-S-m") 'mc/edit-lines)
-  ;; When you want to add multiple cursors not based on continuous lines, but
-  ;; based on keywords in the buffer, use:
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 ;;
 ;;=============================================================================
 
