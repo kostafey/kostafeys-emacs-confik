@@ -614,21 +614,33 @@
   (define-key magit-mode-map (kbd "M-w") 'diffview-current))
 (add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
 
-(eval-after-load "diffview"
+  (eval-after-load "diffview"
   '(progn
+     (defun do-side-by-side (action)
+       (funcall action)
+       (other-window 1)
+       (funcall action)
+       (other-window 1))
+
      (defun kostafey-diffview-mode-hook ()
        (define-key diffview-mode-map [next]
          '(lambda nil (interactive)
-            (pager-page-down)
-            (other-window 1)
-            (pager-page-down)
-            (other-window 1)))
+            (do-side-by-side '(lambda nil (pager-page-down)))))
        (define-key diffview-mode-map [prior]
          '(lambda nil (interactive)
-            (pager-page-up)
-            (other-window 1)
-            (pager-page-up)
-            (other-window 1))))
+            (do-side-by-side '(lambda nil (pager-page-up)))))
+       (define-key diffview-mode-map (kbd "C-<up>")
+         '(lambda nil (interactive)
+            (do-side-by-side '(lambda nil (scroll-down-line 1)))))
+       (define-key diffview-mode-map (kbd "C-<down>")
+         '(lambda nil (interactive)
+            (do-side-by-side '(lambda nil (scroll-up-line 1)))))
+       (define-key diffview-mode-map (kbd "<mouse-4>")
+         '(lambda nil (interactive)
+            (do-side-by-side '(lambda nil (scroll-down-line 1)))))
+       (define-key diffview-mode-map (kbd "<mouse-5>")
+         '(lambda nil (interactive)
+            (do-side-by-side '(lambda nil (scroll-up-line 1))))))
      (add-hook 'diffview-mode-hook 'kostafey-diffview-mode-hook)))
 
 (eval-after-load "version-control"
