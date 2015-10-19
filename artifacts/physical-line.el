@@ -3,7 +3,7 @@
 ;; physical-line.el            by Hiroyuki Komatsu <komatsu@taiyaki.org>
 ;;
 ;; Don't you get annoyed with Emacs cursor skipping lines?
-;; 
+;;
 ;; Physical-line-mode.el provides a minor mode to move a cursor
 ;; across "physical lines", which are actual lines displayed on your
 ;; Emacs screen. Usually Emacs takes a line as "logical" one, which
@@ -14,7 +14,7 @@
 ;; lines correctly in the following commands: previous-line,
 ;; next-line, beginning-of-line, end-of-line. It will make your
 ;; Emacs-life much more comfortable!
-;; 
+;;
 ;; Physical-line-mode.el comes with ABSOLUTELY NO WARRANTY.
 ;; This software is distributed under the GNU General Public License.
 ;;
@@ -22,11 +22,11 @@
 ;; M-x load-file [physical-line.el]
 ;; M-x physical-line-mode
 ;;
-; TODO 
-;  ÊªÍı¹ÔÉ½¼¨¤ÎÉü³è.
-; 
+; TODO
+;  ç‰©ç†è¡Œè¡¨ç¤ºã®å¾©æ´».
+;
 ; BUGS
-;  dired-mode ¤È¤ÏÁêÀ­¤¬°­¤¤.
+;  dired-mode ã¨ã¯ç›¸æ€§ãŒæ‚ªã„.
 
 ;; ============================================================
 ;; Mell (2002-05-18)
@@ -68,7 +68,7 @@
 	  (setcar alist new-cons))
 	)
       alist)))
-  
+
 (defun mell-alist-add (alist new-cons)
   (if (null alist)
       (list new-cons)
@@ -87,11 +87,11 @@
 ;(substitute-key-definition 'end-of-line 'physical-line-end-of-line
 ;			   physical-line-mode-map global-map)
 
-(defvar physical-line nil 
+(defvar physical-line nil
   "*Non-nil means move cursor to same column of frame line.
 -1 means move cursor to same column of logical line")
 
-(defvar physical-line-mode nil 
+(defvar physical-line-mode nil
   "*Non-nil means move cursor to same column of frame line buffer-locally.")
 (mell-set-minor-mode 'physical-line-mode " PL" nil)
 ;(mell-set-minor-mode 'physical-line-mode " PL" physical-line-mode-map)
@@ -164,24 +164,24 @@ from Logical to Physical."
 
 (defun physical-line-mode-without-exception ()
   "Turn on Physical Line mode without modes which are members of physical-line-move-exceptionthe."
-  (physical-line-mode 
+  (physical-line-mode
    (if (memq major-mode physical-line-mode-exception) -1 t)
    ))
 
 (defadvice line-move (around physical-line-move disable)
   "Move cursor to same column of frame line down ARG lines."
   (if (not (physical-line-active-p))
-      ;; physical-line ¤¬Í­¸ú¤Ç¤Ê¤±¤ì¤Ğ²¿¤â¤·¤Ê¤¤
+      ;; physical-line ãŒæœ‰åŠ¹ã§ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
       ad-do-it
     (or (physical-line-keep-goal-column-p)
-	 ;; temporary-goal-column ¤Ï pline-mode °ÊÁ°¤Î line-move ¤È¶¦ÍÑ
+	 ;; temporary-goal-column ã¯ pline-mode ä»¥å‰ã® line-move ã¨å…±ç”¨
 	(setq temporary-goal-column (physical-current-column)))
     (physical-line-line-move-function (ad-get-arg 0))
     ))
 
 (defun physical-line-line-move-function (arg)
   (let ((moved (physical-line-the-vertical-motion arg)))
-    (cond 
+    (cond
      ((> moved arg)
       (signal 'beginning-of-buffer nil))
      ((< moved arg)
@@ -203,7 +203,7 @@ from Logical to Physical."
     )
   (mell-transient-region-stay)
   )
-  
+
 (defadvice end-of-line (around physical-line-end-of-line disable)
   (if (or (eq last-command this-command)
 	  (null (physical-line-active-p))
@@ -218,7 +218,7 @@ from Logical to Physical."
       ))
   (mell-transient-region-stay)
   )
-  
+
 (defun physical-line-active-p ()
   (and (not (eq physical-line -1))
        (or  physical-line
@@ -281,7 +281,7 @@ from Logical to Physical."
 
 (defun physical-current-column ()
   (let ((cur (current-column))
-	(bol (progn (physical-line-the-vertical-motion 0) 
+	(bol (progn (physical-line-the-vertical-motion 0)
 		    (current-column))))
     (move-to-column cur)
     (- cur bol)))
@@ -309,24 +309,24 @@ from Logical to Physical."
     'physical-line-the-vertical-motion--for-emacs21)
   )
 
-;; Emacs21 ¤Î vertical-motion ¤Ï WIDE Ê¸»ú¤È¥¿¥Ö¤ËÌ¤ÂĞ±ş
-;; Emacs21 ¤Ç¿®Íê¤Ç¤­¤ë¤Î¤Ï¡Ö¹ÔÆ¬¤Ç¤Î vertical-motion arg (> 0)¡× ¤Î¤ß
+;; Emacs21 ã® vertical-motion ã¯ WIDE æ–‡å­—ã¨ã‚¿ãƒ–ã«æœªå¯¾å¿œ
+;; Emacs21 ã§ä¿¡é ¼ã§ãã‚‹ã®ã¯ã€Œè¡Œé ­ã§ã® vertical-motion arg (> 0)ã€ ã®ã¿
 (defun physical-line-the-vertical-motion--for-emacs21 (arg)
   (let* ((bol-list (physical-line-get-bol-list arg))
 	 (last-index (1- (length bol-list)))
 	 (i 0))
 
-    ;; (vertical-motion 0) ¤Î¾ì½ê¤ò¸«¤Ä¤±¤ë.
+    ;; (vertical-motion 0) ã®å ´æ‰€ã‚’è¦‹ã¤ã‘ã‚‹.
     (while (and (<= i last-index)
 		(>= (point) (nth i bol-list)))
       (setq i (1+ i)))
     (setq i (1- i))
 
-    ;; ¥Ğ¥Ã¥Õ¥¡Ëö¤ÎÆÃÊÌ½èÍı
+    ;; ãƒãƒƒãƒ•ã‚¡æœ«ã®ç‰¹åˆ¥å‡¦ç†
     (if (and (eobp) (not (bolp)))
 	(setq i (1- i)))
 
-    ;; arg Ê¬°ÜÆ°¤µ¤»¤ë.
+    ;; arg åˆ†ç§»å‹•ã•ã›ã‚‹.
     (if (< (+ i arg) 0)
 	(setq arg (- i)))
     (if (> (+ i arg) last-index)
@@ -365,15 +365,15 @@ from Logical to Physical."
 
 (defun physical-line-the-vertical-motion-one--for-emacs21 ()
   ;; FIXME: Adhoc solution for FSF Emacs 21.3.1.
-  ;; FIXME: (2004-06-16) <komatsu@taiyaki.org> 
-  (and 
+  ;; FIXME: (2004-06-16) <komatsu@taiyaki.org>
+  (and
    (or (string= "21.3.1" emacs-version)
        (string< "21.3.1" emacs-version))
    (or (eolp) (forward-char 1)))
   ;;
   (vertical-motion 1))
 
-; ÊªÍı¹ÔÉ½¼¨¤ÏÊÌ¤Î¥Ş¥¤¥Ê¡¼¥â¡¼¥É¤Ë¤¹¤ë.
+; ç‰©ç†è¡Œè¡¨ç¤ºã¯åˆ¥ã®ãƒã‚¤ãƒŠãƒ¼ãƒ¢ãƒ¼ãƒ‰ã«ã™ã‚‹.
 ;(defun physical-line-mode (&optional arg refresh)
 ;  "Toggle Physical Line mode.
 ;With ARG, turn Physical Line mode on iff ARG is positive.
@@ -389,7 +389,7 @@ from Logical to Physical."
 ;      (progn
 ;       (make-local-variable 'original-mode-line-format)
 ;       (setq original-mode-line-format mode-line-format)
-;       (setq physical-mode-line-format 
+;       (setq physical-mode-line-format
 ;             (physical-line-modeline mode-line-format))))
 ;  (make-local-hook 'post-command-hook)
 ;  (if physical-line-mode
@@ -402,14 +402,14 @@ from Logical to Physical."
 ;    (remove-hook 'post-command-hook 'physical-line-set-position))
 ;  (ad-activate 'line-move))
 
-;ÊªÍı¹ÔÉ½¼¨ÍÑ¤Ê¤Î¤Ç, ¸½ºßÌ¤»ÈÍÑ.
+;ç‰©ç†è¡Œè¡¨ç¤ºç”¨ãªã®ã§, ç¾åœ¨æœªä½¿ç”¨.
 ;(defun physical-line-modeline (&optional ml)
 ;  "Make modeline for display Physical Line and Column."
 ;  (make-local-variable 'physical-line)
 ;  (make-local-variable 'physical-column)
 ;  (physical-line-set-position)
 ;  (or ml (setq ml mode-line-format))
-;  (mapcar 
+;  (mapcar
 ;   (function (lambda (arg)
 ;	       (cond ((and (listp arg) (eq (car arg) 'line-number-mode))
 ;		      '(line-number-mode ("PL" physical-line "--")))
@@ -418,11 +418,11 @@ from Logical to Physical."
 ;		     (t arg))))
 ;   ml))
 
-;ÊªÍı¹ÔÉ½¼¨ÍÑ¤Ê¤Î¤Ç, ¸½ºßÌ¤»ÈÍÑ.
+;ç‰©ç†è¡Œè¡¨ç¤ºç”¨ãªã®ã§, ç¾åœ¨æœªä½¿ç”¨.
 ;(defun physical-line-set-position ()
 ;  "Set strings of Physical Column and Line for modeline."
 ;  (setq physical-column (number-to-string (physical-current-column)))
-;  (setq physical-line 
+;  (setq physical-line
 ;	(let ((pos (point))
 ;	      (line (vertical-motion -10000)))
 ;	  (goto-char pos)
@@ -433,4 +433,3 @@ from Logical to Physical."
 
 (physical-line-init)
 (provide 'physical-line)
-
