@@ -11,6 +11,6 @@
   (interactive)
   (js-mode)
   (foreign-format-json-file (buffer-file-name))
-  (revert-buffer))
+  (revert-buffer t t))
 
 (provide 'foreign)
