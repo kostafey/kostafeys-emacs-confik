@@ -6,12 +6,14 @@
 !*.el
 !*.org
 !*.md
+!*.go
 
 # ...even if they are in subdirectories
 !artifacts
 !custom
 !launcher
 !solutions
+!foreign
 
 communications.el
 ejc-sql-conf.el

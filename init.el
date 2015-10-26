@@ -31,6 +31,7 @@
 (defvar solutions-path
   (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
 (add-to-list 'load-path solutions-path)
+(add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
 ;;-----------------------------------------------------------------------------
 (require 'cedet-conf)
 ;;-----------------------------------------------------------------------------
@@ -62,6 +63,7 @@
 (require 'communications nil 'noerror)
 (require 'reencoding-file)
 
+(provide 'foreign)
 (require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 
