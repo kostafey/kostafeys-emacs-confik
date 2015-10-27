@@ -62,10 +62,16 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 (defun add-quotes (str)
   (concat "\"" str "\""))
 
+(defun escape-quotes (txt)
+  (replace-regexp-in-string "\"" "\\\\\"" txt))
+
 (defun replace-newlines (txt)
   "Replace (kbd c-q c-j) with \n"
   (replace-regexp-in-string "
 " "\\\\n" txt))
+
+(defun prepare-string-to-shell (txt)
+  (add-quotes (replace-newlines (escape-quotes txt))))
 
 (defun kostafey-export-keys ()
   "Export my Emacs keybindings configuration."
