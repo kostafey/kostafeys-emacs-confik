@@ -7,4 +7,6 @@
                slime-fancy-inspector
                slime-indentation))
 
+(add-to-list 'auto-mode-alist '("\\.stumpwmrc$" . lisp-mode))
+
 (provide 'common-lisp-conf)
