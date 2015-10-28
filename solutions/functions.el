@@ -72,6 +72,11 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 (defun prepare-string-to-shell (txt)
   (add-quotes (replace-newlines (escape-quotes txt))))
 
+(defun revert-buffer-hard (&optional buffer)
+  (let ((file-name (buffer-file-name)))
+    (kill-buffer (or buffer (current-buffer)))
+    (find-file file-name)))
+
 (defun kostafey-export-keys ()
   "Export my Emacs keybindings configuration."
   (interactive)

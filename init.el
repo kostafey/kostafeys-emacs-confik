@@ -63,7 +63,7 @@
 (require 'communications nil 'noerror)
 (require 'reencoding-file)
 
-(provide 'foreign)
+(require 'foreign)
 (require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 

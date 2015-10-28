@@ -53,7 +53,7 @@
   (interactive)
   (js-mode)
   (foreign-format-json-file (buffer-file-name))
-  (revert-buffer t t)
+  (revert-buffer-hard)
   (message "Done."))
 
 (defun foreign-replace (old-string new-string)
@@ -67,9 +67,7 @@
   (foreign-replace-file (buffer-file-name)
                         (prepare-string-to-shell old-string)
                         (prepare-string-to-shell new-string))
-  (let ((file-name (buffer-file-name)))
-    (kill-buffer (current-buffer))
-    (find-file file-name)
-    (message "Done.")))
+  (revert-buffer-hard)
+  (message "Done."))
 
 (provide 'foreign)
