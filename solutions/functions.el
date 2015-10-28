@@ -73,8 +73,10 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (add-quotes (replace-newlines (escape-quotes txt))))
 
 (defun revert-buffer-hard (&optional buffer)
-  (let ((file-name (buffer-file-name)))
-    (kill-buffer (or buffer (current-buffer)))
+  "Revert buffer without keeping it's history (for perfomance)."
+  (let ((buff (or buffer (current-buffer)))
+        (file-name (buffer-file-name )))
+    (kill-buffer buff)
     (find-file file-name)))
 
 (defun kostafey-export-keys ()
