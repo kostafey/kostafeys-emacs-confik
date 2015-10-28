@@ -40,7 +40,7 @@
 ;;-----------------------------------------------------------------------------
 ;; jdibug
 ;; (add-to-list 'load-path
-;;              (concat site-lisp-path 
+;;              (concat site-lisp-path
 ;;                      "jdibug"))
 ;; (require 'semantic/lex)
 ;; (require 'semantic/senator)
@@ -68,8 +68,9 @@
 (defvar tomcat-script
   (let* ((catalina-home (getenv "CATALINA_HOME"))
          ;; or set `default-directory' variable
-         (catalina-bin (concat-path catalina-home "bin")))
-    (expand-file-name (if (eq system-type 'windows-nt) 
+         (catalina-bin (file-name-as-directory
+                        (concat-path catalina-home "bin"))))
+    (expand-file-name (if (eq system-type 'windows-nt)
                           "catalina.bat"
                         "catalina.sh")
                       catalina-bin))

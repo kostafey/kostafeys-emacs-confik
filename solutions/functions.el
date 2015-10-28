@@ -37,9 +37,8 @@ E.g.
  (concat-path (getenv \"HOME\") \".m2\" \"repository\")"
   (let ((path))
     (dolist (folder folders)
-      (setq path (if (equal ".." folder)
-                     (expand-file-name ".." path)
-                   (expand-file-name folder path))))
+      (if folder
+          (setq path (expand-file-name folder path))))
     path))
 
 (defun force-symbol-name (some-symbol)
