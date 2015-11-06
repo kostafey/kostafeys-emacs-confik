@@ -121,6 +121,9 @@ Don't mess with special buffers."
         (ansi-term (getenv "SHELL")))
     (switch-to-buffer-other-window "*ansi-term*")))
 
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome-stable")
+
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."
   (interactive "p")
