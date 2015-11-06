@@ -96,6 +96,10 @@
                   (cond
                    ((or (functionp symb) (fboundp symb)) (find-function symb))
                    (t (find-variable symb))))))
+             ;; lisp-mode
+             ((equal 'lisp-mode mode)
+              (let ((symb string-at-point))
+                (slime-edit-definition symb)))
              ;; clojure-mode
              ((and (equal 'clojure-mode mode)
                    (require 'cider nil 'noerror)
