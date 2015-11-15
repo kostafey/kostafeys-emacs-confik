@@ -535,6 +535,10 @@
 ;;----------------------------------------------------------------------
 ;; lisp
 (global-set-key (kbd "M-e") 'eval-print-last-sexp)
+(defun kostafey-lisp-mode-hook ()
+  (define-key lisp-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path))
+(add-hook 'lisp-mode-hook 'kostafey-lisp-mode-hook)
+(add-hook 'slime-mode-hook 'kostafey-lisp-mode-hook)
 
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
