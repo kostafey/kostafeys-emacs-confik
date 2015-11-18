@@ -1195,7 +1195,7 @@ Add to .emacs:
 
 
 <tr>
-<td class="org-left">C-h</td>
+<td class="org-left">C-c h</td>
 <td class="org-left">slime-hyperspec-lookup</td>
 </tr>
 </tbody>

@@ -778,7 +778,7 @@ Add to .emacs:
     | Key     | Command                     |
     |---------+-----------------------------|
     | C-c C-k | slime-compile-and-load-file |
-    | C-h     | slime-hyperspec-lookup      |
+    | C-c h   | slime-hyperspec-lookup      |
 #+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; lisp
