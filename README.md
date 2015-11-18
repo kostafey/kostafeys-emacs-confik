@@ -1172,6 +1172,35 @@ Add to .emacs:
 
 ### Lisp<a id="orgheadline23"></a>
 
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left">C-c C-k</td>
+<td class="org-left">slime-compile-and-load-file</td>
+</tr>
+
+
+<tr>
+<td class="org-left">C-h</td>
+<td class="org-left">slime-hyperspec-lookup</td>
+</tr>
+</tbody>
+</table>
+
 ### Clojure<a id="orgheadline24"></a>
 
 ### Lua<a id="orgheadline25"></a>

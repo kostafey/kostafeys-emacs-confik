@@ -775,14 +775,21 @@ Add to .emacs:
   (global-set-key (kbd "C-<f9>") 'maven-tomcat-deploy)
 #+end_src
 *** Lisp
+    | Key     | Command                     |
+    |---------+-----------------------------|
+    | C-c C-k | slime-compile-and-load-file |
+    | C-h     | slime-hyperspec-lookup      |
 #+begin_src emacs-lisp :exports none
-    ;;----------------------------------------------------------------------
-    ;; lisp
-    (global-set-key (kbd "M-e") 'eval-print-last-sexp)
-    (defun kostafey-lisp-mode-hook ()
-      (define-key lisp-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path))
-    (add-hook 'lisp-mode-hook 'kostafey-lisp-mode-hook)
-    (add-hook 'slime-mode-hook 'kostafey-lisp-mode-hook)
+  ;;----------------------------------------------------------------------
+  ;; lisp
+  (global-set-key (kbd "M-e") 'eval-print-last-sexp)
+  (defun kostafey-lisp-mode-hook ()
+    (define-key lisp-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
+    (define-key lisp-mode-map (kbd "C-c h") 'slime-hyperspec-lookup)
+    (define-key slime-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
+    (define-key slime-mode-map (kbd "C-c h") 'slime-hyperspec-lookup))
+  (add-hook 'lisp-mode-hook 'kostafey-lisp-mode-hook)
+  (add-hook 'slime-mode-hook 'kostafey-lisp-mode-hook)
 #+end_src
 *** Clojure
 #+begin_src emacs-lisp :exports none
