@@ -48,6 +48,11 @@
     (shell-command
      (concat bin " " file-name " " old-string " " new-string))))
 
+(defun foreign-find-in-file (file-name start-pos search-string)
+  (let ((bin (foreign-get-go-executable "find.go")))
+    (shell-command-to-string
+     (concat bin " " file-name " " start-pos " " search-string))))
+
 (defun foreign-format-json ()
   "Pretty print json file."
   (interactive)
@@ -68,6 +73,19 @@
                         (prepare-string-to-shell old-string)
                         (prepare-string-to-shell new-string))
   (revert-buffer-hard)
+  (message "Done."))
+
+(defun foreign-find (search-string)
+  "Find string in file."
+  (interactive
+   (list
+    (read-from-minibuffer "Find string: "
+                          "" nil nil 'foreign-replace-old-history)))
+  (let ((pos (string-to-number
+              (foreign-find-in-file (buffer-file-name)
+                                    (number-to-string (point))
+                                    (prepare-string-to-shell search-string)))))
+    (goto-char pos))
   (message "Done."))
 
 (provide 'foreign)
