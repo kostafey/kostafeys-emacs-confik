@@ -80,12 +80,12 @@
   (interactive
    (list
     (read-from-minibuffer "Find string: "
-                          "" nil nil 'foreign-replace-old-history)))
+                          "" nil nil 'foreign-find-history)))
   (let ((pos (string-to-number
               (foreign-find-in-file (buffer-file-name)
                                     (number-to-string (point))
                                     (prepare-string-to-shell search-string)))))
-    (goto-char pos))
+    (goto-char (+ pos 1)))
   (message "Done."))
 
 (provide 'foreign)

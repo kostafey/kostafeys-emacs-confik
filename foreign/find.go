@@ -23,7 +23,11 @@ func main() {
 		panic(err)
 	}
 	s := string(byt)
-	i := strings.Index(s[startPos:], search)
+
+	if startPos > 0 {
+		s = string([]rune(s)[startPos:])
+	}
+	i := strings.Index(s, search)
 
 	fmt.Println(startPos + utf8.RuneCountInString(s[:i]))
 }
