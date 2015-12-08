@@ -885,6 +885,11 @@ Add to .emacs:
   (define-key go-mode-map (kbd "C-x C-e") 'go-run)
 #+end_src
 
+*** reStructuredText
+#+begin_src emacs-lisp :exports none
+  (define-key rst-mode-map (kbd "C-M-a") nil)
+#+end_src
+
 #+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; SQL

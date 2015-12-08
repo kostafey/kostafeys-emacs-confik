@@ -3,7 +3,7 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orgheadline1">1. Initial setup</a></li>
-<li><a href="#orgheadline38">2. Kostafey's keybindings</a>
+<li><a href="#orgheadline39">2. Kostafey's keybindings</a>
 <ul>
 <li><a href="#orgheadline7">2.1. Humane emacs</a>
 <ul>
@@ -32,7 +32,7 @@
 <li><a href="#orgheadline18">2.5.5. Paredit customization</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline30">2.6. IDE</a>
+<li><a href="#orgheadline31">2.6. IDE</a>
 <ul>
 <li><a href="#orgheadline20">2.6.1. Speedbar</a></li>
 <li><a href="#orgheadline21">2.6.2. Common prog mode keys</a></li>
@@ -43,23 +43,24 @@
 <li><a href="#orgheadline26">2.6.7. Scala</a></li>
 <li><a href="#orgheadline27">2.6.8. Tcl</a></li>
 <li><a href="#orgheadline28">2.6.9. Golang</a></li>
-<li><a href="#orgheadline29">2.6.10. Version control</a></li>
+<li><a href="#orgheadline29">2.6.10. reStructuredText</a></li>
+<li><a href="#orgheadline30">2.6.11. Version control</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline31">2.7. Mouse</a></li>
-<li><a href="#orgheadline33">2.8. Menu</a>
+<li><a href="#orgheadline32">2.7. Mouse</a></li>
+<li><a href="#orgheadline34">2.8. Menu</a>
 <ul>
-<li><a href="#orgheadline32">2.8.1. header<sub>name</sub></a></li>
+<li><a href="#orgheadline33">2.8.1. header<sub>name</sub></a></li>
 </ul>
 </li>
-<li><a href="#orgheadline35">2.9. Org-mode</a>
+<li><a href="#orgheadline36">2.9. Org-mode</a>
 <ul>
-<li><a href="#orgheadline34">2.9.1. Time schedule</a></li>
+<li><a href="#orgheadline35">2.9.1. Time schedule</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline37">2.10. Emacs OS</a>
+<li><a href="#orgheadline38">2.10. Emacs OS</a>
 <ul>
-<li><a href="#orgheadline36">2.10.1. elfeed</a></li>
+<li><a href="#orgheadline37">2.10.1. elfeed</a></li>
 </ul>
 </li>
 </ul>
@@ -75,7 +76,7 @@ Add to .emacs:
 
 (load-file "~/.emacs.d/init.el")
 
-# Kostafey's keybindings<a id="orgheadline38"></a>
+# Kostafey's keybindings<a id="orgheadline39"></a>
 
 ## Humane emacs<a id="orgheadline7"></a>
 
@@ -1094,7 +1095,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-## IDE<a id="orgheadline30"></a>
+## IDE<a id="orgheadline31"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1369,7 +1370,9 @@ Add to .emacs:
 
 ### Golang<a id="orgheadline28"></a>
 
-### Version control<a id="orgheadline29"></a>
+### reStructuredText<a id="orgheadline29"></a>
+
+### Version control<a id="orgheadline30"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1426,11 +1429,11 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Mouse<a id="orgheadline31"></a>
+## Mouse<a id="orgheadline32"></a>
 
-## Menu<a id="orgheadline33"></a>
+## Menu<a id="orgheadline34"></a>
 
-### header<sub>name</sub><a id="orgheadline32"></a>
+### header<sub>name</sub><a id="orgheadline33"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1459,9 +1462,9 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Org-mode<a id="orgheadline35"></a>
+## Org-mode<a id="orgheadline36"></a>
 
-### Time schedule<a id="orgheadline34"></a>
+### Time schedule<a id="orgheadline35"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1518,6 +1521,6 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Emacs OS<a id="orgheadline37"></a>
+## Emacs OS<a id="orgheadline38"></a>
 
-### elfeed<a id="orgheadline36"></a>
+### elfeed<a id="orgheadline37"></a>
