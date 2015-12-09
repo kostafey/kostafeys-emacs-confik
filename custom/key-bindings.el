@@ -601,6 +601,7 @@
 (define-key go-mode-map (kbd "C-c C-e") 'go-run)
 (define-key go-mode-map (kbd "C-x C-e") 'go-run)
 
+(require 'rst)
 (define-key rst-mode-map (kbd "C-M-a") nil)
 
 ;;----------------------------------------------------------------------
