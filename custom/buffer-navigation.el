@@ -35,7 +35,20 @@
 ;;=============================================================================
 ;; Переключения буферов
 ;; Buffers changing
-;;=============================================================================
+;;
+
+(defun my-next-buffer ()
+  (interactive)
+  (next-buffer)
+  (if (equal "*nrepl-messages" (substring-no-properties (buffer-name) 0 15))
+      (next-buffer)))
+
+(defun my-previous-buffer ()
+  (interactive)
+  (previous-buffer)
+  (if (equal "*nrepl-messages" (substring-no-properties (buffer-name) 0 15))
+      (previous-buffer)))
+
 ;;-----------------------------------------------------------------------------
 ;; Tabbar
 (require 'tabbar)

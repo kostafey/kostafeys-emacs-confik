@@ -347,8 +347,8 @@
 ;; (global-set-key (kbd "C-x <right>") 'next-buffer) - default
 ;; (global-set-key (kbd "C-x <left>") 'previous-buffer) - default
 
-(global-set-key [(control next)] 'next-buffer)      ; C-Page Up
-(global-set-key [(control prior)] 'previous-buffer) ; C-Page Down
+(global-set-key [(control next)] 'my-next-buffer)      ; C-Page Up
+(global-set-key [(control prior)] 'my-previous-buffer) ; C-Page Down
 
 ;;-----------------------------------------------------------------------------
 ;; tabbar - switch buffers by tabs
