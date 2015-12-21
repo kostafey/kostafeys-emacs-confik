@@ -496,6 +496,10 @@
     (define-key paredit-mode-map (kbd "M-q") 'nil)
     (define-key paredit-mode-map (kbd "M-r") 'nil)))
 
+(eval-after-load "paredit-everywhere"
+  '(progn
+     (define-key paredit-everywhere-mode-map (kbd "M-r") 'replace-string)))
+
 (global-set-key [(meta super right)] 'transpose-sexps)
 (global-set-key [(meta super left)] (lambda () (interactive) (transpose-sexps -1)))
 ;;
