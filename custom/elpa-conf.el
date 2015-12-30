@@ -73,7 +73,8 @@
                            cider
                            ac-cider
                            clojure-snippets
-                           typed-clojure-mode)
+                           typed-clojure-mode
+                           flycheck-clojure)
   "Required packages for clojure coding.")
 
 (defvar common-lisp-packages '(slime
@@ -113,7 +114,7 @@
         'rainbow-delimiters
         'organic-green-theme
         'cl-lib-highlight
-        )
+        'flycheck-tip)
   "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages

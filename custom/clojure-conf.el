@@ -75,4 +75,13 @@
 (setq cider-known-endpoints
       '(("host-a" "xvm211" "43102")))
 
+;;----------------------------------------------------------------------
+;; flycheck-clojure
+;;
+(eval-after-load 'flycheck '(flycheck-clojure-setup))
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+(require 'flycheck-tip)
+(flycheck-tip-use-timer 'verbose)
+
 (provide 'clojure-conf)
