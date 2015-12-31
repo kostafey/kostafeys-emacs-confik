@@ -1,12 +1,15 @@
-;;; hopper.el - simplify code navigation.
+;;; hopper.el --- simplify code navigation.
 
-;;; Usage:
+;;; Commentary:
+
 ;;
 ;; (global-set-key (kbd "C-M-d") 'hop-at-point)
 ;; (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
 
+;;; Code:
+
 (defun hop-buffer-mode (buffer-or-string)
-  "Returns the major mode associated with a buffer."
+  "Return the major mode associated with a buffer BUFFER-OR-STRING."
   (with-current-buffer buffer-or-string
      major-mode))
 
@@ -65,6 +68,8 @@
   (concat "\\s-*\\(\\w\\|\\+\\|-\\)+://\\(\\w\\|\\-\\)+\\(\\.\\w+\\)?"
           "\\(\\/\\(%[0-9a-fA-F]\\{2\\}\\|[~\\.A-Za-z_+-]*\\)*\\)*"))
 
+(require 'cider nil 'noerror)
+
 (defun hop-nrepl-current-session ()
   "Return the current nrepl session or nil."
   (let* ((buff (or nrepl-connection-buffer
@@ -75,7 +80,7 @@
     sess))
 
 (defun hop-at-point (point)
-  "Jump to the entity definition."
+  "Jump to the entity definition at POINT position."
   (interactive "d")
   (if mark-active
       (browse-url (buffer-substring (region-beginning) (region-end)))
@@ -102,8 +107,9 @@
                 (slime-edit-definition symb)))
              ;; clojure-mode
              ((and (equal 'clojure-mode mode)
-                   (require 'cider nil 'noerror)
-                   (hop-nrepl-current-session)) (cider-jump-to-var t))
+                   (hop-nrepl-current-session)) (cider-find-var
+                                                 (cider--kw-to-symbol
+                                                  (cider-symbol-at-point))))
              ;; go-mode
              ((equal 'go-mode mode) (godef-jump point))
              ;; other modes
@@ -121,3 +127,5 @@
   (hop-at-point (point)))
 
 (provide 'hopper)
+
+;;; hopper.el ends here
