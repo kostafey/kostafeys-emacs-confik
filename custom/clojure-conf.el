@@ -78,10 +78,10 @@
 ;;----------------------------------------------------------------------
 ;; flycheck-clojure
 ;;
-(eval-after-load 'flycheck '(flycheck-clojure-setup))
-(add-hook 'after-init-hook #'global-flycheck-mode)
+;; (eval-after-load 'flycheck '(flycheck-clojure-setup))
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(require 'flycheck-tip)
-(flycheck-tip-use-timer 'verbose)
+;; (require 'flycheck-tip)
+;; (flycheck-tip-use-timer 'verbose)
 
 (provide 'clojure-conf)

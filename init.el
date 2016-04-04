@@ -67,6 +67,9 @@
 (require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 
+(add-to-list 'load-path (expand-file-name "launcher" site-lisp-path))
+(require 'switch-to-emacsclient)
+
 (require 'history-conf)
 (require 'text-modes-conf)
 

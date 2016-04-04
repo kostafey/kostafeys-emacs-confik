@@ -36,17 +36,21 @@
 ;; Переключения буферов
 ;; Buffers changing
 ;;
+(defun my-nrepl-messages-buffer-p ()
+  (and (>= (length (buffer-name)) 15)
+       (equal "*nrepl-messages"
+              (substring-no-properties (buffer-name) 0 15))))
 
 (defun my-next-buffer ()
   (interactive)
   (next-buffer)
-  (if (equal "*nrepl-messages" (substring-no-properties (buffer-name) 0 15))
+  (if (my-nrepl-messages-buffer-p)
       (next-buffer)))
 
 (defun my-previous-buffer ()
   (interactive)
   (previous-buffer)
-  (if (equal "*nrepl-messages" (substring-no-properties (buffer-name) 0 15))
+  (if (my-nrepl-messages-buffer-p)
       (previous-buffer)))
 
 ;;-----------------------------------------------------------------------------

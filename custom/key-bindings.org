@@ -624,8 +624,7 @@ Add to .emacs:
   (global-set-key [f1] 'psw-switch-buffer)
   (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
   (global-set-key (kbd "s-q") 'psw-navigate-files)
-  (eval-after-load "eassist"
-    '(global-set-key [f2] 'psw-switch-function))
+  (global-set-key [f2] 'psw-switch-function)
   ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
   ;; (global-set-key [f8] 'ispell-region); 'ispell-word
   (global-set-key [f4] 'shell)

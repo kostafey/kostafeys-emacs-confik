@@ -6,12 +6,6 @@
 ;; Cedet
 ;; select which submodes we want to activate
 ;;
-(defvar cedet-root-path (concat site-lisp-path "cedet/"))
-(add-to-list 'load-path cedet-root-path)
-(load (concat site-lisp-path "cedet/cedet-devel-load"))
-
-;; load contrib library
-(add-to-list 'load-path (concat site-lisp-path "cedet/contrib/"))
 
 ;; включает глобальную поддержку Semanticdb;
 ;; (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
@@ -41,22 +35,15 @@
 ;; Activate semantic
 ;; (semantic-mode 1)
 
-(require 'eassist)
-
 ;; Чтобы использовать возможности по дополнению имен и показу информации о
 ;; функциях и классах, вам необходимо загрузить пакет semantic/ia с помощью
 ;; следующей команды:
 (require 'semantic/ia)
 
-(require 'semantic/db-javap)
-
 (defun my-semantic-hook ()
   ;; (global-semantic-tag-folding-mode 1)
   (imenu-add-to-menubar "TAGS"))
 (add-hook 'semantic-init-hooks 'my-semantic-hook)
-
-(when (cedet-ectag-version-check t)
-  (semantic-load-enable-primary-ectags-support))
 
 ;; (setq global-semantic-tag-folding-mode t)
 
