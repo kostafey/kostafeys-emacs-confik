@@ -353,7 +353,9 @@
 ;;-----------------------------------------------------------------------------
 ;; tabbar - switch buffers by tabs
 (global-set-key [(shift super left)] 'tabbar-backward-tab)
+(global-set-key [(ctrl super left)] 'tabbar-backward-tab)
 (global-set-key [(shift super right)] 'tabbar-forward-tab)
+(global-set-key [(ctrl super right)] 'tabbar-forward-tab)
 ;;-----------------------------------------------------------------------------
 ;; ido - switch buffers by completiotion
 (require 'ido)
