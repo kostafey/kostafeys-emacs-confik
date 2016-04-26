@@ -22,6 +22,21 @@ arg - is a searching word (char)"
       (message
        "There is %d words in the selected area." count))))
 
+(defun k-count-lines-region (beg end)
+  "Counting lines in the selected area."
+  (interactive "r")
+  (message "Counting ... ")
+  (save-excursion
+    (goto-char beg)
+    (end-of-line)
+    (let ((count 1))
+      (while (and (< (point) end))
+        (forward-line)
+        (end-of-line)
+        (setq count (1+ count)))
+      (message
+       "There is %d lines in the selected area." count))))
+
 ;;=============================================================================
 ;; show ascii table
 ;; optained from http://www.chrislott.org/geek/emacs/dotemacs.html
@@ -36,7 +51,6 @@ arg - is a searching word (char)"
       (setq i (+ i 1))
       (insert (format "%4d %c\n" i i))))
   (beginning-of-buffer))
-
 
 ;;=============================================================================
 ;;;  insert current date into the buffer at point
