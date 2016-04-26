@@ -27,13 +27,8 @@
         when (not (package-installed-p p)) do (return nil)
         finally (return t)))
 
-(defun prompt-package-install (package)
-  (if (y-or-n-p (format "Package %s is missing. Install it? " package))
-      (package-install package)))
-
 (defun install-required-packages (required-packages)
   (unless (required-packages-installed-p required-packages)
-
     ;; check for new packages (package versions)
     (if (not package-is-refreshed)
         (progn
@@ -41,12 +36,15 @@
           (package-refresh-contents)
           (setq package-is-refreshed t)
           (message "%s" " done.")))
-
-    ;; install the missing packages
-    (dolist (package required-packages)
-      (unless (package-installed-p package)
-        (prompt-package-install package)))))
-
+    (let ((uninsalled-packages '()))
+      (dolist (package required-packages)
+        (unless (package-installed-p package)
+          (setq uninsalled-packages (cons package uninsalled-packages))))
+      (if (y-or-n-p (format "Packages %s are missing. Install them?"
+                            uninsalled-packages))
+          ;; install the missing packages
+          (dolist (package uninsalled-packages)
+            (package-install package))))))
 
 (defvar text-modes-required-packages
   (list 'org
