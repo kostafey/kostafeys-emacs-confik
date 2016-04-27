@@ -138,8 +138,12 @@ Don't mess with special buffers."
         (ansi-term (getenv "SHELL")))
     (switch-to-buffer-other-window "*ansi-term*")))
 
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome-stable")
+(if (eq system-type 'windows-nt)
+    (setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program
+          "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe")
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "google-chrome-stable"))
 
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."
