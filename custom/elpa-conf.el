@@ -146,7 +146,8 @@ and `buffer-navigation'.")
         'paredit-everywhere
         'lua-mode
         'erlang
-        'php-mode)
+        'php-mode
+        'ejc-sql)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages

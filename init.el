@@ -50,11 +50,7 @@
 (add-to-list 'load-path (concat site-lisp-path "popup-el/"))
 (require 'popup)
 
-(add-to-list 'load-path
-             (concat site-lisp-path
-                     "clomacs/src/elisp/"))
-;; (require 'clomacs)
-;; (require 'ejc-sql-conf nil 'noerror)
+(require 'ejc-sql-conf nil 'noerror)
 
 (require 'switch-language)
 (require 'ispell-conf)
