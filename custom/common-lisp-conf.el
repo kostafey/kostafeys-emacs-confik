@@ -1,6 +1,6 @@
 (require 'functions)
 
-(setq inferior-lisp-program "sbcl")
+(setq inferior-lisp-program "ros run")
 (setq slime-net-coding-system 'utf-8-unix)
 
 (add-to-list 'load-path
