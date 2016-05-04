@@ -56,6 +56,7 @@
 (require 'ispell-conf)
 (require 'completition-conf)
 (require 'ack-conf)
+(require 'irc-conf)
 (require 'communications nil 'noerror)
 (require 'reencoding-file)
 

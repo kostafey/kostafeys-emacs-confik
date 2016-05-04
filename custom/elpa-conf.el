@@ -160,6 +160,7 @@ and `buffer-navigation'.")
 (defvar misc-packages
   (list 'noflet
         'jabber
+        'circe
         'ag)
   "Packages, not requred by configuration files.")
 
