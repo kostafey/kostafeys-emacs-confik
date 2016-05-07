@@ -51,6 +51,9 @@
 (require 'markdown-toc)
 
 ;;-----------------------------------------------------------------------------
+(add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
+
+;;-----------------------------------------------------------------------------
 ;; Org-mode settings
 ;; (add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
 ;; (require 'org-install)
