@@ -147,7 +147,8 @@ and `buffer-navigation'.")
         'lua-mode
         'erlang
         'php-mode
-        'ejc-sql)
+        'ejc-sql
+        'powershell)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages
