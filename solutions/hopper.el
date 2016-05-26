@@ -8,6 +8,8 @@
 
 ;;; Code:
 
+(require 's)
+
 (defun hop-buffer-mode (buffer-or-string)
   "Return the major mode associated with a buffer BUFFER-OR-STRING."
   (with-current-buffer buffer-or-string
@@ -79,6 +81,39 @@
                      nrepl-session))))
     sess))
 
+(defun hop--goto-file-location (arg)
+  (let ((splitted-path (s-split ":" arg)))
+    (multiple-value-bind (path line)
+        (if (equal (length (car splitted-path)) 1)
+            (list (concat (car splitted-path) ":" (cadr splitted-path))
+                  (string-to-number (nth 2 splitted-path)))
+          (list (car splitted-path) (string-to-number (nth 1 splitted-path))))
+      (find-file path)
+      (goto-line line))))
+
+(defun hop-goto-file-location (arg)
+  (interactive "p")
+  (hop--goto-file-location
+   (if mark-active
+       (buffer-substring (region-beginning) (region-end))
+     (let* ((str-under-point (s-trim
+                              (save-excursion
+                               (buffer-substring
+                                (progn
+                                  (search-backward
+                                   " "
+                                   (save-excursion
+                                     (progn (beginning-of-line-text)
+                                            (point))))
+                                  (point))
+                                (progn (end-of-line)
+                                       (point))))))
+            (entered-str (if (not (equal arg -1))
+                             str-under-point
+                           (read-string "Go to file location: "
+                                        str-under-point))))
+       entered-str))))
+
 (defun hop-at-point (point)
   "Jump to the entity definition at POINT position."
   (interactive "d")
@@ -112,6 +147,8 @@
                                                   (cider-symbol-at-point))))
              ;; go-mode
              ((equal 'go-mode mode) (godef-jump point))
+             ;; shell mode assume line looks like [ERROR] ~/project/MyClass.java:123:
+             ((equal 'shell-mode mode) (hop-goto-file-location point))
              ;; other modes
              (t
               (if (semantic-active-p)
