@@ -143,7 +143,8 @@ Don't mess with special buffers."
           browse-url-generic-program
           "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe")
   (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "google-chrome-stable"))
+        ;; browse-url-generic-program "google-chrome-stable"
+        browse-url-generic-program "chromium"))
 
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."

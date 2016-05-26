@@ -9,7 +9,8 @@
 (when (eq 'gnu/linux system-type)
   ;; (set-face-attribute 'default nil :family "Consolas" :height 130)
   ;; (set-face-font 'default "Consolas-13.5:antialias=subpixel")
-  (set-face-font 'default "FiraMono-12.0:antialias=subpixel"))
+  ;; (set-face-font 'default "FiraMono-12.0:antialias=subpixel")
+  (set-face-attribute 'default nil :family "Consolas" :height 135))
 
 ;;=============================================================================
 ;; Change font size
