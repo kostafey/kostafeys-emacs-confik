@@ -121,7 +121,9 @@ in the --type argument to the ack command")
    (list
     (ido-read-directory-name "Base dir for search: ")
     (read-from-minibuffer "Search for file name: "
-                          (file-name-nondirectory (buffer-file-name))
+                          (if (buffer-file-name)
+                              (file-name-nondirectory (buffer-file-name))
+                            "")
                           nil
                           nil
                           'ack-history)))

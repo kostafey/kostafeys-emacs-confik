@@ -268,6 +268,7 @@
 (add-hook 'sql-mode-hook      'my-coding-hook)
 (add-hook 'mql-mode-hook      'my-coding-hook)
 (add-hook 'go-mode-hook       'my-coding-hook)
+(add-hook 'powershell-mode-hook 'my-coding-hook)
 (add-hook 'web-mode-hook      'web-mode-hook)
 
 (setq query-replace-highlight t)

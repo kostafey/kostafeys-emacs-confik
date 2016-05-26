@@ -165,6 +165,10 @@ and `buffer-navigation'.")
         'ag)
   "Packages, not requred by configuration files.")
 
+(defvar misc-requred-packages
+  (list 's)
+  "Packages, requred by configuration files.")
+
 (install-required-packages (append
                             bte-required-packages
                             text-modes-required-packages
@@ -178,6 +182,7 @@ and `buffer-navigation'.")
                             prog-modes-packages
                             vc-packages
                             misc-packages
+                            misc-requred-packages
                             js-packages))
 
 (provide 'elpa-conf)
