@@ -98,21 +98,24 @@
        (buffer-substring (region-beginning) (region-end))
      (let* ((str-under-point (s-trim
                               (save-excursion
-                               (buffer-substring
-                                (progn
-                                  (search-backward
-                                   " "
-                                   (save-excursion
-                                     (progn (beginning-of-line-text)
-                                            (point))))
-                                  (point))
-                                (progn (end-of-line)
-                                       (point))))))
+                                (buffer-substring
+                                 (search-backward " " (line-beginning-position))
+                                 (line-end-position)))))
             (entered-str (if (not (equal arg -1))
                              str-under-point
                            (read-string "Go to file location: "
                                         str-under-point))))
        entered-str))))
+
+(defun hop-url-in-markdown (pos)
+  "Since markdown URLs looks like: [link](http://link.com)"
+  (let* ((beg (1+ (save-excursion
+                    (search-backward "(" (line-beginning-position)))))
+         (end (1- (save-excursion
+                    (search-forward ")" (line-end-position)))))
+         (browse-url (buffer-substring beg end)))
+    (if (string-match hop-url-regexp browse-url)
+        (browse-url browse-url))))
 
 (defun hop-at-point (point)
   "Jump to the entity definition at POINT position."
@@ -149,6 +152,8 @@
              ((equal 'go-mode mode) (godef-jump point))
              ;; shell mode assume line looks like [ERROR] ~/project/MyClass.java:123:
              ((equal 'shell-mode mode) (hop-goto-file-location point))
+             ;; markdown-mode
+             ((equal 'markdown-mode mode) (hop-url-in-markdown point))
              ;; other modes
              (t
               (if (semantic-active-p)
