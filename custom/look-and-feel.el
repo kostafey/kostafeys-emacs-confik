@@ -10,7 +10,7 @@
   ;; (set-face-attribute 'default nil :family "Consolas" :height 130)
   ;; (set-face-font 'default "Consolas-13.5:antialias=subpixel")
   ;; (set-face-font 'default "FiraMono-12.0:antialias=subpixel")
-  (set-face-font 'default "FiraMonoMedium-12.5:antialias=subpixel:rgba=rgb"))
+  (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb"))
 
 ;; In case of fire use this:
 ;; (font-family-list)
