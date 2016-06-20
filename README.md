@@ -3,7 +3,7 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orgheadline1">1. Initial setup</a></li>
-<li><a href="#orgheadline39">2. Kostafey's keybindings</a>
+<li><a href="#orgheadline40">2. Kostafey's keybindings</a>
 <ul>
 <li><a href="#orgheadline7">2.1. Humane emacs</a>
 <ul>
@@ -58,9 +58,10 @@
 <li><a href="#orgheadline35">2.9.1. Time schedule</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline38">2.10. Emacs OS</a>
+<li><a href="#orgheadline39">2.10. Emacs OS</a>
 <ul>
 <li><a href="#orgheadline37">2.10.1. elfeed</a></li>
+<li><a href="#orgheadline38">2.10.2. stock-ticker</a></li>
 </ul>
 </li>
 </ul>
@@ -76,7 +77,7 @@ Add to .emacs:
 
 (load-file "~/.emacs.d/init.el")
 
-# Kostafey's keybindings<a id="orgheadline39"></a>
+# Kostafey's keybindings<a id="orgheadline40"></a>
 
 ## Humane emacs<a id="orgheadline7"></a>
 
@@ -1521,6 +1522,8 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Emacs OS<a id="orgheadline38"></a>
+## Emacs OS<a id="orgheadline39"></a>
 
 ### elfeed<a id="orgheadline37"></a>
+
+### stock-ticker<a id="orgheadline38"></a>

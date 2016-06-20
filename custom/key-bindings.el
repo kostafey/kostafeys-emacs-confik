@@ -693,3 +693,6 @@
 
 ;; see https://github.com/skeeto/elfeed for details.
 (global-set-key (kbd "M-<f2>") 'elfeed)
+
+;; see https://github.com/skeeto/elfeed for details.
+(global-set-key (kbd "C-c s") 'stock-ticker--list)

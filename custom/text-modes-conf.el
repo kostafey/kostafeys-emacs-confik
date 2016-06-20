@@ -1,5 +1,9 @@
 (require 'elpa-conf)
 
+(setq stock-ticker-symbols
+      '("^gspc" "^ixic" "^tnx" "^nya" "XAUUSD=X" "EURUSD=X" "GOOGL" "AAPL"
+        "IBM" "TSLA" "MSFT" "T" "BZU15.NYM" "RUB=x" "EURRUB=x"))
+
 ;;-----------------------------------------------------------------------------
 ;; nxhtml
 ;; (load (concat site-lisp-path "nxhtml/autostart.el"))
