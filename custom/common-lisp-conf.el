@@ -9,7 +9,7 @@
                            "artifacts"
                            "slime-repl-ansi-color")))
 (require 'slime)
-(require 'slime-repl-ansi-color)
+;; (require 'slime-repl-ansi-color)
 
 (slime-setup '(slime-repl
                slime-fuzzy
@@ -17,7 +17,8 @@
                slime-fancy-inspector
                slime-indentation
                slime-asdf
-               slime-repl-ansi-color))
+               ;; slime-repl-ansi-color
+               ))
 
 (setq slime-header-line-p nil)
 
