@@ -47,7 +47,7 @@
 (require 'ide)
 ;; (add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
 ;; (require 'popup-switcher)
-(add-to-list 'load-path (concat site-lisp-path "popup-el/"))
+(add-to-list 'load-path (concat third-party-lisp-path "popup-el/"))
 (require 'popup)
 
 (require 'ejc-sql-conf nil 'noerror)
