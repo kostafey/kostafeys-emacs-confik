@@ -242,6 +242,10 @@
   (paredit-everywhere-mode)
   (electric-pair-mode))
 
+(defun my-web-mode-hook ()
+  (my-coding-hook)
+  (setq-local indent-line-function 'indent-relative))
+
 (defun my-lisp-coding-hook ()
   (my-common-coding-hook)
   (enable-paredit-mode))
@@ -270,7 +274,7 @@
 (add-hook 'mql-mode-hook        'my-coding-hook)
 (add-hook 'go-mode-hook         'my-coding-hook)
 (add-hook 'powershell-mode-hook 'my-coding-hook)
-(add-hook 'web-mode-hook        'my-coding-hook)
+(add-hook 'web-mode-hook        'my-web-mode-hook)
 
 (setq query-replace-highlight t)
 
