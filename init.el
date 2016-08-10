@@ -50,6 +50,9 @@
 (add-to-list 'load-path (concat third-party-lisp-path "popup-el/"))
 (require 'popup)
 
+(add-to-list 'load-path (concat site-lisp-path "temporary-persistent/"))
+(require 'temporary-persistent)
+
 (require 'ejc-sql-conf nil 'noerror)
 
 (require 'switch-language)

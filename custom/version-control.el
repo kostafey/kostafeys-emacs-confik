@@ -19,4 +19,9 @@
           ((equal vc-type "git") (magit-status))
           (t (magit-status)))))
 
+(when (require 'git-gutter nil 'noerror)
+  (global-git-gutter-mode +1)
+  (git-gutter:linum-setup)
+  (setq git-gutter:modified-sign "*"))
+
 (provide 'version-control)

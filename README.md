@@ -3,7 +3,7 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orgheadline1">1. Initial setup</a></li>
-<li><a href="#orgheadline40">2. Kostafey's keybindings</a>
+<li><a href="#orgheadline42">2. Kostafey's keybindings</a>
 <ul>
 <li><a href="#orgheadline7">2.1. Humane emacs</a>
 <ul>
@@ -32,7 +32,7 @@
 <li><a href="#orgheadline18">2.5.5. Paredit customization</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline31">2.6. IDE</a>
+<li><a href="#orgheadline33">2.6. IDE</a>
 <ul>
 <li><a href="#orgheadline20">2.6.1. Speedbar</a></li>
 <li><a href="#orgheadline21">2.6.2. Common prog mode keys</a></li>
@@ -44,24 +44,29 @@
 <li><a href="#orgheadline27">2.6.8. Tcl</a></li>
 <li><a href="#orgheadline28">2.6.9. Golang</a></li>
 <li><a href="#orgheadline29">2.6.10. reStructuredText</a></li>
-<li><a href="#orgheadline30">2.6.11. Version control</a></li>
+<li><a href="#orgheadline32">2.6.11. Version control</a>
+<ul>
+<li><a href="#orgheadline30">2.6.11.1. Magit &amp; ahg</a></li>
+<li><a href="#orgheadline31">2.6.11.2. git-gutter</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline32">2.7. Mouse</a></li>
-<li><a href="#orgheadline34">2.8. Menu</a>
-<ul>
-<li><a href="#orgheadline33">2.8.1. header<sub>name</sub></a></li>
 </ul>
 </li>
-<li><a href="#orgheadline36">2.9. Org-mode</a>
+<li><a href="#orgheadline34">2.7. Mouse</a></li>
+<li><a href="#orgheadline36">2.8. Menu</a>
 <ul>
-<li><a href="#orgheadline35">2.9.1. Time schedule</a></li>
+<li><a href="#orgheadline35">2.8.1. header<sub>name</sub></a></li>
 </ul>
 </li>
-<li><a href="#orgheadline39">2.10. Emacs OS</a>
+<li><a href="#orgheadline38">2.9. Org-mode</a>
 <ul>
-<li><a href="#orgheadline37">2.10.1. elfeed</a></li>
-<li><a href="#orgheadline38">2.10.2. stock-ticker</a></li>
+<li><a href="#orgheadline37">2.9.1. Time schedule</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline41">2.10. Emacs OS</a>
+<ul>
+<li><a href="#orgheadline39">2.10.1. elfeed</a></li>
+<li><a href="#orgheadline40">2.10.2. stock-ticker</a></li>
 </ul>
 </li>
 </ul>
@@ -77,7 +82,7 @@ Add to .emacs:
 
 (load-file "~/.emacs.d/init.el")
 
-# Kostafey's keybindings<a id="orgheadline40"></a>
+# Kostafey's keybindings<a id="orgheadline42"></a>
 
 ## Humane emacs<a id="orgheadline7"></a>
 
@@ -1096,7 +1101,7 @@ Add to .emacs:
 </tbody>
 </table>
 
-## IDE<a id="orgheadline31"></a>
+## IDE<a id="orgheadline33"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1373,7 +1378,9 @@ Add to .emacs:
 
 ### reStructuredText<a id="orgheadline29"></a>
 
-### Version control<a id="orgheadline30"></a>
+### Version control<a id="orgheadline32"></a>
+
+#### Magit & ahg<a id="orgheadline30"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1430,11 +1437,48 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Mouse<a id="orgheadline32"></a>
+#### git-gutter<a id="orgheadline31"></a>
 
-## Menu<a id="orgheadline34"></a>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
-### header<sub>name</sub><a id="orgheadline33"></a>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Command</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left">C-M-g &lt;down&gt;</td>
+<td class="org-left">git-gutter:next-hunk</td>
+</tr>
+
+
+<tr>
+<td class="org-left">C-M-g &lt;down&gt;</td>
+<td class="org-left">git-gutter:previous-hunk</td>
+</tr>
+
+
+<tr>
+<td class="org-left">C-M-g p</td>
+<td class="org-left">git-gutter:popup-hunk</td>
+</tr>
+</tbody>
+</table>
+
+## Mouse<a id="orgheadline34"></a>
+
+## Menu<a id="orgheadline36"></a>
+
+### header<sub>name</sub><a id="orgheadline35"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1463,9 +1507,9 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Org-mode<a id="orgheadline36"></a>
+## Org-mode<a id="orgheadline38"></a>
 
-### Time schedule<a id="orgheadline35"></a>
+### Time schedule<a id="orgheadline37"></a>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1522,8 +1566,8 @@ Add to .emacs:
 </tbody>
 </table>
 
-## Emacs OS<a id="orgheadline39"></a>
+## Emacs OS<a id="orgheadline41"></a>
 
-### elfeed<a id="orgheadline37"></a>
+### elfeed<a id="orgheadline39"></a>
 
-### stock-ticker<a id="orgheadline38"></a>
+### stock-ticker<a id="orgheadline40"></a>

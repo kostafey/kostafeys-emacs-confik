@@ -130,7 +130,8 @@ and `buffer-navigation'.")
 (defvar vc-packages
   (list 'magit
         'ahg
-        'diffview)
+        'diffview
+        'git-gutter)
   "Required packages for `version-control'.")
 
 (defvar prog-modes-packages
@@ -162,7 +163,8 @@ and `buffer-navigation'.")
   (list 'noflet
         'jabber
         'circe
-        'ag)
+        'ag
+        'names)
   "Packages, not requred by configuration files.")
 
 (defvar misc-requred-packages

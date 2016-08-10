@@ -381,7 +381,7 @@
 (global-set-key (concat change-buffer-prefix "e")
                 '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 
-(global-set-key "\C-x\C-c" 'switch-to-temp-buffer)
+(global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer)
 (global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
 
 (global-set-key (concat change-buffer-prefix "p")
@@ -539,7 +539,6 @@
 
 ;;----------------------------------------------------------------------
 ;; lisp
-(global-set-key (kbd "M-e") 'eval-print-last-sexp)
 (defun kostafey-lisp-mode-hook ()
   (define-key lisp-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
   (define-key lisp-mode-map (kbd "C-c h") 'slime-hyperspec-lookup)
@@ -667,6 +666,11 @@
      (define-key ahg-status-mode-map [tab] 'ahg-status-diff)))
 ;;
 ;;=============================================================================
+
+(when (require 'git-gutter nil 'noerror)
+  (global-set-key (kbd "C-M-g <down>") 'git-gutter:next-hunk)
+  (global-set-key (kbd "C-M-g <up>") 'git-gutter:previous-hunk)
+  (global-set-key (kbd "C-M-g p") 'git-gutter:popup-hunk))
 
 ;;=============================================================================
 ;;                               Mouse
