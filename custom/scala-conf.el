@@ -1,5 +1,4 @@
 (require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 (defun eval-last-scala-expr ()
   (interactive)
