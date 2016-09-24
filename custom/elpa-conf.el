@@ -12,7 +12,6 @@
                          ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("m-stable" . "http://stable.melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")))
-(package-initialize)
 
 (defvar package-is-refreshed nil
   "Holds the flag if the `package-refresh-contents' already done.")

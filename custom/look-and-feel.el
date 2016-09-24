@@ -244,6 +244,8 @@
 
 (defun my-web-mode-hook ()
   (my-coding-hook)
+  (setq-default indent-tabs-mode nil)
+  (setq web-mode-markup-indent-offset 2)
   (setq-local indent-line-function 'indent-relative))
 
 (defun my-lisp-coding-hook ()
