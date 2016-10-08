@@ -24,4 +24,8 @@
   (git-gutter:linum-setup)
   (setq git-gutter:modified-sign "*"))
 
+(if (>= emacs-major-version 25)
+    (remove-hook 'find-file-hooks 'vc-refresh-state)
+  (remove-hook 'find-file-hooks 'vc-find-file-hook))
+
 (provide 'version-control)
