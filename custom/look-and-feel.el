@@ -3,6 +3,8 @@
 ;;-----------------------------------------------------------------------------
 ;; Font
 (when (eq system-type 'windows-nt)
+  (setq gc-cons-threshold (* 511 1024 1024))
+  (setq gc-cons-percentage 0.5)
   ;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 120)
   (set-face-font 'default "Consolas-12.0:antialias=subpixel"))
 
@@ -57,7 +59,9 @@
 (setq frame-title-format "%S: %f")
 
 ;;-----------------------------------------------------------------------------
-(global-linum-mode) ; Нумерация строк
+;; Нумерация строк
+(require 'nlinum)
+(global-nlinum-mode)
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color themes path
@@ -245,7 +249,7 @@
 (defun my-web-mode-hook ()
   (my-coding-hook)
   (setq-default indent-tabs-mode nil)
-  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-markup-indent-offset 4)
   (setq-local indent-line-function 'indent-relative))
 
 (defun my-lisp-coding-hook ()

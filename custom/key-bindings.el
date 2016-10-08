@@ -440,6 +440,7 @@
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
 (global-set-key (kbd "s-q") 'psw-navigate-files)
+(global-set-key (kbd "s-a") 'psw-navigate-files)
 (global-set-key [f2] 'psw-switch-function)
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
 ;; (global-set-key [f8] 'ispell-region); 'ispell-word
