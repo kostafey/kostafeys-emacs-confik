@@ -3,8 +3,6 @@
 ;;-----------------------------------------------------------------------------
 ;; Font
 (when (eq system-type 'windows-nt)
-  (setq gc-cons-threshold (* 511 1024 1024))
-  (setq gc-cons-percentage 0.5)
   ;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 120)
   (set-face-font 'default "Consolas-12.0:antialias=subpixel"))
 

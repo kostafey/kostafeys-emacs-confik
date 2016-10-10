@@ -96,6 +96,7 @@
 
 (require 'calc-time)
 (require 'hibernate-mapping)
+(require 'perfomance-conf)
 
 (setq w32-quote-process-args t)
 
