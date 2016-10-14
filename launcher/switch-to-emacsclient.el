@@ -17,14 +17,16 @@
   (defun my-window-configuration-change ()
     (when (string= (buffer-file-name)
                    (expand-file-name "~/.emacs.d/touch"))
-      (if (> my-switch-counter 0)
-          (progn
-            (my-find-touch-file)
-            (setq my-switch-counter 0)
-            (my-previous-buffer))
-        (progn
-          (my-previous-buffer)
-          (incf my-switch-counter)))))
+      (if (not my-force-switch)
+          (if (> my-switch-counter 0)
+              (progn
+                (my-find-touch-file)
+                (setq my-switch-counter 0)
+                (my-previous-buffer))
+            (progn
+              (my-previous-buffer)
+              (incf my-switch-counter))))))
+
   (add-hook 'window-configuration-change-hook
             'my-window-configuration-change))
 

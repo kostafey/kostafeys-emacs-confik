@@ -36,20 +36,27 @@
 ;; Переключения буферов
 ;; Buffers changing
 ;;
+(defvar my-force-switch nil)
+
 (defun my-nrepl-messages-buffer-p ()
-  (and (>= (length (buffer-name)) 15)
-       (equal "*nrepl-messages"
-              (substring-no-properties (buffer-name) 0 15))))
+  (or (equal (buffer-name) "*touch*")
+      (and (>= (length (buffer-name)) 15)
+           (equal "*nrepl-messages"
+                  (substring-no-properties (buffer-name) 0 15)))))
 
 (defun my-next-buffer ()
   (interactive)
+  (setq my-force-switch t)
   (next-buffer)
+  (setq my-force-switch nil)
   (if (my-nrepl-messages-buffer-p)
       (next-buffer)))
 
 (defun my-previous-buffer ()
   (interactive)
+  (setq my-force-switch t)
   (previous-buffer)
+  (setq my-force-switch nil)
   (if (my-nrepl-messages-buffer-p)
       (previous-buffer)))
 
