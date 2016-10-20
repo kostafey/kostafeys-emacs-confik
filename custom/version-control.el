@@ -16,7 +16,9 @@
                           (vc-backend
                            (buffer-file-name (current-buffer)))))))
     (cond ((equal vc-type "hg")  (ahg-status))
-          ((equal vc-type "git") (magit-status))
+          ((equal vc-type "git") (if (eq system-type 'windows-nt)
+                                     (magit-status-narrow)
+                                   (magit-status)))
           (t (magit-status)))))
 
 (when (require 'git-gutter nil 'noerror)

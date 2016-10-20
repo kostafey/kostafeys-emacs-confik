@@ -69,7 +69,7 @@
                            clojure-mode-extra-font-locking
                            cider
                            ac-cider
-                           clojure-snippets
+                           ;; clojure-snippets
                            typed-clojure-mode
                            flycheck-clojure)
   "Required packages for clojure coding.")
