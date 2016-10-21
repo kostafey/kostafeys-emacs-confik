@@ -16,4 +16,6 @@
                (ensime-inf-eval-region start (point)))))
           (t (ensime-inf-eval-definition)))))
 
+(setq scala-indent:step 4)
+
 (provide 'scala-conf)

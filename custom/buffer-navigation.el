@@ -2,7 +2,7 @@
 ;; popup-switcher
 (defun psw-org-mode-hook ()
   (if (equal major-mode 'org-mode)
-      (show-all)))
+      (outline-show-all)))
 (add-hook 'psw-before-menu-hook 'psw-org-mode-hook)
 (setq psw-use-flx t)
 
@@ -68,15 +68,15 @@
 ;(set-face-background 'tabbar-default "DarkSlateGray")
 ;(set-face-foreground 'tabbar-selected "pale green")
 
-(set-face-bold-p 'tabbar-selected t)
+(set-face-bold 'tabbar-selected t)
 (set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72"))
 
 (setq tabbar-buffer-groups-function
-      (lambda ()
-        (list
-         (cond
-          ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
-          (t "All Buffers")))))
+      '(lambda ()
+         (list
+          (cond
+           ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
+           (t "All Buffers")))))
 
 (tabbar-mode t)
 
