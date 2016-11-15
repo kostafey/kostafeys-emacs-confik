@@ -382,7 +382,7 @@
                 '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 
 (global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer)
-(global-set-key (concat change-buffer-prefix "t") 'switch-to-temp-buffer)
+(setq temporary-persistent-save-key "C-s")
 
 (global-set-key (concat change-buffer-prefix "p")
                 '(lambda () (interactive) (find-file "~/.org.gpg")))
