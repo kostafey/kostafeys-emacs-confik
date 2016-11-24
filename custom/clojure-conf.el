@@ -24,7 +24,7 @@
   (interactive)
   (cider-interactive-eval
    (concat "(in-ns '" (cider-current-ns) ")")
-   nil (nrepl-current-session)))
+   nil (cider-current-session)))
 
 (defun my-cider-eval-buffer (&optional buffer)
   "Load (eval) BUFFER's file in nREPL and switch current namespace."
