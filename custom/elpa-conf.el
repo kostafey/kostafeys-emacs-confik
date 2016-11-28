@@ -57,7 +57,8 @@
         ;; news reader
         'elfeed
         ;; View Large Files
-        'vlf)
+        'vlf
+        'yaml-mode)
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
