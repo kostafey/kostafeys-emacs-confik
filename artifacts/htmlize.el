@@ -1773,7 +1773,7 @@ that created them, or simply alter the faces it uses."
   (interactive)
   (let ((htmlbuf (with-current-buffer (or buffer (current-buffer))
 		   (htmlize-buffer-1))))
-    (when (interactive-p)
+    (when (called-interactively-p 'interactive)
       (switch-to-buffer htmlbuf))
     htmlbuf))
 
@@ -1788,7 +1788,7 @@ See `htmlize-buffer' for details."
   (let ((htmlbuf (save-restriction
 		   (narrow-to-region beg end)
 		   (htmlize-buffer-1))))
-    (when (interactive-p)
+    (when (called-interactively-p 'interactive)
       (switch-to-buffer htmlbuf))
     htmlbuf))
 

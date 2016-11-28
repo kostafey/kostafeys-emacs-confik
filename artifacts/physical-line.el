@@ -194,7 +194,7 @@ from Logical to Physical."
 (defadvice beginning-of-line (around physical-line-beginning-of-line disable)
   (if (or (eq last-command this-command)
 	  (null (physical-line-active-p))
-	  (null (interactive-p))
+	  (null (called-interactively-p 'interactive))
 	  (/=  (prefix-numeric-value (ad-get-arg 0)) 1)
 	  )
       ad-do-it
@@ -207,7 +207,7 @@ from Logical to Physical."
 (defadvice end-of-line (around physical-line-end-of-line disable)
   (if (or (eq last-command this-command)
 	  (null (physical-line-active-p))
-	  (null (interactive-p))
+	  (null (called-interactively-p 'interactive))
 	  (/=  (prefix-numeric-value (ad-get-arg 0)) 1)
 	  )
       ad-do-it

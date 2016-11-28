@@ -41,6 +41,14 @@ E.g.
           (setq path (expand-file-name folder path))))
     path))
 
+(defun my-get-default-directory ()
+  (let* ((full-home-path (expand-file-name "~")))
+    (if (equal
+         (substring default-directory 0 (length full-home-path))
+         full-home-path)
+        (concat "~" (substring default-directory (length full-home-path)))
+      default-directory)))
+
 (defun force-symbol-name (some-symbol)
   "Return lisp symbol `some-symbol' as a string at all costs!"
   (mapconcat 'char-to-string

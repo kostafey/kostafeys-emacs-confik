@@ -1,5 +1,5 @@
 ;;; beanshell.el
-;; $Id: beanshell.el 175 2009-12-24 02:59:33Z lenbok $
+;; $Id: beanshell.el 303 2015-07-06 15:13:34Z paullandes $
 
 ;; Author: Paul Kinnucan <paulk@mathworks.com>
 ;; Maintainer: Paul Landes <landes <at> mailc dt net>
@@ -78,7 +78,8 @@
 
 (require 'eieio)
 (require 'comint)
-(require 'lmenu)
+(eval-when-compile
+  (require 'cl))
 
 (declare-function jde-find-jde-doc-directory "jde" nil)
 
@@ -223,7 +224,7 @@ buffer."
   (oset this process (get-buffer-process (oref this buffer)))
   (oset this filter (process-filter (oref this process)))
 
-  ;; moved to `process-query-on-exit-flag' per compile warning hint: 
+  ;; moved to `process-query-on-exit-flag' per compile warning hint:
   ;; `process-kill-without-query' is an obsolete function (as of Emacs 22.1);
   ;; use `process-query-on-exit-flag' or `set-process-query-on-exit-flag'.
   ;;
@@ -590,8 +591,7 @@ to the string form required by the vm."
 (defmethod bsh-detect-java-eval-error ((this bsh) bsh-output)
   (if (string-match "// Error:" bsh-output)
       (if (oref this separate-error-buffer)
-	  (save-excursion
-	    (set-buffer (get-buffer-create "*Beanshell Error*"))
+	  (with-current-buffer (get-buffer-create "*Beanshell Error*")
 	    (erase-buffer)
 	    (insert (format "Expression: %s" (oref this java-expr)))
 	    (newline)
@@ -720,8 +720,7 @@ with the buffer named BUFFER-NAME."
   (let (bsh-object
 	(buffer (get-buffer buffer-name)))
     (if buffer
-	(save-excursion
-	  (set-buffer buffer)
+	(with-current-buffer buffer
 	  (setq bsh-object bsh-the-bsh)))
     bsh-object))
 
@@ -866,7 +865,7 @@ by Pat Niemeyer."
   (interactive)
   (let ((bsh
 	 (if (slot-boundp 'bsh-standalone-bsh 'the-bsh)
-	     (oref 'bsh-standalone-bsh the-bsh))))
+	     (oref-default 'bsh-standalone-bsh the-bsh))))
     (if (and bsh (bsh-running-p bsh))
 	(bsh-kill-process bsh)
       (message "The beanshell is not running"))))
@@ -905,36 +904,20 @@ by Pat Niemeyer."
 	(browse-url (concat "file://" bsh-help))
       (signal 'error '("Cannot find BeanShell help file.")))))
 
-(defcustom bsh-script-menu-definition
-  (list "Bsh"
-	["Help" bsh-script-help t])
-  "Definition of menu for BeanShell script buffers."
-  :group 'bsh
-  :type 'sexp
-  :set '(lambda (sym val)
-	  (set-default sym val)
-	  ; Define Bsh script menu for FSF Emacs.
-	  (if (or (not (featurep 'xemacs))
-		  (featurep 'infodock))
+(if (not (featurep 'xemacs))
+    (defcustom bsh-script-menu-definition
+      (list "Bsh"
+	    ["Help" bsh-script-help t])
+      "Definition of menu for BeanShell script buffers."
+      :group 'bsh
+      :type 'sexp
+      :set '(lambda (sym val)
+	      (set-default sym val)
+	      ; Define Bsh script menu for FSF Emacs.
 	      (easy-menu-define bsh-script-menu
 				bsh-script-mode-map
 				"Menu for BeanShell Script Buffer."
-				val))
-	  (if (and (featurep 'xemacs)
-		   (eq major-mode 'bsh-script-mode))
-	      (bsh-script-insert-menu-in-xemacs-menubar))))
-
-(defun bsh-script-insert-menu-in-xemacs-menubar ()
-  "Insert BeanShell script menu in the XEmacs menu bar."
-  (if (and
-       (not (featurep 'infodock))
-       (boundp 'c-emacs-features)
-       (not (memq 'infodock c-emacs-features))
-       (boundp 'current-menubar)
-       current-menubar)
-      (if (fboundp 'add-submenu)
-	  (add-submenu nil bsh-script-menu-definition)
-	(add-menu nil "Bsh" (cdr bsh-script-menu-definition)))))
+				val))))
 
 (provide 'beanshell)
 

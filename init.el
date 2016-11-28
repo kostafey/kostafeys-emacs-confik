@@ -53,6 +53,7 @@
 (add-to-list 'load-path (concat site-lisp-path "temporary-persistent/"))
 (require 'temporary-persistent)
 
+(add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
 (require 'ejc-sql-conf nil 'noerror)
 
 (require 'switch-language)
@@ -95,7 +96,6 @@
 ;; (require 'misc-swarm)
 
 (require 'calc-time)
-(require 'hibernate-mapping)
 (require 'perfomance-conf)
 
 (setq w32-quote-process-args t)
