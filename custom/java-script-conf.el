@@ -11,6 +11,9 @@
 (add-hook 'css-mode-hook 'skewer-css-mode)
 (add-hook 'html-mode-hook 'skewer-html-mode)
 
+;; Before M-x run-skewer check port 8080 is free.
+;; Use (setq httpd-port 8081) otherwise.
+
 (defun skewer-eval-region (start end)
   "Evaluate the region as JavaScript code."
   (interactive "r")

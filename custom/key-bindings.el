@@ -8,6 +8,7 @@
 ;; Exit & iconify emacs
 (global-set-key (kbd "M-z") 'iconify-or-deiconify-frame)    ; Hide emacs frame
 (global-set-key (kbd "M-<f4>") 'save-buffers-kill-terminal)
+(global-set-key [escape] 'keyboard-quit)
 
 ;;=============================================================================
 ;; CUA - the core of the emacs humane ;)
