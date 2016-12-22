@@ -21,9 +21,21 @@
                                    (magit-status)))
           (t (magit-status)))))
 
-(when (require 'git-gutter nil 'noerror)
-  (global-git-gutter-mode +1)
-  (git-gutter:linum-setup)
-  (setq git-gutter:modified-sign "*"))
+(if (require 'git-gutter-fringe nil 'noerror)
+    (progn
+      (global-git-gutter-mode t)
+      (fringe-helper-define 'git-gutter-fr:modified nil
+        ".XX..XX."
+        ".XXXXXX."
+        "..XXXX.."
+        "XXXXXXXX"
+        "XXXXXXXX"
+        "..XXXX.."
+        ".XXXXXX."
+        ".XX..XX."))
+  (when (require 'git-gutter nil 'noerror)
+    (global-git-gutter-mode +1)
+    (git-gutter:linum-setup)
+    (setq git-gutter:modified-sign "*")))
 
 (provide 'version-control)

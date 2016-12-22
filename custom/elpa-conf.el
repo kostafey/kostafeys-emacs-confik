@@ -131,7 +131,8 @@ and `buffer-navigation'.")
   (list 'magit
         'ahg
         'diffview
-        'git-gutter)
+        'git-gutter
+        'git-gutter-fringe)
   "Required packages for `version-control'.")
 
 (defvar prog-modes-packages

@@ -13,6 +13,7 @@
 
 ;; Before M-x run-skewer check port 8080 is free.
 ;; Use (setq httpd-port 8081) otherwise.
+(setq httpd-port 8081)
 
 (defun skewer-eval-region (start end)
   "Evaluate the region as JavaScript code."
