@@ -165,7 +165,8 @@ and `buffer-navigation'.")
         'jabber
         'circe
         'ag
-        'names)
+        'names
+        'undercover)
   "Packages, not requred by configuration files.")
 
 (defvar misc-requred-packages
