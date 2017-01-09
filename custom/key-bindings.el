@@ -382,8 +382,8 @@
 (global-set-key (concat change-buffer-prefix "e")
                 '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 
-(global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer)
-(setq temporary-persistent-save-key "C-s")
+(when (require 'temporary-persistent nil)
+  (global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer))
 
 (global-set-key (concat change-buffer-prefix "p")
                 '(lambda () (interactive) (find-file "~/.org.gpg")))

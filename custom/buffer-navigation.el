@@ -130,13 +130,19 @@ Don't mess with special buffers."
         (ansi-term (getenv "SHELL")))
     (switch-to-buffer-other-window "*ansi-term*")))
 
+(defun find-browser-executable ()
+  (cond ((executable-find "google-chrome-stable") "google-chrome-stable")
+        ((executable-find "chromium") "chromium")
+        ((executable-find "chromium-browser") "chromium-browser")
+        ((executable-find "firefox") "firefox")
+        (t (message "Cant find any browser in the PATH."))))
+
 (if (eq system-type 'windows-nt)
     (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program
           "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe")
   (setq browse-url-browser-function 'browse-url-generic
-        ;; browse-url-generic-program "google-chrome-stable"
-        browse-url-generic-program "chromium"))
+        browse-url-generic-program (find-browser-executable)))
 
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."
