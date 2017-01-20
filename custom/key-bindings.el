@@ -67,6 +67,8 @@
 (global-set-key "\C-d" 'delete-char)            ; delete
 (global-set-key "\C-q" 'quoted-insert)
 (global-set-key [(delete)] 'delete-char)
+;; (global-set-key (kbd "M-SPC") 'just-one-space) - default
+(global-set-key (kbd "s-SPC") 'just-one-space)
 
 ;;-----------------------------------------------------------------------------
 (global-set-key (kbd "C-s") 'save-buffer)
@@ -211,6 +213,10 @@
 (global-set-key (kbd "C-M-d") 'hop-at-point)
 ;;
 ;;=============================================================================
+
+;; Switch frame
+;; C-x 5 o - default
+(global-set-key (kbd "s-<tab>") 'other-frame)
 
 ;;=============================================================================
 ;;                              Command executions
@@ -382,7 +388,7 @@
 (global-set-key (concat change-buffer-prefix "e")
                 '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 
-(when (require 'temporary-persistent nil)
+(when (require 'temporary-persistent nil 'noerror)
   (global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer))
 
 (global-set-key (concat change-buffer-prefix "p")

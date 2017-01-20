@@ -116,6 +116,8 @@ Add to .emacs:
   (global-set-key "\C-d" 'delete-char)            ; delete
   (global-set-key "\C-q" 'quoted-insert)
   (global-set-key [(delete)] 'delete-char)
+  ;; (global-set-key (kbd "M-SPC") 'just-one-space) - default
+  (global-set-key (kbd "s-SPC") 'just-one-space)
 #+end_src
 
 *** Save/revert
@@ -327,6 +329,17 @@ Add to .emacs:
   (global-set-key (kbd "C-M-d") 'hop-at-point)
   ;;
   ;;=============================================================================
+#+end_src
+
+** Frames
+    | Key   | Command     |
+    |-------+-------------|
+    | s-tab | other-frame |
+
+#+begin_src emacs-lisp :exports none
+  ;; Switch frame
+  ;; C-x 5 o - default
+  (global-set-key (kbd "s-<tab>") 'other-frame)
 #+end_src
 
 ** Command executions
