@@ -165,7 +165,7 @@
 (defun hop-by-mouse (start-event)
   "Jump to the entity definition by mouse click."
   (interactive "e")
-  (mouse-drag-region start-event)
+  ;; (mouse-drag-region start-event)
   (hop-at-point (point)))
 
 (provide 'hopper)

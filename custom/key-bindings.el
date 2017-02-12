@@ -700,7 +700,8 @@
 (global-unset-key (kbd "<C-S-down-mouse-1>"))
 (global-set-key (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
 (define-key cua--rectangle-keymap (kbd "<C-S-mouse-1>") 'hkb-mouse-mark-cua-rectangle)
-(global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
+;; (global-set-key (kbd "<C-down-mouse-1>") 'hop-by-mouse)
+(global-set-key (kbd "<C-mouse-1>") 'hop-by-mouse)
 ;;
 ;;=============================================================================
 
