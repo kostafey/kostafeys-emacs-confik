@@ -670,6 +670,25 @@ Add to .emacs:
   ;;=============================================================================
 #+end_src
 
+*** ASCII graphic & formatting notes
+    | Command                         | Description                             |
+    |---------------------------------+-----------------------------------------|
+    | markdown-insert-header-setext-1 | Add double underline to text            |
+    | markdown-insert-header-setext-2 | Add underline to text                   |
+    |---------------------------------+-----------------------------------------|
+    | comment-box                     | Comment region, putting it inside a box |
+    |---------------------------------+-----------------------------------------|
+    | picture-draw-rectangle          | Draw rectangle around rectangle-mark    |
+    |                                 | selection                               |
+    |---------------------------------+-----------------------------------------|
+    | table-insert                    | Table creation & manipulation           |
+    | table-recognize                 |                                         |
+    | table-unrecognize               |                                         |
+    | *table--cell-center-paragraph   |                                         |
+    |---------------------------------+-----------------------------------------|
+    | center-line                     |                                         |
+    | center-region                   |                                         |
+
 *** Paredit customization
     | Key         | Command                              | Description               |
     |-------------+--------------------------------------+---------------------------|
