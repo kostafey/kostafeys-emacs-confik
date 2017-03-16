@@ -11,6 +11,22 @@
 (add-hook 'css-mode-hook 'skewer-css-mode)
 (add-hook 'html-mode-hook 'skewer-html-mode)
 
+;;------------------------------------------------------------
+;;        Steps to communicate to the "external" site
+;; For example, there is an application running in localhost:8080.
+;;
+;; 1. (setq httpd-port 8081) in `.emacs'
+;; 2. Install `greasemonkey' for Firefox or `tampermonkey' for Chrome.
+;; 3. Add `skewer-everything.user.js' script.
+;; 4. Modify this script: var host = 'http://localhost:8081';
+;; 5. M-x run-skewer (get new tab for localhost:8081)
+;; 6. M-x skewer-repl
+;; 7. Reload target "external" localhost:8080 tab in browser
+
+;; At this point, you'll get 2 clients in skewer-repl.
+;; So you have to close localhost:8081 tab.
+;;------------------------------------------------------------
+
 ;; Before M-x run-skewer check port 8080 is free.
 ;; Use (setq httpd-port 8081) otherwise.
 (setq httpd-port 8081)
