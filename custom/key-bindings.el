@@ -588,10 +588,12 @@
 ;; ENSIME
 ;;
 (defun kostafey-ensime-mode-hook ()
+  (define-key ensime-mode-map (kbd "C-n j") 'ensime)
   (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
   (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
   (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
-  (define-key ensime-mode-map (kbd "C-x C-e") 'eval-last-scala-expr))
+  (define-key ensime-mode-map (kbd "C-M-/") 'ensime-print-errors-at-point)
+  (define-key ensime-mode-map (kbd "M-=") 'ensime-type-at-point))
 (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 
 ;;----------------------------------------------------------------------
