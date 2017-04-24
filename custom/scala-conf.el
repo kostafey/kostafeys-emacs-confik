@@ -37,7 +37,10 @@
                  (while (equal (string (preceding-char)) ".")
                    (backward-sexp))
                  (if (equal (format "%s" (preceding-sexp)) "new")
-                     (backward-sexp))))
+                     (backward-sexp))
+                 (when (equal (format "%s" (preceding-sexp)) "=")
+                   (backward-sexp)
+                   (beginning-of-line))))
               (t
                (progn
                  (cua-set-mark)
