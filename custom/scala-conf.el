@@ -20,32 +20,40 @@
     (overlay-put overlay 'face 'secondary-selection)
     (run-with-timer (or timeout 0.2) nil 'delete-overlay overlay)))
 
+(defun k/ensime-skip-sexp (val)
+  (ignore-errors
+    (while (or
+            (equal (string (preceding-char)) val)
+            (equal (format "%s" (preceding-sexp)) val))
+      (backward-sexp))))
+
+(defun k/ensime-skip-line (val)
+  (ignore-errors
+    (while (or
+            (equal (string (preceding-char)) val)
+            (equal (format "%s" (preceding-sexp)) val))
+      (backward-sexp)
+      (beginning-of-line))))
+
 (defun eval-last-scala-expr ()
   (interactive)
   (let ((prev-str (string (preceding-char))))
     (save-excursion
       (let ((start (point)))
+        (cua-set-mark)
+        (backward-sexp 1)
         (cond ((equal "}" prev-str)
-               (progn
-                 (cua-set-mark)
-                 (backward-sexp)
-                 (beginning-of-line)))
+               (beginning-of-line))
               ((equal ")" prev-str)
                (progn
-                 (cua-set-mark)
-                 (ignore-errors (backward-sexp 2))
-                 (while (equal (string (preceding-char)) ".")
-                   (backward-sexp))
-                 (if (equal (format "%s" (preceding-sexp)) "new")
-                     (backward-sexp))
-                 (when (equal (format "%s" (preceding-sexp)) "=")
-                   (backward-sexp)
-                   (beginning-of-line))))
+                 (ignore-errors (backward-sexp 1))
+                 (k/ensime-skip-sexp ".")
+                 (k/ensime-skip-sexp "new")
+                 (k/ensime-skip-line "=")))
               (t
                (progn
-                 (cua-set-mark)
-                 (backward-sexp 1)
-                 (flash-region start (point)))))
+                 (k/ensime-skip-sexp ".")
+                 (k/ensime-skip-sexp "import"))))
         (flash-region start (point))
         (ensime-inf-eval-region start (point))
         (setq deactivate-mark t)))))
