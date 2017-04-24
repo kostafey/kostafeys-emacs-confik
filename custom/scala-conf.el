@@ -23,21 +23,29 @@
 (defun eval-last-scala-expr ()
   (interactive)
   (let ((prev-str (string (preceding-char))))
-    (cond ((equal "}" prev-str)
-           (let ((start (point)))
-             (save-excursion
-               (cua-set-mark)
-               (backward-sexp)
-               (beginning-of-line)
-               (flash-region start (point))
-               (ensime-inf-eval-region start (point))
-               (setq deactivate-mark t))))
-          ((equal ")" prev-str)
-           (let ((start (point)))
-             (save-excursion
-               (backward-sexp)
-               (ensime-inf-eval-region start (point)))))
-          (t (ensime-inf-eval-definition)))))
+    (save-excursion
+      (let ((start (point)))
+        (cond ((equal "}" prev-str)
+               (progn
+                 (cua-set-mark)
+                 (backward-sexp)
+                 (beginning-of-line)))
+              ((equal ")" prev-str)
+               (progn
+                 (cua-set-mark)
+                 (ignore-errors (backward-sexp 2))
+                 (while (equal (string (preceding-char)) ".")
+                   (backward-sexp))
+                 (if (equal (format "%s" (preceding-sexp)) "new")
+                     (backward-sexp))))
+              (t
+               (progn
+                 (cua-set-mark)
+                 (backward-sexp 1)
+                 (flash-region start (point)))))
+        (flash-region start (point))
+        (ensime-inf-eval-region start (point))
+        (setq deactivate-mark t)))))
 
 (setq scala-indent:step 4)
 
