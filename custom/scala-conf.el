@@ -49,10 +49,13 @@
                 (equal ")" prev-str)
                 (equal "]" prev-str))
                (progn
-                 (ignore-errors (backward-sexp 1))
+                 (if (not (= (current-column) 0))
+                     (ignore-errors (backward-sexp 1)))
                  (k/ensime-skip-sexp ".")
                  (k/ensime-skip-sexp "new")
-                 (k/ensime-skip-line "=")))
+                 (k/ensime-skip-line "=")
+                 (k/ensime-skip-line "case")
+                 (k/ensime-skip-line "class")))
               (t
                (progn
                  (k/ensime-skip-sexp ".")
@@ -61,18 +64,8 @@
         (ensime-inf-eval-region start (point))
         (setq deactivate-mark t)))))
 
-(defun k/ensime-eval-buffer ()
-  (interactive)
-  (save-excursion
-    (k/ensime-flash-region (point-max) (point-min))
-    (cua-set-mark)
-    (ensime-inf-eval-region (point-max) (point-min))
-    (setq deactivate-mark t)))
-
-(defun k/ensime-quit ()
-  (interactive)
-  (let* ((mask "*ENSIME")
-         (buffers (buffer-list))
+(defun k/quit-by-mask (mask mgs)
+  (let* ((buffers (buffer-list))
          (l (length mask)))
     (while buffers
       (with-current-buffer (car buffers)
@@ -81,7 +74,58 @@
                  (equal (substring (buffer-name) 0 l) mask))
           (kill-buffer)))
       (setq buffers (cdr buffers))))
-  (message "ENSIME buffers closed."))
+  (if mgs (message mgs)))
+
+(defun k/ensime-quit ()
+  (interactive)
+  (k/quit-by-mask "*ENSIME" "ENSIME buffers closed."))
+
+(defun k/repl-quit ()
+  (interactive)
+  (k/quit-by-mask "*Scala REPL" nil))
+
+(defun k/ensime-compile ()
+  (interactive)
+  (let ((buf (current-buffer)))
+    (save-excursion
+      (sbt-command "compile")
+      (save-excursion
+        (let ((beg)
+              (end)))
+        (beginning-of-buffer)
+        (forward-sexp)
+        (setq beg (point))
+        (end-of-line)
+        (setq end (point))
+        (let ((pkg (concat "import "
+                           (trim-string (buffer-substring beg end))
+                           "._")))
+          (k/repl-quit)
+          (ensime-inf-switch)
+          ;; (with-current-buffer buf
+          ;;   (let ((contents (buffer-substring (point-min) (point-max))))
+          ;;     (erase-buffer)
+          ;;     (sit-for 0)
+          ;;     (animate-string contents 0 0)))
+          (sit-for 0.5)
+          (ensime-inf-send-string pkg)
+          (message pkg))))))
+
+(defun k/ensime-config ()
+  (interactive)
+  (sbt-command "ensimeConfig"))
+
+(defun k/ensime-eval-buffer ()
+  (interactive)
+  (save-excursion
+    (k/ensime-flash-region (point-max) (point-min))
+    (cua-set-mark)
+    (ensime-inf-eval-region (point-max) (point-min))
+    (setq deactivate-mark t))
+
+  ;; (k/ensime-flash-region (point-max) (point-min))
+  ;; (ensime-inf-load-file (buffer-file-name))
+  )
 
 (setq scala-indent:step 4)
 
