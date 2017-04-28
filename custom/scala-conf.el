@@ -35,12 +35,35 @@
       (backward-sexp)
       (beginning-of-line))))
 
-(defun k/ensime-eval-last-scala-expr ()
+(defun k/ensime-check-package (pname)
+  (when (equal (format "%s" (preceding-sexp)) "package")
+    (k/ensime-flash-region (line-beginning-position)
+                           (line-end-position))
+    (ensime-inf-send-string (concat "import " pname "._"))
+    t))
+
+(defun k/ensime-inf-eval-region (start end)
+  "Send current region to Scala interpreter."
+  (interactive "r")
+  (ensime-inf-assert-running)
+  (let* ((reg (trim-string
+               (buffer-substring-no-properties start end)))
+         ;; remove package ... line
+         (reg (if (= (string-match "package" reg) 0)
+                  (substring reg (1+ (string-match "\n" reg)))
+                reg)))
+    (with-current-buffer ensime-inf-buffer-name
+      (goto-char (point-max))
+      (comint-send-string nil ":paste\n")
+      (comint-send-string nil reg)
+      (comint-send-string nil "\n")
+      (comint-send-eof))))
+
+(cl-defun k/ensime-eval-last-scala-expr ()
   (interactive)
   (let ((prev-str (string (preceding-char))))
     (save-excursion
       (let ((start (point)))
-        (cua-set-mark)
         (backward-sexp 1)
         (cond ((equal "}" prev-str)
                (ignore-errors (backward-sexp 1))
@@ -59,10 +82,12 @@
               (t
                (progn
                  (k/ensime-skip-sexp ".")
-                 (k/ensime-skip-sexp "import"))))
+                 (k/ensime-skip-sexp "import")
+                 (when (k/ensime-check-package
+                        (buffer-substring start (point)))
+                   (return-from k/ensime-eval-last-scala-expr)))))
         (k/ensime-flash-region start (point))
-        (ensime-inf-eval-region start (point))
-        (setq deactivate-mark t)))))
+        (k/ensime-inf-eval-region start (point))))))
 
 (defun k/quit-by-mask (mask mgs)
   (let* ((buffers (buffer-list))
@@ -97,16 +122,13 @@
         (setq beg (point))
         (end-of-line)
         (setq end (point))
-        (let ((pkg (concat "import "
-                           (trim-string (buffer-substring beg end))
-                           "._")))
+        (let ((pkg (concat
+                    "import "
+                    (trim-string
+                     (buffer-substring beg end))
+                    "._")))
           (k/repl-quit)
           (ensime-inf-switch)
-          ;; (with-current-buffer buf
-          ;;   (let ((contents (buffer-substring (point-min) (point-max))))
-          ;;     (erase-buffer)
-          ;;     (sit-for 0)
-          ;;     (animate-string contents 0 0)))
           (sit-for 0.5)
           (ensime-inf-send-string pkg)
           (message pkg))))))
@@ -119,13 +141,7 @@
   (interactive)
   (save-excursion
     (k/ensime-flash-region (point-max) (point-min))
-    (cua-set-mark)
-    (ensime-inf-eval-region (point-max) (point-min))
-    (setq deactivate-mark t))
-
-  ;; (k/ensime-flash-region (point-max) (point-min))
-  ;; (ensime-inf-load-file (buffer-file-name))
-  )
+    (k/ensime-inf-eval-region (point-max) (point-min))))
 
 (setq scala-indent:step 4)
 
