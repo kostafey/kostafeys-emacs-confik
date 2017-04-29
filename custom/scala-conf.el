@@ -49,7 +49,7 @@
   (let* ((reg (trim-string
                (buffer-substring-no-properties start end)))
          ;; remove package ... line
-         (reg (if (= (string-match "package" reg) 0)
+         (reg (if (equal (string-match "package" reg) 0)
                   (substring reg (1+ (string-match "\n" reg)))
                 reg)))
     (with-current-buffer ensime-inf-buffer-name
