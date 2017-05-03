@@ -157,7 +157,8 @@ and `buffer-navigation'.")
 (defvar js-packages
   (list 'simple-httpd
         'js2-mode
-        'skewer-mode)
+        'skewer-mode
+        'js-comint)
   "Required packages for `java-script-conf'.")
 
 

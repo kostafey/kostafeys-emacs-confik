@@ -19,15 +19,15 @@
 ;; 2. Install `greasemonkey' for Firefox or `tampermonkey' for Chrome.
 ;; 3. Add `skewer-everything.user.js' script.
 ;; 4. Modify this script: var host = 'http://localhost:8081';
-;; 5. M-x run-skewer (get new tab for localhost:8081)
-;; 6. M-x skewer-repl
+;; 5. M-x `run-skewer' (get new tab for localhost:8081)
+;; 6. M-x `skewer-repl'
 ;; 7. Reload target "external" localhost:8080 tab in browser
 
 ;; At this point, you'll get 2 clients in skewer-repl.
 ;; So you have to close localhost:8081 tab.
 ;;------------------------------------------------------------
 
-;; Before M-x run-skewer check port 8080 is free.
+;; Before M-x `run-skewer' check port 8080 is free.
 ;; Use (setq httpd-port 8081) otherwise.
 (setq httpd-port 8081)
 
@@ -36,7 +36,15 @@
   (interactive "r")
   (skewer-eval (buffer-substring-no-properties start end)
                #'skewer-post-minibuffer))
-;;
+
 ;;------------------------------------------------------------
+;; Customize js-comint.el for `rhino'
+;; M-x `run-js'
+;;
+(setq inferior-js-program-command "java")
+(setq inferior-js-program-arguments
+      (list
+       "-jar"
+       (file-truename "~/.m2/repository/org/mozilla/rhino/1.7.7/rhino-1.7.7.jar")))
 
 (provide 'java-script-conf)
