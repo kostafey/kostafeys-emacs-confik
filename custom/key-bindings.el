@@ -598,7 +598,8 @@
   (define-key ensime-mode-map (kbd "C-x C-e") 'k/ensime-eval-last-scala-expr)
   (define-key ensime-mode-map (kbd "C-n q") 'k/ensime-quit)
   (define-key ensime-mode-map (kbd "C-n e b") 'k/ensime-eval-buffer)
-  (define-key ensime-mode-map (kbd "C-n k") 'k/ensime-compile))
+  (define-key ensime-mode-map (kbd "C-n k") 'k/ensime-compile)
+  (define-key ensime-mode-map (kbd "C-M-d") 'hop-at-point))
 (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
 
 ;;----------------------------------------------------------------------

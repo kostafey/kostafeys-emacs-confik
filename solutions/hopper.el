@@ -148,6 +148,11 @@
                    (hop-nrepl-current-session)) (cider-find-var
                                                  (cider--kw-to-symbol
                                                   (cider-symbol-at-point))))
+             ;; scala-mode
+             ((equal 'scala-mode mode)
+              (progn
+                (ensime-edit-definition-of-thing-at-point)
+                (recenter-top-bottom 5)))
              ;; go-mode
              ((equal 'go-mode mode) (godef-jump point))
              ;; shell mode assume line looks like [ERROR] ~/project/MyClass.java:123:
