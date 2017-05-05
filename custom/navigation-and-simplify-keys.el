@@ -32,31 +32,42 @@
 (require 'thingatpt)
 ;; (subword-mode)
 
-(defun step-forward-word ()
+(defun k/select ()
+    (if (not mark-active)
+        (cua-set-mark)))
+
+(defun k/deselect ()
+  (setq deactivate-mark t))
+
+(defun k/step-forward-word ()
   "Like odinary editors, C-<right> moves forward word."
-  (interactive)
   (skip-chars-forward " \t")
   (forward-same-syntax 1))
 
-(defun step-backward-word ()
+(defun k/step-backward-word ()
   "Like odinary editors, C-<left> moves backward word."
-  (interactive)
   (skip-chars-backward " \t")
   (forward-same-syntax -1))
 
-(defun step-forward-select ()
-  "Like odinary editors, C-S-<right> moves forward word and selects it."
-  (interactive)
-  (if (not mark-active)
-      (cua-set-mark))
-  (step-forward-word))
+(defun k/line-next () (interactive) (k/deselect) (next-line))
+(defun k/line-previous () (interactive) (k/deselect) (previous-line))
+(defun k/line-next-select () (interactive) (k/select) (next-line))
+(defun k/line-previous-select () (interactive) (k/select) (previous-line))
 
-(defun step-backward-select ()
-  "Like odinary editors, C-S-<left> moves backward word and selects it."
-  (interactive)
-  (if (not mark-active)
-      (cua-set-mark))
-  (step-backward-word))
+(defun k/char-forward () (interactive) (k/deselect) (right-char 1))
+(defun k/char-backward () (interactive) (k/deselect) (left-char 1))
+(defun k/char-forward-select () (interactive) (k/select) (right-char 1))
+(defun k/char-backward-select () (interactive) (k/select) (left-char 1))
+
+(defun k/word-forward () (interactive) (k/deselect) (k/step-forward-word))
+(defun k/word-backward () (interactive) (k/deselect) (k/step-backward-word))
+(defun k/word-forward-select () (interactive) (k/select) (k/step-forward-word))
+(defun k/word-backward-select () (interactive) (k/select) (k/step-backward-word))
+
+(defun k/sexp-forward () (interactive) (k/deselect) (forward-sexp 1))
+(defun k/sexp-backward () (interactive) (k/deselect) (backward-sexp 1))
+(defun k/sexp-forward-select () (interactive) (k/select) (forward-sexp 1))
+(defun k/sexp-backward-select () (interactive) (k/select) (backward-sexp 1))
 
 ;;=============================================================================
 ;; Marks&select a line

@@ -165,20 +165,35 @@ Add to .emacs:
   (require 'physical-line)
   (physical-line-mode 1)
 
-  (global-set-key (kbd "<up>")   'previous-line)
-  (global-set-key (kbd "<down>") 'next-line)
   (global-set-key (kbd "<end>")  'end-of-line)
   (global-set-key (kbd "<home>") 'beginning-of-line)
   ;;-----------------------------------------------------------------------------
-  (global-set-key (kbd "C-<right>")   'step-forward-word)
-  (global-set-key (kbd "C-<left>")    'step-backward-word)
-  (global-set-key (kbd "C-S-<right>") 'step-forward-select)
-  (global-set-key (kbd "C-S-<left>")  'step-backward-select)
+
+  (global-set-key (kbd "<up>")          'k/line-previous)
+  (global-set-key (kbd "<down>")        'k/line-next)
+  (global-set-key (kbd "S-<up>")        'k/line-previous-select)
+  (global-set-key (kbd "S-<down>")      'k/line-next-select)
+
+  (global-set-key (kbd "<right>")       'k/char-forward)
+  (global-set-key (kbd "<left>")        'k/char-backward)
+  (global-set-key (kbd "S-<right>")     'k/char-forward-select)
+  (global-set-key (kbd "S-<left>")      'k/char-backward-select)
+
+  (global-set-key (kbd "C-<right>")     'k/word-forward)
+  (global-set-key (kbd "C-<left>")      'k/word-backward)
+  (global-set-key (kbd "C-S-<right>")   'k/word-forward-select)
+  (global-set-key (kbd "C-S-<left>")    'k/word-backward-select)
+
+  (global-set-key (kbd "C-M-<right>")   'k/sexp-forward)
+  (global-set-key (kbd "C-M-<left>")    'k/sexp-backward)
+  (global-set-key (kbd "C-M-S-<right>") 'k/sexp-forward-select)
+  (global-set-key (kbd "C-M-S-<left>")  'k/sexp-backward-select)
+
   (put 'step-forward-word 'CUA 'move)
   (put 'step-backward-word 'CUA 'move)
   ;;-----------------------------------------------------------------------------
-  (global-set-key (kbd "C-M-<down>") 'forward-sentence)
-  (global-set-key (kbd "C-M-<up>") 'backward-sentence)
+  (global-set-key (kbd "C-s-<down>") 'forward-sentence)
+  (global-set-key (kbd "C-s-<up>") 'backward-sentence)
   ;;-----------------------------------------------------------------------------
   ;; cua-mode in org-mode
   (eval-after-load "org"
@@ -187,6 +202,8 @@ Add to .emacs:
       (define-key org-mode-map (kbd "S-<right>") nil)
       (define-key org-mode-map (kbd "C-S-<left>") nil)
       (define-key org-mode-map (kbd "C-S-<right>") nil)
+      (define-key org-mode-map (kbd "C-S-M-<left>") nil)
+      (define-key org-mode-map (kbd "C-S-M-<right>") nil)
       (define-key org-mode-map (kbd "S-<up>") nil)
       (define-key org-mode-map (kbd "S-<down>") nil)
       (define-key org-mode-map (kbd "M-<up>") nil)
