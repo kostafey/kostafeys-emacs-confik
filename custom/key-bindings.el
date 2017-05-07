@@ -95,10 +95,6 @@
 (require 'physical-line)
 (physical-line-mode 1)
 
-(global-set-key (kbd "<end>")  'end-of-line)
-(global-set-key (kbd "<home>") 'beginning-of-line)
-;;-----------------------------------------------------------------------------
-
 (global-set-key (kbd "<up>")          'k/line-previous)
 (global-set-key (kbd "<down>")        'k/line-next)
 (global-set-key (kbd "S-<up>")        'k/line-previous-select)
@@ -118,6 +114,11 @@
 (global-set-key (kbd "C-M-<left>")    'k/sexp-backward)
 (global-set-key (kbd "C-M-S-<right>") 'k/sexp-forward-select)
 (global-set-key (kbd "C-M-S-<left>")  'k/sexp-backward-select)
+
+(global-set-key (kbd "<end>")         'k/line-end)
+(global-set-key (kbd "<home>")        'k/line-beginning)
+(global-set-key (kbd "S-<end>")       'k/line-end-select)
+(global-set-key (kbd "S-<home>")      'k/line-beginning-select)
 
 (put 'step-forward-word 'CUA 'move)
 (put 'step-backward-word 'CUA 'move)

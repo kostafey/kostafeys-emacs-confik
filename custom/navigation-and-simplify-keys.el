@@ -37,7 +37,8 @@
         (cua-set-mark)))
 
 (defun k/deselect ()
-  (setq deactivate-mark t))
+  (if (not cua--rectangle)
+      (setq deactivate-mark t)))
 
 (defun k/step-forward-word ()
   "Like odinary editors, C-<right> moves forward word."
@@ -49,10 +50,10 @@
   (skip-chars-backward " \t")
   (forward-same-syntax -1))
 
-(defun k/line-next () (interactive) (k/deselect) (next-line))
-(defun k/line-previous () (interactive) (k/deselect) (previous-line))
-(defun k/line-next-select () (interactive) (k/select) (next-line))
-(defun k/line-previous-select () (interactive) (k/select) (previous-line))
+(defun k/line-next () (interactive) (k/deselect) (line-move 1))
+(defun k/line-previous () (interactive) (k/deselect) (line-move -1))
+(defun k/line-next-select () (interactive) (k/select) (line-move 1))
+(defun k/line-previous-select () (interactive) (k/select) (line-move -1))
 
 (defun k/char-forward () (interactive) (k/deselect) (right-char 1))
 (defun k/char-backward () (interactive) (k/deselect) (left-char 1))
@@ -68,6 +69,11 @@
 (defun k/sexp-backward () (interactive) (k/deselect) (backward-sexp 1))
 (defun k/sexp-forward-select () (interactive) (k/select) (forward-sexp 1))
 (defun k/sexp-backward-select () (interactive) (k/select) (backward-sexp 1))
+
+(defun k/line-beginning () (interactive) (k/deselect) (beginning-of-line))
+(defun k/line-end () (interactive) (k/deselect) (end-of-line))
+(defun k/line-beginning-select () (interactive) (k/select) (beginning-of-line))
+(defun k/line-end-select () (interactive) (k/select) (end-of-line))
 
 ;;=============================================================================
 ;; Marks&select a line
