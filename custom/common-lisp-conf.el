@@ -36,5 +36,6 @@
   '(add-to-list 'ac-modes 'slime-repl-mode))
 
 (add-to-list 'auto-mode-alist '("\\.stumpwmrc$" . lisp-mode))
+(add-to-list 'auto-mode-alist '("\\.sbclrc$" . lisp-mode))
 
 (provide 'common-lisp-conf)
