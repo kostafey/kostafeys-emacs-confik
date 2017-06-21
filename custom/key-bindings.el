@@ -649,6 +649,10 @@
 (when (require 'ejc-sql nil 'noerror)
   (eval-after-load "ejc-sql"
     '(progn
+       (define-key ejc-sql-mode-keymap (kbd "C-S-s-<up>") '(lambda() (interactive) (ejc-previous-sql t)))
+       (define-key ejc-sql-mode-keymap (kbd "C-S-s-<down>") '(lambda() (interactive) (ejc-next-sql t)))
+       (define-key ejc-sql-mode-keymap (kbd "C-s-<up>") 'ejc-previous-sql)
+       (define-key ejc-sql-mode-keymap (kbd "C-s-<down>") 'ejc-next-sql)
        (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
        (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
 ;;

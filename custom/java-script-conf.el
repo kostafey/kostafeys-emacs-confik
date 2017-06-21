@@ -38,13 +38,22 @@
                #'skewer-post-minibuffer))
 
 ;;------------------------------------------------------------
-;; Customize js-comint.el for `rhino'
+;; Customize js-comint.el for `rhino' and `node.js'
 ;; M-x `run-js'
 ;;
-(setq inferior-js-program-command "java")
-(setq inferior-js-program-arguments
-      (list
-       "-jar"
-       (file-truename "~/.m2/repository/org/mozilla/rhino/1.7.7/rhino-1.7.7.jar")))
+(defun rhino-repl ()
+  (interactive)
+  (setq inferior-js-program-command "java")
+  (setq inferior-js-program-arguments
+        (list
+         "-jar"
+         (file-truename "~/.m2/repository/org/mozilla/rhino/1.7.7/rhino-1.7.7.jar")))
+  (run-js inferior-js-program-command))
+
+(defun node-repl ()
+  (interactive)
+  (setq inferior-js-program-command "node")
+  (setq inferior-js-program-arguments '("--interactive"))
+  (run-js inferior-js-program-command))
 
 (provide 'java-script-conf)
