@@ -56,4 +56,12 @@
   (setq inferior-js-program-arguments '("--interactive"))
   (run-js inferior-js-program-command))
 
+;;------------------------------------------------------------
+;; tern
+;;
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+
 (provide 'java-script-conf)
