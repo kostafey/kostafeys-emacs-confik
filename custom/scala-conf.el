@@ -57,7 +57,7 @@
       (comint-send-string nil ":paste\n")
       (comint-send-string nil reg)
       (comint-send-string nil "\n")
-      (sit-for 0.5)
+      (sit-for 1)
       (comint-send-eof))))
 
 (cl-defun k/ensime-eval-last-scala-expr ()

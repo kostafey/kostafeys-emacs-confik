@@ -158,7 +158,9 @@ and `buffer-navigation'.")
   (list 'simple-httpd
         'js2-mode
         'skewer-mode
-        'js-comint)
+        'js-comint
+        'tern
+        'tern-auto-complete)
   "Required packages for `java-script-conf'.")
 
 
