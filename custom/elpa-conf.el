@@ -160,7 +160,8 @@ and `buffer-navigation'.")
         'skewer-mode
         'js-comint
         'tern
-        'tern-auto-complete)
+        'tern-auto-complete
+        'web-beautify)
   "Required packages for `java-script-conf'.")
 
 

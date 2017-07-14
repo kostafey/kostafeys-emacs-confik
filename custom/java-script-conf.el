@@ -64,4 +64,9 @@
       (require 'tern-auto-complete)
       (tern-ac-setup)))
 
+;;------------------------------------------------------------
+;; web-beautify
+;; npm -g install js-beautify
+;; M-x `web-beautify-js'
+
 (provide 'java-script-conf)
