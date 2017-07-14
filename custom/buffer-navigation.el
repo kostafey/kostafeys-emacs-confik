@@ -171,4 +171,12 @@ Don't mess with special buffers."
            (concat "http://" entered-str)
          entered-str)))))
 
+(defun find-file-from-clipboard ()
+  "Open file or directory path from clipboard (kill ring) if path exists."
+  (interactive)
+  (let ((file-path (current-kill 0)))
+    (if (file-exists-p file-path)
+        (find-file file-path)
+      (message "Can't find file '%s'" file-path))))
+
 (provide 'buffer-navigation)

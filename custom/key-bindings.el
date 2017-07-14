@@ -375,6 +375,8 @@
 (global-set-key [(control next)] 'my-next-buffer)      ; C-Page Up
 (global-set-key [(control prior)] 'my-previous-buffer) ; C-Page Down
 
+(global-set-key (kbd "C-x a s") 'find-file-from-clipboard)
+
 ;;-----------------------------------------------------------------------------
 ;; tabbar - switch buffers by tabs
 (global-set-key [(shift super left)] 'tabbar-backward-tab)

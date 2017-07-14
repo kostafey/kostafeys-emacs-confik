@@ -554,7 +554,17 @@ Add to .emacs:
   (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
   ;;
   ;;=============================================================================
+#+end_src
 
+*** Buffers navigation
+    | Key           | Command                  | Description                 |
+    |---------------+--------------------------+-----------------------------|
+    | control next  | my-next-buffer           |                             |
+    | control prior | my-previous-buffer       |                             |
+    | C-x a s       | find-file-from-clipboard | Open file or directory path |
+    |               |                          | from clipboard (kill ring)  |
+    |               |                          | if path exists.             |
+#+begin_src emacs-lisp :exports none
   ;;=============================================================================
   ;; Buffers navigation
   ;;
@@ -568,6 +578,8 @@ Add to .emacs:
 
   (global-set-key [(control next)] 'my-next-buffer)      ; C-Page Up
   (global-set-key [(control prior)] 'my-previous-buffer) ; C-Page Down
+
+  (global-set-key (kbd "C-x a s") 'find-file-from-clipboard)
 
   ;;-----------------------------------------------------------------------------
   ;; tabbar - switch buffers by tabs
