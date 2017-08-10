@@ -1004,6 +1004,8 @@ Add to .emacs:
     | M-w   | diffview-current           | <b>magit-mode</b>: two-window      |
     |       |                            | (side-by-side) comparsion          |
     | S-M-w | magit-copy-buffer-revision | get buffer revision                |
+    |       | magit-log-buffer-file      | Show log for the blob or file      |
+    |       |                            | visited in the current buffer.     |
 #+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
   ;; Magit & ahg

@@ -22,9 +22,8 @@
 ;; 5. M-x `run-skewer' (get new tab for localhost:8081)
 ;; 6. M-x `skewer-repl'
 ;; 7. Reload target "external" localhost:8080 tab in browser
-
-;; At this point, you'll get 2 clients in skewer-repl.
-;; So you have to close localhost:8081 tab.
+;; 8. At this point, you'll get 2 clients in skewer-repl.
+;;    So you have to close localhost:8081 tab.
 ;;------------------------------------------------------------
 
 ;; Before M-x `run-skewer' check port 8080 is free.
@@ -36,6 +35,10 @@
   (interactive "r")
   (skewer-eval (buffer-substring-no-properties start end)
                #'skewer-post-minibuffer))
+
+(when (require 'skewer-mode nil 'noerror)
+  (define-key skewer-mode-map
+    (kbd "C-c C-p") 'skewer-pprint-eval-last-expression))
 
 ;;------------------------------------------------------------
 ;; Customize js-comint.el for `rhino' and `node.js'
