@@ -42,23 +42,36 @@
     (ensime-inf-send-string (concat "import " pname "._"))
     t))
 
+(defun k/ensime-inf-eval-string (s)
+  (with-current-buffer ensime-inf-buffer-name
+    (goto-char (point-max))
+    (comint-send-string nil ":paste\n")
+    (comint-send-string nil s)
+    (comint-send-string nil "\n")
+    (sit-for 1)
+    (comint-send-eof)))
+
 (defun k/ensime-inf-eval-region (start end)
   "Send current region to Scala interpreter."
   (interactive "r")
   (ensime-inf-assert-running)
   (let* ((reg (trim-string
                (buffer-substring-no-properties start end)))
+         (package-pos (string-match "package" reg))
          ;; remove package ... line
-         (reg (if (equal (string-match "package" reg) 0)
-                  (substring reg (1+ (string-match "\n" reg)))
+         (reg (if (equal package-pos 0)
+                  (let* ((package-name-end-pos
+                          (string-match "\n" reg package-pos))
+                         (package-name
+                          (trim-string
+                           (substring reg
+                                      (+ package-pos (length "package"))
+                                      package-name-end-pos))))
+                    (k/ensime-inf-eval-string
+                     (concat "import " package-name "._"))
+                    (substring reg (1+ (string-match "\n" reg))))
                 reg)))
-    (with-current-buffer ensime-inf-buffer-name
-      (goto-char (point-max))
-      (comint-send-string nil ":paste\n")
-      (comint-send-string nil reg)
-      (comint-send-string nil "\n")
-      (sit-for 1)
-      (comint-send-eof))))
+    (k/ensime-inf-eval-string reg)))
 
 (cl-defun k/ensime-eval-last-scala-expr ()
   (interactive)
