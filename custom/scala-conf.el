@@ -67,9 +67,8 @@
                            (substring reg
                                       (+ package-pos (length "package"))
                                       package-name-end-pos))))
-                    (k/ensime-inf-eval-string
-                     (concat "import " package-name "._"))
-                    (substring reg (1+ (string-match "\n" reg))))
+                    (concat "import " package-name "._ \n"
+                            (substring reg (1+ (string-match "\n" reg)))))
                 reg)))
     (k/ensime-inf-eval-string reg)))
 
