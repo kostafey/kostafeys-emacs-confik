@@ -131,7 +131,8 @@ Don't mess with special buffers."
     (switch-to-buffer-other-window "*ansi-term*")))
 
 (defun find-browser-executable ()
-  (cond ((executable-find "google-chrome-stable") "google-chrome-stable")
+  (cond ((executable-find "midori") "midori")
+        ((executable-find "google-chrome-stable") "google-chrome-stable")
         ((executable-find "chromium") "chromium")
         ((executable-find "chromium-browser") "chromium-browser")
         ((executable-find "firefox") "firefox")
@@ -147,15 +148,17 @@ Don't mess with special buffers."
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."
   (interactive "p")
-  (browse-url
-   (concat
-    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
-    (url-hexify-string
-     (if mark-active
-         (buffer-substring (region-beginning) (region-end))
-       (read-string "Google: "
-                    (if (not (equal arg 1))
-                        (symbol-name (symbol-at-point)))))))))
+  (let ((e1 (equal arg 1)))
+    (browse-url
+     (concat
+      (format "http://%s.google.com/search?ie=utf-8&oe=utf-8&q="
+              (if e1 "ipv6" "www"))
+      (url-hexify-string
+       (if mark-active
+           (buffer-substring (region-beginning) (region-end))
+         (read-string (format "%sGoogle: " (if e1 "ipv6." ""))
+                      (if (and e1 (symbol-at-point))
+                          (symbol-name (symbol-at-point))))))))))
 
 (defun goto-url (&optional arg)
   "Go to selected region as URL if any, display a query prompt otherwise."
