@@ -131,7 +131,7 @@ Don't mess with special buffers."
     (switch-to-buffer-other-window "*ansi-term*")))
 
 (defun find-browser-executable ()
-  (cond ((executable-find "midori") "midori")
+  (cond ((executable-find "palemoon") "palemoon")
         ((executable-find "google-chrome-stable") "google-chrome-stable")
         ((executable-find "chromium") "chromium")
         ((executable-find "chromium-browser") "chromium-browser")
@@ -151,12 +151,11 @@ Don't mess with special buffers."
   (let ((e1 (equal arg 1)))
     (browse-url
      (concat
-      (format "http://%s.google.com/search?ie=utf-8&oe=utf-8&q="
-              (if e1 "ipv6" "www"))
+      "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
       (url-hexify-string
        (if mark-active
            (buffer-substring (region-beginning) (region-end))
-         (read-string (format "%sGoogle: " (if e1 "ipv6." ""))
+         (read-string "Google: "
                       (if (and e1 (symbol-at-point))
                           (symbol-name (symbol-at-point))))))))))
 
