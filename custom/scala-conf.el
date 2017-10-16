@@ -156,6 +156,24 @@
     (k/ensime-flash-region (point-max) (point-min))
     (k/ensime-inf-eval-region (point-max) (point-min))))
 
+(defun k/ensime-mvn-sbt ()
+  (interactive)
+  (save-excursion
+    (let* ((beg (point))
+           (bg (progn (search-forward "<groupId>") (point)))
+           (eg (progn (search-forward "</groupId>") (- (point) (length "</groupId>"))))
+           (ba (progn (search-forward "<artifactId>") (point)))
+           (ea (progn (search-forward "</artifactId>") (- (point) (length "</artifactId>"))))
+           (bv (progn (search-forward "<version>") (point)))
+           (ev (progn (search-forward "</version>") (- (point) (length "</version>"))))
+           (end (progn (search-forward "</dependency>") (point)))
+           (sbt-format (format "libraryDependencies += \"%s\" %% \"%s\" %% \"%s\""
+                               (buffer-substring bg eg)
+                               (buffer-substring ba ea)
+                               (buffer-substring bv ev))))
+      (delete-region beg end)
+      (insert sbt-format))))
+
 (setq scala-indent:step 4)
 
 (provide 'scala-conf)
