@@ -151,7 +151,7 @@ Don't mess with special buffers."
   (let ((e1 (equal arg 1)))
     (browse-url
      (concat
-      "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+      "http://ipv6.google.com/search?ie=utf-8&oe=utf-8&q="
       (url-hexify-string
        (if mark-active
            (buffer-substring (region-beginning) (region-end))
