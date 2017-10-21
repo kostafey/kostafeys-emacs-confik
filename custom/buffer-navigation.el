@@ -181,4 +181,18 @@ Don't mess with special buffers."
         (find-file file-path)
       (message "Can't find file '%s'" file-path))))
 
+;;----------------------------------------------------------------------
+;; windmove
+;; Handle 2 monitors case
+;;
+(defun k/windmove-do-window-select (orig-fun &rest args)
+  (let ((other-window (apply 'windmove-find-other-window args)))
+    (if (and (null other-window)
+             (> (length (frame-list)) 1))
+        (other-frame 1)
+      (apply orig-fun args))))
+
+(advice-add 'windmove-do-window-select
+            :around #'k/windmove-do-window-select)
+
 (provide 'buffer-navigation)
