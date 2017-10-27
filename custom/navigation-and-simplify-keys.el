@@ -282,4 +282,21 @@
   (setq ag-reuse-buffers 't)
   (setq ag-highlight-search t))
 
+(defun rename-file-of-buffer ()
+  "Renames both current buffer and file it's visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" (buffer-name))
+      (let ((new-name (read-from-minibuffer
+                       "New name: "
+                       (file-name-nondirectory (buffer-file-name)))))
+        (if (get-buffer new-name)
+            (message "A buffer named '%s' already exists!" new-name)
+          (progn
+            (rename-file filename new-name 1)
+            (rename-buffer new-name)
+            (set-visited-file-name new-name)
+            (set-buffer-modified-p nil)))))))
+
 (provide 'navigation-and-simplify-keys)
