@@ -75,6 +75,18 @@
 (defun k/line-beginning-select () (interactive) (k/select) (beginning-of-line))
 (defun k/line-end-select () (interactive) (k/select) (end-of-line))
 
+(when (require 'sgml-mode nil 'noerror)
+
+  (defun k/sgml-skip-tag-forward-select ()
+    (interactive)
+    (k/select)
+    (sgml-skip-tag-forward 1))
+
+  (defun k/sgml-skip-tag-backward-select ()
+    (interactive)
+    (k/select)
+    (sgml-skip-tag-backward 1)))
+
 ;;=============================================================================
 ;; Marks&select a line
 ;;=============================================================================

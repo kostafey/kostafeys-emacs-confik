@@ -217,14 +217,17 @@
 ;;
 ;;-----------------------------------------------------------------------------
 ;; html/xml tags navigation
-(defun kostafey-html-mode-hook ()
-  (define-key html-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
-  (define-key html-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
-(add-hook 'html-mode-hook 'kostafey-html-mode-hook)
-(defun kostafey-nxml-mode-hook ()
+(defun k/define-xml-jumps ()
   (require 'sgml-mode)
-  (define-key nxml-mode-map (kbd "C-n") 'sgml-skip-tag-forward)
-  (define-key nxml-mode-map (kbd "C-b") 'sgml-skip-tag-backward))
+  (define-key html-mode-map (kbd "C-M-<right>") 'sgml-skip-tag-forward)
+  (define-key html-mode-map (kbd "C-M-<left>") 'sgml-skip-tag-backward)
+  (define-key html-mode-map (kbd "C-M-S-<right>") 'k/sgml-skip-tag-forward-select)
+  (define-key html-mode-map (kbd "C-M-S-<left>") 'k/sgml-skip-tag-backward-select))
+(defun kostafey-html-mode-hook ()
+  (k/define-xml-jumps))
+(defun kostafey-nxml-mode-hook ()
+  (k/define-xml-jumps))
+(add-hook 'html-mode-hook 'kostafey-html-mode-hook)
 (add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 ;;-----------------------------------------------------------------------------
 ;; goto definition
