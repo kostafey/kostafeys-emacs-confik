@@ -217,16 +217,16 @@
 ;;
 ;;-----------------------------------------------------------------------------
 ;; html/xml tags navigation
-(defun k/define-xml-jumps ()
-  (require 'sgml-mode)
-  (define-key html-mode-map (kbd "C-M-<right>") 'sgml-skip-tag-forward)
-  (define-key html-mode-map (kbd "C-M-<left>") 'sgml-skip-tag-backward)
-  (define-key html-mode-map (kbd "C-M-S-<right>") 'k/sgml-skip-tag-forward-select)
-  (define-key html-mode-map (kbd "C-M-S-<left>") 'k/sgml-skip-tag-backward-select))
+(defun k/define-xml-jumps (mode-map)
+  ;; (require 'sgml-mode)
+  (define-key mode-map (kbd "C-M-<right>") 'k/sgml-skip-tag-forward)
+  (define-key mode-map (kbd "C-M-<left>") 'k/sgml-skip-tag-backward)
+  (define-key mode-map (kbd "C-M-S-<right>") 'k/sgml-skip-tag-forward-select)
+  (define-key mode-map (kbd "C-M-S-<left>") 'k/sgml-skip-tag-backward-select))
 (defun kostafey-html-mode-hook ()
-  (k/define-xml-jumps))
+  (k/define-xml-jumps html-mode-map))
 (defun kostafey-nxml-mode-hook ()
-  (k/define-xml-jumps))
+  (k/define-xml-jumps nxml-mode-map))
 (add-hook 'html-mode-hook 'kostafey-html-mode-hook)
 (add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 ;;-----------------------------------------------------------------------------
@@ -613,6 +613,7 @@
 (defun kostafey-ensime-mode-hook ()
   (define-key ensime-mode-map (kbd "C-n j") 'ensime)
   (define-key ensime-mode-map (kbd "C-n c") 'ensime-inf-switch)
+  (define-key ensime-mode-map (kbd "C-n s") 'ensime-sbt-switch)
   (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
   (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
   (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)

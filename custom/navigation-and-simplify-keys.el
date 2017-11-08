@@ -77,15 +77,33 @@
 
 (when (require 'sgml-mode nil 'noerror)
 
+  (defvar k/sgml-exceptions (list "\""))
+
+  (defun k/sgml-skip-tag-forward (&optional select)
+    (interactive)
+    (if (member (string (following-char)) k/sgml-exceptions)
+        (if select
+            (k/sexp-forward-select)
+          (k/sexp-forward))
+      (sgml-skip-tag-forward 1)))
+
+  (defun k/sgml-skip-tag-backward (&optional select)
+    (interactive)
+    (if (member (string (preceding-char)) k/sgml-exceptions)
+        (if select
+            (k/sexp-backward-select)
+          (k/sexp-backward))
+      (sgml-skip-tag-backward 1)))
+
   (defun k/sgml-skip-tag-forward-select ()
     (interactive)
     (k/select)
-    (sgml-skip-tag-forward 1))
+    (k/sgml-skip-tag-forward t))
 
   (defun k/sgml-skip-tag-backward-select ()
     (interactive)
     (k/select)
-    (sgml-skip-tag-backward 1)))
+    (k/sgml-skip-tag-backward t)))
 
 ;;=============================================================================
 ;; Marks&select a line

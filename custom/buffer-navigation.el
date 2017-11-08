@@ -145,13 +145,22 @@ Don't mess with special buffers."
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program (find-browser-executable)))
 
+(defvar ipv6
+  (and
+   (featurep 'make-network-process '(:family ipv6))
+   (not (equal
+         (car (split-string
+               (shell-command-to-string "ping6 ipv6.google.com") "\n"))
+         "connect: Network is unreachable"))))
+
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."
   (interactive "p")
   (let ((e1 (equal arg 1)))
     (browse-url
      (concat
-      "http://ipv6.google.com/search?ie=utf-8&oe=utf-8&q="
+      (format "http://%s.google.com/search?ie=utf-8&oe=utf-8&q="
+              (if ipv6 "ipv6" "www"))
       (url-hexify-string
        (if mark-active
            (buffer-substring (region-beginning) (region-end))
