@@ -143,6 +143,7 @@ and `buffer-navigation'.")
         'projectile
         'flycheck
         'javadoc-lookup
+        'groovy-mode
         'web-mode
         'diff-hl
         'paredit
