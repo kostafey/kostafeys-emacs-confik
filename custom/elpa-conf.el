@@ -143,7 +143,7 @@ and `buffer-navigation'.")
         'projectile
         'flycheck
         'javadoc-lookup
-        'jdee
+        ;; 'jdee
         'groovy-mode
         'web-mode
         'diff-hl
