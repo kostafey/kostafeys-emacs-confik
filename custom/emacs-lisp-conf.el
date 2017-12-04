@@ -31,7 +31,7 @@
     (let ((buffer (get-buffer-create result-buffer-name)))
       (temp-buffer-window-show
        buffer
-       (with-current-buffer buffer              
+       (with-current-buffer buffer
          (princ (cl-prettyprint form))
          (emacs-lisp-mode)
          (let ((map (current-local-map)))
