@@ -22,6 +22,25 @@
 
 (add-hook 'after-save-hook 'byte-compile-current-buffer)
 
+;;------------------------------------------------------------
+;; pprint
+(defun pprint (form)
+  (let ((result-buffer-name "*elisp-result*"))
+    (if (buffer-live-p (get-buffer-create result-buffer-name))
+        (kill-buffer result-buffer-name))
+    (let ((buffer (get-buffer-create result-buffer-name)))
+      (temp-buffer-window-show
+       buffer
+       (with-current-buffer buffer              
+         (princ (cl-prettyprint form))
+         (emacs-lisp-mode)
+         (let ((map (current-local-map)))
+           (define-key map "q" 'quit-window)))))))
+
+(defun k/el-pprint-eval-last-sexp ()
+  (interactive)
+  (pprint (eval (elisp--preceding-sexp))))
+
 ;;=============================================================================
 ;; ElDoc
 ;;

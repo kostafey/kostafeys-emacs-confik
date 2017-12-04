@@ -580,6 +580,13 @@
 (add-hook 'slime-mode-hook 'kostafey-lisp-mode-hook)
 
 ;;----------------------------------------------------------------------
+;; emacs lisp
+(defun kostafey-elisp-mode-hook ()
+  (define-key emacs-lisp-mode-map (kbd "C-c C-p")
+    'k/el-pprint-eval-last-sexp))
+(add-hook 'emacs-lisp-mode-hook 'kostafey-elisp-mode-hook)
+
+;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
 ;;
 (global-unset-key (kbd "C-n"))

@@ -863,6 +863,18 @@ Add to .emacs:
   (add-hook 'lisp-mode-hook 'kostafey-lisp-mode-hook)
   (add-hook 'slime-mode-hook 'kostafey-lisp-mode-hook)
 #+end_src
+*** Emacs Lisp
+    | Key     | Command                    |
+    |---------+----------------------------|
+    | C-c C-p | k/el-pprint-eval-last-sexp |
+#+begin_src emacs-lisp :exports none
+  ;;----------------------------------------------------------------------
+  ;; emacs lisp
+  (defun kostafey-elisp-mode-hook ()
+    (define-key emacs-lisp-mode-map (kbd "C-c C-p")
+      'k/el-pprint-eval-last-sexp))
+  (add-hook 'emacs-lisp-mode-hook 'kostafey-elisp-mode-hook)
+#+end_src
 *** Clojure
 #+begin_src emacs-lisp :exports none
   ;;----------------------------------------------------------------------
