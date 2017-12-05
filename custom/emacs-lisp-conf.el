@@ -24,6 +24,9 @@
 
 ;;------------------------------------------------------------
 ;; pprint
+(define-derived-mode elisp-result-mode emacs-lisp-mode "elisp-result"
+  "Major mode for emacs lisp result.")
+
 (defun pprint (form)
   (let ((result-buffer-name "*elisp-result*"))
     (if (buffer-live-p (get-buffer-create result-buffer-name))
@@ -33,7 +36,7 @@
        buffer
        (with-current-buffer buffer
          (princ (cl-prettyprint form))
-         (emacs-lisp-mode)
+         (elisp-result-mode)
          (let ((map (current-local-map)))
            (define-key map "q" 'quit-window)))))))
 
