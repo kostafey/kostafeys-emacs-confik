@@ -22,7 +22,9 @@
               (progn
                 (my-find-touch-file)
                 (setq my-switch-counter 0)
-                (my-previous-buffer))
+                (my-previous-buffer)
+                (if (> (length (frame-list)) 1)
+                    (previous-multiframe-window)))
             (progn
               (my-previous-buffer)
               (incf my-switch-counter))))))

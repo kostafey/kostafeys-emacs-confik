@@ -62,8 +62,7 @@
   "Required packages for `text-modes-conf'.")
 
 (defvar bte-required-packages
-  (list 'browse-kill-ring
-        'wrap-region)
+  (list 'browse-kill-ring)
   "Required packages for `basic-text-editing'.")
 
 (defvar clojure-packages '(clojure-mode

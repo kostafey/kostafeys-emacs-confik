@@ -7,3 +7,6 @@
 [submodule "artifacts/popup-el"]
 	path = artifacts/popup-el
 	url = https://github.com/kostafey/popup-el
+[submodule "artifacts/wrap-region.el"]
+	path = artifacts/wrap-region.el
+	url = https://github.com/rejeep/wrap-region.el

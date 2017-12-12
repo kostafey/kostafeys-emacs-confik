@@ -50,6 +50,9 @@
 (add-to-list 'load-path (concat third-party-lisp-path "popup-el/"))
 (require 'popup)
 
+(add-to-list 'load-path (concat third-party-lisp-path "wrap-region.el/"))
+(require 'wrap-region)
+
 (add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
 (require 'ejc-sql-conf nil 'noerror)
 
