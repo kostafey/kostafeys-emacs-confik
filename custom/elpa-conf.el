@@ -8,10 +8,11 @@
 
 (setq package-archives '(("ELPA" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("m-stable" . "http://stable.melpa.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")))
+                         ;;("org" . "http://orgmode.org/elpa/")
+						 ))
 
 (defvar package-is-refreshed nil
   "Holds the flag if the `package-refresh-contents' already done.")
@@ -47,7 +48,7 @@
 
 (defvar text-modes-required-packages
   (list 'org
-        'org-plus-contrib
+        ;'org-plus-contrib
         'log4j-mode
         'lorem-ipsum
         'markdown-mode
@@ -60,10 +61,6 @@
         'vlf
         'yaml-mode)
   "Required packages for `text-modes-conf'.")
-
-(defvar bte-required-packages
-  (list 'browse-kill-ring)
-  "Required packages for `basic-text-editing'.")
 
 (defvar clojure-packages '(clojure-mode
                            clojure-mode-extra-font-locking
@@ -180,7 +177,6 @@ and `buffer-navigation'.")
   "Packages, requred by configuration files.")
 
 (install-required-packages (append
-                            bte-required-packages
                             text-modes-required-packages
                             clojure-packages
                             scala-packages

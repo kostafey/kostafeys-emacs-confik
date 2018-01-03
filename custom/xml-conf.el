@@ -13,4 +13,8 @@ by using nxml's indentation rules."
     (indent-region begin end))
   (message "Ah, much better!"))
 
+(defun xml-format ()
+  (interactive)
+  (xml-pretty-print-region (point-min) (point-max)))
+
 (provide 'xml-conf)

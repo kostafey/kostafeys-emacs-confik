@@ -45,8 +45,13 @@
 ;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.ftl$" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda (progn
+               ;; (setq indent-line-function nil)
+               (setq indent-line-function 'web-mode-indent-line))))
 (setq web-mode-enable-current-element-highlight t)
-(setq web-mode-markup-indent-offset 4)
+(setq web-mode-markup-indent-offset 2)
 
 ;;=============================================================================
 ;; tomacat

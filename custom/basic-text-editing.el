@@ -2,8 +2,6 @@
 
 (require 'elpa-conf)
 
-(require 'browse-kill-ring)
-
 (defun count-words-region (beginning end arg)
   "Counting words (chars) in the selected area.
 arg - is a searching word (char)"
