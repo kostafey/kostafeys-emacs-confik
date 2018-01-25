@@ -60,7 +60,13 @@ arg - is a searching word (char)"
 (defun insert-time()
   "Insert a time-stamp according to locale's date and time format."
   (interactive)
- (insert (format-time-string "%H:%M" (current-time))))
+  (insert (format-time-string "%H:%M" (current-time))))
+
+(defun date (arg)
+  (interactive "P")
+  (insert (if arg
+              (format-time-string "%d.%m.%Y")
+            (format-time-string "%Y-%m-%d"))))
 
 ;Очистка SQL
 ;"\|\(\\n\)\|\+

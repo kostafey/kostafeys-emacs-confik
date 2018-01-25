@@ -63,7 +63,14 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color themes path
-(load-theme 'organic-green t)
+;; (load-theme 'organic-green t)
+;; (load-theme 'doom-peacock t)
+(progn
+ (load-theme 'nord t)
+ (setq font-lock-comment-face '((t :inherit font-lock-comment-face
+                                   :foreground "slate gray")))
+ (setq font-lock-doc-face '((t :inherit font-lock-comment-face
+                                   :foreground "light slate gray"))))
 ;;-----------------------------------------------------------------------------
 
 (defun what-face (pos)

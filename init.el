@@ -68,8 +68,8 @@
 (require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 
-(add-to-list 'load-path (expand-file-name "launcher" site-lisp-path))
-(require 'switch-to-emacsclient)
+(add-to-list 'load-path (expand-file-name "eframe-samurai" site-lisp-path))
+(require 'eframe-samurai)
 
 (require 'history-conf)
 (require 'text-modes-conf)

@@ -15,6 +15,9 @@ by using nxml's indentation rules."
 
 (defun xml-format ()
   (interactive)
-  (xml-pretty-print-region (point-min) (point-max)))
+  (save-excursion
+   (xml-pretty-print-region (point-min) (point-max))
+   (mark-whole-buffer)
+   (indent-for-tab-command)))
 
 (provide 'xml-conf)
