@@ -89,8 +89,7 @@
   (list ;'popup
         'auto-complete
         'ac-etags
-        'yasnippet
-        'icomplete+)
+        'yasnippet)
   "Required packages for autocompletition.")
 
 (defvar laf-required-packages
