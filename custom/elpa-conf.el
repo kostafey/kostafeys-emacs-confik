@@ -115,7 +115,6 @@
   (list 'goto-last-change
         'multiple-cursors
         'temporary-persistent
-        'dired+
         'flx
         'flx-ido
         'smex
