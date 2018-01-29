@@ -89,8 +89,7 @@
   (list ;'popup
         'auto-complete
         'ac-etags
-        'yasnippet
-        'icomplete+)
+        'yasnippet)
   "Required packages for autocompletition.")
 
 (defvar laf-required-packages
@@ -115,7 +114,6 @@
   (list 'goto-last-change
         'multiple-cursors
         'temporary-persistent
-        'dired+
         'flx
         'flx-ido
         'smex

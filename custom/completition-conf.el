@@ -6,7 +6,7 @@
 (require 'yasnippet)
 ;; personal snippets
 (setq yas-snippet-dirs
-    (append yas-snippet-dirs 
+    (append yas-snippet-dirs
             (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
 
 (yas-global-mode 1)
@@ -25,7 +25,7 @@
      (previous-line)
      (indent-according-to-mode))
     ((expand-abbrev))
-    (t 
+    (t
      (setq *yas-invokation-point* (point))
      (yas/next-field-or-maybe-expand-1))))
 
@@ -79,7 +79,6 @@ Pages up through completion menu."
 ;;=============================================================================
 
 ;; minibuffer autocompletition.
-(require 'icomplete+)
 (icomplete-mode)
 
 (provide 'completition-conf)

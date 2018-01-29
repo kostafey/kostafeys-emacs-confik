@@ -63,19 +63,20 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color themes path
-;; (load-theme 'organic-green t)
-;; (load-theme 'doom-peacock t)
-(progn
-  (load-theme 'nord t)
-  (setq font-lock-comment-face '((t :inherit font-lock-comment-face
-                                    :foreground "slate gray")))
-  (setq font-lock-doc-face '((t :inherit font-lock-comment-face
-                                :foreground "light slate gray")))
-  (setq markdown-code-face '((t :inherit nil)))
-  (setq markdown-code-face '((t :inherit font-lock-comment-face
-                                :foreground "light slate gray")))
-  (setq markdown-pre-face '((t :inherit font-lock-comment-face
-                               :foreground "light slate gray"))))
+(if (equal system-name "debian-pc")
+    (load-theme 'organic-green t)
+  ;; (load-theme 'doom-peacock t)
+  (progn
+    (load-theme 'nord t)
+    (setq font-lock-comment-face '((t :inherit font-lock-comment-face
+                                      :foreground "slate gray")))
+    (setq font-lock-doc-face '((t :inherit font-lock-comment-face
+                                  :foreground "light slate gray")))
+    (setq markdown-code-face '((t :inherit nil)))
+    (setq markdown-code-face '((t :inherit font-lock-comment-face
+                                  :foreground "light slate gray")))
+    (setq markdown-pre-face '((t :inherit font-lock-comment-face
+                                 :foreground "light slate gray")))))
 ;;-----------------------------------------------------------------------------
 
 (defun what-face (pos)

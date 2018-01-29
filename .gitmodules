@@ -1,9 +1,6 @@
 [submodule "artifacts/slime-repl-ansi-color"]
 	path = artifacts/slime-repl-ansi-color
-	url = https://github.com/enriquefernandez/slime-repl-ansi-color.git
-[submodule "popup-el"]
-	path = artifacts/popup-el
-	url = https://github.com/kostafey/popup-el
+	url = https://github.com/deadtrickster/slime-repl-ansi-color.git
 [submodule "artifacts/popup-el"]
 	path = artifacts/popup-el
 	url = https://github.com/kostafey/popup-el

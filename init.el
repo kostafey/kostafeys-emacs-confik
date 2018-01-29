@@ -68,8 +68,8 @@
 (require 'copy-paste-clipboard-linux)
 (require 'key-bindings)
 
-(add-to-list 'load-path (expand-file-name "eframe-samurai" site-lisp-path))
-(require 'eframe-samurai)
+(add-to-list 'load-path (expand-file-name "eframe-launcher" site-lisp-path))
+(provide 'eframe-launcher)
 
 (require 'history-conf)
 (require 'text-modes-conf)
