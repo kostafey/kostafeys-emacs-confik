@@ -72,7 +72,6 @@
                                       :foreground "slate gray")))
     (setq font-lock-doc-face '((t :inherit font-lock-comment-face
                                   :foreground "light slate gray")))
-    (setq markdown-code-face '((t :inherit nil)))
     (setq markdown-code-face '((t :inherit font-lock-comment-face
                                   :foreground "light slate gray")))
     (setq markdown-pre-face '((t :inherit font-lock-comment-face

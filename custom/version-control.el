@@ -7,6 +7,7 @@
  '(magit-save-some-buffers (quote dontask)))
 
 (require 'ahg)
+(require 'darcsum)
 
 (defun get-vc-status ()
   "Call status function according to the actual vc system of the active file."
@@ -19,6 +20,9 @@
           ((equal vc-type "git") (if (eq system-type 'windows-nt)
                                      (magit-status-narrow)
                                    (magit-status)))
+          ((not (equal
+                 (darcsum-repository-root) nil)) (darcsum-whatsnew
+                                                  (darcsum-repository-root)))
           (t (magit-status)))))
 
 (if (require 'git-gutter-fringe nil 'noerror)

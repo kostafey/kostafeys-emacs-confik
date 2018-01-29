@@ -69,7 +69,7 @@
 (require 'key-bindings)
 
 (add-to-list 'load-path (expand-file-name "eframe-launcher" site-lisp-path))
-(provide 'eframe-launcher)
+(require 'eframe-samurai)
 
 (require 'history-conf)
 (require 'text-modes-conf)

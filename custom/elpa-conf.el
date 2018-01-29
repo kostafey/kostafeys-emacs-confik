@@ -107,7 +107,9 @@
         'rainbow-delimiters
         'organic-green-theme
         'cl-lib-highlight
-        'flycheck-tip)
+        'flycheck-tip
+        'doom-themes
+        'nord-theme)
   "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages
@@ -127,7 +129,8 @@ and `buffer-navigation'.")
         'ahg
         'diffview
         'git-gutter
-        'git-gutter-fringe)
+        'git-gutter-fringe
+        'darcsum)
   "Required packages for `version-control'.")
 
 (defvar prog-modes-packages
