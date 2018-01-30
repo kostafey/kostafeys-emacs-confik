@@ -68,6 +68,15 @@
   ;; (load-theme 'doom-peacock t)
   (progn
     (load-theme 'nord t)
+    (setq nord3 (if (display-graphic-p) "#4C566A" "brightblack"))
+    (setq nord4 (if (display-graphic-p) "#D8DEE9" "#D8DEE9"))
+    (setq nord11 (if (display-graphic-p) "#BF616A" "red"))
+    (setq nord12 (if (display-graphic-p) "#D08770" "brightyellow"))
+    (setq nord13 (if (display-graphic-p) "#EBCB8B" "yellow"))
+    
+    (set-face-attribute 'ace-jump-face-foreground nil :foreground nord13)
+    (set-face-attribute 'ace-jump-face-background nil :foreground "slate gray")    
+    
     (setq font-lock-comment-face '((t :inherit font-lock-comment-face
                                       :foreground "slate gray")))
     (setq font-lock-doc-face '((t :inherit font-lock-comment-face
