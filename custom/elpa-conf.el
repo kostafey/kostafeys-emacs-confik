@@ -81,6 +81,10 @@
                       go-eldoc)
   "Required packages for go (golang) coding.")
 
+(defvar rust-packages '(rust-mode
+                        racer)
+  "Required packages for rust coding.")
+
 (defvar scala-packages '(ensime
                          sbt-mode)
   "Required packages for scala coding.")
@@ -120,7 +124,8 @@
         'flx-ido
         'smex
         'ace-jump-mode
-        'flx-isearch)
+        'flx-isearch
+        'rg)
   "Required packages for `navigation-and-simplify-keys', `key-bindings'
 and `buffer-navigation'.")
 
@@ -183,6 +188,7 @@ and `buffer-navigation'.")
                             scala-packages
                             common-lisp-packages
                             go-packages
+                            rust-packages
                             ac-required-packages
                             laf-required-packages
                             nav-keys-required-packages
