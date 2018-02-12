@@ -91,6 +91,7 @@
 (require 'lua-conf)
 (require 'xml-conf)
 (require 'go-conf)
+(require 'rust-conf)
 ;; (require 'python-conf)
 
 ;; (require 'misc-swarm)

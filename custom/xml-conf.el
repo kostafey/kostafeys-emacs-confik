@@ -20,4 +20,12 @@ by using nxml's indentation rules."
    (mark-whole-buffer)
    (indent-for-tab-command)))
 
+(defun k/nxml-mode-hook ()
+  (setq indent-tabs-mode nil
+        tab-width 4
+        nxml-child-indent 4
+        nxml-attribute-indent 4))
+
+(add-hook 'nxml-mode-hook 'k/nxml-mode-hook)
+
 (provide 'xml-conf)

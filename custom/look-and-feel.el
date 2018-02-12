@@ -63,7 +63,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color themes path
-(if (equal system-name "debian-pc")
+(if t
     (load-theme 'organic-green t)
   ;; (load-theme 'doom-peacock t)
   (progn
@@ -73,9 +73,8 @@
     (setq nord11 (if (display-graphic-p) "#BF616A" "red"))
     (setq nord12 (if (display-graphic-p) "#D08770" "brightyellow"))
     (setq nord13 (if (display-graphic-p) "#EBCB8B" "yellow"))
-    
-    (set-face-attribute 'ace-jump-face-foreground nil :foreground nord13)
-    (set-face-attribute 'ace-jump-face-background nil :foreground "slate gray")    
+    ;; (set-face-attribute 'ace-jump-face-foreground nil :foreground nord13)
+    ;; (set-face-attribute 'ace-jump-face-background nil :foreground "slate gray")
     
     (setq font-lock-comment-face '((t :inherit font-lock-comment-face
                                       :foreground "slate gray")))
