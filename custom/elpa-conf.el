@@ -82,7 +82,8 @@
   "Required packages for go (golang) coding.")
 
 (defvar rust-packages '(rust-mode
-                        racer)
+                        racer
+                        cargo)
   "Required packages for rust coding.")
 
 (defvar scala-packages '(ensime
