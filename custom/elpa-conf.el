@@ -83,7 +83,8 @@
 
 (defvar rust-packages '(rust-mode
                         racer
-                        cargo)
+                        cargo
+                        flycheck-rust)
   "Required packages for rust coding.")
 
 (defvar scala-packages '(ensime

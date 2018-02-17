@@ -155,6 +155,8 @@
                 (recenter-top-bottom 5)))
              ;; go-mode
              ((equal 'go-mode mode) (godef-jump point))
+             ;; rust-mode
+             ((equal 'rust-mode mode) (racer-find-definition))
              ;; shell mode assume line looks like [ERROR] ~/project/MyClass.java:123:
              ((equal 'shell-mode mode) (hop-goto-file-location point))
              ;; markdown-mode
