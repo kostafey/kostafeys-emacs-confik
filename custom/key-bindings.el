@@ -474,7 +474,13 @@
 (global-set-key [f2] 'psw-switch-function)
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
 ;; (global-set-key [f8] 'ispell-region); 'ispell-word
-(global-set-key [f4] 'shell)
+
+(defun k/shell (&optional num)
+  (interactive "P")
+  (if num
+      (shell (format "*shell %s*" num))
+    (shell)))
+(global-set-key [f4] 'k/shell)
 (global-set-key [f5] 'bookmark-set)
 (global-set-key [f6] 'bookmark-jump)
 (global-set-key [f7] 'auto-complete-mode)
