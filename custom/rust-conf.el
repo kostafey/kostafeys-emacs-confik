@@ -28,6 +28,7 @@
   ;; --------------------------------
   ;; autocompletion & code navigation
   ;; `install:' cargo install racer
+  ;;            rustup component add rust-src
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
 
