@@ -1,40 +1,54 @@
 ;;; go-mode configuration
 
-;;--------------------
-;; Dependencies:
-
-;;    go-mode
-;; go get golang.org/x/tools/cmd/...
-;; go get golang.org/x/tools/cmd/godoc
-;; go get code.google.com/p/rog-go/exp/cmd/godef
-
-;;    go-autocomplete
-;;    go-eldoc
-;; go get -u github.com/nsf/gocode
-
-;;    go-flymake
-;;    go-flycheck
-;; go get -u github.com/dougm/goflymake
-
-;;--------------------
-
+;;---------------------
 ;; Environment example:
+;;
+;; The `GOROOT' points to the directory in which
+;; golang was installed:
+;;
+;; export GOROOT=/usr/local/go
+;; export PATH=$PATH:$GOROOT/bin
+;;
+;; The `GOPATH' environment variable specifies
+;; the location of your workspace:
+;;
+;; export GOPATH=$HOME/data/go
+;; export PATH=$PATH:$GOPATH/bin
 
-;; export GOROOT=/opt/golang/go
-;; export GOPATH=/opt/go
-;; PATH=$PATH:$GOROOT/bin:$GOPATH/bin/
-
+;; --------------------
+;; Navigation & go-mode
+;; go get github.com/rogpeppe/godef
 (require 'go-mode)
+;; Assume godoc & gofmt provided with golang SDK distribution.
+
+;;---------------
+;; Autocompletion
+;; - linux
+;; go get -u github.com/nsf/gocode
+;; - windows
+;; go get -u -ldflags -H=windowsgui github.com/nsf/gocode
 (require 'go-autocomplete)
+;; eldoc
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 
-(add-to-list 'load-path (concat (getenv "GOPATH")
-                                "/src/github.com/dougm/goflymake"))
-(require 'go-flymake nil 'noerror)
-(require 'go-flycheck nil 'noerror)
+;; --------
+;; Flycheck
+(when (require 'flycheck nil)
+  (add-hook 'go-mode-hook (lambda () (flycheck-mode t))))
 
+;; ----
+;; Lint
+go get -u golang.org/x/lint/golint
+(add-to-list 'load-path (concat (getenv "GOPATH")
+                                "/src/github.com/golang/lint/misc/emacs"))
+(require 'golint)
+
+;; -----------
+;; Compilation
 (defvar go-compile-command
   "go generate && go build -ldflags \"-s\" -v && go test -v && go vet")
+
+(defvar go-compile-ad-hoc t)
 
 (defun my-go-mode-hook ()
   (if (not (string-match "go" compile-command))
@@ -44,7 +58,9 @@
 
 (defun go-compile ()
   (interactive)
-  (compile go-compile-command))
+  (compile (if go-compile-ad-hoc
+               (concat "go build " (buffer-file-name))
+             go-compile-command)))
 
 (defun go-run ()
   (interactive)

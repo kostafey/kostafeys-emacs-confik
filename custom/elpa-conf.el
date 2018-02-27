@@ -181,7 +181,8 @@ and `buffer-navigation'.")
   "Packages, not requred by configuration files.")
 
 (defvar misc-requred-packages
-  (list 's)
+  (list 's
+        'java-snippets)
   "Packages, requred by configuration files.")
 
 (install-required-packages (append
