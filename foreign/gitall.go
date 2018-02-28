@@ -18,7 +18,7 @@ func getExPath() string {
 }
 
 func colorizePrint(s []byte) {
-    result := fmt.Sprintf("%s", s)
+    result := string(s)
     for _, line := range strings.Split(
         strings.TrimSuffix(result, "\n"), "\n") {
             if len(line) > 0 {
@@ -41,7 +41,7 @@ func gitGrep(currentDir string, search string, diff bool) {
     cmd := exec.Command("git", "log", "--all", fmt.Sprintf("--grep=%s", search))
     cmd.Dir = repoDir
     out, _ := cmd.Output()
-    result := fmt.Sprintf("%s", out)
+    result := string(out)
     if result != "" {
         if diff {
             for _, line := range strings.Split(
