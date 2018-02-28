@@ -21,6 +21,11 @@
 (require 'go-mode)
 ;; Assume godoc & gofmt provided with golang SDK distribution.
 
+(add-hook 'go-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (setq tab-width 4)))
+
 ;;---------------
 ;; Autocompletion
 ;; - linux
@@ -40,7 +45,7 @@
 ;; Lint
 ;; go get -u golang.org/x/lint/golint
 (add-to-list 'load-path (concat (getenv "GOPATH")
-                                "/src/github.com/golang/lint/misc/emacs"))
+                                "/src/golang.org/x/lint/misc/emacs"))
 (require 'golint)
 
 ;; -----------
