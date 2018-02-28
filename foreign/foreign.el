@@ -25,6 +25,7 @@
 
 ;; * foreign-format-json
 ;; * foreign-replace
+;; * foreign-find
 
 (require 'functions)
 
@@ -32,10 +33,13 @@
 
 (defun foreign-get-go-executable (src-go-file)
   (let* ((src-go-path (concat-path foreign-bin-path src-go-file))
-         (bin-go-path (substring src-go-path 0 (- (length src-go-path) 3))))
+         (bin-go-path (substring src-go-path 0 (- (length src-go-path) 3)))
+         (bin-go-path (if (eq system-type 'windows-nt)
+                          (concat bin-go-path ".exe")
+                        bin-go-path)))
     (if (not (file-exists-p bin-go-path))
         (shell-command
-         (concat "bash - c \"go build -o " bin-go-path " " src-go-path"\"")))
+         (concat "go build -o " bin-go-path " " src-go-path"\"")))
     bin-go-path))
 
 (defun foreign-format-json-file (file-name)
@@ -56,9 +60,9 @@
 (defun foreign-format-json ()
   "Pretty print json file."
   (interactive)
-  (js-mode)
   (foreign-format-json-file (buffer-file-name))
   (revert-buffer-hard)
+  (js-mode)
   (message "Done."))
 
 (defun foreign-replace (old-string new-string)

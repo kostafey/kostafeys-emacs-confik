@@ -1,4 +1,5 @@
 +/artifacts
 +/custom
-+/launcher
 +/solutions
++/eframe-launcher
+-/eframe-launcher/.git
