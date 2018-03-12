@@ -59,7 +59,8 @@
         'elfeed
         ;; View Large Files
         'vlf
-        'yaml-mode)
+        'yaml-mode
+        'restclient)
   "Required packages for `text-modes-conf'.")
 
 (defvar clojure-packages '(clojure-mode

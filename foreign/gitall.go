@@ -3,14 +3,14 @@
 package main
 
 import (
-	"fmt";
-	"strings";
-	"os";
-	"os/exec";
-	"io/ioutil";
-	"path/filepath";
-	"github.com/fatih/color";
-	"time";
+	"fmt"
+	"github.com/fatih/color"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 func help() {
@@ -23,10 +23,12 @@ Usage:
 Actions:
   log      - Show log commits filtered by commit message with <search> substring.
   diff     - Show diffs for all commits filtered by commit message with
-		     <search> substring.
+			 <search> substring.
   help     - Show this help.
   barnch   - Show branches list and current branch.
   checkout - Change current branch.
+  pull
+  status
 
 Params:
   -a
@@ -36,10 +38,9 @@ Params:
 
 Examples:
   gitall checkout -b develop
-          Checkout to develop branch, keep all changes.
+		  Checkout to develop branch, keep all changes.
 `)
 }
-
 
 func getExPath() string {
 	f, _ := os.Open(".")
@@ -62,12 +63,12 @@ func diffColorizePrint(result string) {
 		}
 }
 
-func run(dir string, name string, arg ...string) string {	
+func run(dir string, name string, arg ...string) string {
 	cmd := exec.Command(name, arg...)
 	cmd.Dir = dir
 	out, _ := cmd.Output()
 	result := string(out)
-	return result;
+	return result
 }
 
 func header(dir string) {
@@ -75,20 +76,41 @@ func header(dir string) {
 	color.Yellow(dir)
 }
 
+type summary struct {
+	count int
+	artifacts []string
+}
+var s = summary{count: 0, artifacts: []string{}}
+
+func updateSummary(dir string) {
+	if !in(dir, s.artifacts) {
+		s.count++
+		s.artifacts = append(s.artifacts, dir)
+	}
+}
+
+func affected() {
+	fmt.Printf("---------------------------------------\n")
+	fmt.Printf("Total affected: %d\n%s\n",
+		s.count,
+		strings.Join(s.artifacts[:],"\n"))
+}
+
 func gitGrep(dir string, search string, diff string) {
 	repoDir := filepath.Join(getExPath(), dir)
 	result := run(repoDir, "git", "log", "--all", fmt.Sprintf("--grep=%s", search))
 	if result != "" {
+		updateSummary(dir)
 		if isTrue(diff) {
 			for _, line := range strings.Split(
 				strings.TrimSuffix(result, "\n"), "\n") {
-					if strings.Contains(line, "commit ") {
-						commitHash := strings.Split(line, "commit ")[1]
-						result := run(repoDir, "git", "show", commitHash)
-						header(dir)
-						diffColorizePrint(result)
-					}
+				if strings.Contains(line, "commit ") {
+					commitHash := strings.Split(line, "commit ")[1]
+					result := run(repoDir, "git", "show", commitHash)
+					header(dir)
+					diffColorizePrint(result)
 				}
+			}
 		} else {
 			header(dir)
 			fmt.Printf("%s\n", result)
@@ -96,17 +118,21 @@ func gitGrep(dir string, search string, diff string) {
 	}
 }
 
-func branch(currentDir string) {
+func branch(currentDir string, params string) {
 	repoDir := filepath.Join(getExPath(), currentDir)
 	result := run(repoDir, "git", "branch")
-	if result != "" {		
+	if result != "" {
 		lines := strings.Split(strings.TrimSuffix(result, "\n"), "\n")
+		color.Yellow(currentDir)
 		for _, line := range lines {
 			if len(line) > 0 {
 				if line[0] == '*' {
-					color.Yellow(currentDir)
 					color.Green(line + "\n")
 				}
+				if in(params, all) && line[0] != '*' {
+					color.White(line + "\n")
+				}
+
 			}
 		}
 	}
@@ -125,33 +151,40 @@ func getBranch(dir string) string {
 	return ""
 }
 
+func isClean(dir string) bool {
+	return strings.Contains(
+		run(dir, "git", "status"),
+		"nothing to commit, working tree clean")
+}
+
 func checkout(dir string, params string, branch string) {
 	repoDir := filepath.Join(getExPath(), dir)
 	if branch == "" {
 		branch = params
 		params = ""
 	}
-	if getBranch(repoDir) == branch {		
+	if getBranch(repoDir) == branch {
 		return
 	}
 	header(dir)
-	isClean := strings.Contains(
-		run(repoDir, "git", "status"),
-		"nothing to commit, working tree clean")
+	isClean := isClean(repoDir)
 	stashName := ""
-	if isClean {		
+	if isClean {
 		fmt.Printf("%s\n", "nothing to commit, working tree clean")
 	} else {
-		stashName = time.Now().Format("2006-01-02_15:04:05");
-		run("git", "stash", "save",  "\"" + stashName + "\"")
+		stashName = time.Now().Format("2006-01-02_15:04:05")
+		run("git", "stash", "save", "\""+stashName+"\"")
 		fmt.Printf("Stash: save ")
 		color.Red(stashName + "\n")
 	}
-
-	run(repoDir, "git", "checkout", params, branch)
+	if params == "" {
+		run(repoDir, "git", "checkout", branch)
+	} else {
+		run(repoDir, "git", "checkout", params, branch)
+	}
 	fmt.Printf("Change branch: ")
 	color.Green(branch + "\n")
-	
+
 	if !isClean {
 		fmt.Printf("Stash: apply ")
 		color.Green(stashName + "\n")
@@ -160,7 +193,25 @@ func checkout(dir string, params string, branch string) {
 
 func pull(dir string) {
 	repoDir := filepath.Join(getExPath(), dir)
-	result := run(repoDir, "git", "status")
+	result := run(repoDir, "git", "pull")
+	header(dir)
+	fmt.Printf("%s\n", result)
+}
+
+func status(dir string) {
+	status := run(dir, "git", "status")
+	if !strings.Contains(status, "nothing to commit, working tree clean") {
+		updateSummary(dir)
+		header(dir)
+		fmt.Printf("%s\n", status)
+	}
+}
+
+func fixUpstream(dir string) {
+	repoDir := filepath.Join(getExPath(), dir)
+	branch := getBranch(repoDir)
+	result := run(repoDir, "git", "branch",
+		"--set-upstream-to=origin/" + branch, branch)
 	header(dir)
 	fmt.Printf("%s\n", result)
 }
@@ -174,16 +225,18 @@ func in(val string, arr []string) bool {
 	return false
 }
 
-func isTrue (s string) bool {
+func isTrue(s string) bool {
 	return in(s, []string{"1", "t", "T", "true", "True"})
 }
 
 // T1 @unexported
-type T1 struct {}
+type T1 struct{}
+
 // T2 @unexported
-type T2 struct {}
+type T2 struct{}
+
 // T3 @unexported
-type T3 struct {}
+type T3 struct{}
 
 func (t T1) traverse(fu func(string)) {
 	files, _ := ioutil.ReadDir("./")
@@ -221,7 +274,7 @@ func (t T3) traverse(fu func(string, string, string), search string, diff string
 				fu(f.Name(), search, diff)
 			}
 		}
-	}	
+	}
 }
 
 var all = []string{"-a", "a", "--all"}
@@ -254,6 +307,7 @@ func main() {
 	if action == "log" {
 		if in(params, all) {
 			T3{}.traverse(gitGrep, search, "false")
+			affected()
 		} else if in(params, local) {
 			gitGrep(getExPath(), search, "false")
 		}
@@ -263,6 +317,7 @@ func main() {
 	if action == "diff" {
 		if in(params, all) {
 			T3{}.traverse(gitGrep, search, "true")
+			affected()
 		} else if in(params, local) {
 			gitGrep(getExPath(), search, "true")
 		}
@@ -270,7 +325,7 @@ func main() {
 	//------
 	// branch
 	if action == "branch" {
-		T1{}.traverse(branch)
+		T2{}.traverse(branch, params)
 	}
 	//------
 	// checkout
@@ -281,7 +336,17 @@ func main() {
 	// ----
 	// pull
 	if action == "pull" {
-		// search - is branch name
 		T1{}.traverse(pull)
+	}
+	// ------
+	// status
+	if action == "status" {
+		T1{}.traverse(status)
+		affected()
+	}
+	// ------------
+	// fix-upstream
+	if action == "fix-upstream" {
+		T1{}.traverse(fixUpstream)
 	}
 }
