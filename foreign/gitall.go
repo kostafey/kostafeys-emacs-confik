@@ -91,9 +91,8 @@ func updateSummary(dir string) {
 
 func affected() {
 	fmt.Printf("---------------------------------------\n")
-	fmt.Printf("Total affected: %d\n%s\n",
-		s.count,
-		strings.Join(s.artifacts[:],"\n"))
+	color.Cyan("Total affected: %d", s.count)
+	color.White("%s\n", strings.Join(s.artifacts[:],"\n"))
 }
 
 func gitGrep(dir string, search string, diff string) {
@@ -132,7 +131,6 @@ func branch(currentDir string, params string) {
 				if in(params, all) && line[0] != '*' {
 					color.White(line + "\n")
 				}
-
 			}
 		}
 	}
