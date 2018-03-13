@@ -50,17 +50,17 @@ func getExPath() string {
 func diffColorizePrint(result string) {
 	for _, line := range strings.Split(
 		strings.TrimSuffix(result, "\n"), "\n") {
-			if len(line) > 0 {
-				if line[0] == '-' {
-					color.Red(line)
-				} else if line[0] == '+' {
-					color.Green(line)
-				} else {
-					fmt.Printf(line)
-					fmt.Printf("\n")
-				}
+		if len(line) > 0 {
+			if line[0] == '-' {
+				color.Red(line)
+			} else if line[0] == '+' {
+				color.Green(line)
+			} else {
+				fmt.Printf(line)
+				fmt.Printf("\n")
 			}
 		}
+	}
 }
 
 func run(dir string, name string, arg ...string) string {
@@ -77,9 +77,10 @@ func header(dir string) {
 }
 
 type summary struct {
-	count int
+	count     int
 	artifacts []string
 }
+
 var s = summary{count: 0, artifacts: []string{}}
 
 func updateSummary(dir string) {
@@ -92,7 +93,18 @@ func updateSummary(dir string) {
 func affected() {
 	fmt.Printf("---------------------------------------\n")
 	color.Cyan("Total affected: %d", s.count)
-	color.White("%s\n", strings.Join(s.artifacts[:],"\n"))
+	color.White("%s\n", strings.Join(s.artifacts[:], "\n"))
+}
+
+func isClean(dir string) bool {
+	return strings.Contains(
+		run(dir, "git", "status"),
+		"nothing to commit, working tree clean")
+}
+
+func isGit(dir string) bool {
+	result := run(dir, "git", "status")
+	return !(result == "" || strings.Contains(result, "Not a git repository"))
 }
 
 func gitGrep(dir string, search string, diff string) {
@@ -149,12 +161,6 @@ func getBranch(dir string) string {
 	return ""
 }
 
-func isClean(dir string) bool {
-	return strings.Contains(
-		run(dir, "git", "status"),
-		"nothing to commit, working tree clean")
-}
-
 func checkout(dir string, params string, branch string) {
 	repoDir := filepath.Join(getExPath(), dir)
 	if branch == "" {
@@ -209,7 +215,7 @@ func fixUpstream(dir string) {
 	repoDir := filepath.Join(getExPath(), dir)
 	branch := getBranch(repoDir)
 	result := run(repoDir, "git", "branch",
-		"--set-upstream-to=origin/" + branch, branch)
+		"--set-upstream-to=origin/"+branch, branch)
 	header(dir)
 	fmt.Printf("%s\n", result)
 }
@@ -278,6 +284,10 @@ func (t T3) traverse(fu func(string, string, string), search string, diff string
 var all = []string{"-a", "a", "--all"}
 var local = []string{"-a", "a", "--all"}
 
+func runForSingleRepo(params string) bool {
+	return isGit(getExPath()) && !in(params, all)
+}
+
 func main() {
 	if len(os.Args) < 2 {
 		help()
@@ -300,51 +310,44 @@ func main() {
 	if len(os.Args) > 3 {
 		search = os.Args[3]
 	}
-	//-----
-	// log
-	if action == "log" {
-		if in(params, all) {
+	if search == "" {
+		search = params
+	}
+	switch action {
+	case "log":
+		if runForSingleRepo(params) {
+			fmt.Printf(getExPath())
+			gitGrep(getExPath(), search, "false")
+		} else {
 			T3{}.traverse(gitGrep, search, "false")
 			affected()
-		} else if in(params, local) {
-			gitGrep(getExPath(), search, "false")
 		}
-	} else
-	//------
-	// diff
-	if action == "diff" {
-		if in(params, all) {
+	case "diff":
+		if runForSingleRepo(params) {
+			gitGrep(getExPath(), search, "true")
+		} else {
 			T3{}.traverse(gitGrep, search, "true")
 			affected()
-		} else if in(params, local) {
-			gitGrep(getExPath(), search, "true")
 		}
-	} else
-	//------
-	// branch
-	if action == "branch" {
+	case "branch":
 		T2{}.traverse(branch, params)
-	}
-	//------
-	// checkout
-	if action == "checkout" {
+	case "checkout":
 		// search - is branch name
 		T3{}.traverse(checkout, params, search)
-	}
-	// ----
-	// pull
-	if action == "pull" {
+	case "pull":
 		T1{}.traverse(pull)
-	}
-	// ------
-	// status
-	if action == "status" {
-		T1{}.traverse(status)
-		affected()
-	}
-	// ------------
-	// fix-upstream
-	if action == "fix-upstream" {
-		T1{}.traverse(fixUpstream)
+	case "status":
+		if runForSingleRepo(params) {
+			status(getExPath())
+		} else {
+			T1{}.traverse(status)
+			affected()
+		}
+	case "fix-upstream":
+		if runForSingleRepo(params) {
+			fixUpstream(getExPath())
+		} else {
+			T1{}.traverse(fixUpstream)
+		}
 	}
 }
