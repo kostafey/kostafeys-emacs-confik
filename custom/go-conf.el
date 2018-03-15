@@ -44,9 +44,12 @@
 ;; ----
 ;; Lint
 ;; go get -u golang.org/x/lint/golint
-(add-to-list 'load-path (concat (getenv "GOPATH")
-                                "/src/golang.org/x/lint/misc/emacs"))
-(require 'golint)
+(if (getenv "GOPATH")
+    (progn
+      (add-to-list 'load-path (concat (getenv "GOPATH")
+                                      "/src/golang.org/x/lint/misc/emacs"))
+      (require 'golint))
+  (warn "No GOPATH system environment variable, can't load `golint'."))
 
 ;; -----------
 ;; Compilation

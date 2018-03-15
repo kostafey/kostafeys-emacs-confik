@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"sort"
 )
 
 func help() {
@@ -29,6 +30,7 @@ Actions:
   checkout - Change current branch.
   pull
   status
+  last     - Show last commit ordered for projects by time desc.
 
 Params:
   -a
@@ -163,10 +165,6 @@ func getBranch(dir string) string {
 
 func checkout(dir string, params string, branch string) {
 	repoDir := filepath.Join(getExPath(), dir)
-	if branch == "" {
-		branch = params
-		params = ""
-	}
 	if getBranch(repoDir) == branch {
 		return
 	}
@@ -208,6 +206,56 @@ func status(dir string) {
 		updateSummary(dir)
 		header(dir)
 		fmt.Printf("%s\n", status)
+	}
+}
+
+// Pair @unexported
+type Pair struct {
+	a, b string
+}
+
+// ByDate @unexported
+type ByDate []Pair
+
+func getCommitDate(p Pair) time.Time {
+	commit := p.b
+	d := ""
+	for _, line := range strings.Split(commit, "\n") {
+		if strings.Contains(line, "Date:") {
+			d = strings.TrimSpace(strings.Split(line, "Date:")[1])
+		}
+	}
+	t, _ := time.Parse("Mon Jan _2 15:04:05 2006 -0700", d)
+	return t
+}
+// Len @unexported
+func (s ByDate) Len() int {
+	return len(s)
+}
+// Swap @unexported
+func (s ByDate) Swap(i, j int) {
+   s[i], s[j] = s[j], s[i]
+}
+// Less @unexported
+func (s ByDate) Less(i, j int) bool {
+	return getCommitDate(s[i]).Before(getCommitDate(s[j]))
+}
+
+var lastCommits []Pair
+
+func getLastCommits(dir string) {
+	result := run(dir, "git", "log", "-1")
+	lastCommits = append(lastCommits, Pair{dir, result})
+}
+
+const gitTimeFmt = "Mon Jan _2 15:04:05 2006 -0700"
+const outputTimeFmt = "2006-01-02 15:04:05"
+
+func sortLastCommits() {
+	sort.Sort(ByDate(lastCommits))
+	for _, p := range lastCommits {
+		header(p.a)
+		fmt.Printf("%s \n", p.b)
 	}
 }
 
@@ -299,22 +347,17 @@ func main() {
 		help()
 		return
 	}
-	// params
-	// -a --all
-	// -l --local
-	var params = ""
+	var attr = ""
 	if len(os.Args) > 2 {
-		params = os.Args[2]
+		attr = os.Args[2]
 	}
-	var search = ""
+	var params = ""
 	if len(os.Args) > 3 {
-		search = os.Args[3]
-	}
-	if search == "" {
-		search = params
+		params = os.Args[3]
 	}
 	switch action {
 	case "log":
+		search := attr
 		if runForSingleRepo(params) {
 			fmt.Printf(getExPath())
 			gitGrep(getExPath(), search, "false")
@@ -323,6 +366,7 @@ func main() {
 			affected()
 		}
 	case "diff":
+		search := attr
 		if runForSingleRepo(params) {
 			gitGrep(getExPath(), search, "true")
 		} else {
@@ -330,10 +374,12 @@ func main() {
 			affected()
 		}
 	case "branch":
+		params := attr
 		T2{}.traverse(branch, params)
 	case "checkout":
 		// search - is branch name
-		T3{}.traverse(checkout, params, search)
+		branch := attr
+		T3{}.traverse(checkout, params, branch)
 	case "pull":
 		T1{}.traverse(pull)
 	case "status":
@@ -348,6 +394,13 @@ func main() {
 			fixUpstream(getExPath())
 		} else {
 			T1{}.traverse(fixUpstream)
+		}
+	case "last":
+		if runForSingleRepo(params) {
+			fmt.Print(run(getExPath(), "git", "log", "-1"))
+		} else {
+			T1{}.traverse(getLastCommits)
+			sortLastCommits()
 		}
 	}
 }
