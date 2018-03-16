@@ -119,6 +119,10 @@
 (global-set-key (kbd "<home>")        'k/line-beginning)
 (global-set-key (kbd "S-<end>")       'k/line-end-select)
 (global-set-key (kbd "S-<home>")      'k/line-beginning-select)
+(global-set-key (kbd "C-<home>")      'k/buffer-beginning)
+(global-set-key (kbd "C-<end>")       'k/buffer-end)
+(global-set-key (kbd "C-S-<home>")    'k/buffer-beginning-select)
+(global-set-key (kbd "C-S-<end>")     'k/buffer-end-select)
 
 (put 'step-forward-word 'CUA 'move)
 (put 'step-backward-word 'CUA 'move)

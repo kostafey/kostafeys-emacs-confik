@@ -73,6 +73,11 @@
 (defun k/line-beginning-select () (interactive) (k/select) (beginning-of-line))
 (defun k/line-end-select () (interactive) (k/select) (end-of-line))
 
+(defun k/buffer-beginning () (interactive) (k/deselect) (goto-char (point-min)))
+(defun k/buffer-end () (interactive) (k/deselect) (goto-char (point-max)))
+(defun k/buffer-beginning-select () (interactive) (k/select) (goto-char (point-min)))
+(defun k/buffer-end-select () (interactive) (k/select) (goto-char (point-max)))
+
 (when (require 'sgml-mode nil 'noerror)
 
   (defvar k/sgml-exceptions (list "\"" " "))
