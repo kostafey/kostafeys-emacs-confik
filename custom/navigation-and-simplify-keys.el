@@ -80,25 +80,23 @@
 
 (when (require 'sgml-mode nil 'noerror)
 
-  (defvar k/sgml-exceptions (list "\"" " "))
+  (defvar k/sgml-tags (list "<" ">"))
 
   (defun k/sgml-skip-tag-forward (&optional select)
     (interactive)
-    (if (or (member (string (following-char)) k/sgml-exceptions)
-            (member (string (preceding-char)) k/sgml-exceptions))
+    (if (member (string (following-char)) k/sgml-tags)
+        (sgml-skip-tag-forward 1)
         (if select
             (k/sexp-forward-select)
-          (k/sexp-forward))
-      (sgml-skip-tag-forward 1)))
+          (k/sexp-forward))))
 
   (defun k/sgml-skip-tag-backward (&optional select)
     (interactive)
-    (if (or (member (string (following-char)) k/sgml-exceptions)
-            (member (string (preceding-char)) k/sgml-exceptions))
+    (if (member (string (preceding-char)) k/sgml-tags)
+        (sgml-skip-tag-backward 1)
         (if select
             (k/sexp-backward-select)
-          (k/sexp-backward))
-      (sgml-skip-tag-backward 1)))
+          (k/sexp-backward))))
 
   (defun k/sgml-skip-tag-forward-select ()
     (interactive)
