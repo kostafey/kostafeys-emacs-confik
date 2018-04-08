@@ -45,11 +45,30 @@
 (defun k/ensime-inf-eval-string (s)
   (with-current-buffer ensime-inf-buffer-name
     (goto-char (point-max))
-    (comint-send-string nil ":paste\n")
-    (comint-send-string nil s)
-    (comint-send-string nil "\n")
-    (sit-for 1)
-    (comint-send-eof)))
+    (if (eq system-type 'windows-nt)
+        ;; Windows
+        (progn
+          (comint-send-string nil s)
+          (let ((comint-input-sender 'ignore)
+                (comint-input-filter-functions nil))
+            (comint-send-input t t))
+          (comint-send-input)
+          (goto-char (process-mark (get-buffer-process (current-buffer))))
+          (line-move -1)
+          (right-char (length "scala> "))
+          (when (and (>= (point-max) (+ (point) 3))
+                     (not (equal
+                           (buffer-substring (point) (+ (point) 3))
+                           "res")))
+            (kill-line 1))
+          (comint-kill-input))
+      ;; Linux
+      (progn
+        (comint-send-string nil ":paste\n")
+        (comint-send-string nil s)
+        (comint-send-string nil "\n")
+        (sit-for 1)
+        (comint-send-eof)))))
 
 (defun k/ensime-inf-eval-region (start end)
   "Send current region to Scala interpreter."
@@ -101,6 +120,8 @@
                    (return-from k/ensime-eval-last-scala-expr)))))
         (k/ensime-flash-region start (point))
         (k/ensime-inf-eval-region start (point))))))
+
+
 
 (defun k/quit-by-mask (mask mgs)
   (let* ((buffers (buffer-list))

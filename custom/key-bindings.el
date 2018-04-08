@@ -636,7 +636,7 @@
   (define-key ensime-mode-map (kbd "C-n c") 'ensime-inf-switch)
   (define-key ensime-mode-map (kbd "C-n s") 'ensime-sbt-switch)
   (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
-  (define-key ensime-mode-map (kbd "M-e") 'ensime-inf-eval-region)
+  (define-key ensime-mode-map (kbd "M-e") 'k/ensime-inf-eval-region)
   (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
   (define-key ensime-mode-map (kbd "C-M-/") 'ensime-print-errors-at-point)
   (define-key ensime-mode-map (kbd "M-=") 'ensime-type-at-point)
