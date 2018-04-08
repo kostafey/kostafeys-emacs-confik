@@ -11,7 +11,7 @@
 
 ;; 2. sbt ensimeConfig
 ;; 3. M-x ensime
-;; 4. C-c C-v z
+;; 4. C-c C-v z (M-x ensime-inf-switch)
 ;; 5. M-x ensime-inf-eval-region
 
 (defun k/ensime-flash-region (start end &optional timeout)
@@ -176,6 +176,16 @@
   (save-excursion
     (k/ensime-flash-region (point-max) (point-min))
     (k/ensime-inf-eval-region (point-max) (point-min))))
+
+(defun k/ensime-eval-line ()
+  (interactive)
+  (save-excursion
+    (k/ensime-flash-region
+     (save-excursion (beginning-of-line) (point))
+     (point))
+    (k/ensime-inf-eval-region
+     (save-excursion (beginning-of-line) (point))
+     (point))))
 
 (defun k/ensime-mvn-sbt ()
   (interactive)
