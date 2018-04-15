@@ -41,6 +41,19 @@
     (kbd "C-c C-p") 'skewer-pprint-eval-last-expression))
 
 ;;------------------------------------------------------------
+;; npm-mode
+;;
+(when (require 'npm-mode nil 'noerror)
+  (npm-global-mode)
+  (defun k/npm-mode-build ()
+    (interactive)
+    (npm-mode--exec-process "npm run build"))
+  (define-key js2-mode-map
+    (kbd "C-c C-c") 'k/npm-mode-build)
+  (define-key js-jsx-mode-map
+    (kbd "C-c C-c") 'k/npm-mode-build))
+
+;;------------------------------------------------------------
 ;; Customize js-comint.el for `rhino' and `node.js'
 ;; M-x `run-js'
 ;;

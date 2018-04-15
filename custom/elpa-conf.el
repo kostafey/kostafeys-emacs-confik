@@ -169,7 +169,8 @@ and `buffer-navigation'.")
         'tern
         'tern-auto-complete
         'web-beautify
-        'rjsx-mode)
+        'rjsx-mode
+        'npm-mode)
   "Required packages for `java-script-conf'.")
 
 
