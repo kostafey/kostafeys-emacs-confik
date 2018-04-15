@@ -168,7 +168,8 @@ and `buffer-navigation'.")
         'js-comint
         'tern
         'tern-auto-complete
-        'web-beautify)
+        'web-beautify
+        'rjsx-mode)
   "Required packages for `java-script-conf'.")
 
 
