@@ -12,6 +12,7 @@ import (
     "strings"
     "time"
     "sort"
+    "regexp"
 )
 
 func help() {
@@ -30,7 +31,8 @@ Actions:
   checkout - Change current branch.
   pull
   status
-  last     - Show last commit ordered for projects by time desc.
+  last     - Show last commit ordered for projects by time asc.
+  work     - Show all my commits by time asc (work history).
 
 Params:
   -a
@@ -250,6 +252,77 @@ func getLastCommits(dir string) {
     lastCommits = append(lastCommits, Pair{dir, result})
 }
 
+func filter(ss []string, test func(string) bool) (ret []string) {
+    for _, s := range ss {
+        if test(s) {
+            ret = append(ret, s)
+        }
+    }
+    return
+}
+
+func mapcar(ss []string, evalFn func(string)) (ret []string) {
+    for _, s := range ss {
+        evalFn(s)
+    }
+    return
+}
+
+func mapv(ss []string, evalFn func(string) string) (ret []string) {
+    for _, s := range ss {
+        ret = append(ret, evalFn(s))
+    }
+    return
+}
+
+func splitKeep(reStr string, s string, n int, take int) []string {
+    re := regexp.MustCompile(reStr)
+
+    if n == 0 {
+        return nil
+    }
+
+    matches := re.FindAllStringIndex(s, n)
+    strings := make([]string, 0, len(matches))
+
+    beg := 0
+    end := 0
+    for _, match := range matches {
+        if n > 0 && len(strings) >= n-1 {
+            break
+        }
+
+        end = match[0]
+        if match[1] != 0 {
+            if (beg >= take) {
+                beg = beg - take
+            }
+            strings = append(strings, s[beg:end])
+        }
+        beg = match[1]
+    }
+
+    if end != len(s) {
+        strings = append(strings, s[beg:])
+    }
+
+    return strings
+}
+
+func getWorkHistory(dir string) {
+    result := run(dir, "git", "log", "--all")
+    commits := splitKeep(`commit [a-zA-Z0-9]{40}`, result, -1, 47)
+
+    mycommitsFilter := func(s string) bool {
+        return strings.Contains(s, "konstantin.sedykh") ||
+            strings.Contains(s, "kostafey")
+    }
+    mycommits := filter(commits, mycommitsFilter)
+    mapcar(mycommits, func(s string) {
+        lastCommits = append(lastCommits, Pair{dir, s})
+    })
+}
+
 const gitTimeFmt = "Mon Jan _2 15:04:05 2006 -0700"
 const outputTimeFmt = "2006-01-02 15:04:05"
 
@@ -449,6 +522,13 @@ func main() {
             fmt.Print(run(getExPath(), "git", "log", "-1"))
         } else {
             T1{}.traverse(getLastCommits)
+            sortLastCommits()
+        }
+    case "work":
+        if runForSingleRepo(params) {
+            getWorkHistory(getExPath())
+        } else {
+            T1{}.traverse(getWorkHistory)
             sortLastCommits()
         }
     case "mvn":
