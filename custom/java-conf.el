@@ -53,6 +53,18 @@
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-markup-indent-offset 2)
 
+;;-----------------------------------------------------------------------------
+;; JBehave: story-mode
+(define-generic-mode story-mode
+  '("!-")
+  '("Given" "When" "Then" "Narrative" "Meta" "And" "Scenario" "Examples")
+  '(("|.*|" . 'font-lock-constant-face)
+    ("'.*'" . 'font-lock-string-face))
+  '("\\.story$")
+  nil
+  "Story mode is a minor mode for editing JBehave story files")
+(add-to-list 'auto-mode-alist '("\\.story" . story-mode))
+
 ;;=============================================================================
 ;; tomacat
 (defvar tomcat-process nil "Process running tomcat")

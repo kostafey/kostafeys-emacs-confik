@@ -202,21 +202,29 @@
 
 ;;=============================================================================
 ;; Someday might want to rotate windows if more than 2 of them
+(defun swap-buffers (w1 w2)
+  (let ((b1 (window-buffer w1))
+        (b2 (window-buffer w2))
+        (s1 (window-start w1))
+        (s2 (window-start w2))))
+  (set-window-buffer w1 b2)
+  (set-window-buffer w2 b1)
+  (set-window-start w1 s2)
+  (set-window-start w2 s1))
+
 (defun swap-windows ()
- "If you have 2 windows, it swaps them."
- (interactive)
- (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
- (t
- (let* ((w1 (first (window-list)))
-     (w2 (second (window-list)))
-     (b1 (window-buffer w1))
-     (b2 (window-buffer w2))
-     (s1 (window-start w1))
-     (s2 (window-start w2)))
- (set-window-buffer w1 b2)
- (set-window-buffer w2 b1)
- (set-window-start w1 s2)
- (set-window-start w2 s1)))))
+  "If you have 2 windows or 2 frames, it swaps them."
+  (interactive)
+  (cond ((= (count-windows) 2)
+         (let* ((w1 (first (window-list)))
+                (w2 (second (window-list))))
+           (swap-buffers w1 w2)))
+        ((= (length (frame-list)) 2)
+         (let* ((w1 (first (window-list (first (frame-list)))))
+                (w2 (first (window-list (second (frame-list))))))
+           (swap-buffers w1 w2)))
+        (t
+         (message "You need exactly 2 windows or frames to do this."))))
 
 (defun mirror-window ()
  "Show the same buffer in the second window as in the active window."
