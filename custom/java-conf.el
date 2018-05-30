@@ -56,7 +56,7 @@
 ;;-----------------------------------------------------------------------------
 ;; JBehave: story-mode
 (define-generic-mode story-mode
-  '("!-")
+  '("!--")
   '("Given" "When" "Then" "Narrative" "Meta" "And" "Scenario" "Examples")
   '(("|.*|" . 'font-lock-constant-face)
     ("'.*'" . 'font-lock-string-face))

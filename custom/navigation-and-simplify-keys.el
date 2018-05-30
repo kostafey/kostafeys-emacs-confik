@@ -206,11 +206,11 @@
   (let ((b1 (window-buffer w1))
         (b2 (window-buffer w2))
         (s1 (window-start w1))
-        (s2 (window-start w2))))
-  (set-window-buffer w1 b2)
-  (set-window-buffer w2 b1)
-  (set-window-start w1 s2)
-  (set-window-start w2 s1))
+        (s2 (window-start w2)))
+    (set-window-buffer w1 b2)
+    (set-window-buffer w2 b1)
+    (set-window-start w1 s2)
+    (set-window-start w2 s1)))
 
 (defun swap-windows ()
   "If you have 2 windows or 2 frames, it swaps them."
