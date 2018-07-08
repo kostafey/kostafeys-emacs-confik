@@ -4,3 +4,6 @@
 [submodule "artifacts/wrap-region.el"]
 	path = artifacts/wrap-region.el
 	url = https://github.com/rejeep/wrap-region.el
+[submodule "artifacts/slime-repl-ansi-color"]
+	path = artifacts/slime-repl-ansi-color
+	url = https://github.com/deadtrickster/slime-repl-ansi-color
