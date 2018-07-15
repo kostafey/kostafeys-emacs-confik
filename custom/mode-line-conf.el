@@ -20,12 +20,12 @@
         'mode-line-mule-info
         '(:eval (propertize
                  (format"%s " buffer-file-coding-system)
-                 'face 'mode-line-default-face                 
+                 ;; 'face 'mode-line-default-face                 
                  'help-echo (format"%s" buffer-file-coding-system)))        
                 
         ;; the buffer name; the file name as a tool tip
         '(:eval (propertize (format-mode-line mode-line-buffer-identification)
-                            'face 'mode-line-header
+                            ;; 'face 'mode-line-header
                             'help-echo (buffer-file-name)))
 
         ;; line and column

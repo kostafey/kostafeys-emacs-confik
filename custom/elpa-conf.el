@@ -68,7 +68,7 @@
                            cider
                            ac-cider
                            ;; clojure-snippets
-                           typed-clojure-mode
+                           ;; typed-clojure-mode
                            flycheck-clojure)
   "Required packages for clojure coding.")
 
@@ -143,7 +143,7 @@ and `buffer-navigation'.")
 
 (defvar prog-modes-packages
   (list 'auctex
-        'quack
+        ;;'quack
         'ecb
         'projectile
         'flycheck

@@ -75,7 +75,7 @@
 (defun hop-nrepl-current-session ()
   "Return the current nrepl session or nil."
   (let* ((buff (or nrepl-connection-buffer
-                   (cider-current-repl-buffer)))
+                   (cider-current-repl)))
          (sess (if buff
                    (with-current-buffer buff
                      nrepl-session))))
@@ -149,7 +149,9 @@
                                                  (cider--kw-to-symbol
                                                   (cider-symbol-at-point))))
              ;; scala-mode
-             ((equal 'scala-mode mode)
+             ;; java-mode
+             ((or (equal 'scala-mode mode)
+                  (equal 'java-mode mode))
               (progn
                 (ensime-edit-definition-of-thing-at-point)
                 (recenter-top-bottom 5)))

@@ -53,7 +53,11 @@
 (add-to-list 'load-path (concat third-party-lisp-path "wrap-region.el/"))
 (require 'wrap-region)
 
+(add-to-list 'load-path (concat site-lisp-path "clomacs/src/elisp/"))
+(require 'clomacs nil 'noerror)
+
 (add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
+(require 'ejc-sql)
 (require 'ejc-sql-conf nil 'noerror)
 
 (require 'switch-language)
