@@ -479,11 +479,6 @@
 ;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
 ;; (global-set-key [f8] 'ispell-region); 'ispell-word
 
-(defun k/shell (&optional num)
-  (interactive "P")
-  (if num
-      (shell (format "*shell %s*" num))
-    (shell)))
 (global-set-key [f4] 'k/shell)
 (global-set-key [f5] 'bookmark-set)
 (global-set-key [f6] 'bookmark-jump)

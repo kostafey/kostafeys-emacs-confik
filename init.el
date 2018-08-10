@@ -86,7 +86,7 @@
 (require 'clojure-conf)
 (require 'emacs-lisp-conf)
 (require 'common-lisp-conf)
-(require 'scheme-conf)
+;;(require 'scheme-conf)
 (require 'auctex-conf)
 (require 'java-script-conf)
 ;; (require 'aj-compilation)
