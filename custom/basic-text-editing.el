@@ -486,8 +486,4 @@ Version 2015-09-14."
     (delete-region -p1 -p2)
     (insert (decode-coding-string (url-unhex-string -input-str) 'utf-8))))
 
-(if (eq system-type 'windows-nt)
-    ;; C-x C-f C-f /<user>@<host>:<path>
-    (setq tramp-default-method "plink"))
-
 (provide 'basic-text-editing)

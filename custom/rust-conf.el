@@ -21,9 +21,19 @@
              "cargo build"
            (format "rustc %s" (buffer-file-name)))))
 
+  (defun k/rust-compile-release ()
+    (interactive)
+    (set (make-local-variable 'compile-command)
+         (if (locate-dominating-file (buffer-file-name) "Cargo.toml")
+             "cargo build --release"
+           (format "rustc %s" (buffer-file-name))))
+    (compile compile-command)
+    (k/rust-compile))
+
   (setq-default compilation-read-command nil)
   (add-hook 'rust-mode-hook 'k/rust-compile)
   (define-key rust-mode-map (kbd "C-c C-c") 'compile)
+  (define-key rust-mode-map (kbd "C-x c") 'k/rust-compile-release)
 
   ;; --------------------------------
   ;; autocompletion & code navigation

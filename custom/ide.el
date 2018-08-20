@@ -46,7 +46,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; projectile
-(projectile-global-mode)
+(projectile-mode)
 (setq projectile-indexing-method 'native)
 (setq projectile-enable-caching t)
 

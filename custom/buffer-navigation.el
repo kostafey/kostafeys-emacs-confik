@@ -169,4 +169,21 @@ Don't mess with special buffers."
         (find-file file-path)
       (message "Can't find file '%s'" file-path))))
 
+(if (eq system-type 'windows-nt)
+    ;; C-x C-f C-f /<user>@<host>:<path>
+    (setq tramp-default-method "plink"))
+
+(defun k/shell (&optional num)
+  (interactive "P")
+  (let* ((current-dir (file-name-directory (buffer-file-name)))
+         (shell-buffer-name (if num "*shell %s*" "*shell*"))
+         (shell-bufer-exists-p (get-buffer shell-buffer-name)))
+    (with-current-buffer (shell shell-buffer-name)
+      (if (and shell-bufer-exists-p
+               (not (equal default-directory current-dir)))
+          (progn
+            (insert "cd ")
+            (insert current-dir)
+            (comint-send-input))))))
+
 (provide 'buffer-navigation)

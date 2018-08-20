@@ -17,9 +17,7 @@
                           (vc-backend
                            (buffer-file-name (current-buffer)))))))
     (cond ((equal vc-type "hg")  (ahg-status))
-          ((equal vc-type "git") (if (eq system-type 'windows-nt)
-                                     (magit-status-narrow)
-                                   (magit-status)))
+          ((equal vc-type "git") (magit-status))
           ((not (equal
                  (darcsum-repository-root) nil)) (darcsum-whatsnew
                                                   (darcsum-repository-root)))

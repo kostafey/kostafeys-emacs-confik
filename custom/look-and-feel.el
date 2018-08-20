@@ -2,15 +2,11 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Font
-(when (eq system-type 'windows-nt)
-  ;; (set-face-attribute 'default nil :family "Lucida Sans Typewriter" :height 120)
-  (set-face-font 'default "Consolas-13.5:antialias=subpixel"))
-
-(when (eq 'gnu/linux system-type)
-  ;; (set-face-attribute 'default nil :family "Consolas" :height 130)
-  ;; (set-face-font 'default "Consolas-13.5:antialias=subpixel")
-  ;; (set-face-font 'default "FiraMono-12.0:antialias=subpixel")
-  (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb"))
+(case system-type
+  ('windows-nt
+   (set-face-font 'default "Consolas-13.5:antialias=subpixel"))
+  ('gnu/linux
+   (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb")))
 
 ;; In case of fire use this:
 ;; (font-family-list)
@@ -53,39 +49,22 @@
 ;; (setq ring-bell-function (lambda nil)) ; No any bell (visual or beep)
 ;;=============================================================================
 
-;; показ имени файла вместе с директорией в заголовке
+;; Show file path & file name in app window header
 (setq frame-title-format "%S: %f")
 
 ;;-----------------------------------------------------------------------------
-;; Нумерация строк
-(require 'nlinum)
-(global-nlinum-mode)
-
-;;-----------------------------------------------------------------------------
-;; Emacs custom color themes path
-(if t
-    (load-theme 'organic-green t)
-  ;; (load-theme 'doom-peacock t)
+;; Line numbers display in the buffer
+(if (>= 26 emacs-major-version)
+    (global-display-line-numbers-mode)
   (progn
-    (load-theme 'nord t)
-    (setq nord3 (if (display-graphic-p) "#4C566A" "brightblack"))
-    (setq nord4 (if (display-graphic-p) "#D8DEE9" "#D8DEE9"))
-    (setq nord11 (if (display-graphic-p) "#BF616A" "red"))
-    (setq nord12 (if (display-graphic-p) "#D08770" "brightyellow"))
-    (setq nord13 (if (display-graphic-p) "#EBCB8B" "yellow"))
-    ;; (set-face-attribute 'ace-jump-face-foreground nil :foreground nord13)
-    ;; (set-face-attribute 'ace-jump-face-background nil :foreground "slate gray")
-    
-    (setq font-lock-comment-face '((t :inherit font-lock-comment-face
-                                      :foreground "slate gray")))
-    (setq font-lock-doc-face '((t :inherit font-lock-comment-face
-                                  :foreground "light slate gray")))
-    (setq markdown-code-face '((t :inherit font-lock-comment-face
-                                  :foreground "light slate gray")))
-    (setq markdown-pre-face '((t :inherit font-lock-comment-face
-                                 :foreground "light slate gray")))))
-;;-----------------------------------------------------------------------------
+    (require 'nlinum)
+    (global-nlinum-mode)))
 
+;;-----------------------------------------------------------------------------
+;; Emacs custom color theme
+(load-theme 'organic-green t)
+
+;;-----------------------------------------------------------------------------
 (defun what-face (pos)
   (interactive "d")
   (let ((face (or (get-char-property (point) 'read-face-name)
@@ -105,7 +84,6 @@
 ;; Cursor config
 ;;
 (global-hl-line-mode 1) ; highlight the line about point in the current window
-
 (blink-cursor-mode -1)
 ;;
 ;;=============================================================================
@@ -185,7 +163,6 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-;; (scroll-bar-mode -1)
 (scroll-bar-mode t)
 (set-scroll-bar-mode 'right) ; replace 'right with 'left to place it to the left
 
@@ -195,10 +172,6 @@
 (setq-default indicate-buffer-boundaries
       '((top . left) (bottom . left) (t . right)))
 (setq-default indicate-empty-lines t)
-
-;; (require 'yascroll)
-;; (global-yascroll-bar-mode 1)
-
 
 ;;=============================================================================
 ;; fill-column-indicator
@@ -305,7 +278,7 @@
 (setq query-replace-highlight t)
 
 ;;-----------------------------------------------------------------------------
-;; Заменяет lambda на λ.
+;; Replace lambda with λ.
 (font-lock-add-keywords
  'emacs-lisp-mode
  '(("(\\(lambda\\)\\>" (0 (prog1 ()
