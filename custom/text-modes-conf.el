@@ -55,6 +55,7 @@
                 ("\\.rst$" . rst-mode)
                 ("\\.rest$" . rst-mode)) auto-mode-alist))
 
+
 ;;-----------------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
@@ -63,6 +64,8 @@
 
 ;;-----------------------------------------------------------------------------
 (add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
+;; .xresources
+(add-to-list 'auto-mode-alist '("\\.xresources$" . conf-xdefaults-mode))
 
 ;;-----------------------------------------------------------------------------
 ;; Org-mode settings
