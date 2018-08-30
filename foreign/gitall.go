@@ -391,6 +391,10 @@ func countMvnDirs() {
     }
 }
 
+func setMavenOptions() {
+    exec.Command("set", "MAVEN_OPTS", "=", "-XX:+TieredCompilation", "-XX:TieredStopAtLevel=1")
+}
+
 // TN @unexported
 type TN struct{}
 
@@ -532,6 +536,7 @@ func main() {
             sortLastCommits()
         }
     case "mvn":
+        setMavenOptions()
         if runForSingleRepo(params) {
             fmt.Print(run(getExPath(), "mvn", os.Args[2:]...))
         } else {

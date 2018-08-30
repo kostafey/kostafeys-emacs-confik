@@ -179,11 +179,11 @@ Don't mess with special buffers."
          (shell-buffer-name (if num "*shell %s*" "*shell*"))
          (shell-bufer-exists-p (get-buffer shell-buffer-name)))
     (with-current-buffer (shell shell-buffer-name)
-      (if (and shell-bufer-exists-p
-               (not (equal default-directory current-dir)))
-          (progn
-            (insert "cd ")
-            (insert current-dir)
-            (comint-send-input))))))
+      (goto-char (point-max))
+      (when (and shell-bufer-exists-p
+                 (not (equal default-directory current-dir)))
+        (insert "cd ")
+        (insert current-dir)
+        (comint-send-input)))))
 
 (provide 'buffer-navigation)

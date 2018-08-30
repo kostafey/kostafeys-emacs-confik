@@ -31,6 +31,8 @@
   (cider-eval-buffer buffer)
   (my-cider-in-ns))
 
+(setq cider-default-repl-command "lein")
+
 ;;----------------------------------------------------------------------
 ;; autocompletition - ac-cider
 ;;
