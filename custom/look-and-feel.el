@@ -268,6 +268,8 @@
 (add-hook 'python-mode-hook     'my-coding-hook)
 (add-hook 'comint-mode-hook     'my-coding-hook)
 (add-hook 'js-mode-hook         'my-coding-hook)
+(add-hook 'typescript-mode      'my-coding-hook)
+(add-hook 'tide-mode            'my-coding-hook)
 (add-hook 'sql-mode-hook        'my-coding-hook)
 (add-hook 'mql-mode-hook        'my-coding-hook)
 (add-hook 'go-mode-hook         'my-coding-hook)

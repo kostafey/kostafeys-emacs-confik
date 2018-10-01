@@ -54,7 +54,10 @@
   (define-key js2-mode-map
     (kbd "C-c C-c") 'k/npm-mode-build)
   (define-key js-jsx-mode-map
-    (kbd "C-c C-c") 'k/npm-mode-build))
+    (kbd "C-c C-c") 'k/npm-mode-build)
+  (when (require 'typescript-mode nil 'noerror)
+    (define-key typescript-mode-map
+      (kbd "C-c C-c") 'k/npm-mode-build)))
 
 ;;------------------------------------------------------------
 ;; Customize js-comint.el for `rhino' and `node.js'

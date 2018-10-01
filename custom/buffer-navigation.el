@@ -175,8 +175,9 @@ Don't mess with special buffers."
 
 (defun k/shell (&optional num)
   (interactive "P")
-  (let* ((current-dir (file-name-directory (buffer-file-name)))
-         (shell-buffer-name (if num "*shell %s*" "*shell*"))
+  (let* ((current-dir (if buffer-file-name
+                          (file-name-directory (buffer-file-name))))
+         (shell-buffer-name (if num (format "*shell %s*" num) "*shell*"))
          (shell-bufer-exists-p (get-buffer shell-buffer-name)))
     (with-current-buffer (shell shell-buffer-name)
       (goto-char (point-max))
