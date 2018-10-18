@@ -55,7 +55,6 @@
                 ("\\.rst$" . rst-mode)
                 ("\\.rest$" . rst-mode)) auto-mode-alist))
 
-
 ;;-----------------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))

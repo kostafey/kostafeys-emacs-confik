@@ -171,8 +171,7 @@ and `buffer-navigation'.")
         'web-beautify
         'rjsx-mode
         'npm-mode
-        'typescript-mode
-        'tide)
+        'typescript-mode)
   "Required packages for `java-script-conf'.")
 
 
