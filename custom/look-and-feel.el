@@ -159,6 +159,7 @@
 (setq inhibit-startup-message t) ;; не показывать сообщение при старте
 (fset 'yes-or-no-p 'y-or-n-p)    ;; не печать yes целиком
 (setq default-tab-width 4)       ;; количество пробелов в табуляции
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)
@@ -275,6 +276,7 @@
 (add-hook 'go-mode-hook         'my-coding-hook)
 (add-hook 'powershell-mode-hook 'my-coding-hook)
 (add-hook 'rust-mode-hook       'my-coding-hook)
+(add-hook 'sql-mode-hook        'my-coding-hook)
 (add-hook 'web-mode-hook        'my-web-mode-hook)
 
 (setq query-replace-highlight t)
