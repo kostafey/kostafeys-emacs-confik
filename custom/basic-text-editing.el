@@ -503,4 +503,11 @@ Version 2015-09-14."
     (delete-region -p1 -p2)
     (insert (decode-coding-string (url-unhex-string -input-str) 'utf-8))))
 
+(defun spaces-to-tabs ()
+  "Reaplace 4 spaces with a tab char."
+  (interactive)
+  (replace-string "    " "	" nil
+                  (if (use-region-p) (region-beginning))
+                  (if (use-region-p) (region-end))))
+
 (provide 'basic-text-editing)
