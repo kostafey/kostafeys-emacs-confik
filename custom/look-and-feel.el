@@ -85,69 +85,6 @@
 ;;
 (global-hl-line-mode 1) ; highlight the line about point in the current window
 (blink-cursor-mode -1)
-;;
-;;=============================================================================
-
-;;=============================================================================
-;; full screen toggle using command+[RET]
-(defvar my-fullscreen-p t "Check if fullscreen is on or off")
-
-(defun toggle-fullscreen ()
-  (interactive)
-  (if (eq system-type 'windows-nt)
-      ;; Максимизировать окно - Windows
-      (progn
-        (defun my-non-fullscreen ()
-          (interactive)
-          (if (fboundp 'w32-send-sys-command)
-              ;; WM_SYSCOMMAND restore #xf120
-              (w32-send-sys-command 61728)
-            (progn (set-frame-parameter nil 'width 82)
-                   (set-frame-parameter nil 'fullscreen 'fullheight))))
-        (defun my-fullscreen ()
-          "Ajusts current frame to display properties"
-          (interactive)
-          (if (fboundp 'w32-send-sys-command)
-              ;; WM_SYSCOMMAND maximaze #xf030
-              (w32-send-sys-command 61488)
-            (set-frame-parameter nil 'fullscreen 'fullboth)))
-        (defun my-toggle-fullscreen ()
-          (interactive)
-          (setq my-fullscreen-p (not my-fullscreen-p))
-          (if my-fullscreen-p
-              (my-non-fullscreen)
-            (my-fullscreen)))
-        (my-toggle-fullscreen))
-    ;; Максимизировать окно - Linux
-    (set-frame-parameter nil 'fullscreen
-                         (if (frame-parameter nil 'fullscreen)
-                             nil
-                           'fullboth))))
-
-;(setq window-setup-hook 'toggle-fullscreen)
-
-(defun fullscreen-linux (&optional f)
-       (interactive)
-       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
-       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
-
-(defun toggle-full-screen-win32 ()
- "Toggles full-screen mode for Emacs window on Win32."
- (interactive)
- (shell-command "emacs_fullscreen.exe"))
-
-(global-set-key (kbd "C-M-<return>") 'toggle-full-screen-win32)
-
-;;=============================================================================
-;; Continuation lines
-;;
-;; Non-nil means do not display continuation lines.
-;; Instead, give each line of text just one screen line.
-(setq truncate-lines nil)
-;; A value of nil means to respect the value of `truncate-lines'.
-(setq truncate-partial-width-windows nil)
 
 ;;-----------------------------------------------------------------------------
 ;; Non-nil means no need to redraw entire frame after suspending.
@@ -167,9 +104,50 @@
 (scroll-bar-mode t)
 (set-scroll-bar-mode 'right) ; replace 'right with 'left to place it to the left
 
+(setq query-replace-highlight t)
+
+;;=============================================================================
+;; full screen toggle using command+[RET]
+(defvar my-fullscreen-p t "Check if fullscreen is on or off")
+
+(defun toggle-fullscreen ()
+  (interactive)
+  (if (eq system-type 'windows-nt)
+      ;; Windows
+      (progn
+        (setq my-fullscreen-p (not my-fullscreen-p))
+        (if my-fullscreen-p
+            ;; set non-fullscreen
+            (if (fboundp 'w32-send-sys-command)
+                ;; WM_SYSCOMMAND restore #xf120
+                (w32-send-sys-command 61728)
+              (progn (set-frame-parameter nil 'width 82)
+                     (set-frame-parameter nil 'fullscreen 'fullheight)))
+          ;; set fullscreen
+          (if (fboundp 'w32-send-sys-command)
+              ;; WM_SYSCOMMAND maximaze #xf030
+              (w32-send-sys-command 61488)
+            (set-frame-parameter nil 'fullscreen 'fullboth))))
+    ;; Linux
+    (set-frame-parameter nil 'fullscreen
+                         (if (frame-parameter nil 'fullscreen)
+                             nil
+                           'fullboth))))
+
+;; (setq window-setup-hook 'toggle-fullscreen)
+
+;;=============================================================================
+;; Continuation lines
+;;
+;; Non-nil means do not display continuation lines.
+;; Instead, give each line of text just one screen line.
+(setq truncate-lines nil)
+;; A value of nil means to respect the value of `truncate-lines'.
+(setq truncate-partial-width-windows nil)
+
 ;;=============================================================================
 ;; fringes
-(setq fringe-mode t) ;Show fields
+(setq fringe-mode t) ; Show fields
 (setq-default indicate-buffer-boundaries
       '((top . left) (bottom . left) (t . right)))
 (setq-default indicate-empty-lines t)
@@ -279,8 +257,6 @@
 (add-hook 'sql-mode-hook        'my-coding-hook)
 (add-hook 'web-mode-hook        'my-web-mode-hook)
 
-(setq query-replace-highlight t)
-
 ;;-----------------------------------------------------------------------------
 ;; Replace lambda with λ.
 (font-lock-add-keywords
@@ -289,23 +265,6 @@
                        (compose-region (match-beginning 1)
                                        (match-end 1)
                                        ?λ))))))
-
-;;-----------------------------------------------------------------------------
-
-;; (require 'popwin)
-;; ;; Since popwin-el is conflicing with ECB.
-;; ;; (setq display-buffer-function 'popwin:display-buffer)
-;; (global-set-key (kbd "C-x p") popwin:keymap)
-;; (push "*Kill Ring*" popwin:special-display-config)
-
-;; Disable bidirectional text support
-(setq-default bidi-display-reordering nil)
-
-;; Windows shell (cmd) correct encoding
-(when (eq system-type 'windows-nt)
-  (defadvice shell (after my-shell-advice)
-    (set-buffer-process-coding-system 'cp1251 'cp1251))
-  (ad-activate 'shell))
 
 ;;=============================================================================
 ;; Speedbar
@@ -316,9 +275,5 @@
 (setq speedbar-show-unknown-files t)
 (setq speedbar-tag-split-minimum-length 200)
 (setq speedbar-use-imenu-flag nil)
-
-;;-----------------------------------------------------------------------------
-;; popup-switcher
-(setq psw-popup-position 'fill-column)
 
 (provide 'look-and-feel)

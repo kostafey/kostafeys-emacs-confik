@@ -1,5 +1,8 @@
 ;; Set of tips to increase responsibility speed for windows.
 
+;; Disable bidirectional text support
+(setq-default bidi-display-reordering nil)
+
 (when (eq system-type 'windows-nt)
   ;; garbage collector
   (setq gc-cons-threshold (* 511 1024 1024))

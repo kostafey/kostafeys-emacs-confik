@@ -27,39 +27,27 @@
 ;; Personal customization
 (defvar custom-conf-lisp-path (concat site-lisp-path "custom/"))
 (add-to-list 'load-path custom-conf-lisp-path)
+(add-to-list 'load-path (concat custom-conf-lisp-path "langs/"))
 ;; Reusable customization
 (defvar solutions-path
   (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
 (add-to-list 'load-path solutions-path)
 (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
 ;;-----------------------------------------------------------------------------
-(require 'cedet-conf)
-;;-----------------------------------------------------------------------------
 ;auto-customized custom-set-variables
 (setq custom-file (concat custom-conf-lisp-path "custom.el"))
 (load custom-file)
 ;;-----------------------------------------------------------------------------
-
-(require 'functions)
-(require 'look-and-feel)
-
-(require 'elpa-conf)
-(require 'ide)
-;; (add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
-;; (require 'popup-switcher)
 (add-to-list 'load-path (concat third-party-lisp-path "popup-el/"))
 (require 'popup)
-
 (add-to-list 'load-path (concat third-party-lisp-path "wrap-region.el/"))
 (require 'wrap-region)
 
-(add-to-list 'load-path (concat site-lisp-path "clomacs/src/elisp/"))
-(require 'clomacs nil 'noerror)
-
-(add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
-(require 'ejc-sql)
-(require 'ejc-sql-conf nil 'noerror)
-
+(require 'functions)
+(require 'file-ops)
+(require 'look-and-feel)
+(require 'elpa-conf)
+(require 'ide)
 (require 'switch-language)
 (require 'ispell-conf)
 (require 'completition-conf)
@@ -67,46 +55,47 @@
 (require 'irc-conf)
 (require 'communications nil 'noerror)
 (require 'reencoding-file)
-
 (require 'foreign)
 (require 'copy-paste-clipboard-linux)
+(add-to-list 'load-path (expand-file-name "eframe-jack-in/" site-lisp-path))
+(require 'eframe-jack-in)
+(require 'eframe-windmove)
 (require 'key-bindings)
-
-(add-to-list 'load-path (expand-file-name "eframe-launcher" site-lisp-path))
-(require 'eframe-samurai)
-
 (require 'history-conf)
 (require 'text-modes-conf)
-
 (require 'version-control)
-;; (require 'maxima-conf)
-;; (require 'haskell-conf)
+(require 'perfomance-conf)
+
+;;-----------------------------------------------------------------------------
+;; Programming languages configs
+;;
 (require 'java-conf)
 (require 'scala-conf)
 (require 'clojure-conf)
 (require 'emacs-lisp-conf)
 (require 'common-lisp-conf)
-;;(require 'scheme-conf)
-(require 'auctex-conf)
-(require 'java-script-conf)
-;; (require 'aj-compilation)
+;; (require 'scheme-conf)
+;; (require 'python-conf)
+;; (require 'maxima-conf)
+;; (require 'haskell-conf)
+;; (require 'auctex-conf)
+;; (require 'mql-mode)
 (require 'sphinx-frontend)
-(require 'mql-mode)
+(require 'java-script-conf)
 (require 'lua-conf)
 (require 'xml-conf)
 (require 'go-conf)
 (require 'rust-conf)
-;; (require 'python-conf)
 
-;; (require 'misc-swarm)
+;; (add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
+;; (require 'popup-switcher)
+(add-to-list 'load-path (concat site-lisp-path "clomacs/src/elisp/"))
+(require 'clomacs nil 'noerror)
+(add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
+(require 'ejc-sql)
+(require 'ejc-sql-conf nil 'noerror)
 
-(require 'calc-time)
-(require 'perfomance-conf)
-
-(setq w32-quote-process-args t)
-
-;;=============================================================================
-
+;;-----------------------------------------------------------------------------
 ;;; In praise of Emacs, The One True Editor
 ;;; 1.0 Aug 19, 1994
 ;;; 2.0 Aug 28, 1994

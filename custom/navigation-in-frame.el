@@ -1,3 +1,5 @@
+;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.
+
 ;;-----------------------------------------------------------------------------
 ;; popup-switcher
 (defun psw-org-mode-hook ()
@@ -5,6 +7,7 @@
       (outline-show-all)))
 (add-hook 'psw-before-menu-hook 'psw-org-mode-hook)
 (setq psw-use-flx t)
+(setq psw-popup-position 'fill-column)
 
 ;;-----------------------------------------------------------------------------
 ;; dired
@@ -36,22 +39,6 @@
 (setq-default ibuffer-default-sorting-mode 'major-mode)
 
 ;;-----------------------------------------------------------------------------
-;; Here's a handy function that kills the current buffer and removes
-;; the file it is connected to.
-(defun delete-this-buffer-and-file ()
-  "Removes file connected to current buffer and kills buffer."
-  (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name)
-      (when (yes-or-no-p "Are you sure you want to remove this file? ")
-        (delete-file filename)
-        (kill-buffer buffer)
-        (message "File '%s' successfully removed" filename)))))
-
-;;-----------------------------------------------------------------------------
 ;; Kill current buffer
 (defun prh:kill-current-buffer ()
     (interactive)
@@ -77,12 +64,6 @@
 
 (tabbar-mode t)
 
-;;=============================================================================
-
-;;; save minibuffer history between sessions
-(when (> emacs-major-version 21) (savehist-mode t))
-;;=============================================================================
-
 ;;----------------------------------------------------------------------
 ;; flx configuration - fuzzy matching files and paths via ido
 ;;
@@ -92,28 +73,8 @@
 (flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.
 (setq ido-use-faces nil)
-;;
+
 ;;----------------------------------------------------------------------
-
-(defun copy-to-clipboard-buffer-file-path ()
-  (interactive)
-  "Copy current file path to the clipboard."
-  (let ((result (kill-new
-                 (if (eq system-type 'windows-nt)
-                     (let ((uri (replace-regexp-in-string
-                                 "/" "\\\\" (buffer-file-name))))
-                       (concat (upcase (substring uri 0 1))
-                               (substring uri 1)))
-                   (buffer-file-name)))))
-    (message result)
-    result))
-
-(defun copy-to-clipboard-buffer-file-name ()
-  (interactive)
-  "Copy current file name to the clipboard."
-  (let ((result (kill-new (file-name-nondirectory (buffer-file-name)))))
-    (message result)
-    result))
 
 (defun kill-other-buffers ()
   "Kill all buffers but the current one.
@@ -212,4 +173,6 @@ Don't mess with special buffers."
         (insert current-dir)
         (comint-send-input)))))
 
-(provide 'buffer-navigation)
+(provide 'navigation-in-frame)
+
+;;; navigation-in-frame.el ends here

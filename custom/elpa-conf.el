@@ -129,8 +129,8 @@
         'ace-jump-mode
         'flx-isearch
         'rg)
-  "Required packages for `navigation-and-simplify-keys', `key-bindings'
-and `buffer-navigation'.")
+  "Required packages for `navigation-in-buffer', `key-bindings'
+and `navigation-in-frame'.")
 
 (defvar vc-packages
   (list 'magit

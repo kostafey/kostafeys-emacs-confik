@@ -1,3 +1,5 @@
+;;; navigation-in-buffer.el --- Simplify point navigation inside buffer.
+
 (require 'elpa-conf)
 (require 'goto-last-change)
 
@@ -234,44 +236,6 @@
    (set-window-buffer w2 b1)))))
 
 ;;=============================================================================
-;; Standard file-manipulation functions:
-;;
-(defun rename-file-of-buffer ()
-  "Renames both current buffer and file it's visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" (buffer-name))
-      (let ((new-name (read-from-minibuffer
-                       "New name: "
-                       (file-name-nondirectory (buffer-file-name)))))
-        (if (get-buffer new-name)
-            (message "A buffer named '%s' already exists!" new-name)
-          (progn
-            (rename-file filename new-name 1)
-            (rename-buffer new-name)
-            (set-visited-file-name new-name)
-            (set-buffer-modified-p nil)))))))
-
-(defun move-buffer-file (dir)
-  "Moves both current buffer and file it's visiting to DIR."
-  (interactive "DNew directory: ")
-  (let* ((name (buffer-name))
-         (filename (buffer-file-name))
-         (dir
-          (if (string-match dir "\\(?:/\\|\\\\)$")
-              (substring dir 0 -1) dir))
-         (newname (concat dir "/" name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
-      (progn
-        (copy-file filename newname 1)
-        (delete-file filename)
-        (set-visited-file-name newname)
-        (set-buffer-modified-p nil)
-        t))))
-
-;;=============================================================================
 ;; Jump back to the last position of the cursor
 (when (fboundp 'winner-mode)
   (winner-mode 1))
@@ -303,4 +267,6 @@
     ad-do-it)
   (setq ad-return-value 'alpha))
 
-(provide 'navigation-and-simplify-keys)
+(provide 'navigation-in-buffer)
+
+;;; navigation-in-buffer.el ends here

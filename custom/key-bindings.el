@@ -83,8 +83,8 @@
 (defvar selected-area-prefix "\C-\M-a")
 (defvar change-buffer-prefix "\C-c\C-b")
 
-(require 'buffer-navigation)
-(require 'navigation-and-simplify-keys)
+(require 'navigation-in-frame)
+(require 'navigation-in-buffer)
 (require 'basic-text-editing)
 
 ;;=============================================================================
@@ -380,8 +380,8 @@
 ;; (global-set-key (kbd "C-x <right>") 'next-buffer) - default
 ;; (global-set-key (kbd "C-x <left>") 'previous-buffer) - default
 
-(global-set-key [(control next)] 'my-next-buffer)      ; C-Page Up
-(global-set-key [(control prior)] 'my-previous-buffer) ; C-Page Down
+(global-set-key [(control next)] 'eframe-next-buffer)      ; C-Page Up
+(global-set-key [(control prior)] 'eframe-previous-buffer) ; C-Page Down
 
 (global-set-key (kbd "C-x a s") 'find-file-from-clipboard)
 

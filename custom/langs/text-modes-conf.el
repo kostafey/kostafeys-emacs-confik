@@ -1,5 +1,15 @@
 (require 'elpa-conf)
 
+;;-----------------------------------------------------------------------------
+;; shell
+(setq w32-quote-process-args t)
+
+;; Windows shell (cmd) correct encoding
+(when (eq system-type 'windows-nt)
+  (defadvice shell (after my-shell-advice)
+    (set-buffer-process-coding-system 'cp1251 'cp1251))
+  (ad-activate 'shell))
+
 (setq stock-ticker-symbols
       '("^gspc" "DIA" "^ixic" "^tnx" "^tyx" "^nya"
         "XAUUSD=X" "GBPUSD=X" "EURUSD=X"
