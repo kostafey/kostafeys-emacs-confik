@@ -7,6 +7,31 @@
 (setq psw-use-flx t)
 
 ;;-----------------------------------------------------------------------------
+;; dired
+(setq dired-omit-files
+      (rx (or (seq bol (? ".") "#")
+              (seq bol "." eol))))
+
+(add-hook 'dired-mode-hook 'dired-omit-mode)
+
+;; dired+
+(when (require 'dired+ nil 'noerror)
+  (toggle-diredp-find-file-reuse-dir t)
+
+  (defun mydired-sort ()
+    "Sort dired listings with directories first."
+    (save-excursion
+      (let (buffer-read-only)
+        (forward-line 2) ;; beyond dir. header
+        (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+      (set-buffer-modified-p nil)))
+
+  (defadvice dired-readin
+      (after dired-after-updating-hook first () activate)
+    "Sort dired listings with directories first before adding marks."
+    (mydired-sort)))
+
+;;-----------------------------------------------------------------------------
 ;; ibuffer sorting
 (setq-default ibuffer-default-sorting-mode 'major-mode)
 
@@ -27,7 +52,7 @@
         (message "File '%s' successfully removed" filename)))))
 
 ;;-----------------------------------------------------------------------------
-;Убить буфер
+;; Kill current buffer
 (defun prh:kill-current-buffer ()
     (interactive)
     (kill-buffer (current-buffer)))

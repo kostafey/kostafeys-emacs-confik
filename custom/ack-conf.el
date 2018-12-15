@@ -1,3 +1,5 @@
+;; ----------------------------------------------------------------------
+;; ack
 (add-to-list 
  'load-path
  (expand-file-name "ack/" third-party-lisp-path))
@@ -11,12 +13,11 @@
   (setq ack-command (concat "perl \"" ack-src-file-path 
                             "\" --nocolor --nogroup ")))
 
-;; (defadvice after-ack (after ack)
-;;   (switch-to-buffer "*ack*")
-;;   )
-
-;; (ad-activate 'after-ack)
-
-;; (ad-disable-advice 'compilation-start 'after 'compilation-handle-exit)
+;; ----------------------------------------------------------------------
+;; The Silver Searcher - ag
+(when (require 'ag nil 'noerror)
+  (setq ag-reuse-window 'nil)
+  (setq ag-reuse-buffers 't)
+  (setq ag-highlight-search t))
 
 (provide 'ack-conf)

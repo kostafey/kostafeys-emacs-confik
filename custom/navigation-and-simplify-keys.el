@@ -19,7 +19,7 @@
 (cua-mouse-resize-rectangle event)))
 
 ;;=============================================================================
-;; Включаем команды изменения регистра
+;; Enable case changes commands
 ;;=============================================================================
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
@@ -152,7 +152,7 @@
     (message (concat "Copied to buffer: " url))))
 
 ;;=============================================================================
-;; Поиск и замена
+;; Search & replace
 ;;=============================================================================
 (add-hook 'isearch-mode-hook
           '(lambda ()
@@ -168,9 +168,9 @@
 (setq truncate-lines nil)
 
 ;;=============================================================================
-;; Скроллинг
+;; Scrolling
 ;;=============================================================================
-;;mouse
+;; mouse
 (setq mouse-wheel-mode t)
 (setq mouse-wheel-progressive-speed nil)
 
@@ -180,21 +180,16 @@
     (progn
       (defun smooth-scroll (increment)
         (scroll-up increment) (sit-for 0.05)
-        ;; (scroll-up increment) (sit-for 0.02)
-        ;; (scroll-up increment) (sit-for 0.02)
-        ;; (scroll-up increment) (sit-for 0.05)
-        ;; (scroll-up increment) (sit-for 0.06)
         (scroll-up increment))
-
       (global-set-key [(mouse-5)] '(lambda () (interactive) (smooth-scroll 1)))
       (global-set-key [(mouse-4)] '(lambda () (interactive) (smooth-scroll -1)))))
 
-;;keyboard
-(setq scroll-step 1)                     ; Шаг прокрутки
-(setq next-screen-context-lines 10)      ; Number of lines of continuity when
-                                         ; scrolling by screenfuls.
+;; keyboard
+(setq scroll-step 1)
+(setq next-screen-context-lines 10)     ; Number of lines of continuity when
+                                        ; scrolling by screenfuls.
 
-;; Если тока вышла за пределы окна на число не первосходящее данное,
+;; Если точка вышла за пределы окна на число не первосходящее данное,
 ;; то прокрутить лишь настолько, чтобы вернуть точку в окно
 (setq scroll-conservatively 50)
 (setq scroll-preserve-screen-position t) ; Не изменять положение точки после прокрутки
@@ -241,51 +236,42 @@
 ;;=============================================================================
 ;; Standard file-manipulation functions:
 ;;
-(defun rename-file-and-buffer (new-name)
- "Renames both current buffer and file it's visiting to NEW-NAME." (interactive "sNew name: ")
- (let ((name (buffer-name))
-    (filename (buffer-file-name)))
- (if (not filename)
-    (message "Buffer '%s' is not visiting a file!" name)
- (if (get-buffer new-name)
-     (message "A buffer named '%s' already exists!" new-name)
-    (progn   (rename-file name new-name 1)   (rename-buffer new-name)    (set-visited-file-name new-name)    (set-buffer-modified-p nil))))))
+(defun rename-file-of-buffer ()
+  "Renames both current buffer and file it's visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" (buffer-name))
+      (let ((new-name (read-from-minibuffer
+                       "New name: "
+                       (file-name-nondirectory (buffer-file-name)))))
+        (if (get-buffer new-name)
+            (message "A buffer named '%s' already exists!" new-name)
+          (progn
+            (rename-file filename new-name 1)
+            (rename-buffer new-name)
+            (set-visited-file-name new-name)
+            (set-buffer-modified-p nil)))))))
 
 (defun move-buffer-file (dir)
- "Moves both current buffer and file it's visiting to DIR." (interactive "DNew directory: ")
- (let* ((name (buffer-name))
-     (filename (buffer-file-name))
-     (dir
-     (if (string-match dir "\\(?:/\\|\\\\)$")
-     (substring dir 0 -1) dir))
-     (newname (concat dir "/" name)))
+  "Moves both current buffer and file it's visiting to DIR."
+  (interactive "DNew directory: ")
+  (let* ((name (buffer-name))
+         (filename (buffer-file-name))
+         (dir
+          (if (string-match dir "\\(?:/\\|\\\\)$")
+              (substring dir 0 -1) dir))
+         (newname (concat dir "/" name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (progn
+        (copy-file filename newname 1)
+        (delete-file filename)
+        (set-visited-file-name newname)
+        (set-buffer-modified-p nil)
+        t))))
 
- (if (not filename)
-    (message "Buffer '%s' is not visiting a file!" name)
- (progn     (copy-file filename newname 1)  (delete-file filename)  (set-visited-file-name newname)     (set-buffer-modified-p nil)     t))))
 ;;=============================================================================
-
-;;=============================================================================
-;; dired+
-;;
-(when (require 'dired+ nil 'noerror)
-  (toggle-diredp-find-file-reuse-dir t)
-
-  (defun mydired-sort ()
-    "Sort dired listings with directories first."
-    (save-excursion
-      (let (buffer-read-only)
-        (forward-line 2) ;; beyond dir. header
-        (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
-      (set-buffer-modified-p nil)))
-
-  (defadvice dired-readin
-      (after dired-after-updating-hook first () activate)
-    "Sort dired listings with directories first before adding marks."
-    (mydired-sort)))
-;;
-;;=============================================================================
-
 ;; Jump back to the last position of the cursor
 (when (fboundp 'winner-mode)
   (winner-mode 1))
@@ -316,29 +302,5 @@
   (unless (= (char-syntax (ad-get-arg 0)) ?w)
     ad-do-it)
   (setq ad-return-value 'alpha))
-
-;; ----------------------------------------------------------------------
-;; The Silver Searcher - ag
-(when (require 'ag nil 'noerror)
-  (setq ag-reuse-window 'nil)
-  (setq ag-reuse-buffers 't)
-  (setq ag-highlight-search t))
-
-(defun rename-file-of-buffer ()
-  "Renames both current buffer and file it's visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" (buffer-name))
-      (let ((new-name (read-from-minibuffer
-                       "New name: "
-                       (file-name-nondirectory (buffer-file-name)))))
-        (if (get-buffer new-name)
-            (message "A buffer named '%s' already exists!" new-name)
-          (progn
-            (rename-file filename new-name 1)
-            (rename-buffer new-name)
-            (set-visited-file-name new-name)
-            (set-buffer-modified-p nil)))))))
 
 (provide 'navigation-and-simplify-keys)
