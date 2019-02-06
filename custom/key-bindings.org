@@ -1105,6 +1105,17 @@ Add to .emacs:
     (global-set-key (kbd "C-M-g p") 'git-gutter:popup-hunk))
 #+end_src
 
+**** Smerge
+    | Key       | Command             | Description                 |
+    |-----------+---------------------+-----------------------------|
+    | C-c s n   | smerge-next         | Go to the next conflict     |
+    | C-c s p   | smerge-prev         | Go to the previous conflict |
+    | C-c s RET | smerge-keep-current | Use version the cursor      |
+    | C-c s u   | smerge-keep-upper   | Keep the "upper" version    |
+    | C-c s l   | smerge-keep-lower   | Keep the "lower" version    |
+#+begin_src emacs-lisp :exports none
+  (setq smerge-command-prefix (kbd "C-c s"))
+#+end_src
 
 ** Mouse
 #+begin_src emacs-lisp :exports none
@@ -1155,8 +1166,3 @@ Add to .emacs:
    (global-set-key (kbd "M-<f2>") 'elfeed)
 #+end_src
 
-*** stock-ticker
-#+begin_src emacs-lisp :exports none
-   ;; see https://github.com/skeeto/elfeed for details.
-   (global-set-key (kbd "C-c s") 'stock-ticker--list)
-#+end_src

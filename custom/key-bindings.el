@@ -738,6 +738,8 @@
   (global-set-key (kbd "C-M-g <up>") 'git-gutter:previous-hunk)
   (global-set-key (kbd "C-M-g p") 'git-gutter:popup-hunk))
 
+(setq smerge-command-prefix (kbd "C-c s"))
+
 ;;=============================================================================
 ;;                               Mouse
 ;;
@@ -764,6 +766,3 @@
 
 ;; see https://github.com/skeeto/elfeed for details.
 (global-set-key (kbd "M-<f2>") 'elfeed)
-
-;; see https://github.com/skeeto/elfeed for details.
-(global-set-key (kbd "C-c s") 'stock-ticker--list)
