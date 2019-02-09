@@ -128,5 +128,13 @@ Then revert back the OS input language."
   (eval `(define-key key-translation-map 
            (kbd ,(concat "M-" (string from))) (kbd ,(concat "M-" (string to))))))
 
+;;====================================================================
+;; google-translate
+(require 'google-translate)
+(require 'google-translate-default-ui)
+(global-set-key "\C-ct" 'google-translate-at-point)
+(global-set-key "\C-cT" 'google-translate-query-translate)
+(setq google-translate-enable-ido-completion t)
+
 (provide 'switch-language)
 

@@ -60,7 +60,8 @@
         ;; View Large Files
         'vlf
         'yaml-mode
-        'restclient)
+        'restclient
+        'google-translate)
   "Required packages for `text-modes-conf'.")
 
 (defvar clojure-packages '(clojure-mode
