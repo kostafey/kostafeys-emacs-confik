@@ -10,9 +10,9 @@
 ;; " >> ~/.sbt/0.13/plugins/plugins.sbt
 
 ;; 2. sbt ensimeConfig
-;; 3. M-x ensime
+;; 3. C-n j     (M-x ensime)
 ;; 4. C-c C-v z (M-x ensime-inf-switch)
-;; 5. M-x ensime-inf-eval-region
+;; 5. M-e       (M-x ensime-inf-eval-region)
 
 (defun k/ensime-flash-region (start end &optional timeout)
   "Temporarily highlight region from START to END."
