@@ -254,7 +254,6 @@
 (add-hook 'go-mode-hook         'my-coding-hook)
 (add-hook 'powershell-mode-hook 'my-coding-hook)
 (add-hook 'rust-mode-hook       'my-coding-hook)
-(add-hook 'sql-mode-hook        'my-coding-hook)
 (add-hook 'web-mode-hook        'my-web-mode-hook)
 
 ;;-----------------------------------------------------------------------------

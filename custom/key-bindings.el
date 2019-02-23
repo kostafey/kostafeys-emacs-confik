@@ -679,7 +679,7 @@
        (define-key ejc-sql-mode-keymap (kbd "C-s-<up>") 'ejc-previous-sql)
        (define-key ejc-sql-mode-keymap (kbd "C-s-<down>") 'ejc-next-sql)
        (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
-       (global-set-key (kbd "C-x C-s") 'ejc-switch-to-sql-editor-buffer))))
+       (global-set-key (kbd "C-x C-s") 'ejc-get-temp-editor-buffer))))
 ;;
 
 ;;----------------------------------------------------------------------
