@@ -175,6 +175,10 @@ and `navigation-in-frame'.")
         'typescript-mode)
   "Required packages for `java-script-conf'.")
 
+(defvar java-packages
+  (list 'java-snippets
+        'jdecomp)
+  "Required packages for `java-conf'.")
 
 (defvar misc-packages
   (list 'noflet
@@ -186,8 +190,7 @@ and `navigation-in-frame'.")
   "Packages, not requred by configuration files.")
 
 (defvar misc-requred-packages
-  (list 's
-        'java-snippets)
+  (list 's)
   "Packages, requred by configuration files.")
 
 (install-required-packages (append
@@ -204,6 +207,7 @@ and `navigation-in-frame'.")
                             vc-packages
                             misc-packages
                             misc-requred-packages
-                            js-packages))
+                            js-packages
+                            java-packages))
 
 (provide 'elpa-conf)

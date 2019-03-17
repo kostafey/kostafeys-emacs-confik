@@ -117,4 +117,22 @@
 (autoload 'jflex-mode "jflex-mode" nil t)
 (setq auto-mode-alist (cons '("\\(\\.flex\\|\\.jflex\\)\\'" . jflex-mode) auto-mode-alist))
 
+;;=============================================================================
+;; java-decompiler
+;;
+;; mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -Dartifact=org.benf:cfr:0.139
+
+(let ((home (if (eq system-type 'windows-nt)
+                (concat (getenv "HOMEDRIVE") (getenv "HOMEPATH"))
+              (file-truename "~"))))
+  (customize-set-variable
+   'jdecomp-decompiler-paths
+   (list
+    (cons 'cfr (concat
+                home
+                "/.m2/repository/org/benf/cfr/0.139/cfr-0.139.jar")))))
+
+(customize-set-variable 'jdecomp-decompiler-type 'cfr)
+(jdecomp-mode 1)
+
 (provide 'java-conf)

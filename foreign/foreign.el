@@ -24,6 +24,7 @@
 ;; See docstrings for the following functions:
 
 ;; * foreign-format-json
+;; * foreign-format-xml
 ;; * foreign-replace
 ;; * foreign-find
 
@@ -42,28 +43,35 @@
          (concat "go build -o " bin-go-path " " src-go-path"\"")))
     bin-go-path))
 
-(defun foreign-format-json-file (file-name)
-  (let ((bin (foreign-get-go-executable "jsonpp.go")))
-    (shell-command
-     (concat bin " " file-name))))
+(defun foreign-run-for-file (foreign-src file-name &rest args)
+  (let* ((bin (foreign-get-go-executable foreign-src))
+         (command (concat bin " " file-name
+                          (if args
+                              (concat " "
+                                      (cl-reduce
+                                       (lambda (x y) (concat x " " y)) args))
+                            ""))))
+    (shell-command-to-string command)))
 
-(defun foreign-replace-file (file-name old-string new-string)
-  (let ((bin (foreign-get-go-executable "replace.go")))
-    (shell-command
-     (concat bin " " file-name " " old-string " " new-string))))
-
-(defun foreign-find-in-file (file-name start-pos search-string)
-  (let ((bin (foreign-get-go-executable "find.go")))
-    (shell-command-to-string
-     (concat bin " " file-name " " start-pos " " search-string))))
+(defun foreign-format-file (foreign-src mode)
+  (when (and
+         (buffer-modified-p)
+         (yes-or-no-p "Buffer modified. Save it?"))
+    (save-buffer))
+  (foreign-run-for-file foreign-src (buffer-file-name))
+  (revert-buffer-hard)
+  (funcall mode)
+  (message "Done."))
 
 (defun foreign-format-json ()
   "Pretty print json file."
   (interactive)
-  (foreign-format-json-file (buffer-file-name))
-  (revert-buffer-hard)
-  (js-mode)
-  (message "Done."))
+  (foreign-format-file "jsonpp.go" 'js-mode))
+
+(defun foreign-format-xml ()
+  "Pretty print xml file."
+  (interactive)
+  (foreign-format-file "xmlpp.go" 'xml-mode))
 
 (defun foreign-replace (old-string new-string)
   "Replace string in file."
@@ -73,7 +81,8 @@
                           "" nil nil 'foreign-replace-old-history)
     (read-from-minibuffer (concat "Replace with: ")
                           "" nil nil 'foreign-replace-new-history)))
-  (foreign-replace-file (buffer-file-name)
+  (foreign-run-for-file "replace.go"
+                        (buffer-file-name)
                         (prepare-string-to-shell old-string)
                         (prepare-string-to-shell new-string))
   (revert-buffer-hard)
@@ -86,7 +95,8 @@
     (read-from-minibuffer "Find string: "
                           "" nil nil 'foreign-find-history)))
   (let ((pos (string-to-number
-              (foreign-find-in-file (buffer-file-name)
+              (foreign-run-for-file "find.go"
+                                    (buffer-file-name)
                                     (number-to-string (point))
                                     (prepare-string-to-shell search-string)))))
     (goto-char (+ pos 1)))
