@@ -129,7 +129,8 @@
         'smex
         'ace-jump-mode
         'flx-isearch
-        'rg)
+        'rg
+        'expand-region)
   "Required packages for `navigation-in-buffer', `key-bindings'
 and `navigation-in-frame'.")
 
