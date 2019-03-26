@@ -108,6 +108,10 @@
   '(progn
      (sql-set-product "ansi")))
 
+(require 'ob-clojure)
+(setq org-babel-clojure-backend 'cider)
+
+;;--------------------------------------------------------------------
 ;;typing game
 (autoload 'typing-of-emacs "The Typing Of Emacs, a game." t)
 
