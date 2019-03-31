@@ -443,6 +443,7 @@
 ;;
 (global-unset-key "\C-u")
 (global-set-key "\C-u" 'swap-windows)
+(global-set-key [M-f1] 'universal-argument) ; Binded to `C-u` by default
 
 (global-unset-key (kbd "M-m"))
 (global-set-key (kbd "M-m") 'mirror-window)
