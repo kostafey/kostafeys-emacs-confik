@@ -446,6 +446,7 @@ Add to .emacs:
   ;;-----------------------------------------------------------------------------
   ;; Paragraph operations
   (global-set-key (kbd "C-c q")  'unfill-paragraph)
+  (global-set-key (kbd "C-c e")  'graph-easy-run)
 #+end_src
 
 *** Rectangle operations

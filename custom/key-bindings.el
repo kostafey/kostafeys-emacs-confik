@@ -286,6 +286,7 @@
 ;;-----------------------------------------------------------------------------
 ;; Paragraph operations
 (global-set-key (kbd "C-c q")  'unfill-paragraph)
+(global-set-key (kbd "C-c e")  'graph-easy-run)
 
 ;;-----------------------------------------------------------------------------
 ;; Rectangle operations
