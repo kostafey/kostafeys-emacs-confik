@@ -510,4 +510,14 @@ Version 2015-09-14."
                   (if (use-region-p) (region-beginning))
                   (if (use-region-p) (region-end))))
 
+(defun toggle-indent-tabs-mode ()
+  "Toggle `indent-tabs-mode'."
+  (interactive)
+  (let ((current-indent-tabs (not indent-tabs-mode)))
+	(setq-local indent-tabs-mode current-indent-tabs)
+	(message (format
+			  "Use %s for intendation."
+			  (propertize (if current-indent-tabs "tabs" "spaces")
+						  'face 'font-lock-keyword-face)))))
+
 (provide 'basic-text-editing)

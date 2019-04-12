@@ -142,3 +142,5 @@
             (insert result)
             (message "Done graph-easy."))
         (message "Not in graph-easy block.")))))
+
+(provide 'graph-easy)
