@@ -206,5 +206,6 @@
       (insert sbt-format))))
 
 (setq scala-indent:step 4)
+(setq ensime-startup-notification nil)
 
 (provide 'scala-conf)
