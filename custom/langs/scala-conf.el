@@ -11,7 +11,7 @@
 
 ;; 2. sbt ensimeConfig
 ;; 3. C-n j     (M-x ensime)
-;; 4. C-c C-v z (M-x ensime-inf-switch)
+;; 4. C-n c     (M-x ensime-inf-switch) or C-c C-v z
 ;; 5. M-e       (M-x ensime-inf-eval-region)
 
 (defun k/ensime-flash-region (start end &optional timeout)
