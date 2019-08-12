@@ -24,11 +24,6 @@
   ;; itself is the current buffer.
   (setq magit-refresh-status-buffer nil)
 
-  ;; Don't revert buffers which visit files located inside the current
-  ;; repository, when the visited file changes on disk.
-  (setq auto-revert-buffer-list-filter
-        'magit-auto-revert-repository-buffers-p)
-
   (defun magit-status-narrow ()
     ;; Hide sections by default
     (let ((hide (lambda (_section) 'hide)))
