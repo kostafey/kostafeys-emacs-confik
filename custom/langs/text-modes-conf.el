@@ -99,14 +99,13 @@
    (python . t)
    (emacs-lisp . t)))
 
-(defun sql-ansi-mode ()
-  (interactive)
-  (sql-mode)
-  (sql-set-product "ansi"))
+;; Inhibit confirmation before interactively evaluating SQL code
+;; blocks in Org buffers.
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("sql"))))
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 
-(eval-after-load "sql"
-  '(progn
-     (sql-set-product "ansi")))
+(setq org-fontify-quote-and-verse-blocks nil)
 
 (require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
