@@ -50,6 +50,17 @@
   (skip-chars-backward " \t")
   (forward-same-syntax -1))
 
+(require 'eldoc)
+;; Run ElDoc after this commands:
+(mapc 'eldoc-add-command '(k/char-forward
+                           k/char-backward
+                           k/word-forward
+                           k/word-backward
+                           k/sexp-forward
+                           k/sexp-backward
+                           k/line-next
+                           k/line-previous))
+
 (defun k/line-next () (interactive) (k/deselect) (line-move 1))
 (defun k/line-previous () (interactive) (k/deselect) (line-move -1))
 (defun k/line-next-select () (interactive) (k/select) (line-move 1))
@@ -79,17 +90,6 @@
 (defun k/buffer-end () (interactive) (k/deselect) (goto-char (point-max)))
 (defun k/buffer-beginning-select () (interactive) (k/select) (goto-char (point-min)))
 (defun k/buffer-end-select () (interactive) (k/select) (goto-char (point-max)))
-
-(require 'eldoc)
-;; Run ElDoc after this commands:
-(mapcar 'eldoc-add-command '(k/char-forward
-                             k/char-backward
-                             k/word-forward
-                             k/word-backward
-                             k/sexp-forward
-                             k/sexp-backward
-                             k/line-next
-                             k/line-previous))
 
 (when (require 'sgml-mode nil 'noerror)
 
