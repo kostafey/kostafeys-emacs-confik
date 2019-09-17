@@ -479,6 +479,7 @@
 (define-key dired-mode-map [f1] nil)
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
+(global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
 (global-set-key (kbd "s-q") 'psw-navigate-files)
 (global-set-key (kbd "s-a") 'psw-navigate-files)
 (global-set-key [f2] 'psw-switch-function)

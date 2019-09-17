@@ -58,7 +58,8 @@
                            'face 'font-lock-constant-face))
        ;; ------------------------------------------------------------
        ;; projectile
-       '(:eval (propertize (projectile-default-mode-line)
+       '(:eval (propertize (if (projectile-project-root)
+                               (projectile-default-mode-line))
                            'mouse-face 'mode-line-highlight
                            'local-map (make-mode-line-mouse-map
                                        'mouse-1 'projectile-mode-menu)))
