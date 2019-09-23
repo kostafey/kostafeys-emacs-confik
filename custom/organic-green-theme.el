@@ -300,6 +300,8 @@ Basic, Font Lock, Isearch, Jabber, rst, magit, Web faces are included.")
    `(diredp-dir-name ((t (:foreground ,alum-6))))
    `(diredp-file-name ((t (:foreground ,organic-fg))))
    `(diredp-file-suffix ((t (:foreground ,organic-builtin-fg))))
+   ;; dired+
+   `(diredp-compressed-file-suffix ((t (:foreground ,orange-3))))
 
    ;;Highlight pair parentheses
    `(show-paren-match ((t (:background "#F0F0A1"))))

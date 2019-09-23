@@ -36,7 +36,7 @@
        ;; ------------------------------------------------------------
        ;; the current major mode for the buffer and list of minor modes.
        '(:eval (propertize " %m"
-                           'face '((t :foreground "black"))
+                           ;; 'face '((t :foreground "black"))
                            'help-echo (mapconcat
                                        'identity
                                        (-sort
@@ -52,14 +52,15 @@
                                        'mouse-1 'describe-mode)))
        ;; ------------------------------------------------------------
        ;; version control data
-       '(:eval (propertize (progn
-                             (vc-mode-line buffer-file-name)
-                             vc-mode)
+       '(:eval (propertize (if (vc-mode-line buffer-file-name)
+                               vc-mode
+                             "")
                            'face 'font-lock-constant-face))
        ;; ------------------------------------------------------------
        ;; projectile
        '(:eval (propertize (if (projectile-project-root)
-                               (projectile-default-mode-line))
+                               (projectile-default-mode-line)
+                             "")
                            'mouse-face 'mode-line-highlight
                            'local-map (make-mode-line-mouse-map
                                        'mouse-1 'projectile-mode-menu)))
