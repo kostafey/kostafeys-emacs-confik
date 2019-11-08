@@ -182,7 +182,8 @@ and `navigation-in-frame'.")
   "Required packages for `java-conf'.")
 
 (defvar misc-packages
-  (list 'noflet
+  (list 'dash
+        'noflet
         'jabber
         'circe
         'ag

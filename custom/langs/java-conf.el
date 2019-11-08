@@ -33,25 +33,73 @@
 
 (maven-def-task maven-tomcat-deploy "mvn tomcat7:redeploy")
 (maven-def-task maven-compile "mvn compile")
+(maven-def-task maven-install "mvn install")
 (maven-def-task maven-clean "mvn clean")
 (maven-def-task maven-package "mvn package")
 (maven-def-task maven-all "mvn clean package tomcat7:redeploy")
 
 ;;-----------------------------------------------------------------------------
-;; JDEE
-(setq jdee-server-dir "~/.emacs.d/jdee-server/target")
+;; Inserting getters and setters
+;; Based on:
+;; `https://www.ecyrd.com/JSPWiki/wiki/InsertingGettersAndSettersInEmacs'
+;;
+(defun java-getter-setter (type field)
+  "Inserts a Java field, and getter/setter methods."
+  (interactive "MType: \nMField: ")
+  (let ((oldpoint (point))
+        (capfield (concat (capitalize (substring field 0 1))
+                          (substring field 1))))
+    (insert (concat "public " type " get" capfield "()\n"
+                    "{\n"
+                    "    return this." field ";\n"
+                    "}\n\n"
+                    "public void set" capfield "(" type " " field ")\n"
+                    "{\n"
+                    "    this." field " = " field ";\n"
+                    "}\n"))
+    (c-indent-region oldpoint (point) t)))
+
+(defun make-class-getter-setter (type var)
+  (format
+   (concat "public %s get%s() { return %s; }\n"
+           "public void set%s(%s %s) { this.%s = %s; }\n")
+   ;; getter line
+   type (upcase-initials var) var
+   ;; setter line
+   type (upcase-initials var) type var var var))
+
+(defun extract-class-variables (&rest modifiers)
+  (let ((regexp
+	     (concat
+	      "^\\([ \t]*\\)"
+          ;; "\\(private\\)?"
+	      "\\(" (mapconcat (lambda (m) (format "%S" m)) modifiers "\\|") "\\)"
+	      "\\([ \t]*\\)"
+	      "\\([A-Za-z0-9<>]+\\)"
+	      "\\([ \t]*\\)"
+	      "\\([a-zA-Z0-9]+\\);$")))
+    (save-excursion
+      (goto-char (point-min))
+      (loop for pos = (search-forward-regexp regexp nil t)
+	        while pos collect (let ((modifier (match-string 2))
+				                    (type (match-string 4))
+				                    (name (match-string 6)))
+				                (list modifier type name))))))
+
+(defun java-generate-getters-setters (&rest modifiers)
+  (interactive)
+  (let ((oldpoint (point)))
+    (insert
+     (mapconcat (lambda (var) (apply 'make-class-getter-setter (rest var)))
+                (apply 'extract-class-variables modifiers)
+                "\n"))
+    (c-indent-region oldpoint (point) t)))
+
+(defalias 'java-create-getters-setters 'java-generate-getters-setters)
 
 ;;-----------------------------------------------------------------------------
-;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.ftl$" . web-mode))
-(add-hook 'web-mode-hook
-          (lambda (progn
-               ;; (setq indent-line-function nil)
-               (setq indent-line-function 'web-mode-indent-line))))
-(setq web-mode-enable-current-element-highlight t)
-(setq web-mode-markup-indent-offset 2)
+;; JDEE
+(setq jdee-server-dir "~/.emacs.d/jdee-server/target")
 
 ;;-----------------------------------------------------------------------------
 ;; JBehave: story-mode

@@ -31,18 +31,18 @@
 If current buffer is write-protected (`buffer-read-only'), temporarily toggle
 read-only flag, recode, then turn it back."
   (interactive "zEnter target coding system: ")
-  (labels ((do-recode nil
-		      (encode-coding-region (point-min)
-					    (point-max)
-					    buffer-file-coding-system)
-		      (decode-coding-region (point-min)
-					    (point-max)
-					    target-coding-system)
-		      (set-buffer-file-coding-system target-coding-system)))
+  (cl-labels ((do-recode nil
+		                 (encode-coding-region (point-min)
+					                           (point-max)
+					                           buffer-file-coding-system)
+		                 (decode-coding-region (point-min)
+					                           (point-max)
+					                           target-coding-system)
+		                 (set-buffer-file-coding-system target-coding-system)))
     (if buffer-read-only
-	(let ((buffer-read-only nil))
-	  (do-recode)
-	  (set-buffer-modified-p nil))
+	    (let ((buffer-read-only nil))
+	      (do-recode)
+	      (set-buffer-modified-p nil))
       (do-recode))))
 
 (defun recode-buffer-safe (target-coding-system)
