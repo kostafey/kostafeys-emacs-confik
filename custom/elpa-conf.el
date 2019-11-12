@@ -89,9 +89,16 @@
                         flycheck-rust)
   "Required packages for rust coding.")
 
-(defvar scala-packages '(ensime
+(defvar scala-packages '(;; ensime
+                         scala-mode
                          sbt-mode)
   "Required packages for scala coding.")
+
+(defvar lsp-packages '(lsp-mode
+                       lsp-ui
+                       company-lsp)
+  "Required packages for lsp.")
+
 
 (defvar ac-required-packages
   (list ;'popup
@@ -192,13 +199,15 @@ and `navigation-in-frame'.")
   "Packages, not requred by configuration files.")
 
 (defvar misc-requred-packages
-  (list 's)
+  (list 's
+        'use-package)
   "Packages, requred by configuration files.")
 
 (install-required-packages (append
                             text-modes-required-packages
                             clojure-packages
                             scala-packages
+                            lsp-packages
                             common-lisp-packages
                             go-packages
                             rust-packages
