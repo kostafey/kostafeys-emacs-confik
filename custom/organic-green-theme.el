@@ -24,8 +24,6 @@
 
 ;;; Code:
 
-(make-face 'mode-line-default-face)
-(make-face 'mode-line-header)
 (make-face 'tcl-substitution-char-face)
 
 (deftheme organic-green
@@ -70,9 +68,6 @@ Basic, Font Lock, Isearch, Jabber, rst, magit, Web faces are included.")
    `(default ((,class (:foreground ,organic-fg :background ,organic-bg))))
    `(cursor ((,class (:background ,organic-cursor-fg))))
    `(hl-line ((,class (:background "#A0F0A0" :inverse-video nil))))
-
-   `(mode-line-default-face ((,class (:foreground ,organic-fg))))
-   `(mode-line-header ((t (:foreground "gray25" :weight bold))))
 
    ;; Highlighting faces
    `(fringe ((,class (:background "#E5E5E5" :foreground "gray40"))))
@@ -163,6 +158,11 @@ Basic, Font Lock, Isearch, Jabber, rst, magit, Web faces are included.")
    ;; scala
    `(scala-font-lock:var-face ((t (:foreground ,orange-3))))
    `(ensime-result-overlay-face ((t (:background ,organic-bg :foreground ,organic-comment-fg :box (:line-width -1 :color "#F0F0A1")))))
+
+   ;; lsp
+   `(lsp-ui-doc-border ((t (:background "#E5E5E5"))))
+   `(lsp-ui-doc-background ((t (:background ,tiny-green-highlight-background))))
+   `(lsp-ui-sideline-code-action ((t (:background ,tiny-green-highlight-background :foreground ,organic-comment-fg))))
 
    ;; Tcl
    '(tcl-substitution-char-face ((t (:foreground "OliveDrab4"))))

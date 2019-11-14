@@ -153,7 +153,7 @@
              ((or (equal 'scala-mode mode)
                   (equal 'java-mode mode))
               (progn
-                (ensime-edit-definition-of-thing-at-point)
+                (lsp-find-definition)
                 (recenter-top-bottom 5)))
              ;; go-mode
              ((equal 'go-mode mode) (godef-jump point))

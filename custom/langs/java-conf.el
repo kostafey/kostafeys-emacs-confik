@@ -1,30 +1,44 @@
-;;; java-conf.el
+;;; java-conf.el -- Emacs Java configuration
 
 ;; Envieronment variables in use are:
 ;; - `JAVADOC'
 ;; - `CATALINA_HOME'
 
-(defun my-indent-setup ()
-  (c-set-offset 'arglist-intro '+))
-(add-hook 'java-mode-hook 'my-indent-setup)
+;;-----------------------------------------------------------------------------
+;; lsp-java
+;;
+(use-package lsp-mode :ensure t)
+(use-package company-lsp :ensure t)
 
-;;=============================================================================
+(use-package lsp-java
+  :ensure t
+  :after lsp
+  :config (progn (add-hook 'java-mode-hook 'lsp)
+                 (custom-set-variables '(lsp-ui-sideline-enable nil)
+                                       '(lsp-ui-doc-enable nil))))
+
+(defun k/java-indent-setup ()
+  (c-set-offset 'arglist-intro '+))
+(add-hook 'java-mode-hook 'k/java-indent-setup)
+
+;;-----------------------------------------------------------------------------
 ;; beanshell
 ;;
 (require 'beanshell)
 (setq bsh-jar (find-file-in-load-path "bsh-2.0b4.jar"))
+
 ;;-----------------------------------------------------------------------------
 ;; skeeto/javadoc-lookup
+;;
 (require 'javadoc-lookup)
 ;; Path example: `~/Java/jdk/docs/api/'
 (let ((javadoc-env (getenv "JAVADOC")))
   (when javadoc-env
     (apply 'javadoc-add-roots (split-string javadoc-env ";"))))
-;;-----------------------------------------------------------------------------
-;; skeeto/ant-project-mode
-;; TODO: add
+
 ;;-----------------------------------------------------------------------------
 ;; maven
+;;
 (defmacro maven-def-task (name command)
   `(defun ,name ()
      (interactive)
@@ -98,11 +112,8 @@
 (defalias 'java-create-getters-setters 'java-generate-getters-setters)
 
 ;;-----------------------------------------------------------------------------
-;; JDEE
-(setq jdee-server-dir "~/.emacs.d/jdee-server/target")
-
-;;-----------------------------------------------------------------------------
 ;; JBehave: story-mode
+;;
 (define-generic-mode story-mode
   '("!--")
   '("Given" "When" "Then" "Narrative" "Meta" "And" "Scenario" "Examples")
@@ -114,52 +125,6 @@
 (add-to-list 'auto-mode-alist '("\\.story" . story-mode))
 
 ;;=============================================================================
-;; tomacat
-(defvar tomcat-process nil "Process running tomcat")
-(defvar tomcat-buffer nil "Buffer containing tomcat-process")
-(defvar tomcat-is-running nil "Is tomcat running ?")
-
-(defvar tomcat-script
-  (let* ((catalina-home (getenv "CATALINA_HOME"))
-         ;; or set `default-directory' variable
-         (catalina-bin (file-name-as-directory
-                        (concat-path catalina-home "bin"))))
-    (expand-file-name (if (eq system-type 'windows-nt)
-                          "catalina.bat"
-                        "catalina.sh")
-                      catalina-bin))
-  "Script to start or stop tomcat")
-
-(defun tomcat-start ()
-  (switch-to-buffer "*tomcat*")
-  (setq tomcat-buffer (current-buffer))
-  (erase-buffer)
-  (log4j-mode)
-  (setq tomcat-process
-        (start-process "tomcat" (current-buffer)
-                       tomcat-script "run"))
-  (setq tomcat-is-running t)
-  (beginning-of-buffer)
-  (message "Tomcat started."))
-
-(defun tomcat-stop ()
-  (message "Stopping Tomcat ...")
-  (save-excursion
-    (switch-to-buffer "*tomcat*")
-    (goto-char (point-max)))
-  (call-process tomcat-script nil "*tomcat-stop*" t "stop")
-  (setq tomcat-is-running nil)
-  (kill-buffer "*tomcat-stop*")
-  (message "Tomcat stopped"))
-
-(defun tomcat-toggle()
-  "Stop or start Tomcat"
-  (interactive)
-  (if tomcat-is-running
-      (tomcat-stop)
-    (tomcat-start)))
-
-;;=============================================================================
 ;; jflex-mode
 ;;
 (autoload 'jflex-mode "jflex-mode" nil t)
@@ -169,7 +134,7 @@
 ;; java-decompiler
 ;;
 ;; mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -Dartifact=org.benf:cfr:0.139
-
+;;
 (let ((home (if (eq system-type 'windows-nt)
                 (concat (getenv "HOMEDRIVE") (getenv "HOMEPATH"))
               (file-truename "~"))))
