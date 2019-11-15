@@ -52,6 +52,14 @@
 
 (use-package lsp-ui)
 
+(defun k/scala-mode-hook ()
+  (my-coding-hook)
+  (auto-complete-mode -1))
+
+(add-hook 'scala-mode-hook 'k/scala-mode-hook)
+
+(setq scala-indent:step 4)
+
 ;; Add company-lsp backend for metals
 (use-package company-lsp)
 

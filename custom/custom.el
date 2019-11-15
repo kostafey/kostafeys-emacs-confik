@@ -8,6 +8,8 @@
  '(ecb-options-version "2.40")
  '(edts-man-root "/home/kostafey/.emacs.d/edts/doc/R7B")
  '(jde-jdk-registry (quote (("1.6.0" . "C:\\Java\\jdk1.6.0_24\\"))))
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-sideline-enable nil)
  '(magit-save-some-buffers (quote dontask))
  '(mouse-wheel-down-event (quote wheel-up))
  '(mouse-wheel-follow-mouse t)
