@@ -17,9 +17,12 @@
                  (custom-set-variables '(lsp-ui-sideline-enable nil)
                                        '(lsp-ui-doc-enable nil))))
 
-(defun k/java-indent-setup ()
+(defun k/java-mode-hook ()
+  (my-coding-hook)
+  (flycheck-mode t)
   (c-set-offset 'arglist-intro '+))
-(add-hook 'java-mode-hook 'k/java-indent-setup)
+
+(add-hook 'java-mode-hook 'k/java-mode-hook)
 
 ;;-----------------------------------------------------------------------------
 ;; beanshell

@@ -42,8 +42,7 @@
    (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 ;; Enable nice rendering of diagnostics like compile errors.
-(use-package flycheck
-  :init (global-flycheck-mode))
+(use-package flycheck)
 
 (use-package lsp-mode
   ;; Optional - enable lsp-mode automatically in scala files
