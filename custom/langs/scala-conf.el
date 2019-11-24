@@ -3,6 +3,7 @@
 ;;; Commentary:
 
 ;; # Make sure to use coursier v1.1.0-M9 or newer.
+;; `Linux':
 ;; curl -L -o coursier https://git.io/coursier
 ;; chmod +x coursier
 ;; ./coursier bootstrap \
@@ -13,6 +14,22 @@
 ;;   -r bintray:scalacenter/releases \
 ;;   -r sonatype:snapshots \
 ;;   -o /usr/local/bin/metals-emacs -f
+;;
+;; `Windows':
+;; set BIN_PATH=C:\bin\
+;; curl -L -o "%BIN_PATH%coursier" https://git.io/coursier-cli
+;; curl -L -o "%BIN_PATH%coursier.bat" https://git.io/coursier-bat
+;; coursier bootstrap ^
+;;   --java-opt -Xss4m ^
+;;   --java-opt -Xms100m ^
+;;   --java-opt -Dmetals.client=emacs ^
+;;   org.scalameta:metals_2.12:0.7.6 ^
+;;   -r bintray:scalacenter/releases ^
+;;   -r sonatype:snapshots ^
+;;   -o %BIN_PATH%metals-emacs -f
+
+;; Run for new projects:
+;; M-x `lsp-metals-build-import'
 
 ;;; Code:
 
