@@ -89,8 +89,7 @@
                         flycheck-rust)
   "Required packages for rust coding.")
 
-(defvar scala-packages '(;; ensime
-                         scala-mode
+(defvar scala-packages '(scala-mode
                          sbt-mode)
   "Required packages for scala coding.")
 

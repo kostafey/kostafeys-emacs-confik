@@ -42,6 +42,10 @@
 (require 'lorem-ipsum)
 
 ;;-----------------------------------------------------------------------------
+; sh-mode
+(add-to-list 'auto-mode-alist '("\\.xsessionrc$" . sh-mode))
+
+;;-----------------------------------------------------------------------------
 ; dos-mode
 (autoload 'dos-mode "dos" "Edit Dos scripts." t)
 (add-to-list 'auto-mode-alist '("\\.bat$" . dos-mode))
