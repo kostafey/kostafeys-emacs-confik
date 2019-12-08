@@ -554,4 +554,10 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
 			  (propertize (if current-indent-tabs "tabs" "spaces")
 						  'face 'font-lock-keyword-face)))))
 
+(defun sort-lines-nocase ()
+  "Sort lines alphabetically in selected region case insensitive."
+  (interactive)
+  (let ((sort-fold-case t))
+    (call-interactively 'sort-lines)))
+
 (provide 'basic-text-editing)

@@ -111,15 +111,33 @@
 
 (defun k/scala-eval-string (s)
   (with-current-buffer (sbt:buffer-name)
+    (goto-char (point-max))
     (if (string-match "\n" s)
-        (progn
-          (goto-char (point-max))
-          (comint-send-string nil ":paste\n")
-          (comint-send-string nil s)
-          (comint-send-string nil "\n")
-          (comint-send-string nil sbt:quit-paste-command)
-          (sit-for 1)
-          (comint-send-eof))
+        (if (eq system-type 'windows-nt)
+            ;; Windows
+            (progn
+              (comint-send-string nil s)
+              (let ((comint-input-sender 'ignore)
+                    (comint-input-filter-functions nil))
+                (comint-send-input t t))
+              (comint-send-input)
+              (goto-char (process-mark (get-buffer-process (current-buffer))))
+              (line-move -1)
+              (right-char (length "scala> "))
+              (when (and (>= (point-max) (+ (point) 3))
+                         (not (equal
+                               (buffer-substring (point) (+ (point) 3))
+                               "res")))
+                (kill-line 1))
+              (comint-kill-input))
+          ;; Linux
+          (progn
+            (comint-send-string nil ":paste\n")
+            (comint-send-string nil s)
+            (comint-send-string nil "\n")
+            (comint-send-string nil sbt:quit-paste-command)
+            (sit-for 1)
+            (comint-send-eof)))
       (progn
         (comint-send-string nil s)
         (comint-send-string nil "\n")))))
@@ -187,6 +205,9 @@
 (advice-add 'sbt:find-root
             :around
             #'k/scala-find-root)
+
+(add-to-list 'sbt:program-options
+             "-Djline.terminal=jline.UnsupportedTerminal")
 
 (defun k/scala-start-console ()
   (interactive)
