@@ -959,23 +959,19 @@ Add to .emacs:
   ;;----------------------------------------------------------------------
   ;; ENSIME
   ;;
-  (defun kostafey-ensime-mode-hook ()
-    (define-key ensime-mode-map (kbd "C-n j") 'ensime)
-    (define-key ensime-mode-map (kbd "C-n c") 'ensime-inf-switch)
-    (define-key ensime-mode-map (kbd "C-n s") 'ensime-sbt-switch)
-    (define-key ensime-mode-map (kbd "C-c C-r") 'ensime-inf-eval-region)
-    (define-key ensime-mode-map (kbd "M-e") 'k/ensime-inf-eval-region)
-    (define-key ensime-mode-map (kbd "C-c C-v b") 'ensime-inf-eval-buffer)
-    (define-key ensime-mode-map (kbd "C-M-/") 'ensime-print-errors-at-point)
-    (define-key ensime-mode-map (kbd "M-=") 'ensime-type-at-point)
-    (define-key ensime-mode-map (kbd "C-x C-e") 'k/ensime-eval-last-scala-expr)
-    (define-key ensime-mode-map (kbd "C-c C-e") 'k/ensime-eval-line)
-    (define-key ensime-mode-map (kbd "C-n q") 'k/ensime-quit)
-    (define-key ensime-mode-map (kbd "C-n e b") 'k/ensime-eval-buffer)
-    (define-key ensime-mode-map (kbd "C-n k") 'k/ensime-compile)
+  (defun kostafey-scala-mode-hook ()
+    (define-key scala-mode-map (kbd "C-n j")   'k/scala-start-console)
+    (define-key scala-mode-map (kbd "C-n c")   'k/scala-switch-console)
+    (define-key scala-mode-map (kbd "M-e")     'k/scala-eval-region)
+    (define-key scala-mode-map (kbd "C-n e b") 'k/scala-eval-buffer)
+    (define-key scala-mode-map (kbd "C-x C-e") 'k/scala-eval-last-scala-expr)
+    (define-key scala-mode-map (kbd "C-c C-e") 'k/scala-eval-line)
+    (define-key scala-mode-map (kbd "C-n k")   'k/scala-compile)
+
+    (define-key ensime-mode-map (kbd "C-n q")  'k/ensime-quit)
     (define-key ensime-mode-map (kbd "C-M-d") 'hop-at-point)
     (define-key ensime-mode-map (kbd "C-c i") 'ensime-import-type-at-point))
-  (add-hook 'ensime-mode-hook 'kostafey-ensime-mode-hook)
+  (add-hook 'scala-mode-hook 'kostafey-scala-mode-hook)
 #+end_src
 
 *** Tcl

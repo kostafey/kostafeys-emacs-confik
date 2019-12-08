@@ -64,7 +64,9 @@
 (use-package lsp-mode
   ;; Optional - enable lsp-mode automatically in scala files
   :hook (scala-mode . lsp)
-  :config (setq lsp-prefer-flymake nil))
+  :config (progn
+            (setq lsp-prefer-flymake nil)
+            (setq lsp-before-save-edits nil)))
 
 (use-package lsp-ui)
 
@@ -78,6 +80,140 @@
 
 ;; Add company-lsp backend for metals
 (use-package company-lsp)
+
+(defun k/scala-flash-region (start end &optional timeout)
+  "Temporarily highlight region from START to END."
+  (let ((overlay (make-overlay start end)))
+    (overlay-put overlay 'face 'secondary-selection)
+    (run-with-timer (or timeout 0.2) nil 'delete-overlay overlay)))
+
+(defun k/scala-skip-sexp (val)
+  (ignore-errors
+    (while (or
+            (equal (string (preceding-char)) val)
+            (equal (format "%s" (preceding-sexp)) val))
+      (backward-sexp))))
+
+(defun k/scala-skip-line (val)
+  (ignore-errors
+    (while (or
+            (equal (string (preceding-char)) val)
+            (equal (format "%s" (preceding-sexp)) val))
+      (backward-sexp)
+      (beginning-of-line))))
+
+(defun k/scala-check-package (pname)
+  (when (equal (format "%s" (preceding-sexp)) "package")
+    (k/scala-flash-region (line-beginning-position)
+                           (line-end-position))
+    (sbt-send-region (concat "import " pname "._"))
+    t))
+
+(defun k/scala-eval-string (s)
+  (with-current-buffer (sbt:buffer-name)
+    (if (string-match "\n" s)
+        (progn
+          (goto-char (point-max))
+          (comint-send-string nil ":paste\n")
+          (comint-send-string nil s)
+          (comint-send-string nil "\n")
+          (comint-send-string nil sbt:quit-paste-command)
+          (sit-for 1)
+          (comint-send-eof))
+      (progn
+        (comint-send-string nil s)
+        (comint-send-string nil "\n")))))
+
+(defun k/scala-eval-region (start end)
+  "Send current region to Scala interpreter."
+  (interactive "r")
+  (let* ((reg (trim-string
+               (buffer-substring-no-properties start end)))
+         (package-pos (string-match "package" reg))
+         ;; remove package ... line
+         (reg (if (equal package-pos 0)
+                  (let* ((package-name-end-pos
+                          (or
+                           (string-match "\n" reg package-pos)
+                           (length reg)))
+                         (package-name
+                          (trim-string
+                           (substring reg
+                                      (+ package-pos (length "package"))
+                                      package-name-end-pos))))
+                    (concat
+                     (format "import %s._ %s" package-name
+                             (if (string-match "\n" reg ) "\n" ""))
+                     (substring reg package-name-end-pos)))
+                reg)))
+    (k/scala-eval-string reg)))
+
+(cl-defun k/scala-eval-last-scala-expr ()
+  (interactive)
+  (let* ((prev-str (string (preceding-char)))
+         (start (point))
+         (end
+          (save-excursion
+            (backward-sexp 1)
+            (cond ((equal "}" prev-str)
+                   (ignore-errors (backward-sexp 1))
+                   (beginning-of-line))
+                  ((or
+                    (equal ")" prev-str)
+                    (equal "]" prev-str))
+                   (progn
+                     (if (not (= (current-column) 0))
+                         (ignore-errors (backward-sexp 1)))
+                     (k/scala-skip-sexp ".")
+                     (k/scala-skip-sexp "new")
+                     (k/scala-skip-line "=")
+                     (k/scala-skip-line "case")
+                     (k/scala-skip-line "class")))
+                  (t
+                   (progn
+                     (k/scala-skip-sexp ".")
+                     (k/scala-skip-sexp "import")
+                     (when (k/scala-check-package
+                            (buffer-substring start (point)))
+                       (return-from k/scala-eval-last-scala-expr)))))
+            (point))))
+    (k/scala-flash-region start end)
+    (k/scala-eval-region start end)))
+
+(defun k/scala-find-root (orig-fun &rest args)
+  (setq-local sbt:buffer-project-root
+              (projectile-project-root)))
+
+(advice-add 'sbt:find-root
+            :around
+            #'k/scala-find-root)
+
+(defun k/scala-start-console ()
+  (interactive)
+  (sbt-command "console"))
+
+(defun k/scala-switch-console ()
+  (interactive)
+  (switch-to-buffer-other-window (sbt:buffer-name)))
+
+(defun k/scala-eval-buffer ()
+  (interactive)
+  (save-excursion
+    (k/scala-flash-region (point-max) (point-min))
+    (k/scala-eval-region (point-max) (point-min))))
+
+(defun k/scala-eval-line ()
+  (interactive)
+  (k/scala-flash-region
+      (line-beginning-position)
+      (point))
+     (k/scala-eval-region
+      (line-beginning-position)
+      (point)))
+
+(defun k/scala-compile ()
+  (interactive)
+  (sbt-command "compile"))
 
 (provide 'scala-conf)
 
