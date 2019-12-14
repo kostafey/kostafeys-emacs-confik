@@ -55,8 +55,11 @@
    'minibuffer-complete-word
    'self-insert-command
    minibuffer-local-completion-map)
-   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-   (setq sbt:program-options '("-Dsbt.supershell=false")))
+  (setq sbt:program-options
+        '(;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+          "-Dsbt.supershell=false"
+          ;; sbt console on windows: https://github.com/hvesalai/emacs-sbt-mode/issues/44
+          "-Djline.terminal=jline.UnsupportedTerminal")))
 
 ;; Enable nice rendering of diagnostics like compile errors.
 (use-package flycheck)
@@ -205,9 +208,6 @@
 (advice-add 'sbt:find-root
             :around
             #'k/scala-find-root)
-
-(add-to-list 'sbt:program-options
-             "-Djline.terminal=jline.UnsupportedTerminal")
 
 (defun k/scala-start-console ()
   (interactive)
