@@ -75,7 +75,8 @@
 
 (defun k/scala-mode-hook ()
   (my-coding-hook)
-  (auto-complete-mode -1))
+  (auto-complete-mode -1)
+  (flycheck-mode))
 
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
