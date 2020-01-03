@@ -54,7 +54,9 @@
 ; log4j-mode
 (autoload 'log4j-mode "log4j-mode" "Major mode for viewing log files." t)
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log4j-mode))
+(add-hook 'log4j-mode-hook (lambda () (toggle-truncate-lines nil)))
 
+;;-----------------------------------------------------------------------------
 ;; PL/SQL
 (add-to-list 'auto-mode-alist '("\\.pkh\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.pkb\\'" . sql-mode))
