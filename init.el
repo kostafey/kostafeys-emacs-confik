@@ -55,6 +55,7 @@
 (require 'file-ops)
 (require 'look-and-feel)
 (require 'elpa-conf)
+(require 'jiraf)
 (require 'ide)
 (require 'switch-language)
 (require 'ispell-conf)
