@@ -64,6 +64,17 @@
 
 (tabbar-mode t)
 
+;; Hide `tabbar' for buffers displayed in windows located
+;; not in the top of the frame.
+(defadvice select-window (after
+                          k/select-window
+                          activate)
+  (if tabbar-mode
+      (if (or (not (> (cadr (window-edges)) 0))
+              (> (length (get-buffer-window-list)) 1))
+          (tabbar-local-mode -1)
+        (tabbar-local-mode 1))))
+
 ;;----------------------------------------------------------------------
 ;; flx configuration - fuzzy matching files and paths via ido
 ;;
