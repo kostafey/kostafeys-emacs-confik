@@ -70,10 +70,28 @@
                           k/select-window
                           activate)
   (if tabbar-mode
-      (if (or (not (> (cadr (window-edges)) 0))
-              (> (length (get-buffer-window-list)) 1))
-          (tabbar-local-mode -1)
-        (tabbar-local-mode 1))))
+      (-map
+       (lambda (window)
+         (let ((buffer (window-buffer window)))
+           (with-current-buffer buffer
+             (condition-case nil
+                 ;; Keep `tabbar' if
+                 (if (or
+                      ;; buffer is displayed in window located
+                      ;; in the top of the frame
+                      (not (> (cadr (window-edges window)) 0))
+                      (and
+                       ;; or this buffer displayed in other window too
+                       (> (length (get-buffer-window-list buffer)) 1)
+                       ;; but not only in the bottom windows.
+                       (not (-all?
+                             (lambda (w) (> (cadr (window-edges w)) 0))
+                             (get-buffer-window-list buffer)))))
+                     (tabbar-local-mode -1)
+                   ;; Hide `tabbar' otherwise.
+                   (tabbar-local-mode 1))
+               (error nil)))))
+       (window-list))))
 
 ;;----------------------------------------------------------------------
 ;; flx configuration - fuzzy matching files and paths via ido
