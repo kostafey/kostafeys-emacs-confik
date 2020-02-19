@@ -1,6 +1,9 @@
 ;;=============================================================================
 ;; mode-line (emacs status bar) config
 ;;
+(use-package minions
+  :config (minions-mode 1))
+
 (setq-default
  projectile-mode-line-prefix " "
  mode-line-format
@@ -12,7 +15,7 @@
                 (format "%s " buffer-file-coding-system)
                 'help-echo (format"%s" buffer-file-coding-system)))        
        ;; ------------------------------------------------------------
-       ;; the buffer name; the file name as a tool tip
+       ;; the `buffer-name'; the file name as a tool tip
        '(:eval (propertize (buffer-name)
                            'face '(:weight bold)
                            'mouse-face 'mode-line-highlight
@@ -34,7 +37,7 @@
        (propertize "%02c" 'face 'font-lock-string-face) 
        ")"        
        ;; ------------------------------------------------------------
-       ;; the current major mode for the buffer and list of minor modes.
+       ;; the current `major-mode' for the buffer and list of minor modes.
        '(:eval (propertize " %m"
                            ;; 'face '((t :foreground "black"))
                            'help-echo (mapconcat
@@ -48,8 +51,12 @@
                                                minor-mode-list)))
                                        "\n")
                            'mouse-face 'mode-line-highlight
-                           'local-map (make-mode-line-mouse-map
-                                       'mouse-1 'describe-mode)))
+                           'local-map (let ((map (make-sparse-keymap)))
+                                        (define-key map [mode-line mouse-1]
+                                          'describe-mode)
+                                        (define-key map [mode-line mouse-3]
+                                          'minions-minor-modes-menu)
+                                        map)))
        ;; ------------------------------------------------------------
        ;; version control data
        '(:eval (propertize (if (vc-mode-line buffer-file-name)
@@ -57,7 +64,7 @@
                              "")
                            'face 'font-lock-constant-face))
        ;; ------------------------------------------------------------
-       ;; projectile
+       ;; `projectile'
        '(:eval (propertize (if (projectile-project-root)
                                (projectile-default-mode-line)
                              "")

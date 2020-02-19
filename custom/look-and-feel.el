@@ -236,6 +236,7 @@
 (add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
 (add-hook 'cider-mode-hook      'my-lisp-coding-hook)
 (add-hook 'sbt-mode-hook        'my-coding-hook)
+(add-hook 'java-mode-hook       (lambda () (rainbow-delimiters-mode t)))
 (add-hook 'markdown-mode-hook   'my-coding-hook)
 (add-hook 'mql-mode-hook        'my-coding-hook)
 (add-hook 'tex-mode-hook        'my-coding-hook)

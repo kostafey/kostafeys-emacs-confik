@@ -124,7 +124,7 @@
         'cl-lib-highlight
         'flycheck-tip
         'doom-themes
-        'nord-theme)
+        'minions)
   "Required packages for `look-and-feel'.")
 
 (defvar nav-keys-required-packages
