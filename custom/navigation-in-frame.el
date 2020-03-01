@@ -48,13 +48,6 @@
 ;; Tabbar
 (require 'tabbar)
 
-;(set-face-foreground 'tabbar-default "LightSteelBlue")
-;(set-face-background 'tabbar-default "DarkSlateGray")
-;(set-face-foreground 'tabbar-selected "pale green")
-
-(set-face-bold 'tabbar-selected t)
-(set-face-attribute 'tabbar-button nil :box '(:line-width 1 :color "gray72"))
-
 (setq tabbar-buffer-groups-function
       '(lambda ()
          (list

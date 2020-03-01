@@ -817,11 +817,8 @@ Add to .emacs:
     | s-s   | sr-speedbar-toggle       |                                      |
     | C-x B | semantic-mrub-switch-tag | Backward after semantic-ia-fast-jump |
 
-*** Speedbar
+*** ECB
 #+begin_src emacs-lisp :exports none
-  ;; speedbar
-  (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
-
   ;;=============================================================================
   ;; ecb
   (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)

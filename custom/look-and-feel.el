@@ -62,6 +62,12 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color theme
+(case system-type
+  ('windows-nt
+   (setq organic-green-boldless nil))
+  ('gnu/linux
+   (setq organic-green-boldless t)))
+
 (load-theme 'organic-green t)
 
 ;;-----------------------------------------------------------------------------
@@ -245,7 +251,7 @@
 (add-hook 'python-mode-hook     'my-coding-hook)
 (add-hook 'comint-mode-hook     'my-coding-hook)
 (add-hook 'js-mode-hook         'my-coding-hook)
-(add-hook 'typescript-mode      'my-coding-hook)
+(add-hook 'typescript-mode-hook 'my-coding-hook)
 (add-hook 'tide-mode            'my-coding-hook)
 (add-hook 'sql-mode-hook        'my-coding-hook)
 (add-hook 'mql-mode-hook        'my-coding-hook)
@@ -262,15 +268,5 @@
                        (compose-region (match-beginning 1)
                                        (match-end 1)
                                        ?λ))))))
-
-;;=============================================================================
-;; Speedbar
-;;=============================================================================
-(require 'sr-speedbar)
-(setq sr-speedbar-right-side t)
-(setq speedbar-use-images nil)
-(setq speedbar-show-unknown-files t)
-(setq speedbar-tag-split-minimum-length 200)
-(setq speedbar-use-imenu-flag nil)
 
 (provide 'look-and-feel)

@@ -118,7 +118,6 @@
         ;; 'minimap
         ;; 'powerline
         'popup-switcher
-        'sr-speedbar
         'rainbow-delimiters
         'organic-green-theme
         'cl-lib-highlight

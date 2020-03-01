@@ -91,6 +91,20 @@
 (defun k/buffer-beginning-select () (interactive) (k/select) (goto-char (point-min)))
 (defun k/buffer-end-select () (interactive) (k/select) (goto-char (point-max)))
 
+(defun hard-rewrite-mode ()
+  "Workaround for the case when selected text not replaced by insertions."
+  (interactive)
+  (defadvice cua-paste (before k/cua-paste activate)
+    (if mark-active
+        (delete-region (point) (mark))))
+  (defadvice self-insert-command (before k/self-insert-command activate)
+    (if mark-active
+        (delete-region (point) (mark))))
+  (message (format
+            "Hard %s mode enabled."
+            (propertize "rewrite"
+			            'face 'font-lock-keyword-face))))
+
 (when (require 'sgml-mode nil 'noerror)
 
   (defvar k/sgml-tags (list "<" ">"))
