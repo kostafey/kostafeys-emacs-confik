@@ -4,7 +4,7 @@
 ;; Font
 (case system-type
   ('windows-nt
-   (set-face-font 'default "Consolas-13.5:antialias=subpixel"))
+   (set-face-font 'default "Consolas-14.5:antialias=subpixel"))
   ('gnu/linux
    (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb")))
 
@@ -62,12 +62,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color theme
-(case system-type
-  ('windows-nt
-   (setq organic-green-boldless nil))
-  ('gnu/linux
-   (setq organic-green-boldless t)))
-
+(setq organic-green-boldless t)
 (load-theme 'organic-green t)
 
 ;;-----------------------------------------------------------------------------

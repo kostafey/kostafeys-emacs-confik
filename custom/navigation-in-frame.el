@@ -39,10 +39,29 @@
 (setq-default ibuffer-default-sorting-mode 'major-mode)
 
 ;;-----------------------------------------------------------------------------
-;; Kill current buffer
-(defun prh:kill-current-buffer ()
-    (interactive)
-    (kill-buffer (current-buffer)))
+;; Kill or create buffer(s)
+
+(defun k/kill-current-buffer ()
+  "Kill current buffer."
+  (interactive)
+  (kill-buffer (current-buffer))
+  (previous-buffer))
+
+(defun kill-other-buffers ()
+  "Kill all buffers but the current one.
+Don't mess with special buffers."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (or (eql buffer (current-buffer)) (not (buffer-file-name buffer)))
+      (kill-buffer buffer))))
+
+(defun find-file-from-clipboard ()
+  "Open file or directory path from clipboard (kill ring) if path exists."
+  (interactive)
+  (let ((file-path (current-kill 0)))
+    (if (file-exists-p file-path)
+        (find-file file-path)
+      (message "Can't find file '%s'" file-path))))
 
 ;;-----------------------------------------------------------------------------
 ;; Tabbar
@@ -97,24 +116,7 @@
 (setq ido-use-faces nil)
 
 ;;----------------------------------------------------------------------
-
-(defun kill-other-buffers ()
-  "Kill all buffers but the current one.
-Don't mess with special buffers."
-  (interactive)
-  (dolist (buffer (buffer-list))
-    (unless (or (eql buffer (current-buffer)) (not (buffer-file-name buffer)))
-      (kill-buffer buffer))))
-
-(defun visit-term-buffer ()
-  "Create or visit a terminal buffer."
-  (interactive)
-  (if (not (get-buffer "*ansi-term*"))
-      (progn
-        (split-window-sensibly (selected-window))
-        (other-window 1)
-        (ansi-term (getenv "SHELL")))
-    (switch-to-buffer-other-window "*ansi-term*")))
+;; Interact with browser
 
 (defun find-browser-executable ()
   (cond ((executable-find "palemoon") "palemoon")
@@ -168,32 +170,6 @@ Don't mess with special buffers."
        (if (not (equal "http" (substring entered-str 0 4)))
            (concat "http://" entered-str)
          entered-str)))))
-
-(defun find-file-from-clipboard ()
-  "Open file or directory path from clipboard (kill ring) if path exists."
-  (interactive)
-  (let ((file-path (current-kill 0)))
-    (if (file-exists-p file-path)
-        (find-file file-path)
-      (message "Can't find file '%s'" file-path))))
-
-(if (eq system-type 'windows-nt)
-    ;; C-x C-f C-f /<user>@<host>:<path>
-    (setq tramp-default-method "plink"))
-
-(defun k/shell (&optional num)
-  (interactive "P")
-  (let* ((current-dir (if buffer-file-name
-                          (file-name-directory (buffer-file-name))))
-         (shell-buffer-name (if num (format "*shell %s*" num) "*shell*"))
-         (shell-bufer-exists-p (get-buffer shell-buffer-name)))
-    (with-current-buffer (shell shell-buffer-name)
-      (goto-char (point-max))
-      (when (and shell-bufer-exists-p
-                 (not (equal default-directory current-dir)))
-        (insert "cd ")
-        (insert current-dir)
-        (comint-send-input)))))
 
 (provide 'navigation-in-frame)
 

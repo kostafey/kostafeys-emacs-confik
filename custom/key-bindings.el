@@ -376,7 +376,7 @@
 ;;=============================================================================
 ;; Buffers navigation
 ;;
-(global-set-key (kbd "C-w") 'prh:kill-current-buffer)
+(global-set-key (kbd "C-w") 'k/kill-current-buffer)
 (global-set-key (kbd "C-c w") 'kill-other-buffers)
 (global-set-key (kbd "C-x w") 'kill-buffer)
 (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
@@ -697,7 +697,7 @@
 ;;
 (global-unset-key (kbd "M-w"))
 (defun kostafey-magit-mode-hook ()
-  (define-key magit-mode-map (kbd "C-w") 'prh:kill-current-buffer)
+  (define-key magit-mode-map (kbd "C-w") 'k/kill-current-buffer)
   (define-key magit-mode-map (kbd "S-M-w") 'magit-copy-buffer-revision)
   (define-key magit-mode-map (kbd "M-w") 'diffview-current)
   (define-key magit-mode-map (kbd "C-s-<down>") 'magit-section-forward)

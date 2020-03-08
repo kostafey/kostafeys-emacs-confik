@@ -69,6 +69,7 @@
 (add-to-list 'load-path (expand-file-name "eframe-jack-in/" site-lisp-path))
 (require 'eframe-jack-in)
 (require 'eframe-windmove)
+(require 'shell-conf)
 (require 'key-bindings)
 (require 'history-conf)
 (require 'text-modes-conf)
