@@ -72,9 +72,11 @@
 (defun k/eshell-handle-cd-args (args)
   "If `cd' argument is filepath, use it's directory path."
   (list (let ((path (car args)))
-                        (if (directory-name-p path)
-                            path
-                          (file-name-directory path)))))
+          (if (file-directory-p path)
+              path
+            (if (file-exists-p path)
+                (file-name-directory path)
+              path)))))
 
 (advice-add 'eshell/cd :filter-args #'k/eshell-handle-cd-args)
 
