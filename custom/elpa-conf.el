@@ -166,7 +166,8 @@ and `navigation-in-frame'.")
         'erlang
         'php-mode
         'ejc-sql
-        'powershell)
+        'powershell
+        'eshell-prompt-extras)
   "Packages, requred by misc programming modes.")
 
 (defvar js-packages

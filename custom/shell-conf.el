@@ -41,11 +41,15 @@
 ;;------------------------------------------------------------
 ;; eshell
 
+(require 'eshell-prompt-extras)
+
 (setq eshell-prompt-regexp "^λ "
       eshell-prompt-function
       (lambda ()
         (concat
          (propertize (eshell/pwd) 'face `(:foreground "#3063EA"))
+         (propertize "\n" 'face `(:foreground "#326B6B"))
+         (propertize (epe-git-branch) 'face `(:foreground "#009292"))
          (propertize "\nλ" 'face `(:foreground "#5544EE" :weight bold))
          (propertize " " 'face `(:foreground "#326B6B" :weight normal)))))
 
