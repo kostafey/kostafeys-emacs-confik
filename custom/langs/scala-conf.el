@@ -46,6 +46,20 @@
 (use-package scala-mode
   :mode "\\.s\\(cala\\|bt\\)$")
 
+(defun k/scala-indent-region (beg end)
+  "Indent region or current line in Scala file."
+  (interactive "r")
+  (if (not mark-active)
+      (scala-indent:indent-line)
+    (save-excursion
+      (let ((beg (min beg end))
+            (end (max beg end)))
+        (-map (lambda (line)
+                (goto-line (- (+ (line-number-at-pos beg) line) 1))
+                (scala-indent:indent-line))
+              (number-sequence 1 (count-lines beg end))))))
+  (setq deactivate-mark t))
+
 (use-package sbt-mode
   :commands sbt-start sbt-command
   :config
@@ -76,7 +90,8 @@
 (defun k/scala-mode-hook ()
   (my-coding-hook)
   (auto-complete-mode -1)
-  (flycheck-mode))
+  (flycheck-mode)
+  (define-key scala-mode-map (kbd "<tab>") 'k/scala-indent-region))
 
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
