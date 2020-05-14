@@ -125,9 +125,11 @@
     (progn
       (let ((mode (hop-buffer-mode (current-buffer)))
             (string-at-point (hop-strip-text-properties
-                              (thing-at-point 'symbol))))
-        (if (string-match hop-url-regexp string-at-point)
-            (browse-url string-at-point)
+                              (thing-at-point 'symbol)))
+            (url (hop-strip-text-properties
+                  (thing-at-point 'url))))
+        (if (string-match hop-url-regexp url)
+            (browse-url url)
           (progn
             (push-mark)
             (hop-update-positions (current-buffer) (point) :hop)
