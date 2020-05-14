@@ -128,7 +128,7 @@
                               (thing-at-point 'symbol)))
             (url (hop-strip-text-properties
                   (thing-at-point 'url))))
-        (if (string-match hop-url-regexp url)
+        (if (and url (string-match hop-url-regexp url))
             (browse-url url)
           (progn
             (push-mark)
