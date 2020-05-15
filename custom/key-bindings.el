@@ -148,6 +148,7 @@
     (define-key org-mode-map (kbd "M-<down>") nil)
     (define-key org-mode-map (kbd "M-<left>") nil)
     (define-key org-mode-map (kbd "M-<right>") nil)
+    (define-key org-mode-map (kbd "C-c C-p") 'k/el-pprint-eval-last-sexp)
     (define-key org-mode-map (kbd "C-a") nil)
     (define-key org-mode-map (kbd "M-a") nil)))
 
