@@ -9,11 +9,15 @@
 ;;; Code:
 
 (require 's)
+(require 'ejc-sql)
 
 (defun hop-buffer-mode (buffer-or-string)
   "Return the major mode associated with a buffer BUFFER-OR-STRING."
   (with-current-buffer buffer-or-string
-     major-mode))
+    (if (and (equal 'sql-mode major-mode)
+             (member 'ejc-sql-mode minor-mode-list))
+        'ejc-sql-mode
+      major-mode)))
 
 (defun hop-strip-text-properties (txt)
   (set-text-properties 0 (length txt) nil txt)
@@ -165,6 +169,10 @@
              ((equal 'shell-mode mode) (hop-goto-file-location point))
              ;; markdown-mode
              ((equal 'markdown-mode mode) (hop-url-in-markdown point))
+             ;; ejc-sql-mode
+             ((equal 'ejc-sql-mode mode)
+              (apply 'ejc-describe-entity
+                     (ejc-get-prompt-symbol-under-point "Describe entity")))
              ;; other modes
              (t
               (if (semantic-active-p)
