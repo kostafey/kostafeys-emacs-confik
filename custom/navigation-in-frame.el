@@ -76,11 +76,9 @@ Don't mess with special buffers."
 
 (tabbar-mode t)
 
-;; Hide `tabbar' for buffers displayed in windows located
-;; not in the top of the frame.
-(defadvice select-window (after
-                          k/select-window
-                          activate)
+(defun k/select-window-fix-tabbar ()
+  "Hide `tabbar' for buffers displayed in windows located
+not in the top of the frame."
   (if tabbar-mode
       (-map
        (lambda (window)
@@ -104,6 +102,14 @@ Don't mess with special buffers."
                    (tabbar-local-mode 1))
                (error nil)))))
        (window-list))))
+
+(when (require 'ejc-sql nil 'noerror)
+  (add-hook 'ejc-sql-complete-query-hook 'k/select-window-fix-tabbar))
+
+(defadvice select-window (after
+                          k/select-window
+                          activate)
+  (k/select-window-fix-tabbar))
 
 ;;----------------------------------------------------------------------
 ;; flx configuration - fuzzy matching files and paths via ido
