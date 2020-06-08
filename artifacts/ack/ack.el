@@ -70,7 +70,7 @@ in the --type argument to the ack command")
     (concat ack-command
             (if (and ack-guess-type type)
                 (concat " --type=" type)
-              " --type=text")
+              " --known-types")
             " --ignore-case --flush -- ")))
 
 (define-compilation-mode ack-mode "Ack"
@@ -128,7 +128,7 @@ in the --type argument to the ack command")
                           nil
                           'ack-history)))
   (setq default-directory search-dir)
-  (compilation-start (concat ack-command " --all-types " " -g " ;-s
+  (compilation-start (concat ack-command " -gs "
                              (ack-quote file-name-regex) " "
                              (ack-quote search-dir)
                              (when (eq system-type 'windows-nt)

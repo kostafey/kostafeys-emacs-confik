@@ -11,7 +11,7 @@
 (when ack-src-file-path
   (require 'ack)
   (setq ack-command (concat "perl \"" ack-src-file-path 
-                            "\" --nocolor --nogroup ")))
+                            "\" --nocolor ")))
 
 ;; ----------------------------------------------------------------------
 ;; The Silver Searcher - ag
