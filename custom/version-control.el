@@ -6,6 +6,14 @@
 (custom-set-variables
  '(magit-save-some-buffers (quote dontask)))
 
+(defun copy-to-clipboard-git-branch ()
+  (interactive)
+  "Copy current branch name to the clipboard."
+  (let* ((branch (car (vc-git-branches)))
+         (result (kill-new branch)))
+    (message result)
+    result))
+
 (require 'ahg)
 (require 'darcsum)
 

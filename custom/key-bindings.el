@@ -371,6 +371,7 @@
 (global-set-key "\C-\M-a\C-c" 'count-words-region)
 (global-set-key (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
 (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
+(global-set-key (kbd "C-p") 'copy-to-clipboard-git-branch)
 ;;
 ;;=============================================================================
 
@@ -477,7 +478,6 @@
 (define-key ac-complete-mode-map [prior] 'ac-page-previous)
 (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
 
-(define-key dired-mode-map [f1] nil)
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
 (global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
@@ -774,6 +774,11 @@
 ;;=============================================================================
 
 (provide 'key-bindings)
+
+(define-key dired-mode-map [f1] nil)
+(define-key dired-mode-map (kbd "M-z") nil)
+(define-key dired-mode-map (kbd "M-p")
+  'copy-to-clipboard-dired-current-directory)
 
 ;; see https://github.com/skeeto/elfeed for details.
 (global-set-key (kbd "M-<f2>") 'elfeed)

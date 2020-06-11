@@ -70,10 +70,10 @@
 (require 'eframe-jack-in)
 (require 'eframe-windmove)
 (require 'shell-conf)
+(require 'version-control)
 (require 'key-bindings)
 (require 'history-conf)
 (require 'text-modes-conf)
-(require 'version-control)
 (require 'perfomance-conf)
 
 ;;-----------------------------------------------------------------------------

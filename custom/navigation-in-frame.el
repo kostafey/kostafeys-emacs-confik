@@ -34,6 +34,13 @@
     "Sort dired listings with directories first before adding marks."
     (mydired-sort)))
 
+(defun copy-to-clipboard-dired-current-directory ()
+  (interactive)
+  "Copy current directory path to the clipboard."
+  (let ((result (kill-new (dired-current-directory))))
+    (message result)
+    result))
+
 ;;-----------------------------------------------------------------------------
 ;; ibuffer sorting
 (setq-default ibuffer-default-sorting-mode 'major-mode)

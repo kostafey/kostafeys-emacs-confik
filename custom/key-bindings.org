@@ -566,6 +566,7 @@ Add to .emacs:
   (global-set-key "\C-\M-a\C-c" 'count-words-region)
   (global-set-key (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
   (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
+  (global-set-key (kbd "C-p") 'copy-to-clipboard-git-branch)
   ;;
   ;;=============================================================================
 #+end_src
@@ -682,7 +683,6 @@ Add to .emacs:
   (define-key ac-complete-mode-map [prior] 'ac-page-previous)
   (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
 
-  (define-key dired-mode-map [f1] nil)
   (global-set-key [f1] 'psw-switch-buffer)
   (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
   (global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
@@ -1171,6 +1171,13 @@ Add to .emacs:
     | C-c C-x C-r | org-clock-report | Create a table containing a report  |
     |             |                  | about clocked time                  |
 ** Emacs OS
+*** Dired
+#+begin_src emacs-lisp :exports none
+  (define-key dired-mode-map [f1] nil)
+  (define-key dired-mode-map (kbd "M-z") nil)
+  (define-key dired-mode-map (kbd "M-p")
+    'copy-to-clipboard-dired-current-directory)
+#+end_src
 *** elfeed
 #+begin_src emacs-lisp :exports none
    ;; see https://github.com/skeeto/elfeed for details.
