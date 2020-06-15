@@ -1126,6 +1126,11 @@ Add to .emacs:
     | C-c s l   | smerge-keep-lower   | Keep the "lower" version    |
 #+begin_src emacs-lisp :exports none
   (setq smerge-command-prefix (kbd "C-c s"))
+  (define-key smerge-mode-map (kbd "C-c s n") 'smerge-next)
+  (define-key smerge-mode-map (kbd "C-c s p") 'smerge-prev)
+  (define-key smerge-mode-map (kbd "C-c s RET") 'smerge-keep-current)
+  (define-key smerge-mode-map (kbd "C-c s u") 'smerge-keep-upper)
+  (define-key smerge-mode-map (kbd "C-c s l") 'smerge-keep-lower)
 #+end_src
 
 ** Mouse

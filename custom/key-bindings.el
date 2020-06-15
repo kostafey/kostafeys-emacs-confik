@@ -750,6 +750,11 @@
   (global-set-key (kbd "C-M-g p") 'git-gutter:popup-hunk))
 
 (setq smerge-command-prefix (kbd "C-c s"))
+(define-key smerge-mode-map (kbd "C-c s n") 'smerge-next)
+(define-key smerge-mode-map (kbd "C-c s p") 'smerge-prev)
+(define-key smerge-mode-map (kbd "C-c s RET") 'smerge-keep-current)
+(define-key smerge-mode-map (kbd "C-c s u") 'smerge-keep-upper)
+(define-key smerge-mode-map (kbd "C-c s l") 'smerge-keep-lower)
 
 ;;=============================================================================
 ;;                               Mouse
