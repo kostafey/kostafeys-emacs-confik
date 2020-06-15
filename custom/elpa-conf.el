@@ -96,7 +96,8 @@
 (defvar lsp-packages '(lsp-mode
                        lsp-ui
                        company-lsp
-                       lsp-java)
+                       lsp-java
+                       lsp-metals)
   "Required packages for lsp.")
 
 

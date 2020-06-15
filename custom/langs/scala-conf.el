@@ -31,6 +31,8 @@
 ;; Run for new projects:
 ;; M-x `lsp-metals-build-import'
 
+;; C-n j (`k/scala-start-console')
+
 ;;; Code:
 
 (require 'use-package)
@@ -84,6 +86,9 @@
   :config (progn
             (setq lsp-prefer-flymake nil)
             (setq lsp-before-save-edits nil)))
+
+;; Add metals backend for lsp-mode
+(use-package lsp-metals)
 
 (use-package lsp-ui)
 
@@ -227,7 +232,9 @@
 
 (defun k/scala-start-console ()
   (interactive)
-  (sbt-command "console"))
+  ;; Use `test:console' instead of `console'
+  ;; to access test resources.
+  (sbt-command "test:console"))
 
 (defun k/scala-switch-console ()
   (interactive)
