@@ -38,6 +38,7 @@
 (setq custom-file (concat custom-conf-lisp-path "custom.el"))
 (load custom-file)
 ;;-----------------------------------------------------------------------------
+(require 'elpa-conf)
 (add-to-list 'load-path (concat third-party-lisp-path "popup-el/"))
 (require 'popup)
 (add-to-list 'load-path (concat third-party-lisp-path "wrap-region.el/"))
@@ -54,7 +55,6 @@
 (require 'functions)
 (require 'file-ops)
 (require 'look-and-feel)
-(require 'elpa-conf)
 (require 'jiraf)
 (require 'ide)
 (require 'switch-language)

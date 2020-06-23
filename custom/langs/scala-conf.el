@@ -10,7 +10,7 @@
 ;;   --java-opt -Xss4m \
 ;;   --java-opt -Xms100m \
 ;;   --java-opt -Dmetals.client=emacs \
-;;   org.scalameta:metals_2.12:0.7.6 \
+;;   org.scalameta:metals_2.12:0.9.0 \
 ;;   -r bintray:scalacenter/releases \
 ;;   -r sonatype:snapshots \
 ;;   -o /usr/local/bin/metals-emacs -f
@@ -23,7 +23,7 @@
 ;;   --java-opt -Xss4m ^
 ;;   --java-opt -Xms100m ^
 ;;   --java-opt -Dmetals.client=emacs ^
-;;   org.scalameta:metals_2.12:0.7.6 ^
+;;   org.scalameta:metals_2.12:0.9.0 ^
 ;;   -r bintray:scalacenter/releases ^
 ;;   -r sonatype:snapshots ^
 ;;   -o %BIN_PATH%metals-emacs -f
@@ -47,20 +47,6 @@
 ;; Enable scala-mode and sbt-mode
 (use-package scala-mode
   :mode "\\.s\\(cala\\|bt\\)$")
-
-(defun k/scala-indent-region (beg end)
-  "Indent region or current line in Scala file."
-  (interactive "r")
-  (if (not mark-active)
-      (scala-indent:indent-line)
-    (save-excursion
-      (let ((beg (min beg end))
-            (end (max beg end)))
-        (-map (lambda (line)
-                (goto-line (- (+ (line-number-at-pos beg) line) 1))
-                (scala-indent:indent-line))
-              (number-sequence 1 (count-lines beg end))))))
-  (setq deactivate-mark t))
 
 (use-package sbt-mode
   :commands sbt-start sbt-command
@@ -91,6 +77,20 @@
 (use-package lsp-metals)
 
 (use-package lsp-ui)
+
+(defun k/scala-indent-region (beg end)
+  "Indent region or current line in Scala file."
+  (interactive "r")
+  (if (not mark-active)
+      (scala-indent:indent-line)
+    (save-excursion
+      (let ((beg (min beg end))
+            (end (max beg end)))
+        (-map (lambda (line)
+                (goto-line (- (+ (line-number-at-pos beg) line) 1))
+                (scala-indent:indent-line))
+              (number-sequence 1 (count-lines beg end))))))
+  (setq deactivate-mark t))
 
 (defun k/scala-mode-hook ()
   (my-coding-hook)
