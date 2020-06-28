@@ -51,8 +51,10 @@
 (defun k/kill-current-buffer ()
   "Kill current buffer."
   (interactive)
+  (setq eframe-force-switch t)
   (kill-buffer (current-buffer))
-  (previous-buffer))
+  (previous-buffer)
+  (setq eframe-force-switch nil))
 
 (defun kill-other-buffers ()
   "Kill all buffers but the current one.

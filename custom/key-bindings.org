@@ -603,6 +603,8 @@ Add to .emacs:
   (global-set-key [(ctrl super left)] 'tabbar-backward-tab)
   (global-set-key [(shift super right)] 'tabbar-forward-tab)
   (global-set-key [(ctrl super right)] 'tabbar-forward-tab)
+  (global-set-key [(ctrl shift prior)] 'tabbar-backward-tab)
+  (global-set-key [(ctrl shift next)] 'tabbar-forward-tab)
   ;;-----------------------------------------------------------------------------
   ;; ido - switch buffers by completiotion
   (require 'ido)

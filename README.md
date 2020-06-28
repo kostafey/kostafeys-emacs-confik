@@ -1,58 +1,58 @@
 
 # Table of Contents
 
-1.  [Initial setup](#org4e6a281)
-2.  [Kostafey's keybindings](#orgf1ca30f)
-    1.  [Humane emacs](#org0640b83)
-        1.  [Exit/hide emacs](#orgd9b9a21)
-        2.  [Select Copy Paste](#orge4256e8)
-        3.  [Undo/redo](#orgc8de4bc)
-        4.  [Delete/insert char](#org7a6d74a)
-        5.  [Save/revert](#org531e7c0)
-    2.  [Basic point movements & change buffer's position](#org50e86f8)
-    3.  [Point hyper-jumps](#org929d02b)
-        1.  [Bookmarks](#orgf492406)
-        2.  [Search & replace](#orgbb65cc8)
-        3.  [Intellectual point jumps](#org1828dbe)
-    4.  [Frames](#orgaa3759d)
-    5.  [Command executions](#orga4db29c)
-    6.  [Text transformations](#org02332b3)
-        1.  [Basic text transformations](#orgea809e4)
-        2.  [Rectangle operations](#orga435654)
-        3.  [Upcase/downcase](#org855583b)
-        4.  [Region & misc operations](#org948e55b)
-        5.  [Buffers navigation](#org59b219c)
-        6.  [ASCII graphic & formatting notes](#orgcfca674)
-        7.  [Paredit customization](#org59f1705)
-    7.  [IDE](#org98ba6fc)
-        1.  [ECB](#orgc0776d3)
-        2.  [Common prog mode keys](#orgc700959)
-        3.  [Java](#orge61a72e)
-        4.  [Lisp](#org6d5407c)
-        5.  [Emacs Lisp](#orgc957185)
-        6.  [Clojure](#org0973287)
-        7.  [Lua](#org8edb1d9)
-        8.  [Scala](#org0df9ef0)
-        9.  [Tcl](#orge538799)
-        10. [Golang](#orgabccdc5)
-        11. [reStructuredText](#org92e0838)
-        12. [SQL](#orgf384438)
-        13. [Version control](#orgae4a538)
-            1.  [Magit & ahg](#orgcba9d25)
-            2.  [git-gutter](#org283364c)
-            3.  [Smerge](#org5438203)
-    8.  [Mouse](#org7f41730)
-    9.  [Menu](#orgebd0899)
-        1.  [header<sub>name</sub>](#orgd90e5dc)
-    10. [Org-mode](#orgd8de690)
-        1.  [Time schedule](#org2a01698)
-    11. [Emacs OS](#org78e844e)
-        1.  [Dired](#org056154d)
-        2.  [elfeed](#org308865f)
+1.  [Initial setup](#org9669144)
+2.  [Kostafey's keybindings](#org421f254)
+    1.  [Humane emacs](#orgcf8afbf)
+        1.  [Exit/hide emacs](#orga214b10)
+        2.  [Select Copy Paste](#org148ac95)
+        3.  [Undo/redo](#org961b79e)
+        4.  [Delete/insert char](#org045cef6)
+        5.  [Save/revert](#org35c01d0)
+    2.  [Basic point movements & change buffer's position](#org1804778)
+    3.  [Point hyper-jumps](#orga28ac24)
+        1.  [Bookmarks](#org8191a70)
+        2.  [Search & replace](#orgff8ef88)
+        3.  [Intellectual point jumps](#orga566962)
+    4.  [Frames](#orgbb0ffbb)
+    5.  [Command executions](#org26dd08a)
+    6.  [Text transformations](#orgecc1d6a)
+        1.  [Basic text transformations](#org16b9020)
+        2.  [Rectangle operations](#orga5b781e)
+        3.  [Upcase/downcase](#org8609027)
+        4.  [Region & misc operations](#orgeed07d0)
+        5.  [Buffers navigation](#orga0ce2d6)
+        6.  [ASCII graphic & formatting notes](#org456f75f)
+        7.  [Paredit customization](#orga02c9aa)
+    7.  [IDE](#org6a44928)
+        1.  [ECB](#org627038d)
+        2.  [Common prog mode keys](#org1385ba3)
+        3.  [Java](#org777992e)
+        4.  [Lisp](#org9fe1bfc)
+        5.  [Emacs Lisp](#orgc9c9df6)
+        6.  [Clojure](#orga9a434a)
+        7.  [Lua](#org9f49302)
+        8.  [Scala](#org2c8b151)
+        9.  [Tcl](#org9b9f621)
+        10. [Golang](#org038a349)
+        11. [reStructuredText](#orgcbf5385)
+        12. [SQL](#org6498a79)
+        13. [Version control](#orgcb6a410)
+            1.  [Magit & ahg](#orgbfd8682)
+            2.  [git-gutter](#orga51a82e)
+            3.  [Smerge](#org09a4835)
+    8.  [Mouse](#orgb889f77)
+    9.  [Menu](#org3c38ac4)
+        1.  [header<sub>name</sub>](#org4b5fb3e)
+    10. [Org-mode](#org22d0257)
+        1.  [Time schedule](#org3fbc5d5)
+    11. [Emacs OS](#org02127d6)
+        1.  [Dired](#org7246ed8)
+        2.  [elfeed](#orgdb97cd1)
 
 
 
-<a id="org4e6a281"></a>
+<a id="org9669144"></a>
 
 # Initial setup
 
@@ -61,17 +61,17 @@ Add to .emacs:
 (load-file "~/.emacs.d/init.el")
 
 
-<a id="orgf1ca30f"></a>
+<a id="org421f254"></a>
 
 # Kostafey's keybindings
 
 
-<a id="org0640b83"></a>
+<a id="orgcf8afbf"></a>
 
 ## Humane emacs
 
 
-<a id="orgd9b9a21"></a>
+<a id="orga214b10"></a>
 
 ### Exit/hide emacs
 
@@ -110,7 +110,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orge4256e8"></a>
+<a id="org148ac95"></a>
 
 ### Select Copy Paste
 
@@ -184,7 +184,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orgc8de4bc"></a>
+<a id="org961b79e"></a>
 
 ### Undo/redo
 
@@ -230,7 +230,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org7a6d74a"></a>
+<a id="org045cef6"></a>
 
 ### Delete/insert char
 
@@ -276,7 +276,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org531e7c0"></a>
+<a id="org35c01d0"></a>
 
 ### Save/revert
 
@@ -322,7 +322,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org50e86f8"></a>
+<a id="org1804778"></a>
 
 ## Basic point movements & change buffer's position
 
@@ -375,12 +375,12 @@ Add to .emacs:
 </table>
 
 
-<a id="org929d02b"></a>
+<a id="orga28ac24"></a>
 
 ## Point hyper-jumps
 
 
-<a id="orgf492406"></a>
+<a id="org8191a70"></a>
 
 ### Bookmarks
 
@@ -433,7 +433,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orgbb65cc8"></a>
+<a id="orgff8ef88"></a>
 
 ### Search & replace
 
@@ -549,7 +549,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org1828dbe"></a>
+<a id="orga566962"></a>
 
 ### Intellectual point jumps
 
@@ -603,7 +603,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orgaa3759d"></a>
+<a id="orgbb0ffbb"></a>
 
 ## Frames
 
@@ -631,7 +631,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orga4db29c"></a>
+<a id="org26dd08a"></a>
 
 ## Command executions
 
@@ -677,12 +677,12 @@ Add to .emacs:
 </table>
 
 
-<a id="org02332b3"></a>
+<a id="orgecc1d6a"></a>
 
 ## Text transformations
 
 
-<a id="orgea809e4"></a>
+<a id="org16b9020"></a>
 
 ### Basic text transformations
 
@@ -807,7 +807,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orga435654"></a>
+<a id="orga5b781e"></a>
 
 ### Rectangle operations
 
@@ -859,7 +859,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org855583b"></a>
+<a id="org8609027"></a>
 
 ### Upcase/downcase
 
@@ -893,7 +893,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org948e55b"></a>
+<a id="orgeed07d0"></a>
 
 ### Region & misc operations
 
@@ -978,7 +978,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org59b219c"></a>
+<a id="orga0ce2d6"></a>
 
 ### Buffers navigation
 
@@ -1038,7 +1038,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orgcfca674"></a>
+<a id="org456f75f"></a>
 
 ### ASCII graphic & formatting notes
 
@@ -1130,7 +1130,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org59f1705"></a>
+<a id="orga02c9aa"></a>
 
 ### Paredit customization
 
@@ -1323,7 +1323,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org98ba6fc"></a>
+<a id="org6a44928"></a>
 
 ## IDE
 
@@ -1362,12 +1362,12 @@ Add to .emacs:
 </table>
 
 
-<a id="orgc0776d3"></a>
+<a id="org627038d"></a>
 
 ### ECB
 
 
-<a id="orgc700959"></a>
+<a id="org1385ba3"></a>
 
 ### Common prog mode keys
 
@@ -1406,12 +1406,12 @@ Add to .emacs:
 </table>
 
 
-<a id="orge61a72e"></a>
+<a id="org777992e"></a>
 
 ### Java
 
 
-<a id="org6d5407c"></a>
+<a id="org9fe1bfc"></a>
 
 ### Lisp
 
@@ -1445,7 +1445,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orgc957185"></a>
+<a id="orgc9c9df6"></a>
 
 ### Emacs Lisp
 
@@ -1480,12 +1480,12 @@ Add to .emacs:
 </table>
 
 
-<a id="org0973287"></a>
+<a id="orga9a434a"></a>
 
 ### Clojure
 
 
-<a id="org8edb1d9"></a>
+<a id="org9f49302"></a>
 
 ### Lua
 
@@ -1531,7 +1531,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org0df9ef0"></a>
+<a id="org2c8b151"></a>
 
 ### Scala
 
@@ -1682,7 +1682,7 @@ Add to .emacs:
 </table>
 
 
-<a id="orge538799"></a>
+<a id="org9b9f621"></a>
 
 ### Tcl
 
@@ -1742,27 +1742,27 @@ Add to .emacs:
 </table>
 
 
-<a id="orgabccdc5"></a>
+<a id="org038a349"></a>
 
 ### Golang
 
 
-<a id="org92e0838"></a>
+<a id="orgcbf5385"></a>
 
 ### reStructuredText
 
 
-<a id="orgf384438"></a>
+<a id="org6498a79"></a>
 
 ### SQL
 
 
-<a id="orgae4a538"></a>
+<a id="orgcb6a410"></a>
 
 ### Version control
 
 
-<a id="orgcba9d25"></a>
+<a id="orgbfd8682"></a>
 
 #### Magit & ahg
 
@@ -1836,7 +1836,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org283364c"></a>
+<a id="orga51a82e"></a>
 
 #### git-gutter
 
@@ -1876,7 +1876,7 @@ Add to .emacs:
 </table>
 
 
-<a id="org5438203"></a>
+<a id="org09a4835"></a>
 
 #### Smerge
 
@@ -1936,17 +1936,17 @@ Add to .emacs:
 </table>
 
 
-<a id="org7f41730"></a>
+<a id="orgb889f77"></a>
 
 ## Mouse
 
 
-<a id="orgebd0899"></a>
+<a id="org3c38ac4"></a>
 
 ## Menu
 
 
-<a id="orgd90e5dc"></a>
+<a id="org4b5fb3e"></a>
 
 ### header<sub>name</sub>
 
@@ -1978,12 +1978,12 @@ Add to .emacs:
 </table>
 
 
-<a id="orgd8de690"></a>
+<a id="org22d0257"></a>
 
 ## Org-mode
 
 
-<a id="org2a01698"></a>
+<a id="org3fbc5d5"></a>
 
 ### Time schedule
 
@@ -2043,17 +2043,17 @@ Add to .emacs:
 </table>
 
 
-<a id="org78e844e"></a>
+<a id="org02127d6"></a>
 
 ## Emacs OS
 
 
-<a id="org056154d"></a>
+<a id="org7246ed8"></a>
 
 ### Dired
 
 
-<a id="org308865f"></a>
+<a id="orgdb97cd1"></a>
 
 ### elfeed
 
