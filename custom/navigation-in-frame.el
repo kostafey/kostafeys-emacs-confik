@@ -1,4 +1,5 @@
 ;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.
+(require 'navigation-in-buffer)
 
 ;;-----------------------------------------------------------------------------
 ;; popup-switcher
@@ -20,6 +21,18 @@
 ;; dired+
 (when (require 'dired+ nil 'noerror)
   (toggle-diredp-find-file-reuse-dir t)
+
+  (defun dired-home ()
+    (interactive)
+    (k/buffer-beginning)
+    (k/char-forward)
+    (k/char-forward))
+
+  (defun dired-end ()
+    (interactive)
+    (k/buffer-end)
+    (k/line-previous)
+    (k/line-end))
 
   (defun mydired-sort ()
     "Sort dired listings with directories first."

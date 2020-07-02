@@ -488,20 +488,17 @@
 (global-set-key (kbd "s-q") 'psw-navigate-files)
 (global-set-key (kbd "s-a") 'psw-navigate-files)
 (global-set-key [f2] 'psw-switch-function)
-;; (global-set-key [f7] 'ispell-buffer); проверить орфографию в текущем буфере
-;; (global-set-key [f8] 'ispell-region); 'ispell-word
 
 (global-set-key [f4] 'k/shell)
-(global-set-key [f5] 'bookmark-set)
-(global-set-key [f6] 'bookmark-jump)
-(global-set-key [f7] 'auto-complete-mode)
+(global-set-key [f5] (lambda () (interactive) (dired default-directory)))
+(global-set-key [f6] 'ack-file)
+(global-set-key [f7] 'rg)
 (require 'reencoding-file)
 (global-set-key [f8] 'recode-buffer-rotate-ring)
-(global-set-key [f9] 'auto-fill-mode); вкл/выкл автозаполнения
+(global-set-key [f9] 'auto-fill-mode); enable/disable lines auto-fill
 (global-set-key [f10] 'flyspell-english)
 (global-set-key [f11] 'flyspell-russian)
-(global-set-key [f12] 'flyspell-mode); вкл/выкл проверки орфографии "на ходу"
-
+(global-set-key [f12] 'flyspell-mode); enable/disable spell checking
 ;; yasnippet
 (defvar yasnippet-prefix "\C-y")
 (global-unset-key yasnippet-prefix)
@@ -788,6 +785,8 @@
 (define-key dired-mode-map (kbd "M-z") nil)
 (define-key dired-mode-map (kbd "M-p")
   'copy-to-clipboard-dired-current-directory)
+(define-key dired-mode-map (kbd "C-<home>") 'dired-home)
+(define-key dired-mode-map (kbd "C-<end>") 'dired-end)
 
 ;; see https://github.com/skeeto/elfeed for details.
 (global-set-key (kbd "M-<f2>") 'elfeed)

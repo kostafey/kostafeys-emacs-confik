@@ -136,7 +136,7 @@
     (k/sgml-skip-tag-backward t)))
 
 ;;=============================================================================
-;; Marks&select a line
+;; Marks & select a line
 ;;=============================================================================
 (defun mark-line (&optional arg)
   "Marks a line from start of indentation to end"
