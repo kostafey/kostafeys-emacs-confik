@@ -472,15 +472,26 @@
 ;;
 ;;=============================================================================
 
-;;=============================================================================
-;; Modes enabling
-;;
+;;-----------------------------------------------------------------------------
 ;; auto-complete-mode
 (define-key ac-mode-map (kbd "C-SPC") 'auto-complete) ;; to 'set-mark-command use M-s instead
 (define-key ac-complete-mode-map [next] 'ac-page-next)
 (define-key ac-complete-mode-map [prior] 'ac-page-previous)
 (define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
 
+;;-----------------------------------------------------------------------------
+;; company-mode
+(define-key company-search-map [escape] 'company-search-abort)
+(define-key company-active-map [escape] 'company-abort)
+(define-key company-active-map (kbd "<up>") 'k/company-select-previous)
+(define-key company-active-map (kbd "<down>") 'k/company-select-next)
+(define-key company-active-map [next] 'company-next-page)
+(define-key company-active-map [prior] 'company-previous-page)
+(define-key company-active-map (kbd "C-f") 'company-search-candidates)
+
+;;=============================================================================
+;; Function keys
+;;
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key [M-f1] (lambda () (interactive) (psw-switch-buffer t)))
 (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
@@ -492,7 +503,10 @@
 (global-set-key [f4] 'k/shell)
 (global-set-key [f5] (lambda () (interactive) (dired default-directory)))
 (global-set-key [f6] 'ack-file)
-(global-set-key [f7] 'rg)
+(global-set-key [f7] (lambda () (interactive)
+                       (if (projectile-project-root)
+                           (command-execute 'rg-project)
+                         (command-execute 'rg))))
 (require 'reencoding-file)
 (global-set-key [f8] 'recode-buffer-rotate-ring)
 (global-set-key [f9] 'auto-fill-mode); enable/disable lines auto-fill
