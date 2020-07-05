@@ -105,6 +105,8 @@
   (list ;'popup
         'auto-complete
         'ac-etags
+        'company
+        'company-quickhelp
         'yasnippet)
   "Required packages for autocompletition.")
 

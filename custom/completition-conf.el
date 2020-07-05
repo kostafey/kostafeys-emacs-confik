@@ -35,7 +35,7 @@
 (require 'auto-complete-config)
 (ac-config-default)
 
-(global-auto-complete-mode t)
+;; (global-auto-complete-mode t)
 ;; if a length of a word you entered is larger than the value,
 ;; completion will be started automatically
 (setq ac-auto-start 2)
@@ -53,11 +53,7 @@
              (message "etags autocomplete off."))
          (progn
            (add-to-list 'ac-sources 'ac-source-etags)
-           (message "etags autocomplete on."))))
-     ;; (defun my-java-ac-mode-common-hook ()
-     ;;   (add-to-list 'ac-sources 'ac-source-etags))
-     ;; (add-hook 'java-mode-hook 'my-java-ac-mode-common-hook)
-     ))
+           (message "etags autocomplete on."))))))
 
 (defun ac-page-next ()
   "Select next completion candidate per `ac-menu-height' range.
@@ -79,6 +75,40 @@ Pages up through completion menu."
 ;; company-mode
 ;;
 (require 'company)
+
+(add-hook 'after-init-hook 'global-company-mode)
+;; The minimum prefix length for idle completion.
+(setq company-minimum-prefix-length 1)
+
+(company-quickhelp-mode)
+
+(defun k/company-select-next (&optional arg)
+  "Select the next candidate in the list.
+
+With ARG, move by that many elements."
+  (interactive "p")
+  (when (company-manual-begin)
+    (if (= company-selection (1- company-candidates-length))
+        (company-set-selection 0)
+      (company-set-selection (+ (or arg 1) company-selection)))))
+
+(defun k/company-select-previous (&optional arg)
+  "Select the previous candidate in the list.
+
+With ARG, move by that many elements."
+  (interactive "p")
+  (if (= company-selection 0)
+      (company-select-next (1- company-candidates-length))
+      (company-select-next (if arg (- arg) -1))))
+
+;;=============================================================================
+;; common completion functions
+;;
+(defun start-complete ()
+  "Start `company-mode' or `auto-complete-mode' completion."
+  (interactive)
+  (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
+        ((bound-and-true-p company-mode) (company-complete))))
 
 (defun switch-completion-frontend ()
   "Switch between `company-mode' and `auto-complete-mode' completion frontends."
@@ -105,25 +135,6 @@ Pages up through completion menu."
            (switch-to-auto-complete))
           (t
            (switch-to-company)))))
-
-(defun k/company-select-next (&optional arg)
-  "Select the next candidate in the list.
-
-With ARG, move by that many elements."
-  (interactive "p")
-  (when (company-manual-begin)
-    (if (= company-selection (1- company-candidates-length))
-        (company-set-selection 0)
-      (company-set-selection (+ (or arg 1) company-selection)))))
-
-(defun k/company-select-previous (&optional arg)
-  "Select the previous candidate in the list.
-
-With ARG, move by that many elements."
-  (interactive "p")
-  (if (= company-selection 0)
-      (company-select-next (1- company-candidates-length))
-      (company-select-next (if arg (- arg) -1))))
 
 ;;=============================================================================
 ;; minibuffer autocompletition.
