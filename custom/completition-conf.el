@@ -77,6 +77,34 @@ Pages up through completion menu."
 
 ;;=============================================================================
 ;; company-mode
+;;
+(require 'company)
+
+(defun switch-completion-frontend ()
+  "Switch between `company-mode' and `auto-complete-mode' completion frontends."
+  (interactive)
+  (cl-labels ((switch-to-company
+               ()
+               (auto-complete-mode -1)
+               (company-mode t)
+               (message (format
+                         "%s enabled"
+                         (propertize "company-mode"
+                                     'face 'font-lock-keyword-face))))
+              (switch-to-auto-complete
+               ()
+               (company-mode -1)
+               (auto-complete-mode t)
+               (message (format
+                         "%s enabled"
+                         (propertize "auto-complete-mode"
+                                     'face 'font-lock-keyword-face)))))
+    (cond ((bound-and-true-p auto-complete-mode)
+           (switch-to-company))
+          ((bound-and-true-p company-mode)
+           (switch-to-auto-complete))
+          (t
+           (switch-to-company)))))
 
 (defun k/company-select-next (&optional arg)
   "Select the next candidate in the list.

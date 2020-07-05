@@ -707,11 +707,13 @@ Add to .emacs:
 
   (global-set-key [f4] 'k/shell)
   (global-set-key [f5] (lambda () (interactive) (dired default-directory)))
-  (global-set-key [f6] 'ack-file)
+  (global-set-key [f6] 'switch-completion-frontend)
   (global-set-key [f7] (lambda () (interactive)
                          (if (projectile-project-root)
                              (command-execute 'rg-project)
                            (command-execute 'rg))))
+  (global-set-key [C-f7] 'ack-file)
+
   (require 'reencoding-file)
   (global-set-key [f8] 'recode-buffer-rotate-ring)
   (global-set-key [f9] 'auto-fill-mode); enable/disable lines auto-fill
