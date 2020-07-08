@@ -716,7 +716,7 @@
 ;;
 (global-unset-key (kbd "M-w"))
 (defun kostafey-magit-mode-hook ()
-  (define-key magit-mode-map (kbd "C-w") 'k/kill-current-buffer)
+  (define-key magit-mode-map (kbd "C-w") 'eframe-kill-buffer)
   (define-key magit-mode-map (kbd "S-M-w") 'magit-copy-buffer-revision)
   (define-key magit-mode-map (kbd "M-w") 'diffview-current)
   (define-key magit-mode-map (kbd "C-s-<down>") 'magit-section-forward)
