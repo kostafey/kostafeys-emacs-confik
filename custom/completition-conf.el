@@ -35,7 +35,6 @@
 (require 'auto-complete-config)
 (ac-config-default)
 
-;; (global-auto-complete-mode t)
 ;; if a length of a word you entered is larger than the value,
 ;; completion will be started automatically
 (setq ac-auto-start 2)
@@ -76,11 +75,8 @@ Pages up through completion menu."
 ;;
 (require 'company)
 
-(add-hook 'after-init-hook 'global-company-mode)
 ;; The minimum prefix length for idle completion.
 (setq company-minimum-prefix-length 1)
-
-(company-quickhelp-mode)
 
 (defun k/company-select-next (&optional arg)
   "Select the next candidate in the list.
@@ -104,6 +100,20 @@ With ARG, move by that many elements."
 ;;=============================================================================
 ;; common completion functions
 ;;
+(defcustom k/complete-frontend 'auto-complete
+  "Selected completion frontend."
+  :type '(choice
+          (const :tag "auto-complete" :value auto-complete)
+          (const :tag "company-mode" :value company-mode)))
+
+(case k/complete-frontend
+  ('auto-complete
+   (global-auto-complete-mode t))
+  ('company-mode
+   (progn
+     (add-hook 'after-init-hook 'global-company-mode)
+     (company-quickhelp-mode))))
+
 (defun start-complete ()
   "Start `company-mode' or `auto-complete-mode' completion."
   (interactive)

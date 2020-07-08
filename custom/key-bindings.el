@@ -84,6 +84,7 @@
 (defvar selected-area-prefix "\C-\M-a")
 (defvar change-buffer-prefix "\C-c\C-b")
 
+(require 'dired-conf)
 (require 'navigation-in-frame)
 (require 'navigation-in-buffer)
 (require 'basic-text-editing)
@@ -501,7 +502,7 @@
 (global-set-key [f2] 'psw-switch-function)
 
 (global-set-key [f4] 'k/shell)
-(global-set-key [f5] (lambda () (interactive) (dired default-directory)))
+(global-set-key [f5] 'dired-open)
 (global-set-key [f6] 'switch-completion-frontend)
 (global-set-key [f7] (lambda () (interactive)
                        (if (projectile-project-root)

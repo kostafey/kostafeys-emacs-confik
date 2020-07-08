@@ -8,28 +8,42 @@
 
 (defun k/shell (&optional num)
   (interactive "P")
-  (let* ((current-dir (if buffer-file-name
-                          (file-name-directory (buffer-file-name))))
-         (shell-buffer-name (if num
-                                (format "*%s %s*"
-                                        (symbol-name k/default-shell) num)
-                              (format "*%s*"
-                                      (symbol-name k/default-shell))))
-         (shell-bufer-exists-p (get-buffer shell-buffer-name)))
-    (with-current-buffer
-        (pcase k/default-shell
-          ('eshell (flet ((pop-to-buffer-same-window
-                           (b) (switch-to-buffer-other-window b)))
-                     (eshell num)))
-          ('shell (shell shell-buffer-name)))
-      (goto-char (point-max))
-      (when (and shell-bufer-exists-p
-                 (not (equal default-directory current-dir)))
-        (insert "cd ")
-        (insert current-dir)
-        (pcase k/default-shell
-          ('eshell (eshell-send-input))
-          ('shell (comint-send-input)))))))
+  (if (eq major-mode 'eshell-mode)
+      (message "Already in Eshell")
+    (let* ((current-dir (cond
+                         ((eq major-mode 'dired-mode)
+                          default-directory)
+                         (buffer-file-name
+                          (file-name-directory (buffer-file-name)))))
+           (shell-buffer-name (if num
+                                  (format "*%s %s*"
+                                          (symbol-name k/default-shell) num)
+                                (format "*%s*"
+                                        (symbol-name k/default-shell))))
+           (shell-bufer-exists-p (get-buffer shell-buffer-name)))
+      (with-current-buffer
+          (pcase k/default-shell
+            ('eshell (or (if (not num)
+                             (eframe-pop-buffer 'eshell-mode))
+                         (flet ((pop-to-buffer-same-window
+                                 (b) (switch-to-buffer-other-window b)))
+                           (eshell num))))
+            ('shell (shell shell-buffer-name)))
+        (goto-char (point-max))
+        (when (and shell-bufer-exists-p
+                   (not (equal default-directory current-dir)))
+          ;; Clear chars existing in command line.
+          (let ((line-beg (save-excursion
+                            (eshell-bol)
+                            (point))))
+            (k/line-end)
+            (while (> (point) line-beg)
+              (delete-char -1)))
+          (insert "cd ")
+          (insert current-dir)
+          (pcase k/default-shell
+            ('eshell (eshell-send-input))
+            ('shell (comint-send-input))))))))
 
 ;;------------------------------------------------------------
 ;; shell
