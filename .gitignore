@@ -17,5 +17,5 @@
 !foreign
 
 communications.el
-ejc-sql-conf.el
+ejc-databases.el
 .mc-lists.el
