@@ -1,11 +1,3 @@
-;;-----------------------------------------------------------------------------
-;; JavaScript IDE
-;; (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.js$" . rjsx-mode))
-(wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
-
-(add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
-
 ;;------------------------------------------------------------
 ;; skewer-mode
 ;;
@@ -91,7 +83,14 @@
 ;; npm -g install js-beautify
 ;; M-x `web-beautify-js'
 
-;;-----------------------------------------------------------------------------
+;;------------------------------------------------------------
+;; JavaScript IDE
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
+(wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
+(add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
+
+;;------------------------------------------------------------
 ;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
