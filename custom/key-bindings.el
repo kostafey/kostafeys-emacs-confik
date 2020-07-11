@@ -508,6 +508,7 @@
                        (if (projectile-project-root)
                            (command-execute 'rg-project)
                          (command-execute 'rg))))
+(global-set-key [S-f7] 'rg)
 (global-set-key [C-f7] 'ack-file)
 
 (require 'reencoding-file)
@@ -804,6 +805,8 @@
   'copy-to-clipboard-dired-current-directory)
 (define-key dired-mode-map (kbd "C-<home>") 'dired-home)
 (define-key dired-mode-map (kbd "C-<end>") 'dired-end)
+(define-key dired-mode-map (kbd "C-<up>") 'diredp-up-directory-reuse-dir-buffer)
+(define-key dired-mode-map (kbd "C-<down>") 'diredp-find-file-reuse-dir-buffer)
 
 ;; see https://github.com/skeeto/elfeed for details.
 (global-set-key (kbd "M-<f2>") 'elfeed)

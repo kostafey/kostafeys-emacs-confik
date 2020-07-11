@@ -538,7 +538,7 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
                     (substring myStr 20 32)))))
 
 (defun spaces-to-tabs ()
-  "Reaplace 4 spaces with a tab char."
+  "Replace 4 spaces with a tab char."
   (interactive)
   (replace-string "    " "	" nil
                   (if (use-region-p) (region-beginning))
