@@ -13,7 +13,7 @@
        'mode-line-mule-info
        '(:eval (propertize
                 (format "%s " buffer-file-coding-system)
-                'help-echo (format"%s" buffer-file-coding-system)))        
+                'help-echo (format"%s" buffer-file-coding-system)))
        ;; ------------------------------------------------------------
        ;; the `buffer-name'; the file name as a tool tip
        '(:eval (propertize (buffer-name)
@@ -34,8 +34,14 @@
        ;; line and column
        " (" ;; '%02' to set to 2 chars at least; prevents flickering
        (propertize "%02l" 'face 'font-lock-string-face) ","
-       (propertize "%02c" 'face 'font-lock-string-face) 
-       ")"        
+       (propertize "%02c" 'face 'font-lock-string-face)
+       ")"
+       ;; ------------------------------------------------------------
+       ;; csv field index for `csv-mode'
+       '(:eval (when (and (eq major-mode 'csv-mode) csv-field-index-mode)
+                 (propertize
+                  (format " %s" (k/csv-get-field-index))
+                  'face 'escape-glyph)))
        ;; ------------------------------------------------------------
        ;; the current `major-mode' for the buffer and list of minor modes.
        '(:eval (propertize " %m"
@@ -89,8 +95,8 @@
        '(:eval (when buffer-read-only
                  (concat ","  (propertize "RO"
                                           'face 'font-lock-string-face
-                                          'help-echo "Buffer is read-only"))))  
-       ")"                
+                                          'help-echo "Buffer is read-only"))))
+       ")"
        ))
 
 (provide 'mode-line-conf)

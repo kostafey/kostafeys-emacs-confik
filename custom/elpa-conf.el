@@ -53,6 +53,7 @@
         'lorem-ipsum
         'markdown-mode
         'markdown-toc
+        'csv-mode
         'typing
         'sphinx-frontend
         ;; news reader
