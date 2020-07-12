@@ -86,20 +86,24 @@
   "Extend `csv--field-index' fn - get field index & handle quotes in data.
 Take into account case when CSV data can be quoted, e.g.:
 Trades,Header,Currency,Symbol,Date/Time,Quantity
-Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10"
-  (let ((curr-idx (csv--field-index))
-        (bound-beg (line-beginning-position))
-        (bound-end (line-end-position))
-        (delta 0))
-    (save-mark-and-excursion
-      (while (re-search-backward "\".+,.+\"" bound-beg)
-        (setq delta (+ delta 1))))
-    (when (and (save-mark-and-excursion
-                 (re-search-backward "\".+,.*" bound-beg))
-               (save-mark-and-excursion
-                 (re-search-forward "\"" bound-end)))
-      (setq delta (+ delta 1)))
-    (- curr-idx delta)))
+Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
+\"Trades,Data,USD,AAPL,\"\"2000-01-01, 09:00:00\"\",10"
+  (let ((curr-idx (csv--field-index)))
+    (if (= curr-idx 1)
+        curr-idx
+      (let ((bound-beg (line-beginning-position))
+            (bound-end (line-end-position))
+            (delta 0))
+        (save-mark-and-excursion
+          (while (re-search-backward "(\"|\"\").+,.+(\"|\"\")" bound-beg t)
+            (setq delta (+ delta 1))))
+        (when (and (save-mark-and-excursion
+                     (re-search-backward "\".+,.*" bound-beg t)
+                     (not (equal bound-beg (point))))
+                   (save-mark-and-excursion
+                     (re-search-forward "\"" bound-end t)))
+          (setq delta (+ delta 1)))
+        (- curr-idx delta)))))
 
 ;;-----------------------------------------------------------------------------
 (add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
