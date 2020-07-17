@@ -1,4 +1,4 @@
-;; ----------------------------------------------------------------------
+;;----------------------------------------------------------------------
 ;; ack
 (add-to-list 
  'load-path
@@ -13,11 +13,16 @@
   (setq ack-command (concat "perl \"" ack-src-file-path 
                             "\" --nocolor ")))
 
-;; ----------------------------------------------------------------------
+;;----------------------------------------------------------------------
 ;; The Silver Searcher - ag
 (when (require 'ag nil 'noerror)
   (setq ag-reuse-window 'nil)
   (setq ag-reuse-buffers 't)
   (setq ag-highlight-search t))
+
+;;----------------------------------------------------------------------
+;; ripgrep  - rg
+
+(setq rg-command-line-flags '("--no-messages")) ; Suppress all error messages.
 
 (provide 'ack-conf)
