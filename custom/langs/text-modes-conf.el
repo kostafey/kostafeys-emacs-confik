@@ -111,19 +111,12 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 (add-to-list 'auto-mode-alist '("\\.xresources$" . conf-xdefaults-mode))
 
 ;;-----------------------------------------------------------------------------
-;; Org-mode settings
-;; (add-to-list 'load-path (concat site-lisp-path "org-7.6/lisp/"))
-;; (require 'org-install)
+;; Org-mode
+;;
+(setq org-hide-leading-stars t)
+(setq org-log-done 'nil) ; Don't show datetime on switching to done.
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(setq org-log-done t)
-;введенный пароль не будет кешироваться
-(setq epa-file-cache-passphrase-for-symmetric-encryption nil)
-
-(setq org-hide-leading-stars t)
 
 (org-babel-do-load-languages
  'org-babel-load-languages

@@ -438,10 +438,11 @@
 (global-set-key (kbd "C-x m")
                 '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
-(global-set-key (kbd "C-x t") 'visit-term-buffer)
 (global-set-key (kbd "C-c g") 'google)
 (global-set-key (kbd "C-x g") 'goto-url)
 (global-set-key (kbd "C-c C-g") '(lambda () (interactive) (google -1)))
+(global-set-key (kbd "C-c t") 'google-translate-at-point)
+(global-set-key (kbd "C-c T") 'google-translate-query-translate)
 ;;
 ;;=============================================================================
 
@@ -798,6 +799,11 @@
 ;;=============================================================================
 
 (provide 'key-bindings)
+
+(define-key org-mode-map (kbd "C-x t") 'org-todo)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-switchb)
 
 (define-key dired-mode-map [f1] nil)
 (define-key dired-mode-map (kbd "M-z") nil)

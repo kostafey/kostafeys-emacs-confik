@@ -643,10 +643,11 @@ Add to .emacs:
   (global-set-key (kbd "C-x m")
                   '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
-  (global-set-key (kbd "C-x t") 'visit-term-buffer)
   (global-set-key (kbd "C-c g") 'google)
   (global-set-key (kbd "C-x g") 'goto-url)
   (global-set-key (kbd "C-c C-g") '(lambda () (interactive) (google -1)))
+  (global-set-key (kbd "C-c t") 'google-translate-at-point)
+  (global-set-key (kbd "C-c T") 'google-translate-query-translate)
   ;;
   ;;=============================================================================
 
@@ -1190,10 +1191,18 @@ Add to .emacs:
     | Key         | Command          | Description                         |
     |-------------+------------------+-------------------------------------|
     | C-c C-t     | org-todo         | Change the TODO state of an item    |
+    | C-x t       | org-todo         | Change the TODO state of an item    |
     | C-c C-x C-i | org-clock-in     | Start the clock on the current item |
     | C-c C-x C-o | org-clock-out    | Stop the currently running clock    |
     | C-c C-x C-r | org-clock-report | Create a table containing a report  |
     |             |                  | about clocked time                  |
+#+begin_src emacs-lisp :exports none
+  (define-key org-mode-map (kbd "C-x t") 'org-todo)
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c b") 'org-switchb)
+#+end_src
+
 ** Emacs OS
 *** Dired
 #+begin_src emacs-lisp :exports none
