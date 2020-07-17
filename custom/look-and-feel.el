@@ -65,13 +65,6 @@
 (setq organic-green-boldless t)
 (load-theme 'organic-green t)
 
-;;-----------------------------------------------------------------------------
-(defun what-face (pos)
-  (interactive "d")
-  (let ((face (or (get-char-property (point) 'read-face-name)
-                  (get-char-property (point) 'face))))
-    (if face (message "Face: %s" face) (message "No face at %d" pos))))
-
 ;;=============================================================================
 ;; StatusBar config
 ;;
@@ -258,11 +251,36 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Replace lambda with λ.
+;;
 (font-lock-add-keywords
  'emacs-lisp-mode
  '(("(\\(lambda\\)\\>" (0 (prog1 ()
                        (compose-region (match-beginning 1)
                                        (match-end 1)
                                        ?λ))))))
+
+;;-----------------------------------------------------------------------------
+;; Fix `describe-face' fn call when `hl-line' is enabled.
+;;
+(defun my-face-at-point ()
+  (let ((face (get-text-property (point) 'face)))
+    (or (and (face-list-p face)
+             (car face))
+        (and (symbolp face)
+             face))))
+
+(defun what-face (pos)
+  (interactive)
+  (message "Face: %s" (my-face-at-point)))
+
+(defun my-describe-face (&rest ignore)
+  (interactive (list (read-face-name "Describe face"
+                                     (or (my-face-at-point) 'default)
+                                     t)))
+  ;; This only needs to change the `interactive` spec, so:
+  nil)
+
+(eval-after-load "hl-line"
+  '(advice-add 'describe-face :before #'my-describe-face))
 
 (provide 'look-and-feel)
