@@ -29,11 +29,8 @@
 (define-key ejc-sql-mode-keymap (kbd "<F8>") 'ejc-eval-user-sql-at-point)
 
 (defun k/ejc-after-emacs-init-hook ()
-  ;; Setup completion frontend. One of them or both.
-  ;; Setup autocomplete:
+  ;; Require completion frontend (autocomplete or company). One of them or both.
   (require 'ejc-autocomplete)
-  (ejc-ac-setup)
-  ;; Setup company:
   (require 'ejc-company)
   (push 'ejc-company-backend company-backends)
   ;; In case of `company-mode' is used by default this can be useful:
@@ -41,6 +38,11 @@
   )
 
 (add-hook 'after-init-hook 'k/ejc-after-emacs-init-hook)
+
+(defun k/sql-mode-hook ()
+  (ejc-sql-mode t))
+
+(add-hook 'sql-mode-hook 'k/sql-mode-hook)
 
 (defun k/ejc-result-mode-hook ()
   (display-line-numbers-mode))
@@ -50,6 +52,7 @@
 (defun k/ejc-sql-mode-hook ()
   ;; Enable one of the completion frontend by by default but not both.
   (auto-complete-mode t) ; Enable `auto-complete-mode'
+  (ejc-ac-setup)
   ;; (company-mode t)    ; or `company-mode'.
   (ejc-eldoc-setup)      ; Setup ElDoc.
   (font-lock-warn-todo)       ; See custom/look-and-feel.el
