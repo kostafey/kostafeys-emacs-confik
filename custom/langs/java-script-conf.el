@@ -42,7 +42,7 @@
   (npm-global-mode)
   (defun k/npm-mode-build ()
     (interactive)
-    (npm-mode--exec-process "npm run build"))
+    (npm-mode--exec-process "npm run build --prefer-offline --no-audit"))
   (define-key js2-mode-map
     (kbd "C-c C-c") 'k/npm-mode-build)
   (define-key js-jsx-mode-map
