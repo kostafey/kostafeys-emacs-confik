@@ -99,4 +99,4 @@
 (setq web-mode-enable-current-element-highlight t)
 (setq-default web-mode-markup-indent-offset 4)
 
-(provide 'java-script-conf)
+(provide 'js-conf)

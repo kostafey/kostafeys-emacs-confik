@@ -90,7 +90,7 @@
 ;; (require 'auctex-conf)
 ;; (require 'mql-mode)
 (require 'sphinx-frontend)
-(require 'java-script-conf)
+(require 'js-conf)
 (require 'lua-conf)
 (require 'xml-conf)
 (require 'go-conf)
