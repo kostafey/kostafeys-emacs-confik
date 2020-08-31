@@ -713,6 +713,10 @@
                                                  (ejc-show-prev-result)))))))
 ;;
 
+(defun k/LaTeX-mode-hook ()
+  (define-key LaTeX-mode-map  (kbd "C-j") 'join-next-line-space-n))
+(add-hook 'LaTeX-mode-hook 'k/LaTeX-mode-hook)
+
 ;;----------------------------------------------------------------------
 ;; Magit & ahg
 ;;

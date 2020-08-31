@@ -1059,6 +1059,13 @@ Add to .emacs:
   ;;
 #+end_src
 
+*** LaTeX
+#+begin_src emacs-lisp :exports none
+  (defun k/LaTeX-mode-hook ()
+    (define-key LaTeX-mode-map  (kbd "C-j") 'join-next-line-space-n))
+  (add-hook 'LaTeX-mode-hook 'k/LaTeX-mode-hook)
+#+end_src
+
 *** Version control
 **** Magit & ahg
     | Key   | Command                    | Description                        |
