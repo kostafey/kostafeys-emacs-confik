@@ -5,6 +5,8 @@
 
 (setq nrepl-sync-request-timeout 60)
 (setq clomacs-httpd-default-port 8090) ; Use a port other than 8080.
+;; Allow use any CIDER nREPL not only library dedicated nREPL
+;; (setq clomacs-allow-other-repl t)
 
 ;; Show results of SQL snippets evaluation in `org-mode'
 ;; in dedicated buffer.
@@ -64,8 +66,9 @@
 (add-hook 'ejc-sql-minor-mode-hook 'k/ejc-sql-mode-hook)
 
 (defun k/ejc-sql-connected-hook ()
-  (ejc-set-fetch-size 100)        ; Limit for the number of records to output.
+  (ejc-set-fetch-size 99)         ; Limit for the number of records to output.
   (ejc-set-max-rows 99)           ; Limit for the number of records in ResultSet.
+  (ejc-set-show-too-many-rows-message t) ; Set output 'Too many rows' message.
   (ejc-set-column-width-limit 25) ; Limit for outputing the number of chars per column.
   (ejc-set-use-unicode t)         ; Use unicode symbols for grid borders.
   )
