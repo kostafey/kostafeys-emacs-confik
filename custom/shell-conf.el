@@ -52,6 +52,14 @@
     ;; C-x C-f C-f /<user>@<host>:<path>
     (setq tramp-default-method "plink"))
 
+(setq w32-quote-process-args t)
+
+;; Windows shell (cmd) correct encoding
+(when (eq system-type 'windows-nt)
+  (defadvice shell (after my-shell-advice)
+    (set-process-coding-system 'cp1251 'cp1251))
+  (ad-activate 'shell))
+
 ;;------------------------------------------------------------
 ;; eshell
 

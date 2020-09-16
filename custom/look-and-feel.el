@@ -54,11 +54,7 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Line numbers display in the buffer
-(if (>= 26 emacs-major-version)
-    (global-display-line-numbers-mode)
-  (progn
-    (require 'nlinum)
-    (global-nlinum-mode)))
+(global-display-line-numbers-mode)
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color theme

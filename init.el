@@ -13,7 +13,6 @@
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 ;;
 
-(package-initialize)
 (server-start)
 ;;=============================================================================
 ;; Elisp extensions paths
@@ -91,7 +90,7 @@
 ;; (require 'mql-mode)
 (require 'sphinx-frontend)
 (require 'js-conf)
-(require 'lua-conf)
+;; (require 'lua-conf)
 (require 'xml-conf)
 (require 'go-conf)
 (require 'rust-conf)

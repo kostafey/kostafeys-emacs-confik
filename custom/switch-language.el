@@ -21,6 +21,9 @@
 ;; Realized just for Windows Nt and EmacsW32 (prior to 24 emacs version).
 ;; (global-set-key [(meta shift)] 'toggle-input-method) - is a dream only? ;)
 
+(require 'unicode-fonts)
+(unicode-fonts-setup)
+
 ;;====================================================================
 (if (< emacs-major-version 24)
     ;;----------------------------------------------------------------

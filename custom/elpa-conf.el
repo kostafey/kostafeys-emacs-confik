@@ -6,13 +6,11 @@
           (list (let ((proxy (split-string (getenv "http_proxy") "://")))
                   (cons (car proxy) (cadr proxy))))))
 
-(setq package-archives '(("ELPA" . "http://tromey.com/elpa/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("m-stable" . "http://stable.melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-						 ))
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("ELPA" . "https://tromey.com/elpa/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("m-stable" . "https://stable.melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
 
 (defvar package-is-refreshed nil
   "Holds the flag if the `package-refresh-contents' already done.")
@@ -199,7 +197,8 @@ and `navigation-in-frame'.")
         'circe
         'ag
         'names
-        'undercover)
+        'undercover
+        'unicode-fonts)
   "Packages, not requred by configuration files.")
 
 (defvar misc-requred-packages
