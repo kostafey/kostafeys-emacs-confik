@@ -35,10 +35,10 @@
       (temp-buffer-window-show
        buffer
        (with-current-buffer buffer
-         (princ (cl-prettyprint form))
          (elisp-result-mode)
          (let ((map (current-local-map)))
-           (define-key map "q" 'quit-window)))))))
+           (define-key map "q" 'quit-window))
+         (princ (cl-prettyprint form)))))))
 
 (defun k/el-pprint-eval-last-sexp ()
   (interactive)
