@@ -78,11 +78,11 @@
       eshell-prompt-function
       (lambda ()
         (concat
-         (propertize (eshell/pwd) 'face `(:foreground "#3063EA"))
+         (propertize (eshell/pwd) 'face 'font-lock-function-name-face)
          (if-let ((branch (k/git-branch)))
-             (propertize (concat "\n" branch) 'face `(:foreground "#009292")))
+             (propertize (concat "\n" branch) 'face 'font-lock-builtin-face))
          (propertize "\nλ" 'face `(:foreground "#5544EE" :weight bold))
-         (propertize " " 'face `(:foreground "#326B6B" :weight normal)))))
+         (propertize " " 'face 'default))))
 
 (defun eshell-maybe-bol ()
   "Goto end of prompt or beginning of line."
