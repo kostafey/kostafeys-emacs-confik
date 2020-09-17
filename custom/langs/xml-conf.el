@@ -47,11 +47,13 @@ by using nxml's indentation rules."
    (mark-whole-buffer)
    (indent-for-tab-command)))
 
+(setq k/xml-spaces 4)
+
 (defun k/nxml-mode-hook ()
   (setq indent-tabs-mode nil
-        tab-width 4
-        nxml-child-indent 4
-        nxml-attribute-indent 4))
+        tab-width k/xml-spaces
+        nxml-child-indent k/xml-spaces
+        nxml-attribute-indent k/xml-spaces))
 
 (add-hook 'nxml-mode-hook 'k/nxml-mode-hook)
 
