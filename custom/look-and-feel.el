@@ -137,6 +137,7 @@
 
 ;;=============================================================================
 ;; fringes
+;;
 (setq fringe-mode t) ; Show fields
 (setq-default indicate-buffer-boundaries
       '((top . left) (bottom . left) (t . right)))
@@ -144,12 +145,20 @@
 
 ;;=============================================================================
 ;; fill-column-indicator
-(require 'fill-column-indicator)
-(setq-default fill-column 80)
-(setq-default fci-rule-column fill-column)
-(setq fci-rule-width 1)
-(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-(global-fci-mode 1)
+;;
+(if t ;(< emacs-major-version 27)
+    (progn
+      (require 'fill-column-indicator)
+      (setq-default fill-column 80)
+      (setq-default fci-rule-column fill-column)
+      (setq fci-rule-width 1)
+      (define-globalized-minor-mode global-fci-mode fci-mode
+        (lambda () (fci-mode 1)))
+      (global-fci-mode 1))
+  (progn
+    (setq-default fill-column 80)
+    (setq-default display-fill-column-indicator-column 80)
+    (global-display-fill-column-indicator-mode t)))
 
 ;; del `lines' highlight
 (setq whitespace-style
@@ -190,14 +199,8 @@
 ;; Font lock of dash functions in emacs lisp buffers
 (eval-after-load "dash" '(dash-enable-font-lock))
 
-;;=============================================================================
-;; Magic lisp parentheses rainbow
-;;=============================================================================
-;; Usage: Just enable highlight-parentheses-mode.
-;; (require 'highlight-parentheses)
-
 (defun my-common-coding-hook ()
-  (rainbow-delimiters-mode t)
+  (rainbow-delimiters-mode t) ; Magic lisp parentheses rainbow
   (idle-highlight-mode t)
   (font-lock-warn-todo))
 
