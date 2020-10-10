@@ -13,6 +13,8 @@
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 ;;
 
+(when (< emacs-major-version 27)
+  (package-initialize))
 (server-start)
 ;;=============================================================================
 ;; Elisp extensions paths
