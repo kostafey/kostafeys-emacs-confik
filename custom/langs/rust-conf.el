@@ -35,10 +35,18 @@
   (define-key rust-mode-map (kbd "C-c C-c") 'compile)
   (define-key rust-mode-map (kbd "C-x c") 'k/rust-compile-release)
 
-  ;; --------------------------------
-  ;; autocompletion & code navigation
-  ;; `install:' cargo install racer
+  ;; ----------------------------------------
+  ;; autocompletion & code navigation & eldoc
+  ;; `install:' rustup toolchain add nightly
   ;;            rustup component add rust-src
+  ;;            cargo +nightly install racer
+  ;;       `or' cargo install racer
+  (setq racer-rust-src-path
+        (if (file-exists-p racer-rust-src-path)
+            racer-rust-src-path
+          (expand-file-name "library"
+                            (file-name-directory racer-rust-src-path))))
+
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
 
