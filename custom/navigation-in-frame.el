@@ -1,8 +1,10 @@
 ;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.
+
 (require 'navigation-in-buffer)
 
 ;;-----------------------------------------------------------------------------
 ;; popup-switcher
+;;
 (defun psw-org-mode-hook ()
   (if (equal major-mode 'org-mode)
       (outline-show-all)))
@@ -11,12 +13,52 @@
 (setq psw-popup-position 'fill-column)
 
 ;;-----------------------------------------------------------------------------
-;; ibuffer sorting
-(setq-default ibuffer-default-sorting-mode 'major-mode)
+;; ibuffer
+;;
+(setq-default ibuffer-default-sorting-mode 'major-mode)    ; sorting
+(setq ibuffer-never-show-predicates (list "^\\*" "magit")) ; filter buffers
+
+;; list ouptut format
+(define-ibuffer-column k/path-and-process
+  (:name "Filename/Process"
+         :header-mouse-map ibuffer-filename/process-header-map
+         :summarizer
+         (lambda (strings)
+           (setq strings (delete "" strings))
+           (let ((procs 0)
+	             (files 0))
+             (dolist (string strings)
+               (when (get-text-property 1 'ibuffer-process string)
+                 (setq procs (1+ procs)))
+	           (setq files (1+ files)))
+             (concat (cond ((zerop files) "No files")
+		                   ((= 1 files) "1 file")
+		                   (t (format "%d files" files)))
+	                 ", "
+	                 (cond ((zerop procs) "no processes")
+		                   ((= 1 procs) "1 process")
+		                   (t (format "%d processes" procs)))))))
+  (let ((proc (get-buffer-process buffer))
+        (filename (file-name-directory (ibuffer-make-column-filename buffer mark))))
+    (if proc
+	    (concat (propertize (format "(%s %s)" proc (process-status proc))
+			                'font-lock-face 'italic
+                            'ibuffer-process proc)
+		        (if (> (length filename) 0)
+		            (format " %s" filename)
+		          ""))
+      filename)))
+
+(setq ibuffer-formats
+      '((mark modified read-only locked
+              " " (name 40 40 :left :elide)
+			  " " (size 9 -1 :right)
+			  " " (mode 16 16 :left :elide) " " k/path-and-process)
+		(mark " " (name 16 -1) " " filename)))
 
 ;;-----------------------------------------------------------------------------
 ;; Kill or create buffer(s)
-
+;;
 (defun kill-other-buffers ()
   "Kill all buffers but the current one.
 Don't mess with special buffers."
@@ -35,6 +77,7 @@ Don't mess with special buffers."
 
 ;;-----------------------------------------------------------------------------
 ;; Tabbar
+;;
 (require 'tabbar)
 
 (setq tabbar-buffer-groups-function
@@ -93,7 +136,7 @@ not in the top of the frame."
 
 ;;----------------------------------------------------------------------
 ;; Interact with browser
-
+;;
 (defun find-browser-executable ()
   (cond ((executable-find "palemoon") "palemoon")
         ((executable-find "google-chrome-stable") "google-chrome-stable")

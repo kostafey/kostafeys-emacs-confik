@@ -22,13 +22,13 @@
 
 ;;=============================================================================
 ;; Enable case changes commands
-;;=============================================================================
+;;
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
 ;;=============================================================================
 ;; Odinary C-<right>, C-<left> movements
-;;=============================================================================
+;;
 (require 'thingatpt)
 ;; (subword-mode)
 
@@ -111,33 +111,33 @@
 
   (defun k/sgml-skip-tag-forward (&optional select)
     (interactive)
+    (if select
+        (k/select)
+      (k/deselect))
     (if (member (string (following-char)) k/sgml-tags)
         (sgml-skip-tag-forward 1)
-        (if select
-            (k/sexp-forward-select)
-          (k/sexp-forward))))
+      (sgml-forward-sexp 1)))
 
   (defun k/sgml-skip-tag-backward (&optional select)
     (interactive)
+    (if select
+        (k/select)
+      (k/deselect))
     (if (member (string (preceding-char)) k/sgml-tags)
         (sgml-skip-tag-backward 1)
-        (if select
-            (k/sexp-backward-select)
-          (k/sexp-backward))))
+      (sgml-forward-sexp -1)))
 
   (defun k/sgml-skip-tag-forward-select ()
     (interactive)
-    (k/select)
     (k/sgml-skip-tag-forward t))
 
   (defun k/sgml-skip-tag-backward-select ()
     (interactive)
-    (k/select)
     (k/sgml-skip-tag-backward t)))
 
 ;;=============================================================================
 ;; Marks & select a line
-;;=============================================================================
+;;
 (defun mark-line (&optional arg)
   "Marks a line from start of indentation to end"
   (interactive "p")
@@ -179,16 +179,15 @@
     (message (concat "Copied to buffer: " url))))
 
 ;;=============================================================================
-;; Search & replace
-;;=============================================================================
-(add-hook 'isearch-mode-hook
-          '(lambda ()
-             (define-key isearch-mode-map "\C-f"
-               'isearch-repeat-forward)
-             (define-key isearch-mode-map "\C-r"
-               'isearch-repeat-backward)
-             (define-key isearch-mode-map "\C-v"
-               'isearch-yank-kill)))
+;; Search
+;;
+(defun k/isearch-key (key)
+  (isearch-done)
+  (execute-kbd-macro (kbd key)))
+
+(defun k/isearch-ret () (interactive) (k/isearch-key "RET"))
+(defun k/isearch-down () (interactive) (k/isearch-key "<down>"))
+(defun k/isearch-up () (interactive) (k/isearch-key "<up>"))
 
 ;; do not truncate and wrap long lines
 (setq truncate-partial-width-windows nil)
@@ -196,7 +195,7 @@
 
 ;;=============================================================================
 ;; Scrolling
-;;=============================================================================
+;;
 ;; mouse
 (setq mouse-wheel-mode t)
 (setq mouse-wheel-progressive-speed nil)
@@ -216,14 +215,20 @@
 (setq next-screen-context-lines 10)     ; Number of lines of continuity when
                                         ; scrolling by screenfuls.
 
-;; Если точка вышла за пределы окна на число не первосходящее данное,
-;; то прокрутить лишь настолько, чтобы вернуть точку в окно
+;; If point moves off-screen, redisplay will scroll by up to
+;; `scroll-conservatively' lines in order to bring point just barely
+;; onto the screen again.
 (setq scroll-conservatively 50)
-(setq scroll-preserve-screen-position t) ; Не изменять положение точки после прокрутки
-(setq scroll-margin 0)                   ; Граница прокрутки
+;; Point keeps its screen position if the scroll command moved it
+;; vertically out of the window, e.g. when scrolling by full screens.
+(setq scroll-preserve-screen-position t)
+;; Trigger automatic scrolling whenever point gets within this many lines
+;; of the top or bottom of the window.
+(setq scroll-margin 0)
 
 ;;=============================================================================
-;; Someday might want to rotate windows if more than 2 of them
+;; Rotate windows if more than 2 of them
+;;
 (defun swap-buffers (w1 w2)
   (let ((b1 (window-buffer w1))
         (b2 (window-buffer w2))
@@ -251,17 +256,19 @@
 (defun mirror-window ()
  "Show the same buffer in the second window as in the active window."
  (interactive)
- (cond ((not (= (count-windows) 2)) (message "You need exactly 2 windows to do this."))
- (t
- (let* ((w1 (first (window-list)))
-        (w2 (second (window-list)))
-        (b1 (window-buffer w1))
-        (s1 (window-start w1)))
-   (set-window-start w2 s1)
-   (set-window-buffer w2 b1)))))
+ (cond ((not (= (count-windows) 2))
+        (message "You need exactly 2 windows to do this."))
+       (t
+        (let* ((w1 (first (window-list)))
+               (w2 (second (window-list)))
+               (b1 (window-buffer w1))
+               (s1 (window-start w1)))
+          (set-window-start w2 s1)
+          (set-window-buffer w2 b1)))))
 
 ;;=============================================================================
 ;; Jump back to the last position of the cursor
+;;
 (when (fboundp 'winner-mode)
   (winner-mode 1))
 

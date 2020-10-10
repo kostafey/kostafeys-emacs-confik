@@ -185,12 +185,23 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Search & replace
+;;
 (global-unset-key (kbd "C-f"))
 (global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-S-f") 'flx-isearch-forward)
 (global-set-key (kbd "C-r") 'isearch-backward)
 (global-set-key (kbd "C-S-r") 'flx-isearch-backward)
 ;;(global-set-key (kbd "M-e") 'isearch-edit-string) - default
+
+(defun k/isearch-mode-hook ()
+  (define-key isearch-mode-map (kbd "C-f")    'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "C-r")    'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "C-v")    'isearch-yank-kill)
+  (define-key isearch-mode-map (kbd "RET")    'k/isearch-ret)
+  (define-key isearch-mode-map (kbd "<down>") 'k/isearch-down)
+  (define-key isearch-mode-map (kbd "<up>")   'k/isearch-up))
+
+(add-hook 'isearch-mode-hook 'k/isearch-mode-hook)
 
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
