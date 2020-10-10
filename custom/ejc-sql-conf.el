@@ -2,6 +2,9 @@
 ;; Emacs SQL client `ejc-sql'.
 ;;
 (require 'ejc-sql)
+;; Require completion frontend (autocomplete or company). One of them or both.
+(require 'ejc-autocomplete)
+(require 'ejc-company)
 
 (setq nrepl-sync-request-timeout 60)
 (setq clomacs-httpd-default-port 8090) ; Use a port other than 8080.
@@ -31,9 +34,6 @@
 (define-key ejc-sql-mode-keymap (kbd "<F8>") 'ejc-eval-user-sql-at-point)
 
 (defun k/ejc-after-emacs-init-hook ()
-  ;; Require completion frontend (autocomplete or company). One of them or both.
-  (require 'ejc-autocomplete)
-  (require 'ejc-company)
   (push 'ejc-company-backend company-backends)
   ;; In case of `company-mode' is used by default this can be useful:
   ;; (company-quickhelp-mode)
