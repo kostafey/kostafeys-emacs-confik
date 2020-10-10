@@ -57,4 +57,7 @@ by using nxml's indentation rules."
 
 (add-hook 'nxml-mode-hook 'k/nxml-mode-hook)
 
+;; Highlight only closest pair XML tags.
+(setq nxml-sexp-element-flag nil)
+
 (provide 'xml-conf)
