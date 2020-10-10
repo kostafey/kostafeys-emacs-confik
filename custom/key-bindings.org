@@ -1083,6 +1083,7 @@ Add to .emacs:
     |-------+----------------------------+------------------------------------|
     | C-w   | k/kill-current-buffer      | kill current buffer                |
     | M-w   | get-vc-status              | <b>prog-mode</b>: git or hg status |
+    | C-M-w | k/multy-magit-status       |                                    |
     | M-w   | diffview-current           | <b>magit-mode</b>: two-window      |
     |       |                            | (side-by-side) comparsion          |
     | S-M-w | magit-copy-buffer-revision | get buffer revision                |
@@ -1132,7 +1133,8 @@ Add to .emacs:
 
   (eval-after-load "version-control"
     '(progn
-       (global-set-key (kbd "M-w") 'get-vc-status)))
+       (global-set-key (kbd "M-w") 'get-vc-status)
+       (global-set-key (kbd "C-M-w") 'k/multy-magit-status)))
 
   (eval-after-load "ahg"
     '(progn

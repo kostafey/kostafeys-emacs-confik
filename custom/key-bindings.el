@@ -771,7 +771,8 @@
 
 (eval-after-load "version-control"
   '(progn
-     (global-set-key (kbd "M-w") 'get-vc-status)))
+     (global-set-key (kbd "M-w") 'get-vc-status)
+     (global-set-key (kbd "C-M-w") 'k/multy-magit-status)))
 
 (eval-after-load "ahg"
   '(progn
