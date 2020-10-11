@@ -10,6 +10,7 @@
 (global-set-key (kbd "C-M-e") 'eframe-pop-emacs)
 (global-set-key (kbd "M-<f4>") 'save-buffers-kill-terminal)
 (global-set-key [escape] 'keyboard-quit)
+;; (global-set-key (kbd "C-u") 'universal-argument) ; default
 
 ;;=============================================================================
 ;; CUA - the core of the emacs humane ;)
@@ -460,9 +461,7 @@
 ;;=============================================================================
 ;; Windows navigation
 ;;
-(global-unset-key "\C-u")
-(global-set-key "\C-u" 'swap-windows)
-(global-set-key [M-f2] 'universal-argument) ; Binded to `C-u` by default
+(global-set-key [M-f2] 'swap-windows)
 
 (global-unset-key (kbd "M-m"))
 (global-set-key (kbd "M-m") 'mirror-window)
