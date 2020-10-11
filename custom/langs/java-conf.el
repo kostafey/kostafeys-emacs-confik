@@ -17,6 +17,10 @@
                  (custom-set-variables '(lsp-ui-sideline-enable nil)
                                        '(lsp-ui-doc-enable nil))))
 
+;; The server installation will be in `lsp-java-server-install-dir'
+;; For update: (lsp-install-server t)
+;;         or: (lsp--install-server-internal ['jdtls] t)
+
 (defun k/java-mode-hook ()
   (my-coding-hook)
   (flycheck-mode t)
