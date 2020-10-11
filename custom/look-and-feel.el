@@ -82,10 +82,10 @@
 ;; update isn't paused when input is detected
 (setq redisplay-dont-pause t)
 
-(show-paren-mode 1)              ;; Выделение парных скобок
-(setq inhibit-startup-message t) ;; не показывать сообщение при старте
-(fset 'yes-or-no-p 'y-or-n-p)    ;; не печать yes целиком
-(setq default-tab-width 4)       ;; количество пробелов в табуляции
+(show-paren-mode 1)              ;; Visualize of matching parens
+(setq inhibit-startup-message t) ;; Do not show startup message
+(fset 'yes-or-no-p 'y-or-n-p)    ;; Ask user a "y or n" question
+(setq default-tab-width 4)       ;; Number of spaces in the tab
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
@@ -127,15 +127,6 @@
 ;; (setq window-setup-hook 'toggle-fullscreen)
 
 ;;=============================================================================
-;; Continuation lines
-;;
-;; Non-nil means do not display continuation lines.
-;; Instead, give each line of text just one screen line.
-(setq truncate-lines nil)
-;; A value of nil means to respect the value of `truncate-lines'.
-(setq truncate-partial-width-windows nil)
-
-;;=============================================================================
 ;; fringes
 ;;
 (setq fringe-mode t) ; Show fields
@@ -146,7 +137,7 @@
 ;;=============================================================================
 ;; fill-column-indicator
 ;;
-(if t ;(< emacs-major-version 27)
+(if (< emacs-major-version 27)
     (progn
       (require 'fill-column-indicator)
       (setq-default fill-column 80)
@@ -165,6 +156,15 @@
       '(face tabs spaces trailing  space-before-tab
              newline indentation empty space-after-tab
              space-mark tab-mark newline-mark))
+
+;;=============================================================================
+;; Continuation lines
+;;
+;; Non-nil means do not display continuation lines.
+;; Instead, give each line of text just one screen line.
+(setq-default truncate-lines t)
+;; A value of nil means to respect the value of `truncate-lines'.
+(setq truncate-partial-width-windows nil)
 
 ;;=============================================================================
 ;; Enables narrow possibility (`narrow-to-page' function).
