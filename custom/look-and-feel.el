@@ -58,6 +58,9 @@
 
 ;;-----------------------------------------------------------------------------
 ;; Emacs custom color theme
+(add-to-list 'custom-theme-load-path
+             (concat site-lisp-path
+                     "organic-green-theme/organic-green-theme.el"))
 (setq organic-green-boldless t)
 (load-theme 'organic-green t)
 
