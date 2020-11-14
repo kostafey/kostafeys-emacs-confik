@@ -21,8 +21,9 @@
 ;; Realized just for Windows Nt and EmacsW32 (prior to 24 emacs version).
 ;; (global-set-key [(meta shift)] 'toggle-input-method) - is a dream only? ;)
 
-(require 'unicode-fonts)
-(unicode-fonts-setup)
+(when (eq system-type 'windows-nt)
+  (require 'unicode-fonts)
+  (unicode-fonts-setup))
 
 ;;====================================================================
 (if (< emacs-major-version 24)
@@ -33,16 +34,16 @@
           (defvar lswitch-process-name "lswitch-process")
           (defvar lswitch-program-name "lswitch")
           (defun ensure-start-lswitch-process ()
-            "Searches `lswitch-program-name' program in the PATH and starts it. 
+            "Searches `lswitch-program-name' program in the PATH and starts it.
 It's bind to the `lswitch-process-name' process, which is not require
-the confirm to be killed." 
+the confirm to be killed."
             (if (executable-find lswitch-program-name)
                 (if (not (get-process lswitch-process-name))
                     (progn
                       ;; capslock - 20
                       ;; scroll - 145
                       ;; quit - q
-                      (start-process lswitch-process-name nil 
+                      (start-process lswitch-process-name nil
                                      lswitch-program-name "145")
                       (if (get-process lswitch-process-name)
                           (process-kill-without-query
@@ -53,8 +54,8 @@ the confirm to be killed."
           (defvar safe-language-change-flag nil)
           (defvar inner-change-permit t)
           (defun safe-language-change-revert ()
-            "Actually toggles language input in the both OS and Emacs. 
-Then revert back the OS input language." 
+            "Actually toggles language input in the both OS and Emacs.
+Then revert back the OS input language."
             (interactive)
             (setq safe-language-change-flag (not safe-language-change-flag))
             (when (and safe-language-change-flag inner-change-permit)
@@ -62,7 +63,7 @@ Then revert back the OS input language."
               (toggle-input-method)
               (w32-toggle-lock-key 'scroll)))
           (defun toggle-emacs-os-switching ()
-            "Enable/disable `safe-language-change-revert' function's normal working." 
+            "Enable/disable `safe-language-change-revert' function's normal working."
             (interactive)
             (setq inner-change-permit (not inner-change-permit))
             (if inner-change-permit
@@ -83,7 +84,7 @@ Then revert back the OS input language."
             (shell-command (concat
                             "setxkbmap -layout 'us,ru' -option"
                             " 'grp:alt_shift_toggle,grp_led:scroll,numpad:microsoft,compose:caps'"))))
-        
+
         (global-set-key (kbd "M-Z") 'toggle-input-method)))
 
   ;;------------------------------------------------------------------
@@ -126,9 +127,9 @@ Then revert back the OS input language."
   for from across "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖ\ЭЯЧСМИТЬБЮ№"
   for to   across "qwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>#"
   do
-  (eval `(define-key key-translation-map 
+  (eval `(define-key key-translation-map
            (kbd ,(concat "C-" (string from))) (kbd ,(concat "C-" (string to)))))
-  (eval `(define-key key-translation-map 
+  (eval `(define-key key-translation-map
            (kbd ,(concat "M-" (string from))) (kbd ,(concat "M-" (string to))))))
 
 ;;====================================================================
@@ -138,4 +139,3 @@ Then revert back the OS input language."
 (setq google-translate-enable-ido-completion t)
 
 (provide 'switch-language)
-
