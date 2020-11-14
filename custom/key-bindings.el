@@ -581,6 +581,10 @@
 ;;
 ;;============================================================================
 
+(defun kostafey-lsp-signature-mode-map ()
+  (define-key lsp-signature-mode-map (kbd "M-a") 'ace-jump-mode))
+(add-hook 'lsp-signature-mode-map-hook 'kostafey-lsp-signature-mode-map)
+
 ;;=============================================================================
 ;; ecb
 (global-set-key (kbd "\e M-l") 'ecb-toggle-ecb-windows)
