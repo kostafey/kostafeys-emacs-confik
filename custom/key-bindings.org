@@ -1243,7 +1243,7 @@ Add to .emacs:
 #+end_src
 *** elfeed
 #+begin_src emacs-lisp :exports none
-   ;; see https://github.com/skeeto/elfeed for details.
-   (global-set-key (kbd "M-<f2>") 'elfeed)
+  ;; see https://github.com/skeeto/elfeed for details.
+  ;; (global-set-key (kbd "M-<f2>") 'elfeed)
 #+end_src
 

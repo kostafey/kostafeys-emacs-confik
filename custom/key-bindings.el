@@ -834,4 +834,4 @@
 (define-key dired-mode-map (kbd "C-<down>") 'diredp-find-file-reuse-dir-buffer)
 
 ;; see https://github.com/skeeto/elfeed for details.
-(global-set-key (kbd "M-<f2>") 'elfeed)
+;; (global-set-key (kbd "M-<f2>") 'elfeed)
