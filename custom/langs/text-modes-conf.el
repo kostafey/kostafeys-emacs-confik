@@ -140,4 +140,14 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
         "http://planet.emacsen.org/atom.xml"
         "http://planet.emacsen.org/ru/atom.xml"))
 
+;;--------------------------------------------------------------------
+;; graphviz-dot-mode
+;;
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (setq graphviz-dot-indent-width 4))
+
+(require 'company-graphviz-dot)
+
 (provide 'text-modes-conf)

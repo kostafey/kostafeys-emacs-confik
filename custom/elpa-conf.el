@@ -54,6 +54,7 @@
         'csv-mode
         'typing
         'sphinx-frontend
+        'graphviz-dot-mode
         ;; news reader
         'elfeed
         ;; View Large Files
