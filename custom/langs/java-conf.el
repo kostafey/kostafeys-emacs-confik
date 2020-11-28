@@ -131,19 +131,23 @@
   "Story mode is a minor mode for editing JBehave story files")
 (add-to-list 'auto-mode-alist '("\\.story" . story-mode))
 
-;;=============================================================================
+;;-----------------------------------------------------------------------------
 ;; jflex-mode
 ;;
 (autoload 'jflex-mode "jflex-mode" nil t)
-(setq auto-mode-alist (cons '("\\(\\.flex\\|\\.jflex\\)\\'" . jflex-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\(\\.flex\\|\\.jflex\\)\\'" . jflex-mode)
+                            auto-mode-alist))
 
-;;=============================================================================
+;;-----------------------------------------------------------------------------
 ;; java-decompiler
 ;;
-;; mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -Dartifact=org.benf:cfr:0.139
+;; mvn org.apache.maven.plugins:maven-dependency-plugin:get \
+;;   -Dartifact=org.benf:cfr:0.139
 ;;
 (let ((home (if (eq system-type 'windows-nt)
-                (concat (getenv "HOMEDRIVE") (getenv "HOMEPATH"))
+                (s-replace-all
+                 (list (cons "\\" "/"))
+                 (concat (getenv "HOMEDRIVE") (getenv "HOMEPATH")))
               (file-truename "~"))))
   (customize-set-variable
    'jdecomp-decompiler-paths
@@ -153,6 +157,21 @@
                 "/.m2/repository/org/benf/cfr/0.139/cfr-0.139.jar")))))
 
 (customize-set-variable 'jdecomp-decompiler-type 'cfr)
+
+(defun toggle-java-decompile-mode ()
+  (interactive)
+  (let ((enable (if jdecomp-mode -1 1)))
+    (jdecomp-mode enable)
+    (message (format
+              "java decompile mode %s."
+              (propertize (if jdecomp-mode "enabled" "disabled")
+                          'face 'font-lock-keyword-face)))))
+
 (jdecomp-mode 1)
+
+(when (not (executable-find "file"))
+  (defun jdecomp--jar-p (file)
+    "Return t if FILE is a JAR."
+    (s-ends-with? ".jar" file)))
 
 (provide 'java-conf)
