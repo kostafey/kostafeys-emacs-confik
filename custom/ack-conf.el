@@ -1,8 +1,10 @@
 ;;----------------------------------------------------------------------
 ;; ack
-(add-to-list 
+(require 'functions)
+
+(add-to-list
  'load-path
- (expand-file-name "ack/" third-party-lisp-path))
+ (expand-file-name "~/.emacs.d/artifacts/ack/"))
 
 (defvar ack-src-file "ack-standalone.pl"
   "ack-filename.")
@@ -10,7 +12,7 @@
 (defvar ack-src-file-path (find-file-in-load-path ack-src-file))
 (when ack-src-file-path
   (require 'ack)
-  (setq ack-command (concat "perl \"" ack-src-file-path 
+  (setq ack-command (concat "perl \"" ack-src-file-path
                             "\" --nocolor ")))
 
 ;;----------------------------------------------------------------------

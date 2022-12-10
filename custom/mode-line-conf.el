@@ -1,8 +1,10 @@
+(require 'elpa-conf)
+
 ;;=============================================================================
 ;; mode-line (emacs status bar) config
 ;;
-(use-package minions
-  :config (minions-mode 1))
+(use-elpa 'minions)
+(minions-mode 1)
 
 (setq-default
  projectile-mode-line-prefix " "
@@ -11,9 +13,9 @@
        ;; ------------------------------------------------------------
        ;; file encoding
        'mode-line-mule-info
-       '(:eval (propertize
-                (format "%s " buffer-file-coding-system)
-                'help-echo (format"%s" buffer-file-coding-system)))
+       ;; '(:eval (propertize
+       ;;          (format "%s " buffer-file-coding-system)
+       ;;          'help-echo (format"%s" buffer-file-coding-system)))
        ;; ------------------------------------------------------------
        ;; the `buffer-name'; the file name as a tool tip
        '(:eval (propertize (buffer-name)

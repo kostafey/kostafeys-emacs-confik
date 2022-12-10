@@ -1,8 +1,7 @@
-﻿(require 'elpa-conf)
-
-;;-----------------------------------------------------------------------------
+﻿
+;;-------------------------------------------------------------------
 ;; Font
-(case system-type
+(pcase system-type
   ('windows-nt
    (set-face-font 'default "Consolas-14.5:antialias=subpixel"))
   ('gnu/linux
@@ -12,78 +11,67 @@
 ;; (font-family-list)
 ;; (find-font (font-spec :name "FiraMono"))
 
-;;=============================================================================
-;; Change font size
-;;=============================================================================
-(defun djcb-zoom (n)
-  "with positive N, increase the font size, otherwise decrease it"
-  (set-face-attribute 'default (selected-frame) :height
-    (+ (face-attribute 'default :height) (* (if (> n 0) 1 -1) 10))))
-
-;;=============================================================================
-;; Font decorations
-;;=============================================================================
-(setq font-lock-maximum-decoration
-      '((java-mode . (if (eq system-type 'windows-nt) 1 t))
-        (t . t)))
-(global-font-lock-mode t)
-
-; Maximum size of a buffer for buffer fontification.
-(if (< emacs-major-version 24)
-    (setq font-lock-maximum-size 2560000))
-
-;;=============================================================================
-;; bell
-;;=============================================================================
-;; Emacs does not beep when you hit `C-g' in the minibuffer or during
-;; an `isearch' (http://www.emacswiki.org/cgi-bin/wiki.pl?AlarmBell)
-;; (setq ring-bell-function
-;;       (lambda ()
-;;  (unless (memq this-command
-;;            '(isearch-abort abort-recursive-edit find-file
-;;                    exit-minibuffer keyboard-quit))
-;;    (ding))))
-
+;;-------------------------------------------------------------------
+;; Bell
+;;
 ;;;turn off the bell http://www.emacswiki.org/cgi-bin/wiki?AlarmBell
 (setq ring-bell-function 'ignore)
-;; (setq ring-bell-function (lambda nil)) ; No any bell (visual or beep)
-;;=============================================================================
 
+;;-------------------------------------------------------------------
 ;; Show file path & file name in app window header
 (setq frame-title-format "%S: %f")
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; Line numbers display in the buffer
 (global-display-line-numbers-mode)
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; Emacs custom color theme
-(add-to-list 'custom-theme-load-path
-             (concat site-lisp-path
-                     "organic-green-theme/organic-green-theme.el"))
+(add-to-list 'custom-theme-load-path "~/.emacs.d/organic-green-theme")
 (setq organic-green-boldless t)
 (load-theme 'organic-green t)
 
-;;=============================================================================
+;;-------------------------------------------------------------------
 ;; StatusBar config
 ;;
 (require 'mode-line-conf)
-;; (require 'powerline)
-;; (powerline-default-theme)
-;;
-;;=============================================================================
 
-;;=============================================================================
+;;-------------------------------------------------------------------
 ;; Cursor config
 ;;
-(global-hl-line-mode 1) ; highlight the line about point in the current window
 (blink-cursor-mode -1)
+;; highlight the line about point in the current window
+(global-hl-line-mode 1)
 
-;;-----------------------------------------------------------------------------
+;; Fix `describe-face' fn call when `hl-line' is enabled.
+;;
+(defun my-face-at-point ()
+  (let ((face (get-text-property (point) 'face)))
+    (or (and (face-list-p face)
+             (car face))
+        (and (symbolp face)
+             face))))
+
+(defun what-face (pos)
+  (interactive)
+  (message "Face: %s" (my-face-at-point)))
+
+(defun my-describe-face (&rest ignore)
+  (interactive (list (read-face-name "Describe face"
+                                     (or (my-face-at-point) 'default)
+                                     t)))
+  ;; This only needs to change the `interactive` spec, so:
+  nil)
+
+(eval-after-load "hl-line"
+  '(advice-add 'describe-face :before #'my-describe-face))
+
+;;-------------------------------------------------------------------
 ;; Non-nil means no need to redraw entire frame after suspending.
 (setq no-redraw-on-reenter nil)
-;; update isn't paused when input is detected
-(setq redisplay-dont-pause t)
+;; t means update isn't paused when input is detected.
+;; Nil means display update is paused when input is detected.
+;; (setq redisplay-dont-pause nil)
 
 (show-paren-mode 1)              ;; Visualize of matching parens
 (setq inhibit-startup-message t) ;; Do not show startup message
@@ -99,8 +87,8 @@
 
 (setq query-replace-highlight t)
 
-;;=============================================================================
-;; full screen toggle using command+[RET]
+;;-------------------------------------------------------------------
+;; Full screen toggle using command+[RET]
 (defvar my-fullscreen-p t "Check if fullscreen is on or off")
 
 (defun toggle-fullscreen ()
@@ -129,30 +117,19 @@
 
 ;; (setq window-setup-hook 'toggle-fullscreen)
 
-;;=============================================================================
-;; fringes
+;;-------------------------------------------------------------------
+;; Fringes
 ;;
-(setq fringe-mode t) ; Show fields
-(setq-default indicate-buffer-boundaries
-      '((top . left) (bottom . left) (t . right)))
-(setq-default indicate-empty-lines t)
+(fringe-mode (cdr (assoc "left-only" fringe-styles))) ; Show fields
+(setq-default indicate-buffer-boundaries '((bottom . left)))
+(setq-default indicate-empty-lines nil)
 
-;;=============================================================================
+;;-------------------------------------------------------------------
 ;; fill-column-indicator
 ;;
-(if (< emacs-major-version 27)
-    (progn
-      (require 'fill-column-indicator)
-      (setq-default fill-column 80)
-      (setq-default fci-rule-column fill-column)
-      (setq fci-rule-width 1)
-      (define-globalized-minor-mode global-fci-mode fci-mode
-        (lambda () (fci-mode 1)))
-      (global-fci-mode 1))
-  (progn
-    (setq-default fill-column 80)
-    (setq-default display-fill-column-indicator-column 80)
-    (global-display-fill-column-indicator-mode t)))
+(setq-default fill-column 80)
+(setq-default display-fill-column-indicator-column 80)
+(global-display-fill-column-indicator-mode t)
 
 ;; del `lines' highlight
 (setq whitespace-style
@@ -160,7 +137,7 @@
              newline indentation empty space-after-tab
              space-mark tab-mark newline-mark))
 
-;;=============================================================================
+;;===================================================================
 ;; Continuation lines
 ;;
 ;; Non-nil means do not display continuation lines.
@@ -169,15 +146,11 @@
 ;; A value of nil means to respect the value of `truncate-lines'.
 (setq truncate-partial-width-windows nil)
 
-;;=============================================================================
+;;===================================================================
 ;; Enables narrow possibility (`narrow-to-page' function).
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
-;;=============================================================================
-
-;; (require 'hi-list)
-;; (set-face-background 'hi-list-face "#E3F2A1")
-;; (add-hook 'emacs-lisp-mode-hook 'hi-list-mode)
+;;===================================================================
 
 (defun font-lock-warn-todo ()
   "Make fixme tags standout."
@@ -185,73 +158,7 @@
                           '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:"
                              0 'font-lock-warning-face t))))
 
-(defface tcl-substitution-char-face '((t :inherit default))
-  "Face used for substitution ($) char in Tcl mode."
-  :group 'tcl)
-
-(defvar tcl-substitution-char-face 'tcl-substitution-char-face
-  "Face used for substitution ($) char in Tcl mode.")
-
-(font-lock-add-keywords
- 'tcl-mode
- '(("\\$" . tcl-substitution-char-face)))
-
-;; cl-lib-highlight init
-(cl-lib-highlight-initialize)
-
-;; Font lock of dash functions in emacs lisp buffers
-(eval-after-load "dash" '(dash-enable-font-lock))
-
-(defun my-common-coding-hook ()
-  (rainbow-delimiters-mode t) ; Magic lisp parentheses rainbow
-  (idle-highlight-mode t)
-  (font-lock-warn-todo))
-
-(defun my-coding-hook ()
-  (my-common-coding-hook)
-  (paredit-everywhere-mode)
-  (electric-pair-mode))
-
-(defun my-web-mode-hook ()
-  (my-coding-hook)
-  (setq-default indent-tabs-mode nil)
-  ;; (setq indent-line-function 'web-mode-indent-line)
-  (setq-local indent-line-function 'indent-relative))
-
-(defun my-lisp-coding-hook ()
-  (my-common-coding-hook)
-  (enable-paredit-mode))
-
-(require 'paredit)
-
-(add-to-list 'auto-mode-alist '("\\.iss$" . conf-mode))
-(add-to-list 'auto-mode-alist '("\\.cnf$" . conf-mode))
-
-(add-hook 'emacs-lisp-mode-hook 'my-lisp-coding-hook)
-(add-hook 'lisp-mode-hook       'my-lisp-coding-hook)
-(add-hook 'scheme-mode-hook     'my-lisp-coding-hook)
-(add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
-(add-hook 'cider-mode-hook      'my-lisp-coding-hook)
-(add-hook 'sbt-mode-hook        'my-coding-hook)
-(add-hook 'java-mode-hook       (lambda () (rainbow-delimiters-mode t)))
-(add-hook 'markdown-mode-hook   'my-coding-hook)
-(add-hook 'mql-mode-hook        'my-coding-hook)
-(add-hook 'tex-mode-hook        'my-coding-hook)
-(add-hook 'lua-mode-hook        'my-coding-hook)
-(add-hook 'tcl-mode-hook        'my-coding-hook)
-(add-hook 'python-mode-hook     'my-coding-hook)
-(add-hook 'comint-mode-hook     'my-coding-hook)
-(add-hook 'js-mode-hook         'my-coding-hook)
-(add-hook 'typescript-mode-hook 'my-coding-hook)
-(add-hook 'tide-mode            'my-coding-hook)
-(add-hook 'sql-mode-hook        'my-coding-hook)
-(add-hook 'mql-mode-hook        'my-coding-hook)
-(add-hook 'go-mode-hook         'my-coding-hook)
-(add-hook 'powershell-mode-hook 'my-coding-hook)
-(add-hook 'rust-mode-hook       'my-coding-hook)
-(add-hook 'web-mode-hook        'my-web-mode-hook)
-
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; Replace lambda with λ.
 ;;
 (font-lock-add-keywords
@@ -261,28 +168,5 @@
                                        (match-end 1)
                                        ?λ))))))
 
-;;-----------------------------------------------------------------------------
-;; Fix `describe-face' fn call when `hl-line' is enabled.
-;;
-(defun my-face-at-point ()
-  (let ((face (get-text-property (point) 'face)))
-    (or (and (face-list-p face)
-             (car face))
-        (and (symbolp face)
-             face))))
-
-(defun what-face (pos)
-  (interactive)
-  (message "Face: %s" (my-face-at-point)))
-
-(defun my-describe-face (&rest ignore)
-  (interactive (list (read-face-name "Describe face"
-                                     (or (my-face-at-point) 'default)
-                                     t)))
-  ;; This only needs to change the `interactive` spec, so:
-  nil)
-
-(eval-after-load "hl-line"
-  '(advice-add 'describe-face :before #'my-describe-face))
-
 (provide 'look-and-feel)
+

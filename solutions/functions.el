@@ -87,27 +87,4 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
     (kill-buffer buff)
     (find-file file-name)))
 
-(defun kostafey-export-keys ()
-  "Export my Emacs keybindings configuration."
-  (interactive)
-  (let* ((keys-file-dir custom-conf-lisp-path)
-         (src-filename "key-bindings.org")
-         (el-filename "key-bindings.el")
-         (md-filename "key-bindings.md")         
-         (readme-filename "README.md"))
-    (save-restriction
-      (save-excursion
-        (widen)
-        (with-current-buffer
-            (find-file-noselect 
-             (expand-file-name src-filename keys-file-dir))
-          (org-babel-tangle-file 
-           buffer-file-name
-           (expand-file-name el-filename keys-file-dir) 
-           "emacs-lisp")
-          (org-md-export-to-markdown nil))
-        (rename-file (expand-file-name md-filename keys-file-dir)
-                     (expand-file-name readme-filename "~/.emacs.d")
-                     t)))))
-
 (provide 'functions)

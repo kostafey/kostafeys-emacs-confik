@@ -1,13 +1,13 @@
 (require 'elpa-conf)
 
-;;=============================================================================
+;;===================================================================
 ;; Yet Another Snippet extension
 ;;
-(require 'yasnippet)
+(use-elpa 'yasnippet)
 ;; personal snippets
 (setq yas-snippet-dirs
     (append yas-snippet-dirs
-            (list (expand-file-name "mysnippets" custom-conf-lisp-path))))
+            (list "~/.emacs.d/custom/mysnippets")))
 
 (yas-global-mode 1)
 
@@ -29,9 +29,10 @@
      (setq *yas-invokation-point* (point))
      (yas/next-field-or-maybe-expand-1))))
 
-;;=============================================================================
+;;===================================================================
 ;; auto-complete
 ;;
+(use-elpa 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
 
@@ -40,6 +41,7 @@
 (setq ac-auto-start 2)
 (setq ac-dwim t)               ; Do what i mean
 
+(use-elpa 'ac-etags)
 (setq ac-etags-requires 2)
 (eval-after-load "etags"
   '(progn
@@ -73,7 +75,7 @@ Pages up through completion menu."
 ;;=============================================================================
 ;; company-mode
 ;;
-(require 'company)
+(use-elpa 'company)
 
 ;; The minimum prefix length for idle completion.
 (setq company-minimum-prefix-length 1)

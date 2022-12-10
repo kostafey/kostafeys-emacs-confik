@@ -1,8 +1,6 @@
-﻿;;=============================================================================
-;; Человеку свойственно ошибаться, но для нечеловеческих ляпов нужен компьютер.
-;;                                                                  Пол Эрлих
+﻿;;===================================================================
 ;; To err is human, but to really foul things up you need a computer.
-;;                                                               Paul Ehrlich
+;;                                                     Paul Ehrlich
 ;;
 ;; Kostafey's Emacs confik :)
 ;; started from 08.08.2008, 22:45:25
@@ -12,92 +10,77 @@
 ;;  |  __/ | | | | | (_| | (__\__ \
 ;; (_)___|_| |_| |_|\__,_|\___|___/
 ;;
-
-(when (< emacs-major-version 27)
-  (package-initialize))
 (server-start)
-;;=============================================================================
+(desktop-save-mode 1)
+;;===================================================================
 ;; Elisp extensions paths
-;;=============================================================================
+;
 (defvar site-lisp-path "~/.emacs.d/") ; root extensions folder
-;;-----------------------------------------------------------------------------
+
+;; Personal customization
+(add-to-list 'load-path (concat site-lisp-path "custom/"))
 ;; Third-party *.el files (in general low-supporded, misplaced in ELPA)
 ;; without any patching or with tiny patches, stored in this repo.
-(defvar third-party-lisp-path (concat site-lisp-path "artifacts/"))
-(add-to-list 'load-path third-party-lisp-path)
-;; Personal customization
-(defvar custom-conf-lisp-path (concat site-lisp-path "custom/"))
-(add-to-list 'load-path custom-conf-lisp-path)
-(add-to-list 'load-path (concat custom-conf-lisp-path "langs/"))
+(add-to-list 'load-path (concat site-lisp-path "artifacts/"))
+;; Programming languages configs
+(add-to-list 'load-path (concat site-lisp-path "custom/langs/"))
 ;; Reusable customization
-(defvar solutions-path
-  (file-name-as-directory (expand-file-name "solutions" site-lisp-path)))
-(add-to-list 'load-path solutions-path)
+(add-to-list 'load-path (expand-file-name "solutions" site-lisp-path))
 (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
-;;-----------------------------------------------------------------------------
-;auto-customized custom-set-variables
-(setq custom-file (concat custom-conf-lisp-path "custom.el"))
-(load custom-file)
-;;-----------------------------------------------------------------------------
-(require 'elpa-conf)
-(add-to-list 'load-path (concat third-party-lisp-path "popup-el/"))
-(require 'popup)
-(add-to-list 'load-path (concat third-party-lisp-path "wrap-region.el/"))
-(require 'wrap-region)
+(add-to-list 'load-path (expand-file-name "popup-switcher" site-lisp-path))
 
-(add-to-list 'load-path (concat site-lisp-path "popup-switcher/"))
-(require 'popup-switcher)
+;; No third-party dependencies
+(require 'basic-text-editing)
+(require 'basic)
+(require 'look-and-feel)
+(require 'switch-language)
+;; Use third-party dependencies
+(require 'elpa-conf)
+(require 'appearance)
+(require 'version-control)
+(require 'ack-conf)
+
+;;-------------------------------------------------------------------
+;; auto-customized custom-set-variables
+(setq custom-file (concat site-lisp-path "custom/custom.el"))
+(load custom-file)
+;;-------------------------------------------------------------------
+
+(use-elpa 'cider)
+(use-elpa 'simple-httpd)
 (add-to-list 'load-path (concat site-lisp-path "clomacs/src/elisp/"))
 (require 'clomacs nil 'noerror)
 (add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
 (require 'ejc-sql-conf nil 'noerror)
 
-(require 'functions)
-(require 'file-ops)
-(require 'look-and-feel)
-(require 'jiraf)
-(require 'ide)
-(require 'switch-language)
-(require 'ispell-conf)
-(require 'completition-conf)
-(require 'ack-conf)
-(require 'irc-conf)
-(require 'communications nil 'noerror)
-(require 'reencoding-file)
-(require 'foreign)
-(require 'copy-paste-clipboard-linux)
-(add-to-list 'load-path (expand-file-name "eframe-jack-in/" site-lisp-path))
-(require 'eframe-jack-in)
-(require 'eframe-windmove)
-(require 'shell-conf)
-(require 'version-control)
 (require 'key-bindings)
+
+(require 'ide)
 (require 'history-conf)
 (require 'text-modes-conf)
+(require 'foreign)
 (require 'perfomance-conf)
+(require 'eframe-windmove)
+;; (require 'irc-conf)
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; Programming languages configs
 ;;
-(require 'java-conf)
-(require 'scala-conf)
+;; (require 'java-conf)
+;; (require 'scala-conf)
 (require 'clojure-conf)
 (require 'emacs-lisp-conf)
-(require 'common-lisp-conf)
-;; (require 'scheme-conf)
-;; (require 'python-conf)
-;; (require 'maxima-conf)
-;; (require 'haskell-conf)
-;; (require 'auctex-conf)
-;; (require 'mql-mode)
-(require 'sphinx-frontend)
 (require 'js-conf)
-;; (require 'lua-conf)
 (require 'xml-conf)
-(require 'go-conf)
-(require 'rust-conf)
+;; (require 'common-lisp-conf)
+;; (require 'mql-mode)
+;; (require 'sphinx-frontend)
+;; (require 'lua-conf)
+;; (require 'go-conf)
+;; (require 'rust-conf)
+;; (require 'auctex-conf)
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;;; In praise of Emacs, The One True Editor
 ;;; 1.0 Aug 19, 1994
 ;;; 2.0 Aug 28, 1994

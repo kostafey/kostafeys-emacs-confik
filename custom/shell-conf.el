@@ -1,5 +1,7 @@
 ;;; shell-conf.el --- Eshell & shell related configuration.
 
+(require 'elpa-conf)
+
 (defcustom k/default-shell 'eshell
   "Set default shell type. Possible values are one of:
 'eshell
@@ -63,7 +65,7 @@
 ;;------------------------------------------------------------
 ;; eshell
 
-(require 'eshell-prompt-extras)
+(use-elpa 'eshell-prompt-extras)
 
 (defun k/git-branch ()
   "Return your git branch name."

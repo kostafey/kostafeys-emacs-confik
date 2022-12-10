@@ -1,3 +1,7 @@
+(require 'elpa-conf)
+
+(use-elpa 'circe)
+
 (eval-after-load 'circe
   '(progn
      (setq circe-reduce-lurker-spam t)

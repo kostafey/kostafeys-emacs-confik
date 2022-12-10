@@ -1,6 +1,6 @@
 ;;; basic-text-editing.el --- set of misc text editing functions.
 
-(require 'elpa-conf)
+;; No third-party dependencies.
 
 (defun count-words-region (beginning end arg)
   "Counting words (chars) in the selected area.
@@ -74,11 +74,11 @@ arg - is a searching word (char)"
   (interactive)
   (insert "\"\\|\\(\\\\n\\)\\|\\+"))
 
-;;=============================================================================
+;;-------------------------------------------------------------------
 ;; Join lines
-;;=============================================================================
+;;
 (defun circle-processing (arg function)
-  "Circle call 'function' 'arg' times, default - once"
+  "Circle call FUNCTION ARG times, default - once."
   (interactive)
   (progn
     (if arg
@@ -103,76 +103,58 @@ arg - is a searching word (char)"
       (join-next-line-space)
       (delete-char 1)))
 
-(defun join-next-line-semicolon ()
-  "Joins next line with current with semicolon between them"
-  (interactive)
-  (progn
-      (join-next-line)
-      (insert ";")))
-
 (defun join-next-line-space-n (&optional arg)
   "Joins number of next lines with current with a space between them"
   (interactive "P")
-(circle-processing arg 'join-next-line-space))
+  (circle-processing arg 'join-next-line-space))
 
 (defun join-next-line-n (&optional arg)
   "Joins number of  next lines with current without space between them"
   (interactive "P")
-(circle-processing arg 'join-next-line))
+  (circle-processing arg 'join-next-line))
 
-(defun join-next-line-semicolon-n (&optional arg)
-  "Joins number of  next lines with current with semicolon between them"
-  (interactive "P")
-(circle-processing arg 'join-next-line-semicolon))
-
-;;=============================================================================
+;;-------------------------------------------------------------------
 ;; Duplicate current line
-;;=============================================================================
+;;
 (defun duplicate-line (arg)
   "Duplicate current line, leaving point in lower line."
   (interactive "*p")
-
   ;; save the point for undo
   (setq buffer-undo-list (cons (point) buffer-undo-list))
-
   ;; local variables for start and end of line
   (let ((bol (save-excursion (beginning-of-line) (point)))
         eol)
     (save-excursion
-
       ;; don't use forward-line for this, because you would have
       ;; to check whether you are at the end of the buffer
       (end-of-line)
       (setq eol (point))
-
       ;; store the line and disable the recording of undo information
       (let ((line (buffer-substring bol eol))
             (buffer-undo-list t)
             (count arg))
         ;; insert the line arg times
         (while (> count 0)
-          (newline)         ;; because there is no newline in 'line'
+          (newline) ;; because there is no newline in 'line'
           (insert line)
-          (setq count (1- count)))
-        )
-
+          (setq count (1- count))))
       ;; create the undo information
-      (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))
-    ) ; end-of-let
-
+      (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list))))
   ;; put the point in the lowest line and return
   (next-line arg))
-;;=============================================================================
 
+;;-------------------------------------------------------------------
+;; Comments
+;;
 (defun comment-or-uncomment-this (&optional lines)
   (interactive "P")
   (if mark-active
       (if (< (mark) (point))
           (comment-or-uncomment-region (mark) (point))
-          (comment-or-uncomment-region (point) (mark)))
-      (comment-or-uncomment-region
-       (line-beginning-position)
-       (line-end-position lines))))
+        (comment-or-uncomment-region (point) (mark)))
+    (comment-or-uncomment-region
+     (line-beginning-position)
+     (line-end-position lines))))
 
 ;;=============================================================================
 (defun insert-column-counter (n)
@@ -308,7 +290,6 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
         (setq p1 (region-beginning) p2 (region-end))
       (let ((bds (bounds-of-thing-at-point 'word)))
         (setq p1 (car bds) p2 (cdr bds))))
-
     (when (not (eq last-command this-command))
       (save-excursion
         (goto-char p1)
@@ -319,7 +300,6 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
          ((looking-at "[[:lower:]]") (put this-command 'state "all lower"))
          ((looking-at "[[:upper:]]") (put this-command 'state "all caps") )
          (t (put this-command 'state "all lower")))))
-
     (cond
      ((string= "all lower" (get this-command 'state))
       (upcase-initials-region p1 p2) (put this-command 'state "init caps"))

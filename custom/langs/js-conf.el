@@ -1,3 +1,8 @@
+(require 'elpa-conf)
+(use-elpa 'skewer-mode)
+(use-elpa 'rjsx-mode)
+(use-elpa 'web-mode)
+
 ;;------------------------------------------------------------
 ;; skewer-mode
 ;;
@@ -87,12 +92,11 @@
 ;; JavaScript IDE
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
-(wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
+;; (wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
 
 ;;------------------------------------------------------------
 ;; web-mode
-(require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ftl$" . web-mode))

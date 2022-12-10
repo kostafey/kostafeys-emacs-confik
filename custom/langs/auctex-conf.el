@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;Настройки AucTeX
+;; AucTeX settings
 ;;
 ;; (load "auctex.el" nil t t)
 ;; (load "preview-latex.el" nil t t)
@@ -30,7 +30,6 @@
   (setq tex-command "latex --enable-write18"))
 (add-hook 'tex-mode-hook 'kostafey-tex-mode-hook)
 
-;;модифицируем меню
 ;;; some more menu entries in the command list:
 ;;; see tex-mik.el from package auctex: %v is defined in tex-mik.el
 ;;; other variables are defined in tex.el from auctex
@@ -54,7 +53,7 @@
             "texify --tex-opt=--src --run-viewer --clean %s.tex"
             'TeX-run-command nil t))))
 ;;
-;;Настройки PreviewLatex
+;; PreviewLatex settings
 ;; (load "preview-latex.el" nil t t)
 
 ;; (setenv "PATH" (concat "/usr/local/texlive/2011/bin/x86_64-linux/:" (getenv "PATH")))

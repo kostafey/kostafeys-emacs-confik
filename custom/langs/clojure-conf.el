@@ -36,7 +36,7 @@
 ;;----------------------------------------------------------------------
 ;; autocompletition - ac-cider
 ;;
-(require 'ac-cider)
+(use-elpa 'ac-cider)
 (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
 (add-hook 'cider-mode-hook 'ac-cider-setup)
 (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
@@ -67,14 +67,6 @@
   (insert "(cemerick.piggieback/cljs-repl
   :repl-env (cljs.repl.browser/repl-env :port 9000))")
   (cider-repl-return))
-
-;;----------------------------------------------------------------------
-;; typed-clojure-mode
-;;
-;; (add-hook 'clojure-mode-hook 'typed-clojure-mode)
-
-(setq cider-known-endpoints
-      '(("host-a" "xvm211" "43102")))
 
 ;;----------------------------------------------------------------------
 ;; flycheck-clojure

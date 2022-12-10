@@ -61,13 +61,13 @@
 (defun hop-backward ()
   (interactive)
   (hop-update-positions (current-buffer) (point) :back)
-  (incf hop-current-pos)
+  (cl-incf hop-current-pos)
   (hop-in-list))
 
 (defun hop-forward ()
   (interactive)
   (when (> hop-current-pos 0)
-    (decf hop-current-pos)
+    (cl-decf hop-current-pos)
     (hop-in-list)))
 
 (defvar hop-url-regexp

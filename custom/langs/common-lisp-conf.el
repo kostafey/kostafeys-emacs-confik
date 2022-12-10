@@ -9,7 +9,6 @@
                            "artifacts"
                            "slime-repl-ansi-color")))
 (require 'slime)
-;; (require 'slime-repl-ansi-color)
 
 (slime-setup '(slime-repl
                slime-fuzzy

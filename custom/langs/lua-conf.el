@@ -1,4 +1,5 @@
-(require 'lua-mode)
+(require 'elpa-conf)
+(use-elpa 'lua-mode)
 
 (defvar lua-keywords
   '("and" "break" "do" "else" "elseif" "end"  "for" "function"

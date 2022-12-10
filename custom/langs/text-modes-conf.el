@@ -1,18 +1,11 @@
 (require 'elpa-conf)
 
-(setq stock-ticker-symbols
-      '("^gspc" "DIA" "^ixic" "^tnx" "^tyx" "^nya"
-        "XAUUSD=X" "GBPUSD=X" "EURUSD=X"
-        "GOOGL" "AAPL" "IBM" "TSLA" "MSFT" "T" "ORCL"
-        "SIE.DE" "F" "WMT" "MCD" "NVS" "PG" "BAYN.DE" "JPM"
-        "BZU15.NYM" "RUB=x" "EURRUB=x"))
-
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; nxhtml
 ;; (load (concat site-lisp-path "nxhtml/autostart.el"))
 
-;;-----------------------------------------------------------------------------
-;; html-изация
+;;-------------------------------------------------------------------
+;; htmllize
 (require 'htmlize)
 (setq htmlize-output-type (quote css))
 
@@ -28,30 +21,31 @@
 (add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))
 (add-hook 'nxml-mode-hook (lambda () (hl-tags-mode 1)))
 
-;;-----------------------------------------------------------------------------
-(require 'lorem-ipsum)
+;;-------------------------------------------------------------------
+(use-elpa 'lorem-ipsum)
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ; sh-mode
 (add-to-list 'auto-mode-alist '("\\.xsessionrc$" . sh-mode))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ; dos-mode
+(require 'dos)
 (autoload 'dos-mode "dos" "Edit Dos scripts." t)
 (add-to-list 'auto-mode-alist '("\\.bat$" . dos-mode))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ; log4j-mode
 (autoload 'log4j-mode "log4j-mode" "Major mode for viewing log files." t)
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log4j-mode))
 (add-hook 'log4j-mode-hook (lambda () (toggle-truncate-lines nil)))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; PL/SQL
 (add-to-list 'auto-mode-alist '("\\.pkh\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.pkb\\'" . sql-mode))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; reStructuredText settings
 ;; .. -*- mode: rst -*-
 (add-hook 'rst-adjust-hook 'rst-toc-update)
@@ -61,15 +55,15 @@
                 ("\\.rst$" . rst-mode)
                 ("\\.rest$" . rst-mode)) auto-mode-alist))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
-(require 'markdown-toc)
+(use-elpa 'markdown-toc)
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; CSV
-(require 'csv-mode)
+(use-elpa 'csv-mode)
 ;; M-x `csv-align-mode'
 
 (defun k/csv-get-field-index ()
@@ -95,12 +89,12 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
           (setq delta (+ delta 1)))
         (- curr-idx delta)))))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 (add-to-list 'auto-mode-alist '("PKGBUILD" . shell-script-mode))
 ;; .xresources
 (add-to-list 'auto-mode-alist '("\\.xresources$" . conf-xdefaults-mode))
 
-;;-----------------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; Org-mode
 ;;
 (setq org-hide-leading-stars t)
@@ -127,27 +121,11 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 (require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
 
-;;--------------------------------------------------------------------
-;;typing game
-(autoload 'typing-of-emacs "The Typing Of Emacs, a game." t)
-
-;;--------------------------------------------------------------------
-;; elfeed
-(setq elfeed-feeds
-      '("http://nullprogram.com/feed/"
-        "http://batsov.com/atom.xml"
-        "http://www.masteringemacs.org/feed/"
-        "http://planet.emacsen.org/atom.xml"
-        "http://planet.emacsen.org/ru/atom.xml"))
-
-;;--------------------------------------------------------------------
+;;-------------------------------------------------------------------
 ;; graphviz-dot-mode
 ;;
-(use-package graphviz-dot-mode
-  :ensure t
-  :config
-  (setq graphviz-dot-indent-width 4))
-
-(require 'company-graphviz-dot)
+;; (use-elpa 'graphviz-dot-mode)
+;; (require 'company-graphviz-dot)
+;; (setq graphviz-dot-indent-width 4)
 
 (provide 'text-modes-conf)
