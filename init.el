@@ -81,6 +81,11 @@
 ;; (require 'auctex-conf)
 
 ;;-------------------------------------------------------------------
+;; Packages without customization
+;;
+(use-elpa 'rainbow-mode)
+
+;;-------------------------------------------------------------------
 ;;; In praise of Emacs, The One True Editor
 ;;; 1.0 Aug 19, 1994
 ;;; 2.0 Aug 28, 1994

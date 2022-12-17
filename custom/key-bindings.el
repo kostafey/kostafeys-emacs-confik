@@ -182,9 +182,8 @@
 
 (global-set-key [f8] 'recode-buffer-rotate-ring)
 (global-set-key [f9] 'auto-fill-mode); enable/disable lines auto-fill
-(global-set-key [f10] 'flyspell-english)
-(global-set-key [f11] 'flyspell-russian)
-(global-set-key [f12] 'flyspell-mode); enable/disable spell checking
+(global-set-key [f10] 'smerge-mode)
+(global-set-key [f12] 'flyspell-mode)   ; enable/disable spell checking
 ;; yasnippet
 (defvar yasnippet-prefix "\C-y")
 (global-unset-key yasnippet-prefix)

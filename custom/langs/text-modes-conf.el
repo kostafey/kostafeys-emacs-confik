@@ -128,4 +128,6 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;; (require 'company-graphviz-dot)
 ;; (setq graphviz-dot-indent-width 4)
 
+(use-elpa 'yaml-mode)
+
 (provide 'text-modes-conf)

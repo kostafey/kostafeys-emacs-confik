@@ -29,6 +29,7 @@
 ;; Emacs custom color theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/organic-green-theme")
 (setq organic-green-boldless t)
+(setq organic-green-version 2)
 (load-theme 'organic-green t)
 
 ;;-------------------------------------------------------------------
@@ -121,6 +122,7 @@
 ;; Fringes
 ;;
 (fringe-mode (cdr (assoc "left-only" fringe-styles))) ; Show fields
+(fringe-mode '(5 . 0))
 (setq-default indicate-buffer-boundaries '((bottom . left)))
 (setq-default indicate-empty-lines nil)
 

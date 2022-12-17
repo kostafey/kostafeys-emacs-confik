@@ -3,6 +3,12 @@
 ;;----------------------------------------------------------------------
 ;; clojure
 ;;
+;; lsp
+(use-elpa 'lsp-mode)
+(add-hook 'clojure-mode-hook 'lsp)
+(add-hook 'clojurescript-mode-hook 'lsp)
+(add-hook 'clojurec-mode-hook 'lsp)
+
 (add-hook 'cider-mode-hook 'eldoc-mode)
 
 ;; Stop the error buffer from popping up while working in the REPL buffer
