@@ -4,13 +4,10 @@
 (recentf-mode 1)
 (setq recentf-max-saved-items 300)
 
-(defun ido-choose-from-recentf ()
+(defun choose-from-recentf ()
   "Use ido to select a recently opened file from the `recentf-list'"
   (interactive)
-  (find-file (ido-completing-read "Open file: " recentf-list nil t)))
-
-;; Mode for automatic saving of minibuffer history.
-(savehist-mode 1)
+  (find-file (completing-read "Open file: " recentf-list nil t)))
 
 ;;-------------------------------------------------------------------
 ;; session
@@ -25,10 +22,6 @@
 (setq backup-directory-alist '((".*" . "~/.emacs.d/backups/")))
 ;; create the autosave dir if necessary, since emacs won't.
 (make-directory "~/.emacs.d/autosaves/" t)
-
-;;-------------------------------------------------------------------
-;;; save minibuffer history between sessions
-(savehist-mode t)
 
 (provide 'history-conf)
 

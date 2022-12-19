@@ -552,7 +552,20 @@
 ;;===================================================================
 ;; Buffers navigation
 ;;
-(global-set-key (kbd "C-o") 'find-file)
+(global-set-key (kbd "C-x C-f") 'find-file)
+(global-set-key (kbd "C-x f") 'find-file)
+(global-set-key (kbd "C-c f") 'choose-from-recentf)
+(global-set-key (kbd "C-o")   ; the plain prompt for file path
+                #'(lambda () (interactive)
+                    (find-file (read-from-minibuffer "Enter file path: "))))
+(global-set-key (kbd "C-x C-r") 'sudo-edit)
+(global-set-key (kbd "C-x b") 'switch-to-buffer)
+
+;; ibuffer - list of all buffers
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; (require 'bs) ;; other list of buffers
+;; (global-set-key (kbd "C-x C-n") 'bs-show)
+
 (global-set-key (kbd "C-x w") 'kill-buffer)
 (global-set-key (kbd "C-w") 'kill-buffer)
 
@@ -582,31 +595,13 @@ Don't mess with special buffers."
 ;;-------------------------------------------------------------------
 ;; Switch buffers
 ;;
-(if (require 'ejc-sql nil 'noerror)
+(if (require 'tabbar nil 'noerror)
     (progn
       (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
       (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab))
   (progn
     (global-set-key (kbd "C-<next>") 'next-buffer)
     (global-set-key (kbd "C-<prior>") 'previous-buffer)))
-;;-------------------------------------------------------------------
-;; ido - switch buffers by completiotion
-(require 'ido)
-(ido-mode t)
-(global-set-key (kbd "C-x C-f") 'ido-find-file)
-(global-set-key (kbd "C-c f") 'ido-choose-from-recentf)
-(global-set-key (kbd "C-x f") ; the plain prompt for file path
-                #'(lambda () (interactive)
-                   (find-file (read-from-minibuffer "Enter file path: "))))
-(global-set-key (kbd "C-x C-r") 'sudo-edit)
-(global-set-key (kbd "C-x b") 'ido-switch-buffer)
-(global-set-key (kbd "C-c C-b b") 'switch-to-buffer)
-;;-------------------------------------------------------------------
-;; ibuffer - list of all buffers
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-;;-------------------------------------------------------------------
-;; (require 'bs) ;; other list of buffers
-;; (global-set-key (kbd "C-x C-n") 'bs-show)
 
 ;;-------------------------------------------------------------------
 ;; buffers shortcuts

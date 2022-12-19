@@ -341,10 +341,10 @@ buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:"
-                         (ido-read-file-name "Find file(as root): ")))
+                         (read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-(defadvice ido-find-file (after find-file-sudo activate)
+(defadvice find-file (after find-file-sudo activate)
   "Find file as root if necessary."
   (unless (and buffer-file-name
                (file-writable-p buffer-file-name))

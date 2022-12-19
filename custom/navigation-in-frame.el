@@ -55,16 +55,6 @@
 		(mark " " (name 16 -1) " " filename)))
 
 ;;----------------------------------------------------------------------
-;; flx configuration - fuzzy matching files and paths via ido
-;;
-(require 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-(setq ido-use-faces nil)
-
-;;----------------------------------------------------------------------
 ;; Interact with browser
 ;;
 (defun find-browser-executable ()

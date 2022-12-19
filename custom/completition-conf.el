@@ -148,9 +148,4 @@ With ARG, move by that many elements."
           (t
            (switch-to-company)))))
 
-;;=============================================================================
-;; minibuffer autocompletition.
-;;
-(icomplete-mode)
-
 (provide 'completition-conf)

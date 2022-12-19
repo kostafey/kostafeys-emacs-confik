@@ -94,11 +94,8 @@
 
 ;;===================================================================
 ;;                              Command executions
-;; smex configuration
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is an old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;;
+;; (global-set-key (kbd "M-x") 'execute-extended-command)
 ;;
 ;;===================================================================
 

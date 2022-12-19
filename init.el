@@ -37,6 +37,7 @@
 ;; Use third-party dependencies
 (require 'elpa-conf)
 (require 'appearance)
+(require 'minibuffer-conf)
 (require 'version-control)
 (require 'ack-conf)
 
