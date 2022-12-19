@@ -12,6 +12,16 @@
 (custom-set-variables
  '(magit-save-some-buffers (quote dontask)))
 
+(defun k/magit-status-mode ()
+  (loop for m in (list magit-diff-mode-map
+                       magit-file-section-map
+                       magit-hunk-section-map
+                       magit-unstaged-section-map
+                       magit-staged-section-map)
+        do (define-key m (kbd "C-c") 'cua-copy-region)))
+
+(add-hook 'magit-status-mode-hook #'k/magit-status-mode)
+
 (defun get-vc-status ()
   "Call status function according to the actual vc system of the active file."
   (interactive)
@@ -19,10 +29,12 @@
                   (format "%s"
                           (vc-backend
                            (buffer-file-name (current-buffer)))))))
-    (cond ((equal vc-type "git") (magit-status))
+    (cond ((equal vc-type "git")
+           (magit-status))
           ((not (equal
-                 (darcsum-repository-root) nil)) (darcsum-whatsnew
-                                                  (darcsum-repository-root)))
+                 (darcsum-repository-root) nil))
+           (darcsum-whatsnew
+            (darcsum-repository-root)))
           (t (magit-status)))))
 
 (defvar k/use-gitall t)

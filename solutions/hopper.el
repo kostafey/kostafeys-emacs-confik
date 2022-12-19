@@ -137,58 +137,60 @@
           (progn
             (push-mark)
             (hop-update-positions (current-buffer) (point) :hop)
-            (if (member 'lsp-mode minor-mode-list)
+            (cond
+             ;; emacs-lisp-mode
+             ((equal 'emacs-lisp-mode mode)
+              (let ((symb (read string-at-point)))
+                (when symb
+                  (cond
+                   ((or (functionp symb) (fboundp symb)) (find-function symb))
+                   (t (find-variable symb))))))
+             ;; lisp-mode
+             ((and (equal 'lisp-mode mode)
+                   (functionp 'slime-edit-definition))
+              (let ((symb string-at-point))
+                (slime-edit-definition symb)))
+             ;; clojure-mode
+             ((equal 'clojure-mode mode)
+              (if (hop-nrepl-current-session)
+                  (cider-find-var
+                   (cider--kw-to-symbol
+                    (cider-symbol-at-point)))
+                (if (member 'lsp-mode minor-mode-list)
+                    (lsp-find-definition)
+                  (message "Launch LSP or nREPL."))))
+             ;; scala-mode
+             ;; java-mode
+             ((or (equal 'scala-mode mode)
+                  (equal 'java-mode mode))
+              (progn
                 (lsp-find-definition)
-              (cond
-               ;; emacs-lisp-mode
-               ((equal 'emacs-lisp-mode mode)
-                (let ((symb (read string-at-point)))
-                  (when symb
-                    (cond
-                     ((or (functionp symb) (fboundp symb)) (find-function symb))
-                     (t (find-variable symb))))))
-               ;; lisp-mode
-               ((and (equal 'lisp-mode mode)
-                     (functionp 'slime-edit-definition))
-                (let ((symb string-at-point))
-                  (slime-edit-definition symb)))
-               ;; clojure-mode
-               ((and (equal 'clojure-mode mode)
-                     (hop-nrepl-current-session)) (cider-find-var
-                     (cider--kw-to-symbol
-                      (cider-symbol-at-point))))
-               ;; scala-mode
-               ;; java-mode
-               ((or (equal 'scala-mode mode)
-                    (equal 'java-mode mode))
-                (progn
-                  (lsp-find-definition)
-                  (recenter-top-bottom 5)))
-               ;; go-mode
-               ((and (equal 'go-mode mode)
-                     (functionp 'godef-jump))
-                (godef-jump point))
-               ;; rust-mode
-               ((and (equal 'rust-mode mode)
-                     (functionp 'racer-find-definition))
-                (racer-find-definition))
-               ;; shell mode assume line looks like [ERROR] ~/project/MyClass.java:123:
-               ((equal 'shell-mode mode) (hop-goto-file-location point))
-               ;; markdown-mode
-               ((equal 'markdown-mode mode) (hop-url-in-markdown point))
-               ;; ejc-sql-mode
-               ((equal 'ejc-sql-mode mode)
-                (apply 'ejc-describe-entity
-                       (ejc-get-prompt-symbol-under-point "Describe entity")))
-               ;; other modes
-               (t
-                (if (and (functionp 'semantic-ia-fast-jump)
-                         (functionp 'semantic-active-p)
-                         (semantic-active-p))
-                    (condition-case nil
-                        (semantic-ia-fast-jump point)
-                      (error (hop-default-tag)))
-                  (hop-default-tag)))))))))))
+                (recenter-top-bottom 5)))
+             ;; go-mode
+             ((and (equal 'go-mode mode)
+                   (functionp 'godef-jump))
+              (godef-jump point))
+             ;; rust-mode
+             ((and (equal 'rust-mode mode)
+                   (functionp 'racer-find-definition))
+              (racer-find-definition))
+             ;; shell mode assume line looks like [ERROR] ~/project/MyClass.java:123:
+             ((equal 'shell-mode mode) (hop-goto-file-location point))
+             ;; markdown-mode
+             ((equal 'markdown-mode mode) (hop-url-in-markdown point))
+             ;; ejc-sql-mode
+             ((equal 'ejc-sql-mode mode)
+              (apply 'ejc-describe-entity
+                     (ejc-get-prompt-symbol-under-point "Describe entity")))
+             ;; other modes
+             (t
+              (if (and (functionp 'semantic-ia-fast-jump)
+                       (functionp 'semantic-active-p)
+                       (semantic-active-p))
+                  (condition-case nil
+                      (semantic-ia-fast-jump point)
+                    (error (hop-default-tag)))
+                (hop-default-tag))))))))))
 
 (defun hop-by-mouse (start-event)
   "Jump to the entity definition by mouse click."

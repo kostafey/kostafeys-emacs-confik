@@ -15,7 +15,8 @@
 (defun elpa-highlight-initialize ()
   (font-lock-add-keywords
    'emacs-lisp-mode
-   '(("use-elpa\\b" . font-lock-keyword-face))))
+   '(("use-elpa\\b" . font-lock-keyword-face)
+     ("use-elpa '\\(.*\\)[ )]" (1 font-lock-function-name-face)))))
 
 (eval-after-load "elpa-conf"
   (lambda ()

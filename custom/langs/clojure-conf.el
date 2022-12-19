@@ -8,6 +8,8 @@
 (add-hook 'clojure-mode-hook 'lsp)
 (add-hook 'clojurescript-mode-hook 'lsp)
 (add-hook 'clojurec-mode-hook 'lsp)
+(setq lsp-enable-file-watchers t)
+(setq lsp-file-watch-threshold 10000)
 
 (add-hook 'cider-mode-hook 'eldoc-mode)
 
