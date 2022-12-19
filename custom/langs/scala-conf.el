@@ -35,6 +35,7 @@
 
 ;;; Code:
 
+(use-elpa 'use-package)
 (require 'use-package)
 
 ;; Enable defer and ensure by default for use-package
@@ -72,6 +73,7 @@
   ;; Optional - enable lsp-mode automatically in scala files
   :hook (scala-mode . lsp)
   :config (progn
+            (setq lsp-ui-doc-show-with-mouse nil)
             (setq lsp-prefer-flymake nil)
             (setq lsp-before-save-edits nil)))
 
@@ -103,9 +105,6 @@
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
 (setq scala-indent:step 4)
-
-;; Add company-lsp backend for metals
-(use-package company-lsp)
 
 (defun k/scala-flash-region (start end &optional timeout)
   "Temporarily highlight region from START to END."

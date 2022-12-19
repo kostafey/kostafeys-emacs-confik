@@ -1,3 +1,5 @@
+(use-elpa 'use-package)
+
 ;;-------------------------------------------------------------------
 ;; imenu
 ;;
@@ -15,5 +17,15 @@
 (projectile-mode)
 (setq projectile-indexing-method 'native)
 (setq projectile-enable-caching t)
+
+;;-------------------------------------------------------------------
+;; treemacs
+;;
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (progn
+    (setq treemacs-no-png-images t)))
 
 (provide 'ide)

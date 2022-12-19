@@ -68,7 +68,7 @@
 ;; Programming languages configs
 ;;
 ;; (require 'java-conf)
-;; (require 'scala-conf)
+(require 'scala-conf)
 (require 'clojure-conf)
 (require 'emacs-lisp-conf)
 (require 'js-conf)
