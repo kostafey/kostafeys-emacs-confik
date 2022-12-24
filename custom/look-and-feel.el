@@ -121,8 +121,7 @@
 ;;-------------------------------------------------------------------
 ;; Fringes
 ;;
-(fringe-mode (cdr (assoc "left-only" fringe-styles))) ; Show fields
-(fringe-mode '(5 . 0))
+(fringe-mode '(5 . 8)) ; Show fields
 (setq-default indicate-buffer-boundaries '((bottom . left)))
 (setq-default indicate-empty-lines nil)
 
