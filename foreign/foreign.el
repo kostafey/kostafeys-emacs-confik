@@ -102,4 +102,20 @@
     (goto-char (+ pos 1)))
   (message "Done."))
 
+;;;###autoload
+(defun foreign-format-edn ()
+  "Pretty print end file.
+Install `boot' first: https://github.com/boot-clj/boot"
+  (interactive)
+  (let* ((bin (concat-path foreign-bin-path "pprint-edn.clj"))
+         (command (concat bin " < " (buffer-file-name)))
+         (result (shell-command-to-string command)))
+    (erase-buffer)
+    (insert result))
+  (save-buffer)
+  (when (not (eq major-mode 'clojure-mode))
+    (clojure-mode))
+  (goto-char (point-min))
+  (message "Done."))
+
 (provide 'foreign)
