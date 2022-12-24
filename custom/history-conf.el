@@ -11,8 +11,8 @@
 
 ;;-------------------------------------------------------------------
 ;; session
-
-;; (desktop-save-mode t) save session before exit (default)
+;; Save session before exit
+(desktop-save-mode t)
 ;; Save file buffer encoding
 (add-to-list 'desktop-locals-to-save 'buffer-file-coding-system)
 
