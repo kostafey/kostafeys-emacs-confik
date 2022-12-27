@@ -61,6 +61,7 @@
 (global-set-key [(delete)] 'delete-char)
 ;; (global-set-key (kbd "M-SPC") 'just-one-space) - default
 (global-set-key (kbd "C-c SPC") 'just-one-space)
+(global-set-key (kbd "C-<delete>") 'just-one-space)
 
 ;;-------------------------------------------------------------------
 ;; Save & revert

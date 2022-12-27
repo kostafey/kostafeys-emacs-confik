@@ -53,7 +53,7 @@
 (global-set-key (kbd "C-S-r") 'flx-isearch-backward)
 
 ;; (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
-(global-set-key (kbd "C-M-f") 'ag)
+(global-set-key (kbd "C-M-f") 'ag-project)
 (global-set-key (kbd "C-c C-f") 'ack-file)
 
 (when (require 'highlight-symbol nil 'noerror)
@@ -162,6 +162,7 @@
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key [M-f1] (lambda () (interactive) (psw-switch-buffer t)))
 (global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
+(global-set-key (kbd "C-M-n") 'projectile-find-file)
 (global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
 (global-set-key (kbd "s-q") 'psw-navigate-files)
 (global-set-key (kbd "s-a") 'psw-navigate-files)

@@ -58,6 +58,7 @@ not in the top of the frame."
     (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
     (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)))
 
+;;-------------------------------------------------------------------
 (when (require 'ejc-sql nil 'noerror)
   (add-hook 'ejc-sql-complete-query-hook 'k/select-window-fix-tabbar))
 
@@ -96,7 +97,8 @@ not in the top of the frame."
      (define-key paredit-mode-map (kbd "\"") 'nil)
      (define-key paredit-mode-map (kbd "C-M-d") 'nil)
      (define-key paredit-mode-map (kbd "M-q") 'nil)
-     (define-key paredit-mode-map (kbd "M-r") 'nil)))
+     (define-key paredit-mode-map (kbd "M-r") 'nil)
+     (define-key paredit-mode-map (kbd "C-M-n") 'nil)))
 
 (eval-after-load "paredit-everywhere"
   '(progn
