@@ -5,11 +5,13 @@
 (setq max-lisp-eval-depth 500000)
 ;; cd ~/.emacs.d; emacs --batch -f batch-byte-compile **/*.el
 
+(load-file "~/.emacs.d/artifacts/redef.el")
+
 (setq eval-expression-print-level nil)
 
 (defun byte-recompile-custom-files()
   (interactive)
-  (progn
+  (let ((site-lisp-path "~/.emacs.d/"))
     (byte-recompile-directory (concat site-lisp-path "custom/") 0 t)
     (byte-recompile-directory (concat site-lisp-path "custom/langs") 0 t)
     (byte-recompile-directory (concat site-lisp-path "solutions") 0 t)
