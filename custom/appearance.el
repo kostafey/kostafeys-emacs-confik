@@ -14,6 +14,11 @@
 
 (tabbar-mode t)
 
+;; Hide forward and back buttons
+(customize-set-variable 'tabbar-scroll-right-button '(("") ""))
+(customize-set-variable 'tabbar-scroll-left-button '(("") ""))
+(customize-set-variable 'tabbar-buffer-home-button '(("") ""))
+
 (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
 (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)
 
