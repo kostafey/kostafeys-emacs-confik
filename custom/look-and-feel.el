@@ -121,7 +121,7 @@
 ;;-------------------------------------------------------------------
 ;; Fringes
 ;;
-(fringe-mode '(5 . 8)) ; Show fields
+(fringe-mode '(8 . 8)) ; Show fields
 (setq-default indicate-buffer-boundaries '((bottom . left)))
 (setq-default indicate-empty-lines nil)
 
