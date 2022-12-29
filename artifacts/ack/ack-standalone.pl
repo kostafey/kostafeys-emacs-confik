@@ -15,11 +15,12 @@ package main;
 use strict;
 use warnings;
 
-our $VERSION = 'v3.3.1'; # Check https://beyondgrep.com/ for updates
+our $VERSION = 'v3.6.0'; # Check https://beyondgrep.com/ for updates
 
 use 5.010001;
 
 use File::Spec ();
+use Getopt::Long ();
 
 
 
@@ -111,8 +112,8 @@ MAIN: {
         $ENV{ACK_COLOR_COLNO}    ||= 'bold yellow';
     }
 
-    my $p = App::Ack::ConfigLoader::opt_parser( 'no_auto_abbrev', 'pass_through' );
-    $p->getoptions(
+    App::Ack::ConfigLoader::configure_parser( 'no_auto_abbrev', 'pass_through' );
+    Getopt::Long::GetOptions(
         help     => sub { App::Ack::show_help(); exit; },
         version  => sub { App::Ack::print( App::Ack::get_version_statement() ); exit; },
         man      => sub { App::Ack::show_man(); },
@@ -322,7 +323,11 @@ sub file_loop_c {
 
         if ( !$opt_l || $matches_for_this_file > 0 ) {
             if ( $opt_show_filename ) {
-                App::Ack::say( $file->name, ':', $matches_for_this_file );
+                my $display_filename = $file->name;
+                if ( $opt_color ) {
+                    $display_filename = Term::ANSIColor::colored($display_filename, $ENV{ACK_COLOR_FILENAME});
+                }
+                App::Ack::say( $display_filename, ':', $matches_for_this_file );
             }
             else {
                 App::Ack::say( $matches_for_this_file );
@@ -1248,11 +1253,11 @@ C<--range-start> to the end of the file.
 For example, if you wanted to search all HTML files up until the first
 instance of the C<< <body> >>, you could do
 
-    ack foo --range-end='<body>'
+    ack foo --html --range-end='<body>'
 
 Or to search after Perl's `__DATA__` or `__END__` markers, you would do
 
-    ack pattern --range-end='^__(END|DATA)__'
+    ack pattern --perl --range-start='^__(END|DATA)__'
 
 It's possible for a range to start and stop on the same line.  For example
 
@@ -2157,7 +2162,7 @@ Options are then loaded from the command line.
 ack is based at GitHub at L<https://github.com/beyondgrep/ack3>
 
 Please report any bugs or feature requests to the issues list at
-Github: L<https://github.com/beyondgrep/ack3/issues>.
+GitHub: L<https://github.com/beyondgrep/ack3/issues>.
 
 Please include the operating system that you're using; the output of
 the command C<ack --version>; and any customizations in your F<.ackrc>
@@ -2184,7 +2189,7 @@ L<https://beyondgrep.com/>
 
 L<https://github.com/beyondgrep/ack3>
 
-=item * The ack issues list at Github
+=item * The ack issues list at GitHub
 
 L<https://github.com/beyondgrep/ack3/issues>
 
@@ -2318,6 +2323,10 @@ mailing list.
 How appropriate to have I<ack>nowledgements!
 
 Thanks to everyone who has contributed to ack in any way, including
+Eric Pement,
+Gabor Szabo,
+Frieder Bluemle,
+Grzegorz Kaczmarczyk,
 Dan Book,
 Tomasz Konojacki,
 Salomon Smeke,
@@ -2442,7 +2451,7 @@ Andy Lester, C<< <andy at petdance.com> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2005-2020 Andy Lester.
+Copyright 2005-2022 Andy Lester.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License v2.0.
@@ -2462,8 +2471,8 @@ use strict;
 our $VERSION;
 our $COPYRIGHT;
 BEGIN {
-    $VERSION = 'v3.3.1'; # Check https://beyondgrep.com/ for updates
-    $COPYRIGHT = 'Copyright 2005-2020 Andy Lester.';
+    $VERSION = 'v3.6.0'; # Check https://beyondgrep.com/ for updates
+    $COPYRIGHT = 'Copyright 2005-2022 Andy Lester.';
 }
 our $STANDALONE = 0;
 our $ORIGINAL_PROGRAM_NAME;
@@ -2858,7 +2867,7 @@ sub show_help_rgb {
 ack allows customization of the colors it uses when presenting matches
 onscreen.  See the "ACK COLORS" section of the ack manual (ack --man).
 
-Colors may be specified as "rggNNN" where "NNN" is a triplet of digits
+Colors may be specified as "rgbNNN" where "NNN" is a triplet of digits
 from 0 to 5 specifying the intensity of red, green and blue, respectively.
 
 Here is a grid of the 216 possible values for NNN.
@@ -3079,7 +3088,7 @@ sub is_lowercase {
     # Get rid of any literal backslashes first to avoid confusion.
     $pat =~ s/\\\\//g;
 
-    my $metacharacter = qr/
+    my $metacharacter = qr{
         |\\A                # Beginning of string
         |\\B                # Not word boundary
         |\\c[a-zA-Z]        # Control characters
@@ -3097,7 +3106,7 @@ sub is_lowercase {
         |\\X                # ???
         |\\x[0-9A-Fa-f]{2}  # Hex sequence
         |\\Z                # End of string
-    /x;
+    }x;
     $pat =~ s/$metacharacter//g;
 
     my $name = qr/[_A-Za-z][_A-Za-z0-9]*?/;
@@ -3262,7 +3271,7 @@ sub _options_block {
 # core dumps
 --ignore-file=match:/core[.]\d+$/
 
-# minified Javascript
+# minified JavaScript
 --ignore-file=match:/[.-]min[.]js$/
 --ignore-file=match:/[.]js[.]min$/
 
@@ -3283,14 +3292,23 @@ sub _options_block {
 # Common archives, as an optimization
 --ignore-file=ext:gz,tar,tgz,zip
 
-# Python compiles modules
+# Python compiled modules
 --ignore-file=ext:pyc,pyd,pyo
+
+# Python's pickle serialization format
+# https://docs.python.org/2/library/pickle.html#example
+# https://docs.python.org/3.7/library/pickle.html#examples
+--ignore-file=ext:pkl,pickle
 
 # C extensions
 --ignore-file=ext:so
 
 # Compiled gettext files
 --ignore-file=ext:mo
+
+# Visual Studio user and workspace settings
+# https://code.visualstudio.com/docs/getstarted/settings
+--ignore-dir=.vscode
 
 ### Filetypes defined
 
@@ -3312,6 +3330,17 @@ sub _options_block {
 # https://cmake.org/
 --type-add=cmake:is:CMakeLists.txt
 --type-add=cmake:ext:cmake
+
+# Bazel build tool
+# https://docs.bazel.build/versions/master/skylark/bzl-style.html
+--type-add=bazel:ext:bzl
+# https://docs.bazel.build/versions/master/guide.html#bazelrc-the-bazel-configuration-file
+--type-add=bazel:ext:bazelrc
+# https://docs.bazel.build/versions/master/build-ref.html#BUILD_files
+--type-add=bazel:is:BUILD
+# https://docs.bazel.build/versions/master/build-ref.html#workspace
+--type-add=bazel:is:WORKSPACE
+
 
 # Actionscript
 --type-add=actionscript:ext:as,mxml
@@ -3362,6 +3391,10 @@ sub _options_block {
 # C#
 --type-add=csharp:ext:cs
 
+# Crystal-lang
+# https://crystal-lang.org/
+--type-add=crystal:ext:cr,ecr
+
 # CSS
 # https://www.w3.org/Style/CSS/
 --type-add=css:ext:css
@@ -3377,6 +3410,10 @@ sub _options_block {
 # Elixir
 # https://elixir-lang.org/
 --type-add=elixir:ext:ex,exs
+
+# Elm
+# https://elm-lang.org
+--type-add=elm:ext:elm
 
 # Emacs Lisp
 # https://www.gnu.org/software/emacs
@@ -3486,6 +3523,10 @@ sub _options_block {
 # https://plone.org/
 --type-add=plone:ext:pt,cpt,metadata,cpy,py
 
+# PureScript
+# https://www.purescript.org
+--type-add=purescript:ext:purs
+
 # Python
 # https://www.python.org/
 --type-add=python:ext:py
@@ -3515,7 +3556,7 @@ sub _options_block {
 
 # Scala
 # https://www.scala-lang.org/
---type-add=scala:ext:scala
+--type-add=scala:ext:scala,sbt
 
 # Scheme
 # https://groups.csail.mit.edu/mac/projects/scheme/
@@ -3562,7 +3603,11 @@ sub _options_block {
 # http//template-toolkit.org/
 --type-add=ttml:ext:tt,tt2,ttml
 
-# Typescript
+# TOML
+# https://toml.io/
+--type-add=toml:ext:toml
+
+# TypeScript
 # https://www.typescriptlang.org/
 --type-add=ts:ext:ts,tsx
 
@@ -3697,10 +3742,10 @@ use warnings;
 use 5.010;
 
 use File::Spec 3.00 ();
-use Getopt::Long 2.39 ();
+use Getopt::Long 2.38 ();
 use Text::ParseWords 3.1 ();
 
-sub opt_parser {
+sub configure_parser {
     my @opts = @_;
 
     my @standard = qw(
@@ -3710,8 +3755,11 @@ sub opt_parser {
         no_auto_version
         no_ignore_case
     );
-    return Getopt::Long::Parser->new( config => [ @standard, @opts ] );
+    Getopt::Long::Configure( @standard, @opts );
+
+    return;
 }
+
 
 sub _generate_ignore_dir {
     my ( $option_name, $opt ) = @_;
@@ -3876,17 +3924,17 @@ sub _process_filetypes {
         'type-del=s' => $delete_spec,
     );
 
-    my $p = opt_parser( 'no_auto_abbrev', 'pass_through' );
+    configure_parser( 'no_auto_abbrev', 'pass_through' );
     foreach my $source (@{$arg_sources}) {
         my $args = $source->{contents};
 
         if ( ref($args) ) {
             # $args are modified in place, so no need to munge $arg_sources
-            $p->getoptionsfromarray( $args, %type_arg_specs );
+            Getopt::Long::GetOptionsFromArray( $args, %type_arg_specs );
         }
         else {
             ( undef, $source->{contents} ) =
-                $p->getoptionsfromstring( $args, %type_arg_specs );
+                Getopt::Long::GetOptionsFromString( $args, %type_arg_specs );
         }
     }
 
@@ -4042,15 +4090,15 @@ sub _process_other {
     }
 
     if ( $argv_source ) { # This *should* always be true, but you never know...
-        my $p = opt_parser( 'pass_through' );
-        $p->getoptionsfromarray( [ @{$argv_source} ],
+        configure_parser( 'pass_through' );
+        Getopt::Long::GetOptionsFromArray( [ @{$argv_source} ],
             'help-types' => \$is_help_types_active,
         );
     }
 
     my $arg_specs = get_arg_spec( $opt, $extra_specs );
 
-    my $p = opt_parser();
+    configure_parser();
     foreach my $source (@{$arg_sources}) {
         my ( $source_name, $args ) = @{$source}{qw/name contents/};
 
@@ -4082,11 +4130,11 @@ sub _process_other {
 
         my $ret;
         if ( ref($args) ) {
-            $ret = $p->getoptionsfromarray( $args, %{$args_for_source} );
+            $ret = Getopt::Long::GetOptionsFromArray( $args, %{$args_for_source} );
         }
         else {
             ( $ret, $source->{contents} ) =
-                $p->getoptionsfromstring( $args, %{$args_for_source} );
+                Getopt::Long::GetOptionsFromString( $args, %{$args_for_source} );
         }
         if ( !$ret ) {
             if ( !$is_help_types_active ) {
@@ -4132,7 +4180,7 @@ sub _explode_sources {
         delete $arg_spec->{$arg};
     };
 
-    my $p = opt_parser( 'pass_through' );
+    configure_parser( 'pass_through' );
     foreach my $source (@{$sources}) {
         my ( $name, $options ) = @{$source}{qw/name contents/};
         if ( ref($options) ne 'ARRAY' ) {
@@ -4147,7 +4195,7 @@ sub _explode_sources {
             $j--;
 
             my @copy = @chunk;
-            $p->getoptionsfromarray( [@chunk],
+            Getopt::Long::GetOptionsFromArray( [@chunk],
                 'type-add=s' => $add_type,
                 'type-set=s' => $add_type,
                 'type-del=s' => $del_type,
@@ -4223,18 +4271,18 @@ sub _remove_default_options_if_needed {
 
     my $should_remove = 0;
 
-    my $p = opt_parser( 'no_auto_abbrev', 'pass_through' );
+    configure_parser( 'no_auto_abbrev', 'pass_through' );
 
     foreach my $index ( $default_index + 1 .. $#{$sources} ) {
         my $args = $sources->[$index]->{contents};
 
         if (ref($args)) {
-            $p->getoptionsfromarray( $args,
+            Getopt::Long::GetOptionsFromArray( $args,
                 'ignore-ack-defaults' => \$should_remove,
             );
         }
         else {
-            ( undef, $sources->[$index]{contents} ) = $p->getoptionsfromstring( $args,
+            ( undef, $sources->[$index]{contents} ) = Getopt::Long::GetOptionsFromString( $args,
                 'ignore-ack-defaults' => \$should_remove,
             );
         }
@@ -4261,8 +4309,8 @@ sub process_args {
     foreach my $source (@{$arg_sources}) {
         if ( $source->{name} eq 'ARGV' ) {
             my $dump;
-            my $p = opt_parser( 'pass_through' );
-            $p->getoptionsfromarray( $source->{contents},
+            configure_parser( 'pass_through' );
+            Getopt::Long::GetOptionsFromArray( $source->{contents},
                 'dump' => \$dump,
             );
             if ( $dump ) {
@@ -4311,8 +4359,8 @@ sub retrieve_arg_sources {
     my $noenv;
     my $ackrc;
 
-    my $p = opt_parser( 'no_auto_abbrev', 'pass_through' );
-    $p->getoptions(
+    configure_parser( 'no_auto_abbrev', 'pass_through' );
+    Getopt::Long::GetOptions(
         'noenv'   => \$noenv,
         'ackrc=s' => \$ackrc,
     );
@@ -4490,9 +4538,9 @@ sub _options_used {
     }
 
     # Parse @ARGV twice, once with each capture spec.
-    my $p = opt_parser( 'pass_through' );   # Ignore invalid options.
-    $p->getoptionsfromarray( [@ARGV], %spec_capture_raw );
-    $p->getoptionsfromarray( [@ARGV], %spec_capture_parsed );
+    configure_parser( 'pass_through' );   # Ignore invalid options.
+    Getopt::Long::GetOptionsFromArray( [@ARGV], %spec_capture_raw );
+    Getopt::Long::GetOptionsFromArray( [@ARGV], %spec_capture_parsed );
 
     return (\@raw,\%parsed);
 }
@@ -4544,6 +4592,9 @@ sub mutex_options {
             f => 1,
             g => 1,
             l => 1,
+        },
+        I => {
+            f => 1,
         },
         L => {
             A => 1,
@@ -4609,6 +4660,7 @@ sub mutex_options {
             B => 1,
             C => 1,
             H => 1,
+            I => 1,
             L => 1,
             break => 1,
             c => 1,
@@ -4619,6 +4671,7 @@ sub mutex_options {
             group => 1,
             h => 1,
             heading => 1,
+            i => 1,
             l => 1,
             m => 1,
             match => 1,
@@ -4626,6 +4679,7 @@ sub mutex_options {
             output => 1,
             p => 1,
             passthru => 1,
+            'smart-case' => 1,
             u => 1,
             v => 1,
             x => 1,
@@ -4679,6 +4733,9 @@ sub mutex_options {
             f => 1,
             g => 1,
             l => 1,
+        },
+        i => {
+            f => 1,
         },
         l => {
             A => 1,
@@ -4788,6 +4845,9 @@ sub mutex_options {
             l => 1,
             o => 1,
             output => 1,
+        },
+        'smart-case' => {
+            f => 1,
         },
         u => {
             f => 1,

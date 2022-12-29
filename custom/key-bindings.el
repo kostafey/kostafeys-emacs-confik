@@ -6,8 +6,7 @@
 (use-elpa 'flx)
 (use-elpa 'flx-ido)
 (use-elpa 'flx-isearch)
-(use-elpa 'ag)
-(use-elpa 'rg)
+(require 'ack-conf)
 (use-elpa 'highlight-symbol)
 (use-elpa 'ace-jump-mode)
 (use-elpa 'smex)
@@ -53,7 +52,7 @@
 (global-set-key (kbd "C-S-r") 'flx-isearch-backward)
 
 ;; (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
-(global-set-key (kbd "C-M-f") 'ag-project)
+(global-set-key (kbd "C-M-f") 'k/ag)
 (global-set-key (kbd "C-c C-f") 'ack-file)
 
 (when (require 'highlight-symbol nil 'noerror)
