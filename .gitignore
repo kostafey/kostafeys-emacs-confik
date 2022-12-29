@@ -11,8 +11,12 @@
 
 # ...even if they are in subdirectories
 !artifacts
+!ack
 !custom
-!launcher
+!langs
+!mysnippets
+!fundamental-mode
+!org-mode
 !solutions
 !foreign
 
