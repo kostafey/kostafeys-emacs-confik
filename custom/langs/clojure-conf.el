@@ -66,7 +66,7 @@
 ;;----------------------------------------------------------------------
 ;; clojure-script
 ;;
-(add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljs$" . clojurescript-mode))
 
 (defun initialize-cljs-repl ()
   (interactive)
