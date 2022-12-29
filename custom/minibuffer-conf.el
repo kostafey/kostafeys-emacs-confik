@@ -17,6 +17,7 @@
      ;; vertico.el - VERTical Interactive COmpletion
      ;;
      (use-package vertico
+       :ensure t
        :init
        (vertico-mode)
        :config
@@ -34,7 +35,21 @@
        :bind (:map vertico-map
                    ("RET" . vertico-directory-enter)
                    ("DEL" . vertico-directory-delete-char)
-                   ("M-DEL" . vertico-directory-delete-word)))))
+                   ("M-DEL" . vertico-directory-delete-word)))
+
+     (use-package marginalia
+       :ensure t
+       ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+       :bind (("M-A" . marginalia-cycle)
+              :map minibuffer-local-map
+              ("M-A" . marginalia-cycle))
+
+       ;; The :init configuration is always executed (Not lazy!)
+       :init
+
+       ;; Must be in the :init section of use-package such that the mode gets
+       ;; enabled right away. Note that this forces loading the package.
+       (marginalia-mode))))
   ('ido
    (progn
      ;;-------------------------------------------------------------------
