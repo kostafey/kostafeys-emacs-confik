@@ -104,7 +104,7 @@
 
 ;;;###autoload
 (defun foreign-format-edn ()
-  "Pretty print end file.
+  "Pretty print edn file.
 Install `boot' first: https://github.com/boot-clj/boot"
   (interactive)
   (let* ((bin (concat-path foreign-bin-path "pprint-edn.clj"))
