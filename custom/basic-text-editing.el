@@ -346,7 +346,7 @@ buffer is not visiting a file."
 
 (defadvice find-file (after find-file-sudo activate)
   "Find file as root if necessary."
-  (unless (and buffer-file-name
+  (unless (and (not (directory-name-p buffer-file-name))
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
