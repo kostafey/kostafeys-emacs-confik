@@ -9,6 +9,8 @@
  'load-path
  (expand-file-name "~/.emacs.d/artifacts/ack/"))
 
+;; Install for Fedora:
+;; sudo dnf install perl-filetest
 (defvar ack-src-file "ack-standalone.pl"
   "ack-filename.")
 
