@@ -1,4 +1,7 @@
 ;;; go-mode configuration
+(require 'elpa-conf)
+(use-elpa 'use-package)
+(require 'appearance)
 
 ;;---------------------
 ;; Environment example:
@@ -6,50 +9,39 @@
 ;; The `GOROOT' points to the directory in which
 ;; golang was installed:
 ;;
-;; export GOROOT=/usr/local/go
-;; export PATH=$PATH:$GOROOT/bin
+;; Debian:
+;;   export GOROOT=/usr/local/go
+;; Fedora:
+;;   export GOROOT=/usr/lib/golang
+;;
+;; export PATH="$PATH:$GOROOT/bin"
 ;;
 ;; The `GOPATH' environment variable specifies
 ;; the location of your workspace:
 ;;
-;; export GOPATH=$HOME/data/go
+;; export GOPATH=$HOME/go
 ;; export PATH=$PATH:$GOPATH/bin
 
 ;; --------------------
 ;; Navigation & go-mode
-;; go get github.com/rogpeppe/godef
-(require 'go-mode)
-;; Assume godoc & gofmt provided with golang SDK distribution.
+;; go install github.com/rogpeppe/godef@latest
+;; go install golang.org/x/tools/cmd/godoc@latest
+;; Assume gofmt provided with golang SDK distribution.
+(use-elpa 'go-mode)
 
 (add-hook 'go-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
             (setq tab-width 4)))
-
-;;---------------
-;; Autocompletion
-;; - linux
-;; go get -u github.com/nsf/gocode
-;; - windows
-;; go get -u -ldflags -H=windowsgui github.com/nsf/gocode
-(require 'go-autocomplete)
 ;; eldoc
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 
 ;; --------
-;; Flycheck
-(when (require 'flycheck nil)
-  (add-hook 'go-mode-hook (lambda () (flycheck-mode t))))
-
-;; ----
-;; Lint
-;; go get -u golang.org/x/lint/golint
-(if (getenv "GOPATH")
-    (progn
-      (add-to-list 'load-path (concat (getenv "GOPATH")
-                                      "/src/golang.org/x/lint/misc/emacs"))
-      (require 'golint))
-  (warn "No GOPATH system environment variable, can't load `golint'."))
+;; LSP
+;; go install golang.org/x/tools/gopls@latest
+(use-package lsp-mode
+  :hook ((go-mode . lsp-deferred)
+         (go-mode . my-common-coding-hook)))
 
 ;; -----------
 ;; Compilation

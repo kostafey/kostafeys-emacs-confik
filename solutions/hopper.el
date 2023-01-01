@@ -167,9 +167,11 @@
                 (lsp-find-definition)
                 (recenter-top-bottom 5)))
              ;; go-mode
-             ((and (equal 'go-mode mode)
-                   (functionp 'godef-jump))
-              (godef-jump point))
+             ((equal 'go-mode mode)
+              (if (member 'lsp-mode minor-mode-list)
+                  (lsp-find-definition)
+                (when (functionp 'godef-jump)
+                  (godef-jump point))))
              ;; rust-mode
              ((and (equal 'rust-mode mode)
                    (functionp 'racer-find-definition))

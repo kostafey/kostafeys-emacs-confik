@@ -72,11 +72,11 @@
 (require 'emacs-lisp-conf)
 (require 'js-conf)
 (require 'xml-conf)
+(require 'go-conf)
 ;; (require 'common-lisp-conf)
 ;; (require 'mql-mode)
 ;; (require 'sphinx-frontend)
 ;; (require 'lua-conf)
-;; (require 'go-conf)
 ;; (require 'rust-conf)
 ;; (require 'auctex-conf)
 
