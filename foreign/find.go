@@ -1,22 +1,31 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 	"io/ioutil"
-	"os"
 	"unicode/utf8"
 	"strconv"
+	"github.com/mopemope/emacs-module-go"
 )
 
-func main() {
-	if len(os.Args) != 4 {
-		fmt.Println("Usage: file start-pos search-string")
-		os.Exit(-1)
+func find(ctx emacs.FunctionCallContext) (emacs.Value, error) {
+	env := ctx.Environment()
+	stdlib := ctx.Environment().StdLib()
+
+	fileName, err := ctx.GoStringArg(0)
+	if err != nil {
+		return stdlib.Nil(), err
 	}
-	fileName := os.Args[1]
-	startPos, err := strconv.Atoi(os.Args[2])
-	search := strings.Replace(os.Args[3], "\\n", "\n", -1)
+	startPosStr, err := ctx.GoStringArg(1)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
+	startPos, err := strconv.ParseInt(startPosStr, 10, 0)
+	searchRaw, err := ctx.GoStringArg(2)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
+	search := strings.Replace(searchRaw, "\\n", "\n", -1)
 
 	byt, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -28,6 +37,7 @@ func main() {
 		s = string([]rune(s)[startPos:])
 	}
 	i := strings.Index(s, search)
+	result := startPos + int64(utf8.RuneCountInString(s[:i]))
 
-	fmt.Println(startPos + utf8.RuneCountInString(s[:i]))
+	return env.Int(result), nil
 }

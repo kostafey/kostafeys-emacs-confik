@@ -1,19 +1,18 @@
-//Build with: go build ./jsonpp.go
-
 package main
 
-import "encoding/json"
-import "fmt"
-import "io/ioutil"
-import "os"
+import (
+	"encoding/json"
+	"io/ioutil"
+	"github.com/mopemope/emacs-module-go"
+)
 
-func main() {
-    if len(os.Args) != 2 {
-		fmt.Println("One argument, the json file to pretty-print is required")
-		os.Exit(-1)
-    }
+func jsonpp(ctx emacs.FunctionCallContext) (emacs.Value, error) {
+	stdlib := ctx.Environment().StdLib()
 
-    fileName := os.Args[1]
+	fileName, err := ctx.GoStringArg(0)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
     byt, err := ioutil.ReadFile(fileName)
     if err != nil {
 		panic(err)
@@ -30,4 +29,5 @@ func main() {
     }
     b2 := append(b, '\n')
 	ioutil.WriteFile(fileName, b2, 0644);
+	return stdlib.T(), nil
 }

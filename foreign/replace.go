@@ -1,28 +1,34 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 	"io/ioutil"
-	"os"
+	"github.com/mopemope/emacs-module-go"
 )
 
-func main() {
-	if len(os.Args) != 4 {
-		fmt.Println("Usage: file old-string new-string")
-		os.Exit(-1)
-	}
+func replace(ctx emacs.FunctionCallContext) (emacs.Value, error) {
+	stdlib := ctx.Environment().StdLib()
 
-	fileName := os.Args[1]
+	fileName, err := ctx.GoStringArg(0)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
 	byt, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		panic(err)
 	}
-	old := strings.Replace(os.Args[2], "\\n", "\n", -1)
-	new := strings.Replace(os.Args[3], "\\n", "\n", -1)
+	old, err := ctx.GoStringArg(1)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
+	new, err := ctx.GoStringArg(2)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
 
 	s := string(byt)
 	s = strings.Replace(s, old, new, -1)
 
 	ioutil.WriteFile(fileName, []byte(s), 0644);
+	return stdlib.T(), nil
 }

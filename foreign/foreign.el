@@ -31,34 +31,33 @@
 (require 'functions)
 
 (defvar foreign-bin-path (concat-path "~/.emacs.d" "foreign"))
+(defvar module-file-path (concat-path foreign-bin-path "foreign-fmt.so"))
 
-(defun foreign-get-go-executable (src-go-file)
-  (let* ((src-go-path (concat-path foreign-bin-path src-go-file))
-         (bin-go-path (substring src-go-path 0 (- (length src-go-path) 3)))
-         (bin-go-path (if (eq system-type 'windows-nt)
-                          (concat bin-go-path ".exe")
-                        bin-go-path)))
-    (if (not (file-exists-p bin-go-path))
-        (shell-command
-         (concat "go build -o " bin-go-path " " src-go-path"\"")))
-    bin-go-path))
+(defun module-reload (module)
+  "Reload existing module."
+  (let ((tmpfile (make-temp-file
+                  (file-name-nondirectory module) nil module-file-suffix)))
+    (copy-file module tmpfile t)
+    (module-load tmpfile)
+    tmpfile))
 
-(defun foreign-run-for-file (foreign-src file-name &rest args)
-  (let* ((bin (foreign-get-go-executable foreign-src))
-         (command (concat bin " " file-name
-                          (if args
-                              (concat " "
-                                      (cl-reduce
-                                       (lambda (x y) (concat x " " y)) args))
-                            ""))))
-    (shell-command-to-string command)))
+(defun foreign-ensure-so (filename)
+  (when (not (file-exists-p module-file-path))
+    (let ((default-directory foreign-bin-path))
+      (shell-command
+       (concat "make " filename)))))
+
+(progn
+  (foreign-ensure-so "foreign-fmt.so")
+  ;; (module-reload (concat-path foreign-bin-path "foreign-fmt.so"))
+  (module-load (concat-path foreign-bin-path "foreign-fmt.so")))
 
 (defun foreign-format-file (foreign-src mode)
   (when (and
          (buffer-modified-p)
          (yes-or-no-p "Buffer modified. Save it?"))
     (save-buffer))
-  (foreign-run-for-file foreign-src (buffer-file-name))
+  (funcall foreign-src (buffer-file-name))
   (revert-buffer-hard)
   (funcall mode)
   (message "Done."))
@@ -66,12 +65,17 @@
 (defun foreign-format-json ()
   "Pretty print json file."
   (interactive)
-  (foreign-format-file "jsonpp.go" 'js-mode))
+  (foreign-format-file 'foreign-jsonpp-go 'js-mode))
 
 (defun foreign-format-xml ()
   "Pretty print xml file."
   (interactive)
-  (foreign-format-file "xmlpp.go" 'xml-mode))
+  (foreign-format-file 'foreign-xmlpp-go 'xml-mode))
+
+(defun foreign-format-edn ()
+  "Pretty print edn file."
+  (interactive)
+  (foreign-format-file 'foreign-ednpp-go 'clojure-mode))
 
 (defun foreign-replace (old-string new-string)
   "Replace string in file."
@@ -81,10 +85,9 @@
                           "" nil nil 'foreign-replace-old-history)
     (read-from-minibuffer (concat "Replace with: ")
                           "" nil nil 'foreign-replace-new-history)))
-  (foreign-run-for-file "replace.go"
-                        (buffer-file-name)
-                        (prepare-string-to-shell old-string)
-                        (prepare-string-to-shell new-string))
+  (foreign-replace-go (buffer-file-name)
+                      old-string
+                      new-string)
   (revert-buffer-hard)
   (message "Done."))
 
@@ -94,28 +97,10 @@
    (list
     (read-from-minibuffer "Find string: "
                           "" nil nil 'foreign-find-history)))
-  (let ((pos (string-to-number
-              (foreign-run-for-file "find.go"
-                                    (buffer-file-name)
-                                    (number-to-string (point))
-                                    (prepare-string-to-shell search-string)))))
+  (let ((pos (foreign-find-go (buffer-file-name)
+                              (number-to-string (point))
+                              search-string)))
     (goto-char (+ pos 1)))
-  (message "Done."))
-
-;;;###autoload
-(defun foreign-format-edn ()
-  "Pretty print edn file.
-Install `boot' first: https://github.com/boot-clj/boot"
-  (interactive)
-  (let* ((bin (concat-path foreign-bin-path "pprint-edn.clj"))
-         (command (concat bin " < " (buffer-file-name)))
-         (result (shell-command-to-string command)))
-    (erase-buffer)
-    (insert result))
-  (save-buffer)
-  (when (not (eq major-mode 'clojure-mode))
-    (clojure-mode))
-  (goto-char (point-min))
   (message "Done."))
 
 (provide 'foreign)

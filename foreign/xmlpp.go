@@ -1,19 +1,20 @@
-//Build with: go build ./xmlpp.go
-
 package main
 
-import "fmt"
-import "io/ioutil"
-import "os"
-import "github.com/yosssi/gohtml"
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"github.com/yosssi/gohtml"
+	"github.com/mopemope/emacs-module-go"
+)
 
-func main() {
-    if len(os.Args) != 2 {
-		fmt.Println("One argument, the xml/html file to pretty-print is required")
-		os.Exit(-1)
-    }
+func xmlpp(ctx emacs.FunctionCallContext) (emacs.Value, error) {
+	stdlib := ctx.Environment().StdLib()
 
-    fileName := os.Args[1]
+	fileName, err := ctx.GoStringArg(0)
+	if err != nil {
+		return stdlib.Nil(), err
+	}
     byt, err := ioutil.ReadFile(fileName)
     if err != nil {
 		panic(err)
@@ -24,13 +25,14 @@ func main() {
     f, err := os.Create(fileName)
     if err != nil {
         fmt.Println(err)
-        return
+        return stdlib.Nil(), err
     }
     f.WriteString(html)
 
     err = f.Close()
     if err != nil {
         fmt.Println(err)
-        return
+        return stdlib.Nil(), err
     }
+	return stdlib.T(), nil
 }
