@@ -153,9 +153,8 @@
              ;; clojure-mode
              ((equal 'clojure-mode mode)
               (if (hop-nrepl-current-session)
-                  (cider-find-var
-                   (cider--kw-to-symbol
-                    (cider-symbol-at-point)))
+                  (let ((xref-prompt-for-identifier nil))
+                    (call-interactively 'xref-find-definitions))
                 (if (member 'lsp-mode minor-mode-list)
                     (lsp-find-definition)
                   (message "Launch LSP or nREPL."))))
