@@ -1,4 +1,5 @@
 (require 'elpa-conf)
+(use-elpa 'use-package)
 
 ;;-------------------------------------------------------------------
 ;; nxhtml
@@ -124,9 +125,13 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;;-------------------------------------------------------------------
 ;; graphviz-dot-mode
 ;;
-;; (use-elpa 'graphviz-dot-mode)
-;; (require 'company-graphviz-dot)
-;; (setq graphviz-dot-indent-width 4)
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (setq graphviz-dot-indent-width 4))
+
+(use-package company-graphviz-dot
+  :ensure nil)
 
 (use-elpa 'yaml-mode)
 
