@@ -30,6 +30,8 @@
 
 (require 'functions)
 
+(defcustom foreign-preserve-edit-history t "")
+
 (defvar foreign-bin-path (concat-path "~/.emacs.d" "foreign"))
 (defvar module-file-path (concat-path foreign-bin-path "foreign-fmt.so"))
 
@@ -58,7 +60,9 @@
          (yes-or-no-p "Buffer modified. Save it?"))
     (save-buffer))
   (funcall foreign-src (buffer-file-name))
-  (revert-buffer-hard)
+  (if foreign-preserve-edit-history
+      (revert-buffer nil t)
+      (revert-buffer-hard))
   (funcall mode)
   (message "Done."))
 
