@@ -359,6 +359,15 @@ buffer is not visiting a file."
   (mark-whole-buffer)
   (indent-for-tab-command))
 
+(defun edn-format ()
+  "Pretty print edn string."
+  (interactive)
+  (beginning-of-buffer)
+  (replace-string "," ",\n")
+  (clojure-mode)
+  (mark-whole-buffer)
+  (indent-for-tab-command))
+
 (defun sexp-format ()
   "Pretty print s-expressions data."
   (interactive)
