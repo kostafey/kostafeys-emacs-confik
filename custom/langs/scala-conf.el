@@ -49,7 +49,8 @@
 (use-package scala-mode
   :mode "\\.s\\(cala\\|bt\\)$")
 
-(add-to-list 'auto-mode-alist '("\\routes" . restclient-mode))
+(use-elpa 'restclient)
+(add-to-list 'auto-mode-alist '("\\routes$" . restclient-mode))
 
 (use-package sbt-mode
   :commands sbt-start sbt-command

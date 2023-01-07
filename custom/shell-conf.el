@@ -2,6 +2,9 @@
 
 (require 'elpa-conf)
 
+(use-package vterm
+    :ensure t)
+
 (defcustom k/default-shell 'eshell
   "Set default shell type. Possible values are one of:
 'eshell
