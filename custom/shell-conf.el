@@ -3,8 +3,9 @@
 (require 'elpa-conf)
 
 (use-package vterm
-    :ensure t
-    :config (global-set-key (kbd "C-<insert>") 'vterm-yank))
+  :ensure t
+  :bind (:map vterm-mode-map
+         ("C-<insert>" . vterm-yank)))
 
 (defcustom k/default-shell 'eshell
   "Set default shell type. Possible values are one of:
