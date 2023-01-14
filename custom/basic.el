@@ -581,6 +581,14 @@ Don't mess with special buffers."
     (unless (or (eql buffer (current-buffer)) (not (buffer-file-name buffer)))
       (kill-buffer buffer))))
 
+(defun kill-special-buffers ()
+  "Kill special buffers but the current one."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (or (eql buffer (current-buffer)) (buffer-file-name buffer))
+      (let ((kill-buffer-query-functions nil))
+        (kill-buffer buffer)))))
+
 (defun find-file-from-clipboard ()
   "Open file or directory path from clipboard (kill ring) if path exists."
   (interactive)
@@ -590,6 +598,7 @@ Don't mess with special buffers."
       (message "Can't find file '%s'" file-path))))
 
 (global-set-key (kbd "C-c w") 'kill-other-buffers)
+(global-set-key (kbd "C-c C-w") 'kill-special-buffers)
 (global-set-key (kbd "C-x a s") 'find-file-from-clipboard)
 (global-set-key (kbd "C-c k") 'delete-this-buffer-and-file)
 
