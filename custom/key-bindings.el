@@ -53,6 +53,7 @@
 
 ;; (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
 (global-set-key (kbd "C-M-f") 'k/ag)
+(global-set-key (kbd "C-c r") 'k/rg)
 (global-set-key (kbd "C-c C-f") 'ack-file)
 
 (when (require 'highlight-symbol nil 'noerror)
@@ -170,10 +171,7 @@
 (global-set-key [f4] 'k/shell)
 (global-set-key [f5] 'dired-open)
 (global-set-key [f6] 'switch-completion-frontend)
-(global-set-key [f7] (lambda () (interactive)
-                       (if (projectile-project-root)
-                           (command-execute 'rg-project)
-                         (command-execute 'rg))))
+(global-set-key [f7] 'k/rg)
 (global-set-key [S-f7] 'rg)
 (global-set-key [C-f7] 'ack-file)
 

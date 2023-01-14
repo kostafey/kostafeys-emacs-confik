@@ -1,10 +1,8 @@
-;;----------------------------------------------------------------------
-;; ack
 (require 'elpa-conf)
-(use-elpa 'ag)
-(use-elpa 'rg)
 (require 'functions)
 
+;;----------------------------------------------------------------------
+;; ack
 (add-to-list
  'load-path
  (expand-file-name "~/.emacs.d/artifacts/ack/"))
@@ -22,6 +20,7 @@
 
 ;;----------------------------------------------------------------------
 ;; The Silver Searcher - ag
+(use-elpa 'ag)
 (when (require 'ag nil 'noerror)
   (setq ag-reuse-window 'nil)
   (setq ag-reuse-buffers 't)
@@ -36,6 +35,13 @@
 
 ;;----------------------------------------------------------------------
 ;; ripgrep  - rg
+(use-elpa 'rg)
+
+(defun k/rg ()
+  (interactive)
+  (if (projectile-project-root)
+      (command-execute 'rg-project)
+    (command-execute 'rg)))
 
 (setq rg-command-line-flags '("--no-messages")) ; Suppress all error messages.
 
