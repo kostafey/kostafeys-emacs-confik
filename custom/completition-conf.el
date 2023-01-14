@@ -99,6 +99,12 @@ With ARG, move by that many elements."
       (company-select-next (1- company-candidates-length))
       (company-select-next (if arg (- arg) -1))))
 
+;; Company quickhelp
+(use-elpa 'company-quickhelp)
+(company-quickhelp-mode)
+(eval-after-load 'company
+  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
+
 ;;=============================================================================
 ;; common completion functions
 ;;
