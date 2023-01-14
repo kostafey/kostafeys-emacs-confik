@@ -24,6 +24,12 @@
              (file-exists-p (byte-compile-dest-file buffer-file-name)))
     (byte-compile-file buffer-file-name)))
 
+(defun native-compile-current-buffer ()
+  "`native-compile' current buffer if it's emacs-lisp-mode."
+  (interactive)
+  (when (eq major-mode 'emacs-lisp-mode)
+    (native-compile-async buffer-file-name)))
+
 (add-hook 'after-save-hook 'byte-compile-current-buffer)
 
 ;;------------------------------------------------------------
