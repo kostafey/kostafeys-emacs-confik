@@ -240,18 +240,21 @@
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
 ;;
+(require 'clojure-conf)
 (global-unset-key (kbd "C-n"))
 (defun kostafey-clojure-mode-hook ()
   (define-key clojure-mode-map (kbd "C-c C-p") 'cider-pprint-eval-last-sexp)
   (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
   (define-key clojure-mode-map (kbd "C-n e b") 'my-cider-eval-buffer)
-  (define-key clojure-mode-map (kbd "C-x C-e") 'cider-eval-last-sexp)
+  (define-key clojure-mode-map (kbd "C-x C-e") 'k/clojure-eval-last-sexp)
   (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
   (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
   (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
   (define-key clojure-mode-map (kbd "C-c C-l") nil)
   (define-key clojure-mode-map (kbd "C-c C-f") nil)
-  (define-key clojure-mode-map (kbd "C-c C-f") 'ack-file))
+  (define-key clojure-mode-map (kbd "C-c C-f") 'ack-file)
+  (define-key clojure-mode-map (kbd "C-c RET") 'newline-and-indent)
+  (define-key clojure-mode-map (kbd "M-n") 'k/clojure-switch-to-current-namespace))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
 (global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
 

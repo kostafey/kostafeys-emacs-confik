@@ -10,6 +10,7 @@
 
 (require 's)
 (require 'ejc-sql)
+(require 'clojure-conf)
 
 (defun hop-buffer-mode (buffer-or-string)
   "Return the major mode associated with a buffer BUFFER-OR-STRING."
@@ -75,15 +76,6 @@
           "\\(\\/\\(%[0-9a-fA-F]\\{2\\}\\|[~\\.A-Za-z_+-]*\\)*\\)*"))
 
 (require 'cider nil 'noerror)
-
-(defun hop-nrepl-current-session ()
-  "Return the current nrepl session or nil."
-  (let* ((buff (or nrepl-connection-buffer
-                   (cider-current-repl)))
-         (sess (if buff
-                   (with-current-buffer buff
-                     nrepl-session))))
-    sess))
 
 (defun hop--goto-file-location (arg)
   (let ((splitted-path (s-split ":" arg)))
@@ -151,8 +143,8 @@
               (let ((symb string-at-point))
                 (slime-edit-definition symb)))
              ;; clojure-mode
-             ((equal 'clojure-mode mode)
-              (if (hop-nrepl-current-session)
+             ((member mode (list 'clojure-mode 'clojurescript-mode))
+              (if (k/nrepl-current-session)
                   (let ((xref-prompt-for-identifier nil))
                     (call-interactively 'xref-find-definitions))
                 (if (member 'lsp-mode minor-mode-list)
