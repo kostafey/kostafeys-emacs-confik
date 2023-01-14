@@ -1,9 +1,8 @@
 (require 'elpa-conf)
+(use-elpa 'use-package)
 (use-elpa 'magit)
 (use-elpa 'multi-magit)
 (use-elpa 'darcsum)
-(use-elpa 'git-gutter)
-(use-elpa 'git-gutter-fringe)
 (use-elpa 'diffview)
 
 (setq magit-auto-revert-mode nil)
@@ -64,8 +63,16 @@
     (setq multi-magit-selected-repositories dirs))
   (multi-magit-status))
 
-(when (require 'git-gutter-fringe nil 'noerror)
+(use-package git-gutter
+  :config
   (global-git-gutter-mode t))
+
+(use-package git-gutter-fringe
+  :config
+  (define-fringe-bitmap 'git-gutter-fr:added [#b11100000] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [#b11100000] nil nil '(center repeated))
+  ;; (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom)
+  )
 
 (defun my-enable-smerge-maybe ()
   (when (and buffer-file-name (vc-backend buffer-file-name))
