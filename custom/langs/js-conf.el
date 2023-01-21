@@ -1,6 +1,7 @@
 (require 'elpa-conf)
 (use-elpa 'skewer-mode)
 (use-elpa 'rjsx-mode)
+(use-elpa 'npm-mode)
 (use-elpa 'web-mode)
 
 ;;------------------------------------------------------------
