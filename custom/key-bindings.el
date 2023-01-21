@@ -148,8 +148,8 @@
 
 ;;-------------------------------------------------------------------
 ;; company-mode
-(define-key company-search-map [escape] 'company-search-abort)
-(define-key company-active-map [escape] 'company-abort)
+(define-key company-search-map (kbd "<escape>") 'company-search-abort)
+(define-key company-active-map (kbd "<escape>") 'company-abort)
 (define-key company-active-map (kbd "<up>") 'k/company-select-previous)
 (define-key company-active-map (kbd "<down>") 'k/company-select-next)
 (define-key company-active-map [next] 'company-next-page)
