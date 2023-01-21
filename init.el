@@ -73,6 +73,7 @@
 (require 'js-conf)
 (require 'xml-conf)
 (require 'go-conf)
+(require 'fennel-conf)
 ;; (require 'common-lisp-conf)
 ;; (require 'mql-mode)
 ;; (require 'sphinx-frontend)
