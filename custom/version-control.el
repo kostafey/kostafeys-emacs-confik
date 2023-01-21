@@ -6,7 +6,6 @@
 (use-elpa 'diffview)
 
 (setq magit-auto-revert-mode nil)
-(setq magit-last-seen-setup-instructions "1.4.0")
 
 (custom-set-variables
  '(magit-save-some-buffers (quote dontask)))
@@ -64,15 +63,16 @@
   (multi-magit-status))
 
 (use-package git-gutter
+  :ensure t
   :config
   (global-git-gutter-mode t))
 
 (use-package git-gutter-fringe
+  :ensure t
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [#b11100000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b11100000] nil nil '(center repeated))
-  ;; (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom)
-  )
+  (define-fringe-bitmap 'git-gutter-fr:deleted [#b11111111] nil nil '(center repeated)))
 
 (defun my-enable-smerge-maybe ()
   (when (and buffer-file-name (vc-backend buffer-file-name))
