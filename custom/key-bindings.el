@@ -25,6 +25,7 @@
 (require 'reencoding-file)
 (require 'version-control)
 (require 'org)
+(require 'rofi)
 
 ;;-------------------------------------------------------------------
 ;; multiple-cursors
@@ -55,6 +56,9 @@
 (global-set-key (kbd "C-M-f") 'k/ag)
 (global-set-key (kbd "C-c r") 'k/rg)
 (global-set-key (kbd "C-c C-f") 'ack-file)
+
+;; Esc - exit from search
+(define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
 
 (when (require 'highlight-symbol nil 'noerror)
   (eval-after-load "highlight-symbol"
@@ -161,7 +165,7 @@
 ;;
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key [M-f1] (lambda () (interactive) (psw-switch-buffer t)))
-(global-set-key (kbd "C-S-n") 'psw-switch-projectile-files)
+(global-set-key (kbd "C-S-n") 'rofi-switch-projectile-files)
 (global-set-key (kbd "C-M-n") 'projectile-find-file)
 (global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
 (global-set-key (kbd "s-q") 'psw-navigate-files)
