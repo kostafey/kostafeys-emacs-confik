@@ -135,4 +135,6 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (use-elpa 'yaml-mode)
 
+(use-elpa 'dockerfile-mode)
+
 (provide 'text-modes-conf)
