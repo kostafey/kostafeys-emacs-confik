@@ -108,7 +108,7 @@ With ARG, move by that many elements."
 ;;=============================================================================
 ;; common completion functions
 ;;
-(defcustom k/complete-frontend 'auto-complete
+(defcustom k/complete-frontend 'company-mode
   "Selected completion frontend."
   :type '(choice
           (const :tag "auto-complete" :value auto-complete)
