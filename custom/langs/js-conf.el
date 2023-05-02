@@ -96,6 +96,10 @@
 ;; (wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
 
+;; `lsp-server'
+;; npm install -g eslint
+(setq flycheck-checker-error-threshold 10000)
+
 ;;------------------------------------------------------------
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
