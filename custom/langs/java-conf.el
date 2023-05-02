@@ -4,11 +4,13 @@
 ;; - `JAVADOC'
 ;; - `CATALINA_HOME'
 
+;; The server installation will be in `lsp-java-server-install-dir'
+;; Run all tests: `projectile-test-project'
+
 ;;-----------------------------------------------------------------------------
 ;; lsp-java
 ;;
 (use-package lsp-mode :ensure t)
-(use-package company-lsp :ensure t)
 
 (use-package lsp-java
   :ensure t
@@ -17,33 +19,59 @@
                  (custom-set-variables '(lsp-ui-sideline-enable nil)
                                        '(lsp-ui-doc-enable nil))))
 
-;; The server installation will be in `lsp-java-server-install-dir'
-;; For update: (lsp-install-server t)
-;;         or: (lsp--install-server-internal ['jdtls] t)
-
 (defun k/java-mode-hook ()
   (my-coding-hook)
-  (flycheck-mode t)
-  (c-set-offset 'arglist-intro '+))
+  (c-set-offset 'arglist-intro '+)
+  (define-key java-mode-map (kbd "C-x C-e") #'jshell-eval-last-expr)
+  (define-key java-mode-map (kbd "M-e") #'jshell-eval-region))
 
-(add-hook 'java-mode-hook 'k/java-mode-hook)
+(add-hook 'java-mode-hook #'k/java-mode-hook)
+(add-hook 'java-mode-hook #'lsp)
 
 ;;-----------------------------------------------------------------------------
-;; beanshell
+;; jshell
 ;;
-(require 'beanshell)
-(setq bsh-jar (find-file-in-load-path "bsh-2.0b4.jar"))
+(require 'shell-conf)
 
-;;-----------------------------------------------------------------------------
-;; skeeto/javadoc-lookup
-;;
-(require 'javadoc-lookup)
-;; Path example: `~/Java/jdk/docs/api/'
-(let ((javadoc-env (getenv "JAVADOC")))
-  (when javadoc-env
-    (apply 'javadoc-add-roots (split-string javadoc-env ";"))))
+(defun jshell-get-buffer ()
+  (save-window-excursion
+    (let ((vterm-buffer (or (-find (lambda (b) (equal (buffer-name b)
+                                                 "*eshell*"))
+                                   (buffer-list))
+                            (prog1
+                                (k/shell)
+                              (with-current-buffer "*eshell*"
+                                (eshell-return-to-prompt)
+                                (insert "jshell")
+                                (eshell-send-input))))))
+      vterm-buffer)))
 
-;;-----------------------------------------------------------------------------
+(defun jshell ()
+ (interactive)
+ (pop-to-buffer (jshell-get-buffer)))
+
+(defun jshell-send (data)
+  (interactive)
+  (with-current-buffer (jshell-get-buffer)
+    (insert data)
+    (eshell-send-input)))
+
+(defun jshell-eval-last-expr ()
+  (interactive)
+  (cl-multiple-value-bind
+      (start end)
+      (k/scala-get-last-scala-expr)
+    (k/scala-flash-region start end)
+    (jshell-send (buffer-substring start end))))
+
+(defun jshell-eval-region (start end)
+  (interactive "r")
+  (let ((data (trim-string
+               (buffer-substring-no-properties start end))))
+    (k/scala-flash-region start end)
+    (jshell-send data)))
+
+;;--------------------------------------------------------------------
 ;; maven
 ;;
 (defmacro maven-def-task (name command)
@@ -59,7 +87,9 @@
 (maven-def-task maven-package "mvn package")
 (maven-def-task maven-all "mvn clean package tomcat7:redeploy")
 
-;;-----------------------------------------------------------------------------
+;; "mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-simple"
+
+;;--------------------------------------------------------------------
 ;; Inserting getters and setters
 ;; Based on:
 ;; `https://www.ecyrd.com/JSPWiki/wiki/InsertingGettersAndSettersInEmacs'
@@ -118,7 +148,7 @@
 
 (defalias 'java-create-getters-setters 'java-generate-getters-setters)
 
-;;-----------------------------------------------------------------------------
+;;--------------------------------------------------------------------
 ;; JBehave: story-mode
 ;;
 (define-generic-mode story-mode
@@ -131,19 +161,21 @@
   "Story mode is a minor mode for editing JBehave story files")
 (add-to-list 'auto-mode-alist '("\\.story" . story-mode))
 
-;;-----------------------------------------------------------------------------
+;;--------------------------------------------------------------------
 ;; jflex-mode
 ;;
 (autoload 'jflex-mode "jflex-mode" nil t)
 (setq auto-mode-alist (cons '("\\(\\.flex\\|\\.jflex\\)\\'" . jflex-mode)
                             auto-mode-alist))
 
-;;-----------------------------------------------------------------------------
+;;--------------------------------------------------------------------
 ;; java-decompiler
 ;;
 ;; mvn org.apache.maven.plugins:maven-dependency-plugin:get \
 ;;   -Dartifact=org.benf:cfr:0.139
 ;;
+(use-package jdecomp :ensure t)
+
 (let ((home (if (eq system-type 'windows-nt)
                 (s-replace-all
                  (list (cons "\\" "/"))
