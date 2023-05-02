@@ -26,8 +26,30 @@
       '(lambda ()
          (list
           (cond
-           ((find (aref (buffer-name (current-buffer)) 0) " *") "*")
+           ((and (find (aref (buffer-name (current-buffer)) 0) " *")
+                 (not (string-match
+                       "^\\*temp\\(-[0-9]+\\)?\\*$"
+                       (buffer-name b))))
+            "*")
            (t "All Buffers")))))
+
+(setq tabbar-buffer-list-function
+      '(lambda ()
+         (delq nil
+               (mapcar #'(lambda (b)
+                           (cond
+                            ;; Always include the current buffer.
+                            ((eq (current-buffer) b) b)
+                            ((buffer-file-name b) b)
+                            ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+                            ((buffer-live-p b) b)))
+                       (-filter
+                        (lambda (b) (or (eq (current-buffer) b)
+                                   (buffer-file-name b)
+                                   (string-match
+                                    "^\\*temp\\(-[0-9]+\\)?\\*$"
+                                    (buffer-name b))))
+                        (buffer-list))))))
 
 (defun k/select-window-fix-tabbar ()
   "Hide `tabbar' for buffers displayed in windows located
