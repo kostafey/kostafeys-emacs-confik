@@ -116,6 +116,8 @@
 (global-set-key (kbd "C-w") 'eframe-kill-buffer)
 (global-set-key [(control next)] 'eframe-next-buffer)      ; C-Page Up
 (global-set-key [(control prior)] 'eframe-previous-buffer) ; C-Page Down
+(global-unset-key (kbd "M-k"))
+(global-set-key (kbd "M-k f") 'make-frame)
 
 (when (require 'temporary-persistent nil 'noerror)
   (global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer))

@@ -18,8 +18,15 @@
 (setq ring-bell-function 'ignore)
 
 ;;-------------------------------------------------------------------
-;; Show file path & file name in app window header
-(setq frame-title-format "%S: %f")
+;; Show frame number, file path & file name in app window header
+(setq frame-title-format
+      '((:eval (when (require 'dash nil 'noerror)
+                 (format "%s/%s"
+                         (number-to-string
+                          (-elem-index (selected-frame) (frame-list)))
+                         (number-to-string
+                          (- (length (frame-list)) 1)))))
+        " : %f"))
 
 ;;-------------------------------------------------------------------
 ;; Line numbers display in the buffer
@@ -116,7 +123,11 @@
                              nil
                            'fullboth))))
 
-;; (setq window-setup-hook 'toggle-fullscreen)
+;; start the initial frame maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+;; start every frame maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;;-------------------------------------------------------------------
 ;; Fringes
