@@ -281,11 +281,9 @@
   (define-key scala-mode-map (kbd "C-x C-e") 'k/scala-eval-last-scala-expr)
   (define-key scala-mode-map (kbd "C-c C-e") 'k/scala-eval-line)
   (define-key scala-mode-map (kbd "C-n k")   'k/scala-compile)
-
-  ;; (define-key ensime-mode-map (kbd "C-n q")  'k/ensime-quit)
-  ;; (define-key ensime-mode-map (kbd "C-M-d") 'hop-at-point)
-  ;; (define-key ensime-mode-map (kbd "C-c i") 'ensime-import-type-at-point)
-  )
+  (define-key scala-mode-map (kbd "C-c RET") 'newline-and-indent)
+  (define-key scala-mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
+  (define-key scala-mode-map (kbd "C-c i")   'lsp-java-add-import))
 (add-hook 'scala-mode-hook 'kostafey-scala-mode-hook)
 
 ;;----------------------------------------------------------------------

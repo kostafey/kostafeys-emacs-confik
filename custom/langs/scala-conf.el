@@ -47,7 +47,24 @@
 
 ;; Enable scala-mode and sbt-mode
 (use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)$")
+  :mode "\\.s\\(cala\\|bt\\)$"
+  :config (setq scala-indent:step 4
+                scala-indent:indent-value-expression nil
+                scala-indent:align-parameters t
+                scala-indent:align-forms t
+                scala-indent:default-run-on-strategy scala-indent:reluctant-strategy))
+
+(defun k/scala-toggle-indent:step (arg)
+  "Toggle Scala indent step. When ARG is defined, set it as a step value."
+  (interactive "P")
+  (if arg
+      (setq scala-indent:step arg)
+    (if (equal scala-indent:step 2)
+        (setq scala-indent:step 4)
+      (setq scala-indent:step 2)))
+  (message (format "set scala-indent:step %s"
+                   (propertize (number-to-string scala-indent:step)
+                               'face 'font-lock-keyword-face))))
 
 (use-elpa 'restclient)
 (add-to-list 'auto-mode-alist '("\\routes$" . restclient-mode))
@@ -76,7 +93,8 @@
   :config (progn
             (setq lsp-ui-doc-show-with-mouse nil)
             (setq lsp-prefer-flymake nil)
-            (setq lsp-before-save-edits nil)))
+            (setq lsp-before-save-edits nil)
+            (setq lsp-ui-sideline-diagnostic-max-lines 8)))
 
 ;; Add metals backend for lsp-mode
 (use-package lsp-metals)
@@ -104,8 +122,6 @@
   (define-key scala-mode-map (kbd "<tab>") 'k/scala-indent-region))
 
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
-
-(setq scala-indent:step 4)
 
 (defun k/scala-flash-region (start end &optional timeout)
   "Temporarily highlight region from START to END."
@@ -192,8 +208,7 @@
                 reg)))
     (k/scala-eval-string reg)))
 
-(cl-defun k/scala-eval-last-scala-expr ()
-  (interactive)
+(defun k/scala-get-last-scala-expr ()
   (let* ((prev-str (string (preceding-char)))
          (start (point))
          (end
@@ -219,8 +234,15 @@
                      (k/scala-skip-sexp "import")
                      (when (k/scala-check-package
                             (buffer-substring start (point)))
-                       (return-from k/scala-eval-last-scala-expr)))))
+                       (return-from k/scala-get-last-scala-expr)))))
             (point))))
+    (list start end)))
+
+(defun k/scala-eval-last-scala-expr ()
+  (interactive)
+  (cl-multiple-value-bind
+      (start end)
+      (k/scala-get-last-scala-expr)
     (k/scala-flash-region start end)
     (k/scala-eval-region start end)))
 
