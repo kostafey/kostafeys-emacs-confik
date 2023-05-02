@@ -35,6 +35,7 @@
 (use-elpa 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
+(global-auto-complete-mode nil)
 
 ;; if a length of a word you entered is larger than the value,
 ;; completion will be started automatically
@@ -98,6 +99,23 @@ With ARG, move by that many elements."
   (if (= company-selection 0)
       (company-select-next (1- company-candidates-length))
       (company-select-next (if arg (- arg) -1))))
+
+;; Setting up similar to `auto-complete-mode' behavior:
+;; https://github.com/company-mode/company-mode/wiki/Switching-from-AC
+
+(setq company-require-match 'never)
+(setq company-auto-complete t)
+
+(defun my-company-visible-and-explicit-action-p ()
+  (and (company-tooltip-visible-p)
+       (company-explicit-action-p)))
+
+(defun company-ac-setup ()
+  "Sets up `company-mode' to behave similarly to `auto-complete-mode'."
+  (setq company-require-match nil)
+  (setq company-auto-complete #'my-company-visible-and-explicit-action-p))
+
+(company-ac-setup)
 
 ;; Company quickhelp
 (use-elpa 'company-quickhelp)

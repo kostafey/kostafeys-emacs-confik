@@ -25,7 +25,6 @@
 (require 'reencoding-file)
 (require 'version-control)
 (require 'org)
-(require 'rofi)
 
 ;;-------------------------------------------------------------------
 ;; multiple-cursors
@@ -159,13 +158,13 @@
 (define-key company-active-map [next] 'company-next-page)
 (define-key company-active-map [prior] 'company-previous-page)
 (define-key company-active-map (kbd "C-f") 'company-search-candidates)
+(define-key company-active-map (kbd "<tab>") 'company-complete-selection)
 
 ;;===================================================================
 ;; Function keys
 ;;
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key [M-f1] (lambda () (interactive) (psw-switch-buffer t)))
-(global-set-key (kbd "C-S-n") 'rofi-switch-projectile-files)
 (global-set-key (kbd "C-M-n") 'projectile-find-file)
 (global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
 (global-set-key (kbd "s-q") 'psw-navigate-files)
