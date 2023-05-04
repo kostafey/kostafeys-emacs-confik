@@ -1,3 +1,5 @@
+;;; Minibuffer configuration. -*- lexical-binding: t -*-
+
 (use-elpa 'use-package)
 
 ;;-------------------------------------------------------------------
@@ -49,7 +51,29 @@
 
        ;; Must be in the :init section of use-package such that the mode gets
        ;; enabled right away. Note that this forces loading the package.
-       (marginalia-mode))))
+       (marginalia-mode))
+     (use-package consult
+       :ensure t
+       ;; :custom (consult-config `((consult-bookmark :preview-key any)))
+       :config (progn
+                 (setq register-preview-delay 1)
+                 (setq consult-async-min-input 3)
+                 (setq consult-async-split-style 'perl))
+       :bind (("C-x b" . consult-buffer)
+              ("C-S-n" . consult-project-buffer)
+              ("C-x i" . consult-imenu)
+              ("C-S-i" . consult-imenu-multi)
+              ("C-S-f" . consult-line)
+              ("C-S-r" . consult-line-multi)
+              ("C-M-f" . consult-ripgrep)
+              ("C-c C-f" . consult-find) ; find file
+              ;; Defined in `basic.el':
+              ;; ("C-b" . bookmark-set)
+              ;; ("M-b" . bookmark-jump)
+              ;; ("C-S-b" . bookmark-delete)
+              ("C-c b" . consult-bookmark)
+              ("M-g" . consult-goto-line)
+              ("C-x C-x" . consult-global-mark)))))
   ('ido
    (progn
      ;;-------------------------------------------------------------------

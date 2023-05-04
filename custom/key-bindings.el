@@ -48,13 +48,9 @@
 ;;-------------------------------------------------------------------
 ;; Search & replace
 ;;
-(global-set-key (kbd "C-S-f") 'flx-isearch-forward)
-(global-set-key (kbd "C-S-r") 'flx-isearch-backward)
-
-;; (global-set-key (kbd "C-M-f") 'ack) ;; instead of 'rgrep
-(global-set-key (kbd "C-M-f") 'k/ag)
+(global-set-key (kbd "C-s-f") 'flx-isearch-forward)
+(global-set-key (kbd "C-s-r") 'flx-isearch-backward)
 (global-set-key (kbd "C-c r") 'k/rg)
-(global-set-key (kbd "C-c C-f") 'ack-file)
 
 ;; Esc - exit from search
 (define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
@@ -177,7 +173,8 @@
 (global-set-key [f5] 'dired-open)
 (global-set-key [f6] 'switch-completion-frontend)
 (global-set-key [f7] 'k/rg)
-(global-set-key [S-f7] 'rg)
+(global-set-key [S-f7] 'k/ag)
+(global-set-key [s-f7] 'ack)
 (global-set-key [C-f7] 'ack-file)
 
 (global-set-key [f8] 'recode-buffer-rotate-ring)
@@ -400,7 +397,6 @@
 (define-key org-mode-map (kbd "C-x t") 'org-todo)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-switchb)
 
 (define-key dired-mode-map [f1] nil)
 (define-key dired-mode-map (kbd "M-z") nil)
