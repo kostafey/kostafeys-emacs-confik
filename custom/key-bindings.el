@@ -1,7 +1,7 @@
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
 (require 'elpa-conf)
-(use-elpa 'goto-last-change)
+(use-elpa 'session)
 (use-elpa 'multiple-cursors)
 (use-elpa 'flx)
 (use-elpa 'flx-ido)
@@ -42,8 +42,10 @@
 ;;-------------------------------------------------------------------
 ;; goto-last-change
 ;;
-(global-set-key (kbd "C-x x") 'goto-last-change)
-(global-set-key (kbd "C-M-l") 'goto-last-change)
+(when (require 'session nil 'noerror)
+  (setq session-jump-undo-threshold 80)  ; default was 240
+  (global-set-key (kbd "C-x x") 'session-jump-to-last-change)
+  (global-set-key (kbd "C-M-l") 'session-jump-to-last-change))
 
 ;;-------------------------------------------------------------------
 ;; Search & replace
@@ -198,7 +200,8 @@
 ;;===================================================================
 
 (defun kostafey-lsp-signature-mode-map ()
-  (define-key lsp-signature-mode-map (kbd "M-a") 'ace-jump-mode))
+  (define-key lsp-signature-mode-map (kbd "M-a") 'ace-jump-mode)
+  (define-key lsp-signature-previous (kbd "M-p") 'copy-to-clipboard-buffer-file-path))
 (add-hook 'lsp-signature-mode-map-hook 'kostafey-lsp-signature-mode-map)
 
 ;;=============================================================================

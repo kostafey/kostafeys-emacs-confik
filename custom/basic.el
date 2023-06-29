@@ -284,9 +284,10 @@
 ;;-------------------------------------------------------------------
 ;; Bookmarks
 ;;
-(global-set-key (kbd "C-b") 'bookmark-set)
-(global-set-key (kbd "M-b") 'bookmark-jump)
-(global-set-key (kbd "C-S-b") 'bookmark-delete)
+(global-set-key (kbd "C-S-b") 'bookmark-set)
+(global-set-key (kbd "C-b") 'bookmark-jump)
+(global-set-key (kbd "M-b") 'bookmark-delete)
+(global-set-key (kbd "C-c b") 'bookmark-delete)
 
 ;;-------------------------------------------------------------------
 ;; Search & replace
@@ -354,17 +355,23 @@
          (message "You need exactly 2 windows or frames to do this."))))
 
 (defun mirror-window ()
- "Show the same buffer in the second window as in the active window."
- (interactive)
- (cond ((not (= (count-windows) 2))
-        (message "You need exactly 2 windows to do this."))
-       (t
-        (let* ((w1 (first (window-list)))
-               (w2 (second (window-list)))
-               (b1 (window-buffer w1))
-               (s1 (window-start w1)))
-          (set-window-start w2 s1)
-          (set-window-buffer w2 b1)))))
+  "Show the same buffer in the second window as in the active window."
+  (interactive)
+  (let ((mirror #'(lambda ()
+                    (let* ((w1 (first (window-list)))
+                           (w2 (second (window-list)))
+                           (b1 (window-buffer w1))
+                           (s1 (window-start w1)))
+                      (set-window-start w2 s1)
+                      (set-window-buffer w2 b1))) ))
+    (cond ((= (count-windows) 1)
+           (progn
+             (split-window-right)
+             (funcall mirror)))
+          ((= (count-windows) 2)
+           (funcall mirror))
+          (t
+           (message "You need exactly 2 windows to do this.")))))
 
 ;;===================================================================
 ;; Windows navigation
@@ -423,9 +430,20 @@
 (global-set-key (kbd "C-c j") 'join-next-line-n)
 (global-set-key (kbd "C-c d") 'duplicate-line)
 
+(defun k/kill-whole-line ()
+  "Deletes a whole line, but does not put it in the kill-ring."
+  (interactive)
+  (delete-region (line-beginning-position) (line-end-position))
+  (delete-char 1))
+
+(defun k/kill-line ()
+  "Deletes a line, but does not put it in the kill-ring."
+  (interactive)
+  (delete-region (point) (line-end-position)))
+
 (global-set-key (kbd "C-c c") 'center-line)
-(global-set-key (kbd "C-M-k") 'kill-whole-line)
-;; (global-set-key (kbd "C-k") 'kill-line) - default
+(global-set-key (kbd "C-M-k") 'k/kill-whole-line)
+(global-set-key (kbd "C-k") 'k/kill-line)
 
 (global-set-key (kbd "C-;") 'comment-or-uncomment-this)
 (global-set-key (kbd "C-/") 'comment-or-uncomment-this)

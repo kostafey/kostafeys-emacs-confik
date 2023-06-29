@@ -54,7 +54,6 @@
        (marginalia-mode))
      (use-package consult
        :ensure t
-       ;; :custom (consult-config `((consult-bookmark :preview-key any)))
        :config (progn
                  (setq register-preview-delay 1)
                  (setq consult-async-min-input 3)
@@ -68,10 +67,11 @@
               ("C-M-f" . consult-ripgrep)
               ("C-c C-f" . consult-find) ; find file
               ;; Defined in `basic.el':
-              ;; ("C-b" . bookmark-set)
-              ;; ("M-b" . bookmark-jump)
-              ;; ("C-S-b" . bookmark-delete)
-              ("C-c b" . consult-bookmark)
+              ;; ("C-S-b" . bookmark-set)
+              ;; ("C-b" . bookmark-jump)
+              ;; ("M-b" . bookmark-delete)
+              ;; ("C-c b" . bookmark-delete)
+              ("C-b" . consult-bookmark)
               ("M-g" . consult-goto-line)
               ("C-x C-x" . consult-global-mark)))))
   ('ido

@@ -139,7 +139,7 @@
 ;;-------------------------------------------------------------------
 ;; fill-column-indicator
 ;;
-(setq-default fill-column 80)
+(setq-default fill-column 70)
 (setq-default display-fill-column-indicator-column 80)
 (global-display-fill-column-indicator-mode t)
 

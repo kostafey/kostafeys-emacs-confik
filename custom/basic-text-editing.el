@@ -320,8 +320,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
       (if currently-using-underscores-p
           (progn
             (downcase-region start end)
+            (replace-string "_" " " nil start end)
             (upcase-initials-region start end)
-            (replace-string "_" "" nil start end)
+            (replace-string " " "" nil start end)
             (downcase-region start (1+ start)))
         (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
         (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
