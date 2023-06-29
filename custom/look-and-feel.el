@@ -166,6 +166,8 @@
 
 (defun font-lock-warn-todo ()
   "Make fixme tags standout."
+  (font-lock-add-keywords
+   'scala-mode '(("`.*'" 0 'font-lock-function-name-face t)))
   (font-lock-add-keywords nil
                           '(("AEK:?\\|FIXME:\\|TODO:\\|BUG:"
                              0 'font-lock-warning-face t))))

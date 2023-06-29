@@ -178,8 +178,7 @@
             (comint-send-string nil s)
             (comint-send-string nil "\n")
             (comint-send-string nil sbt:quit-paste-command)
-            (sit-for 1)
-            (comint-send-eof)))
+            (sit-for 1)))
       (progn
         (comint-send-string nil s)
         (comint-send-string nil "\n")))))
