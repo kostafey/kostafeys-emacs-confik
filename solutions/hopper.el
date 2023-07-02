@@ -9,6 +9,7 @@
 ;;; Code:
 
 (require 's)
+(require 'basic)
 (require 'ejc-sql)
 (require 'clojure-conf)
 
@@ -184,6 +185,13 @@
                       (semantic-ia-fast-jump point)
                     (error (hop-default-tag)))
                 (hop-default-tag))))))))))
+
+(defun hop-at-point-other-window (point)
+  "Jump to the entity definition at POINT position at neighboring window."
+  (interactive "d")
+  (when (not (mirror-window))
+    (other-window 1)
+    (hop-at-point (point))))
 
 (defun hop-by-mouse (start-event)
   "Jump to the entity definition by mouse click."

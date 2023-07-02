@@ -87,6 +87,7 @@
 (require 'hopper)
 ;; goto definition
 (global-set-key (kbd "C-M-d") 'hop-at-point)
+(global-set-key (kbd "C-x d") 'hop-at-point-other-window)
 (global-set-key (kbd "M-S-<left>") 'hop-backward)
 (global-set-key (kbd "M-S-<right>") 'hop-forward)
 (global-set-key (kbd "<C-mouse-1>") 'hop-by-mouse)
