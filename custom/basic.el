@@ -285,6 +285,7 @@
 ;; Bookmarks
 ;;
 (global-set-key (kbd "C-S-b") 'bookmark-set)
+(global-set-key (kbd "<f3>") 'bookmark-jump)
 (global-set-key (kbd "C-b") 'bookmark-jump)
 (global-set-key (kbd "M-b") 'bookmark-delete)
 (global-set-key (kbd "C-c b") 'bookmark-delete)

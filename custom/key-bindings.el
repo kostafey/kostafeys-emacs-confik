@@ -60,10 +60,15 @@
 (when (require 'highlight-symbol nil 'noerror)
   (eval-after-load "highlight-symbol"
     '(progn
-       (global-set-key [(control f3)] 'highlight-symbol)
-       (global-set-key [f3] 'highlight-symbol-next)
-       (global-set-key [(shift f3)] 'highlight-symbol-prev)
-       (global-set-key [(meta f3)] 'highlight-symbol-remove-all)
+       (defun k/highlight-region (start end)
+         "Toggle highlighting of the region."
+         (interactive "r")
+         (if mark-active
+             (highlight-symbol (buffer-substring start end))
+           (highlight-symbol)))
+       (global-set-key (kbd "C-<f3>") 'k/highlight-region)
+       (global-set-key (kbd "S-<f3>") 'highlight-symbol-prev)
+       (global-set-key (kbd "M-<f3>") 'highlight-symbol-remove-all)
        (global-set-key (kbd "C-M-<up>") 'highlight-symbol-prev)
        (global-set-key (kbd "C-M-<down>") 'highlight-symbol-next))))
 
@@ -252,6 +257,9 @@
       (eval-buffer)
       (message "Elisp buffer evaluated."))))
 (add-hook 'emacs-lisp-mode-hook 'kostafey-elisp-mode-hook)
+
+;; Eval Emacs Lisp in any mode
+(global-set-key (kbd "C-c M-e") 'eval-last-sexp)
 
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el

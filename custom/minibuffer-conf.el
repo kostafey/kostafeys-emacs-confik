@@ -68,9 +68,10 @@
               ("C-c C-f" . consult-find) ; find file
               ;; Defined in `basic.el':
               ;; ("C-S-b" . bookmark-set)
-              ;; ("C-b" . bookmark-jump)
+              ;; ("C-b" . bookmark-jump) ; <f3>
               ;; ("M-b" . bookmark-delete)
               ;; ("C-c b" . bookmark-delete)
+              ("<f3>" . consult-bookmark)
               ("C-b" . consult-bookmark)
               ("M-g" . consult-goto-line)
               ("C-x C-x" . consult-global-mark)))))
