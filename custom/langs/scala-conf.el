@@ -48,8 +48,8 @@
 ;; Enable scala-mode and sbt-mode
 (use-package scala-mode
   :mode "\\.s\\(cala\\|bt\\)$"
-  :config (setq scala-indent:step 4
-                scala-indent:indent-value-expression nil
+  :config (setq scala-indent:step 2
+                scala-indent:indent-value-expression t
                 scala-indent:align-parameters t
                 scala-indent:align-forms t
                 scala-indent:default-run-on-strategy scala-indent:reluctant-strategy))
@@ -115,8 +115,14 @@
               (number-sequence 1 (count-lines beg end))))))
   (setq deactivate-mark t))
 
+(defun k/scala-add-font-lock ()
+  (font-lock-add-keywords
+   'scala-mode '(("`\".*\"'" 0 'font-lock-string-face t)
+                 ("`.*'" 0 'font-lock-function-name-face t))))
+
 (defun k/scala-mode-hook ()
   (my-coding-hook)
+  (k/scala-add-font-lock)
   (auto-complete-mode -1)
   (flycheck-mode)
   (define-key scala-mode-map (kbd "<tab>") 'k/scala-indent-region))
