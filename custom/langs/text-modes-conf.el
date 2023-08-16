@@ -128,10 +128,9 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 (use-package graphviz-dot-mode
   :ensure t
   :config
-  (setq graphviz-dot-indent-width 4))
-
-(use-package company-graphviz-dot
-  :ensure nil)
+  (progn
+    (setq graphviz-dot-indent-width 4)
+    (add-hook 'graphviz-dot-mode-hook 'company-mode)))
 
 (use-elpa 'yaml-mode)
 
