@@ -35,7 +35,7 @@
 (use-elpa 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
-(global-auto-complete-mode nil)
+(global-auto-complete-mode -1)
 
 ;; if a length of a word you entered is larger than the value,
 ;; completion will be started automatically
@@ -123,6 +123,15 @@ With ARG, move by that many elements."
 (eval-after-load 'company
   '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 
+(use-package company-fuzzy
+  :hook (company-mode . company-fuzzy-mode)
+  :init
+  (setq company-fuzzy-sorting-backend 'flx
+        company-fuzzy-prefix-on-top nil
+        company-fuzzy-show-annotation t
+        company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")
+        global-company-fuzzy-mode 1))
+
 ;;=============================================================================
 ;; common completion functions
 ;;
@@ -132,13 +141,14 @@ With ARG, move by that many elements."
           (const :tag "auto-complete" :value auto-complete)
           (const :tag "company-mode" :value company-mode)))
 
-(case k/complete-frontend
-  ('auto-complete
-   (global-auto-complete-mode t))
-  ('company-mode
-   (progn
-     (add-hook 'after-init-hook 'global-company-mode)
-     (company-quickhelp-mode))))
+(with-eval-after-load 'completition-conf
+  (case k/complete-frontend
+    ('auto-complete
+     (global-auto-complete-mode t))
+    ('company-mode
+     (progn
+       (add-hook 'after-init-hook 'global-company-mode)
+       (company-quickhelp-mode)))))
 
 (defun start-complete ()
   "Start `company-mode' or `auto-complete-mode' completion."
