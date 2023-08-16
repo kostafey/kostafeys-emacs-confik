@@ -28,7 +28,4 @@
   (progn
     (setq treemacs-no-png-images t)))
 
-(use-package project-explorer
-  :ensure t)
-
 (provide 'ide)
