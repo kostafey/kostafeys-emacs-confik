@@ -195,6 +195,17 @@
 
 (global-set-key (kbd "M-g") 'goto-line)
 
+(defun copy-to-clipboard-buffer-line-number ()
+  (interactive)
+  "Copy current line number to the clipboard."
+  (let ((result (kill-new
+                 (number-to-string
+                  (line-number-at-pos (point))))))
+    (message result)
+    result))
+
+(global-set-key (kbd "C-M-g g") 'copy-to-clipboard-buffer-line-number)
+
 ;; Bind scrolling functions from pager library.
 (global-set-key [next]     'pager-page-down)
 (global-set-key [prior]    'pager-page-up)
