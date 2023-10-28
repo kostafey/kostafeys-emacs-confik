@@ -327,6 +327,34 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
         (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
         (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
 
+(defun toggle-date-or-camelcase-underscores (beg end)
+  "Toggle date format 01.11.2020 <-> 2022-11-01"
+  (interactive "r")
+  (when (use-region-p)
+    (let* (;; DD.MM.YYYY
+           (src-fmt1 "[[:digit:]]\\{2\\}\\.[[:digit:]]\\{2\\}.[[:digit:]]\\{4\\}")
+           ;; YYYY-MM-DD
+           (src-fmt2 "[[:digit:]]\\{4\\}\\-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}")
+           (text (buffer-substring beg end)))
+       (cond
+        ((string-match src-fmt1 text)
+         (progn
+           (cua-delete-region)
+           (insert (let ((parts (split-string text "\\.")))
+                     (format "%s-%s-%s"
+                             (nth 2 parts)
+                             (nth 1 parts)
+                             (nth 0 parts))))))
+        ((string-match src-fmt2 text)
+         (progn
+           (cua-delete-region)
+           (insert (let ((parts (split-string text "-")))
+                     (format "%s.%s.%s"
+                             (nth 2 parts)
+                             (nth 1 parts)
+                             (nth 0 parts))))))
+        (t (toggle-camelcase-underscores))))))
+
 (defun print-elements-of-list (list)
   "Print each element of LIST on a line of its own."
   (while list

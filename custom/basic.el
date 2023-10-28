@@ -538,7 +538,7 @@
 ;; Upcase/downcase
 
 (global-set-key (kbd "C-S-<up>") 'toggle-letter-case)
-(global-set-key (kbd "C-S-<down>") 'toggle-camelcase-underscores)
+(global-set-key (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)
 
 ;; Enable case changes commands
 (put 'upcase-region 'disabled nil)
