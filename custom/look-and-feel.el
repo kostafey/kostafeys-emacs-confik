@@ -84,8 +84,8 @@
 (show-paren-mode 1)              ;; Visualize of matching parens
 (setq inhibit-startup-message t) ;; Do not show startup message
 (fset 'yes-or-no-p 'y-or-n-p)    ;; Ask user a "y or n" question
-(setq default-tab-width 4)       ;; Number of spaces in the tab
-(setq-default tab-width 4)
+(setq default-tab-width 2)       ;; Number of spaces in the tab
+(setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)

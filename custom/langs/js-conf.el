@@ -89,6 +89,9 @@
 ;; npm -g install js-beautify
 ;; M-x `web-beautify-js'
 
+(add-hook 'js-mode-hook #'(lambda () (setq js2-basic-offset 2)))
+(add-hook 'rjsx-mode #'(lambda () (setq js2-basic-offset 2)))
+
 ;;------------------------------------------------------------
 ;; JavaScript IDE
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
