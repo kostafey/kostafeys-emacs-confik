@@ -10,7 +10,7 @@
 ;;   --java-opt -Xss4m \
 ;;   --java-opt -Xms100m \
 ;;   --java-opt -Dmetals.client=emacs \
-;;   org.scalameta:metals_2.12:0.9.4 \
+;;   org.scalameta:metals_2.13:1.2.0+13-615add64-SNAPSHOT \
 ;;   -r bintray:scalacenter/releases \
 ;;   -r sonatype:snapshots \
 ;;   -o /home/kostafey/data/soft/bin/metals-emacs -f

@@ -124,13 +124,13 @@ With ARG, move by that many elements."
   '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 
 (use-package company-fuzzy
-  :hook (company-mode . company-fuzzy-mode)
+  ;; :hook (company-mode . company-fuzzy-mode)
   :init
   (setq company-fuzzy-sorting-backend 'flx
         company-fuzzy-prefix-on-top nil
         company-fuzzy-show-annotation t
         company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")
-        global-company-fuzzy-mode 1))
+        global-company-fuzzy-mode nil))
 
 ;;=============================================================================
 ;; common completion functions
