@@ -53,21 +53,22 @@
 (defun copy-to-clipboard-buffer-file-path ()
   (interactive)
   "Copy current file path to the clipboard."
-  (let ((result (kill-new
-                 (if (eq system-type 'windows-nt)
-                     (let ((uri (replace-regexp-in-string
-                                 "/" "\\\\" (buffer-file-name))))
-                       (concat (upcase (substring uri 0 1))
-                               (substring uri 1)))
-                   (buffer-file-name)))))
-    (message result)
+  (let* ((value (if (eq system-type 'windows-nt)
+                    (let ((uri (replace-regexp-in-string
+                                "/" "\\\\" (buffer-file-name))))
+                      (concat (upcase (substring uri 0 1))
+                              (substring uri 1)))
+                  (buffer-file-name)))
+         (result (kill-new value)))
+    (message value)
     result))
 
 (defun copy-to-clipboard-buffer-file-name ()
   (interactive)
   "Copy current file name to the clipboard."
-  (let ((result (kill-new (file-name-nondirectory (buffer-file-name)))))
-    (message result)
+  (let* ((value (file-name-nondirectory (buffer-file-name)))
+         (result (kill-new value)))
+    (message value)
     result))
 
 (provide 'file-ops)
