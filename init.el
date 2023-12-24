@@ -35,6 +35,7 @@
 (require 'switch-language)
 ;; Use third-party dependencies
 (require 'elpa-conf)
+(require 'straight-conf)
 (require 'appearance)
 (require 'minibuffer-conf)
 (require 'version-control)
@@ -61,6 +62,7 @@
 (require 'foreign)
 (require 'perfomance-conf)
 (require 'eframe-windmove)
+(require 'tree-sitter-conf)
 ;; (require 'irc-conf)
 
 ;;-------------------------------------------------------------------

@@ -94,8 +94,8 @@
 
 ;;------------------------------------------------------------
 ;; JavaScript IDE
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)) ; js-ts-mode
+(add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode)) ; js-ts-mode
 ;; (wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
 

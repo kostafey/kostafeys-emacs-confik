@@ -89,7 +89,8 @@
 
 (use-package lsp-mode
   ;; Optional - enable lsp-mode automatically in scala files
-  :hook (scala-mode . lsp)
+  :hook ((scala-mode . lsp)
+         (scala-ts-mode . lsp))
   :config (progn
             (setq lsp-ui-doc-show-with-mouse nil)
             (setq lsp-prefer-flymake nil)
@@ -125,8 +126,12 @@
   (k/scala-add-font-lock)
   (auto-complete-mode -1)
   (flycheck-mode)
-  (define-key scala-mode-map (kbd "<tab>") 'k/scala-indent-region))
+  (when (boundp 'scala-mode-map)
+    (define-key scala-mode-map (kbd "<tab>") 'k/scala-indent-region))
+  (when (boundp 'scala-ts-mode-map)
+    (define-key scala-ts-mode-map (kbd "<tab>") 'k/scala-indent-region)))
 
+(add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
 (defun k/scala-flash-region (start end &optional timeout)

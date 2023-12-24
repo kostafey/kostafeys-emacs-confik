@@ -154,6 +154,7 @@
              ;; scala-mode
              ;; java-mode
              ((or (equal 'scala-mode mode)
+                  (equal 'scala-ts-mode mode)
                   (equal 'java-mode mode))
               (progn
                 (lsp-find-definition)
