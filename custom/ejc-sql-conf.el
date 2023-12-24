@@ -54,9 +54,9 @@
 
 (defun k/ejc-sql-mode-hook ()
   ;; Enable one of the completion frontend by by default but not both.
-  (auto-complete-mode t) ; Enable `auto-complete-mode'
-  (ejc-ac-setup)
-  ;; (company-mode t)    ; or `company-mode'.
+  ;; (auto-complete-mode t) ; Enable `auto-complete-mode'
+  ;; (ejc-ac-setup)
+  (company-mode t)       ; or `company-mode'.
   (ejc-eldoc-setup)      ; Setup ElDoc.
   (font-lock-warn-todo)       ; See custom/look-and-feel.el
   (rainbow-delimiters-mode t) ; https://github.com/Fanael/rainbow-delimiters
