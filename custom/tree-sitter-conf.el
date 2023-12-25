@@ -35,7 +35,8 @@
 ;; All TC modes: C-h a -ts-mode$
 
 (straight-use-package
- '(scala-ts-mode :type git :host github :repo "KaranAhlawat/scala-ts-mode"))
+ '(scala-ts-mode :type git :host gitlab
+                 :repo "kostafey/scala-ts-mode" :branch "var-face"))
 
 (add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
 
