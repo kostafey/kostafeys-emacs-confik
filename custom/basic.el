@@ -650,6 +650,10 @@ Don't mess with special buffers."
 (global-set-key (kbd "C-x m")
                 #'(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
+;;-------------------------------------------------------------------
+;; File variables
+(setq safe-local-variable-values '((scala-indent:step . 2)))
+
 ;;===================================================================
 ;;                               Mouse
 ;;
