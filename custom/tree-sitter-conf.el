@@ -39,6 +39,11 @@
                  :repo "kostafey/scala-ts-mode" :branch "dev"))
 (add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
 
+(straight-use-package
+ '(html-ts-mode :type git :host github
+                :repo "mickeynp/html-ts-mode" :branch "master"))
+(add-to-list 'auto-mode-alist '("\\.xml$" . html-ts-mode))
+
 ;; Decoration level to be used by tree-sitter fontifications.
 (setq treesit-font-lock-level 4)
 
