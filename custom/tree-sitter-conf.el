@@ -36,8 +36,7 @@
 
 (straight-use-package
  '(scala-ts-mode :type git :host gitlab
-                 :repo "kostafey/scala-ts-mode" :branch "var-face"))
-
+                 :repo "kostafey/scala-ts-mode" :branch "dev"))
 (add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
 
 ;; Decoration level to be used by tree-sitter fontifications.

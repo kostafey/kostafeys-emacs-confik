@@ -102,14 +102,16 @@
 
 (use-package lsp-ui)
 
-(defun k/scala-indent-region (beg end)
+(defun k/scala-indent-region ()
   "Indent region or current line in Scala file."
-  (interactive "r")
+  (interactive)
   (if (not mark-active)
       (scala-indent:indent-line)
     (save-excursion
-      (let ((beg (min beg end))
-            (end (max beg end)))
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (beg (min beg end))
+             (end (max beg end)))
         (-map (lambda (line)
                 (goto-line (- (+ (line-number-at-pos beg) line) 1))
                 (scala-indent:indent-line))

@@ -295,18 +295,19 @@
 ;;----------------------------------------------------------------------
 ;; Scala
 ;;
-(defun kostafey-scala-mode-hook ()
-  (define-key scala-mode-map (kbd "C-n j")   'k/scala-start-console)
-  (define-key scala-mode-map (kbd "C-n c")   'k/scala-switch-console)
-  (define-key scala-mode-map (kbd "M-e")     'k/scala-eval-region)
-  (define-key scala-mode-map (kbd "C-n e b") 'k/scala-eval-buffer)
-  (define-key scala-mode-map (kbd "C-x C-e") 'k/scala-eval-last-scala-expr)
-  (define-key scala-mode-map (kbd "C-c C-e") 'k/scala-eval-line)
-  (define-key scala-mode-map (kbd "C-n k")   'k/scala-compile)
-  (define-key scala-mode-map (kbd "C-c RET") 'newline-and-indent)
-  (define-key scala-mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
-  (define-key scala-mode-map (kbd "C-c i")   'lsp-java-add-import))
-(add-hook 'scala-mode-hook 'kostafey-scala-mode-hook)
+(defun kostafey-scala-mode-hook (mode-map)
+  (define-key mode-map (kbd "C-n j")   'k/scala-start-console)
+  (define-key mode-map (kbd "C-n c")   'k/scala-switch-console)
+  (define-key mode-map (kbd "M-e")     'k/scala-eval-region)
+  (define-key mode-map (kbd "C-n e b") 'k/scala-eval-buffer)
+  (define-key mode-map (kbd "C-x C-e") 'k/scala-eval-last-scala-expr)
+  (define-key mode-map (kbd "C-c C-e") 'k/scala-eval-line)
+  (define-key mode-map (kbd "C-n k")   'k/scala-compile)
+  (define-key mode-map (kbd "C-c RET") 'newline-and-indent)
+  (define-key mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
+  (define-key mode-map (kbd "C-c i")   'lsp-java-add-import))
+(add-hook 'scala-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-mode-map)))
+(add-hook 'scala-ts-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-ts-mode-map)))
 
 ;;----------------------------------------------------------------------
 ;; Tcl
