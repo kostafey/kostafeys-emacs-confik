@@ -112,7 +112,7 @@ arg - is a searching word (char)"
                  (prog1
                      (1- (count-lines (region-beginning)
                                       (region-end)))
-                   (when (< (region-beginning) (region-end))
+                   (when (< (region-beginning) (point))
                      (cua-exchange-point-and-mark nil)))
                1))))
     (circle-processing number-of-lines 'join-next-line-space)))
