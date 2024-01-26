@@ -106,7 +106,16 @@ arg - is a searching word (char)"
 (defun join-next-line-space-n (&optional arg)
   "Joins number of next lines with current with a space between them"
   (interactive "P")
-  (circle-processing arg 'join-next-line-space))
+  (let ((number-of-lines
+         (or arg
+             (if (use-region-p)
+                 (prog1
+                     (1- (count-lines (region-beginning)
+                                      (region-end)))
+                   (when (< (region-beginning) (region-end))
+                     (cua-exchange-point-and-mark nil)))
+               1))))
+    (circle-processing number-of-lines 'join-next-line-space)))
 
 (defun join-next-line-n (&optional arg)
   "Joins number of  next lines with current without space between them"
