@@ -64,6 +64,7 @@
 (require 'eframe-windmove)
 (require 'tree-sitter-conf)
 ;; (require 'irc-conf)
+(require 'translate-conf)
 
 ;;-------------------------------------------------------------------
 ;; Programming languages configs
