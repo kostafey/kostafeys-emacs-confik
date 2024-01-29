@@ -111,4 +111,33 @@
 (setq web-mode-enable-current-element-highlight t)
 (setq-default web-mode-markup-indent-offset 4)
 
+;;------------------------------------------------------------
+;; rjsx-mode
+(require 'basic)
+
+(defun k/rjsx-forward (&optional select)
+  (interactive)
+  (if (eq ?< (char-after))
+      (progn
+        (k/char-forward select)
+        (rjsx-jump-closing-tag)
+        (k/sexp-forward select))
+    (k/sexp-forward select)))
+
+(defun k/rjsx-backward (&optional select)
+  (interactive)
+  (if (eq ?> (char-before))
+      (progn
+        (k/char-backward select)
+        (rjsx-jump-opening-tag)
+        (k/sexp-backward select))
+    (k/sexp-backward select)))
+
+(define-key rjsx-mode-map (kbd "C-M-<right>") 'k/rjsx-forward)
+(define-key rjsx-mode-map (kbd "C-M-<left>") 'k/rjsx-backward)
+(define-key rjsx-mode-map (kbd "C-S-M-<right>")
+  #'(lambda () (interactive) (k/rjsx-forward t)))
+(define-key rjsx-mode-map (kbd "C-S-M-<left>")
+  #'(lambda () (interactive) (k/rjsx-backward t)))
+
 (provide 'js-conf)
