@@ -34,6 +34,15 @@
 (global-set-key (kbd "C-e") 'cua-exchange-point-and-mark)
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 
+(defun region-selection-length ()
+  (if (not mark-active)
+      0
+    (let ((beg (min (region-beginning)
+                    (region-end)))
+          (end (max (region-beginning)
+                    (region-end))))
+      (- end beg))))
+
 ;;;###autoload
 (defun hard-rewrite-mode ()
   "Workaround for the case when selected text not replaced by insertions."
@@ -47,7 +56,7 @@
   (message (format
             "Hard %s mode enabled."
             (propertize "rewrite"
-			            'face 'font-lock-keyword-face))))
+			                  'face 'font-lock-keyword-face))))
 
 ;;-------------------------------------------------------------------
 ;; Undo & redo

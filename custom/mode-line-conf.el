@@ -40,6 +40,12 @@
        (propertize "%02l" 'face 'font-lock-string-face) ","
        (propertize "%02c" 'face 'font-lock-string-face)
        ")"
+       '(:eval (when mark-active
+                 (propertize
+                  (format " %s" (region-selection-length))
+                  'face 'font-lock-constant-face)))
+       ;; " %i "
+       ;; (add-to-list 'global-mode-string '(" %i"))
        ;; ------------------------------------------------------------
        ;; csv field index for `csv-mode'
        '(:eval (when (and (eq major-mode 'csv-mode) csv-field-index-mode)
