@@ -306,7 +306,8 @@
   (define-key mode-map (kbd "C-n k")   'k/scala-compile)
   (define-key mode-map (kbd "C-c RET") 'newline-and-indent)
   (define-key mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
-  (define-key mode-map (kbd "C-c i")   'lsp-java-add-import))
+  (define-key mode-map (kbd "C-c i")   'lsp-java-add-import)
+  (define-key mode-map (kbd "M-p")     'copy-to-clipboard-buffer-file-path))
 (add-hook 'scala-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-mode-map)))
 (add-hook 'scala-ts-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-ts-mode-map)))
 
