@@ -260,6 +260,7 @@
 
 ;; Eval Emacs Lisp in any mode
 (global-set-key (kbd "C-c M-e") 'eval-last-sexp)
+(global-set-key (kbd "C-c M-E") #'(lambda () (interactive) (eval-last-sexp "-")))
 
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
