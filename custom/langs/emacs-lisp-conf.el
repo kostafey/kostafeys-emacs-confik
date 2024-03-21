@@ -54,6 +54,9 @@
   (interactive)
   (pprint (eval (elisp--preceding-sexp))))
 
+(defun k/el-insert-eval-last-sexp ()
+  (interactive)
+  (insert (format " => %s" (eval (elisp--preceding-sexp)))))
 ;;=============================================================================
 ;; ElDoc
 ;;
