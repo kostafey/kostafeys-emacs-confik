@@ -25,11 +25,13 @@
 (global-set-key (kbd "C-S-v") 'cua-paste-pop)
 (global-set-key (kbd "C-M-v") #'(lambda() (interactive) (cua-paste-pop -1)))
 
-(global-set-key (kbd "C-M-c") #'(lambda(beg end) (interactive "r")
-                                 (append-to-buffer "temp" beg end)
-                                 (save-excursion
-                                   (set-buffer "temp")
-                                   (insert "\n"))))
+(defun k/kill-and-copy-whole-line ()
+  "Move a whole line to the kill-ring."
+  (interactive)
+  (kill-region (line-beginning-position) (line-end-position))
+  (delete-char 1))
+
+(global-set-key (kbd "C-M-c") 'k/kill-and-copy-whole-line)
 
 (global-set-key (kbd "C-e") 'cua-exchange-point-and-mark)
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
