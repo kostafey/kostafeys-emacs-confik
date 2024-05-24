@@ -68,11 +68,23 @@ arg - is a searching word (char)"
               (format-time-string "%d.%m.%Y")
             (format-time-string "%Y-%m-%d"))))
 
-;Очистка SQL
-;"\|\(\\n\)\|\+
+;; SQL cleanup
+;; "\|\(\\n\)\|\+
 (defun insert-crear-sql-regexp()
   (interactive)
   (insert "\"\\|\\(\\\\n\\)\\|\\+"))
+
+(defun k/re-cleanup (beg end)
+  "Clean (unquote) multiline RegExp."
+  (interactive "r")
+  (let* ((regexp (buffer-substring beg end))
+         (cleaned (replace-regexp-in-string "^[ \t]*\"" "" regexp))
+         (cleaned (replace-regexp-in-string "\"[ \t]*\\+?[ \t]*$" "" cleaned))
+         (cleaned (replace-regexp-in-string "[\n]" "" cleaned))
+         (cleaned (replace-regexp-in-string "\\\\\\\\" "\\\\" cleaned))
+         (result (kill-new cleaned)))
+    (message cleaned)
+    result))
 
 ;;-------------------------------------------------------------------
 ;; Join lines
