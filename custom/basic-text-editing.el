@@ -83,7 +83,7 @@ arg - is a searching word (char)"
          (cleaned (replace-regexp-in-string "[\n]" "" cleaned))
          (cleaned (replace-regexp-in-string "\\\\\\\\" "\\\\" cleaned))
          (result (kill-new cleaned)))
-    (message cleaned)
+    (message "%s" cleaned)
     result))
 
 ;;-------------------------------------------------------------------
