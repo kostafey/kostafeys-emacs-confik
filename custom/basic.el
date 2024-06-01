@@ -31,7 +31,8 @@
   (kill-region (line-beginning-position) (line-end-position))
   (delete-char 1))
 
-(global-set-key (kbd "C-M-c") 'k/kill-and-copy-whole-line)
+(global-set-key (kbd "C-M-x") 'k/kill-and-copy-whole-line)
+(define-key emacs-lisp-mode-map (kbd "C-M-x") 'k/kill-and-copy-whole-line)
 
 (global-set-key (kbd "C-e") 'cua-exchange-point-and-mark)
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
@@ -504,6 +505,7 @@
     (kill-ring-save (point) (mark))))
 
 (global-set-key (kbd "C-S-c") 'copy-line)
+(global-set-key (kbd "C-M-c") 'copy-line)
 
 (defun copy-url (&optional arg)
   "Copy a url under the cursor"
