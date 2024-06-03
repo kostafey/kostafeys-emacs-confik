@@ -45,7 +45,8 @@ filename.scala:123
             (run-hooks 'projectile-find-file-hook)
             (when (and file-with-line-number-matchp
                        (equal (file-name-nondirectory file) file-name-s))
-              (goto-line (string-to-number line-number-s)))))
+              (goto-line (string-to-number line-number-s))
+              (recenter-top-bottom))))
       (projectile--find-file nil ff-variant))))
 
 (provide 'projectile-conf)
