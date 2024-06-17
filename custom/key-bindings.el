@@ -66,11 +66,19 @@
          (if mark-active
              (highlight-symbol (buffer-substring start end))
            (highlight-symbol)))
+
+       (defun k/highlight-search ()
+         "Toggle highlighting of the region."
+         (interactive)
+         (highlight-symbol (substring-no-properties (car kill-ring))))
+
        (global-set-key (kbd "C-<f3>") 'k/highlight-region)
        (global-set-key (kbd "S-<f3>") 'highlight-symbol-prev)
        (global-set-key (kbd "M-<f3>") 'highlight-symbol-remove-all)
        (global-set-key (kbd "C-M-<up>") 'highlight-symbol-prev)
-       (global-set-key (kbd "C-M-<down>") 'highlight-symbol-next))))
+       (global-set-key (kbd "C-M-<down>") 'highlight-symbol-next)
+
+       (define-key isearch-mode-map (kbd "C-<f3>") 'k/highlight-search))))
 
 (defun kostafey-markdown-mode-hook ()
   (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
