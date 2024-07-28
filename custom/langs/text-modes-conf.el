@@ -22,6 +22,35 @@
 (add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))
 (add-hook 'nxml-mode-hook (lambda () (hl-tags-mode 1)))
 
+;; If non-nil, make sure that the skeleton inserted ends with a newline.
+;; Used in commands like `html-span'.
+(setq skeleton-end-newline nil)
+
+(define-skeleton html-Red
+  "HTML Red tag."
+  nil
+  "<Red>" _ "</Red>")
+
+(define-skeleton html-Teal
+  "HTML Teal tag."
+  nil
+  "<Teal>" _ "</Teal>")
+
+(define-skeleton html-li
+  "HTML li tag."
+  nil
+  "<li>" _ "</li>")
+
+(define-skeleton html-span
+  "HTML li tag."
+  nil
+  "<span>" _ "</span>")
+
+(define-skeleton html-Box
+  "HTML Box tag."
+  nil
+  "<Box>" _ "</Box>")
+
 ;;-------------------------------------------------------------------
 (use-elpa 'lorem-ipsum)
 
