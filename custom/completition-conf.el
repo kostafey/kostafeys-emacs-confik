@@ -29,6 +29,9 @@
      (setq *yas-invokation-point* (point))
      (yas/next-field-or-maybe-expand-1))))
 
+;; https://github.com/AndreaCrotti/yasnippet-snippets
+(use-elpa 'yasnippet-snippets)
+
 ;;===================================================================
 ;; auto-complete
 ;;
