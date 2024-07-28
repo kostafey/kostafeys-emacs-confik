@@ -6,14 +6,12 @@
 ;; `Linux':
 ;; curl -L -o coursier https://git.io/coursier
 ;; chmod +x coursier
-;; ./coursier bootstrap \
+;; coursier bootstrap \
+;;   --java-opt -XX:+UseG1GC \
+;;   --java-opt -XX:+UseStringDeduplication  \
 ;;   --java-opt -Xss4m \
 ;;   --java-opt -Xms100m \
-;;   --java-opt -Dmetals.client=emacs \
-;;   org.scalameta:metals_2.13:1.2.0+13-615add64-SNAPSHOT \
-;;   -r bintray:scalacenter/releases \
-;;   -r sonatype:snapshots \
-;;   -o /home/kostafey/data/soft/bin/metals-emacs -f
+;;   org.scalameta:metals_2.13:1.2.2 -o metals -f
 ;;
 ;; `Windows':
 ;; set BIN_PATH=C:\bin\

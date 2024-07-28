@@ -156,9 +156,11 @@
              ((or (equal 'scala-mode mode)
                   (equal 'scala-ts-mode mode)
                   (equal 'java-mode mode))
-              (progn
-                (lsp-find-definition)
-                (recenter-top-bottom 5)))
+              (if (and (boundp 'eglot--managed-mode) eglot--managed-mode)
+                  (call-interactively 'xref-find-definitions)
+                  (progn
+                    (lsp-find-definition)
+                    (recenter-top-bottom 5))))
              ;; go-mode
              ((equal 'go-mode mode)
               (if (member 'lsp-mode minor-mode-list)
