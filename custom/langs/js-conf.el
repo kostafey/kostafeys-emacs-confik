@@ -1,6 +1,9 @@
 (require 'elpa-conf)
 (use-elpa 'skewer-mode)
+(setq native-comp-jit-compilation-deny-list
+      '("js2-mode" "rjsx-mode"))
 (use-elpa 'rjsx-mode)
+(use-elpa 'js2-mode)
 (use-elpa 'npm-mode)
 (use-elpa 'web-mode)
 (require 'typescript-mode nil 'noerror)
