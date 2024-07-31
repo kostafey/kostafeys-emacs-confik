@@ -3,6 +3,7 @@
 (use-elpa 'rjsx-mode)
 (use-elpa 'npm-mode)
 (use-elpa 'web-mode)
+(require 'typescript-mode nil 'noerror)
 
 ;;------------------------------------------------------------
 ;; skewer-mode
@@ -46,16 +47,20 @@
 ;;
 (when (require 'npm-mode nil 'noerror)
   (npm-global-mode)
+
   (defun k/npm-mode-build ()
     (interactive)
     (npm-mode--exec-process "npm run build --prefer-offline --no-audit"))
-  (define-key js2-mode-map
-    (kbd "C-c C-c") 'k/npm-mode-build)
-  (define-key js-jsx-mode-map
-    (kbd "C-c C-c") 'k/npm-mode-build)
-  (when (require 'typescript-mode nil 'noerror)
-    (define-key typescript-mode-map
-      (kbd "C-c C-c") 'k/npm-mode-build)))
+
+  (let ((mode-maps (list js-mode-map js2-mode-map js-json-mode-map
+                         js-jsx-mode-map web-mode-map)))
+    (when (boundp 'typescript-mode-map)
+      (add-to-list mode-maps typescript-mode-map))
+    (mapcar
+     (lambda (mm)
+       (define-key mm
+         (kbd "C-c C-c") 'k/npm-mode-build))
+     mode-maps)))
 
 ;;------------------------------------------------------------
 ;; Customize js-comint.el for `rhino' and `node.js'
