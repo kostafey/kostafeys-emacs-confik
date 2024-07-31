@@ -196,6 +196,7 @@
 (global-set-key (kbd "s-q") 'psw-navigate-files)
 (global-set-key (kbd "s-a") 'psw-navigate-files)
 (global-set-key [f2] 'psw-switch-function)
+(global-set-key [f3] 'toggle-tabbar-breadcrumb)
 
 (global-set-key [f4] 'k/shell)
 (global-set-key [f5] 'dired-open)

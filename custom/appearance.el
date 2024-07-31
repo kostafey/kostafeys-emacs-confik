@@ -5,6 +5,7 @@
 (use-elpa 'paredit)
 (use-elpa 'paredit-everywhere)
 (use-elpa 'tabbar)
+(use-elpa 'breadcrumb)
 
 ;; Font lock of dash functions in emacs lisp buffers
 (eval-after-load "dash" '(dash-enable-font-lock))
@@ -79,6 +80,19 @@ not in the top of the frame."
      (window-list))
     (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
     (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)))
+
+;;-------------------------------------------------------------------
+;; breadcrumb-mode
+(defun toggle-tabbar-breadcrumb ()
+  "Toggle between `tabbar-mode' and `breadcrumb-mode'."
+  (interactive)
+  (if tabbar-mode
+      (progn
+        (tabbar-mode -1)
+        (breadcrumb-mode t))
+    (progn
+      (breadcrumb-mode -1)
+      (tabbar-mode t))))
 
 ;;-------------------------------------------------------------------
 (when (require 'ejc-sql nil 'noerror)
