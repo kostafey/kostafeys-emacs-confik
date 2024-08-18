@@ -97,6 +97,7 @@
 
 ;; Add metals backend for lsp-mode
 (use-package lsp-metals)
+(setq lsp-metals-fallback-scala-version "3.3.3")
 
 (use-package lsp-ui)
 

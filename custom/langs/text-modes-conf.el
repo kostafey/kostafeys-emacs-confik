@@ -2,6 +2,13 @@
 (use-elpa 'use-package)
 
 ;;-------------------------------------------------------------------
+;; Wrap text with punctation or tag
+(when (require 'wrap-region nil 'noerror)
+  (wrap-region-global-mode t)
+  (wrap-region-add-wrapper "*" "*")
+  (wrap-region-add-wrapper "`" "`"))
+
+;;-------------------------------------------------------------------
 ;; nxhtml
 ;; (load (concat site-lisp-path "nxhtml/autostart.el"))
 

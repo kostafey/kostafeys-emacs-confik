@@ -2,6 +2,9 @@
 (use-elpa 'use-package)
 
 (use-package fennel-mode
-  :ensure t)
+  :ensure t
+  :config
+  (progn
+    (setq fennel-program "fennel --repl")))
 
 (provide 'fennel-conf)

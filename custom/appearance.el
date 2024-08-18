@@ -1,3 +1,13 @@
+;;-------------------------------------------------------------------
+;; Emacs custom color theme
+(straight-use-package
+ '(organic-green-theme :type git :host gitlab
+					             :repo "kostafey/organic-green-theme" :branch "master"))
+(setq organic-green-boldless t)
+(setq organic-green-version 2)
+(load-theme 'organic-green t)
+
+;;-------------------------------------------------------------------
 (require 'elpa-conf)
 (use-elpa 'dash)
 (use-elpa 'rainbow-delimiters)

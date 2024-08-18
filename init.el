@@ -25,7 +25,7 @@
 (add-to-list 'load-path (concat site-lisp-path "custom/langs/"))
 ;; Reusable customization
 (add-to-list 'load-path (expand-file-name "solutions" site-lisp-path))
-(add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
+;; (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
 (add-to-list 'load-path (expand-file-name "popup-switcher" site-lisp-path))
 
 ;; No third-party dependencies
@@ -47,11 +47,6 @@
 (load custom-file)
 ;;-------------------------------------------------------------------
 
-(use-elpa 'cider)
-(use-elpa 'simple-httpd)
-(add-to-list 'load-path (concat site-lisp-path "clomacs/src/elisp/"))
-(require 'clomacs nil 'noerror)
-(add-to-list 'load-path (concat site-lisp-path "ejc-sql/"))
 (require 'ejc-sql-conf nil 'noerror)
 
 (require 'key-bindings)
@@ -59,7 +54,7 @@
 (require 'ide)
 (require 'history-conf)
 (require 'text-modes-conf)
-(require 'foreign)
+;; (require 'foreign)
 (require 'perfomance-conf)
 (require 'eframe-windmove)
 (require 'tree-sitter-conf)

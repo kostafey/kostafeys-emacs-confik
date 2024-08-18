@@ -1,4 +1,4 @@
-;;; htmlize.el --- Convert buffer text and decorations to HTML.
+;;; htmlize.el --- Convert buffer text and decorations to HTML. -*- lexical-binding: t -*-
 
 ;; Copyright (C) 1997-2003,2005,2006,2009,2011,2012 Hrvoje Niksic
 
@@ -1935,7 +1935,6 @@ corresponding source file."
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not cl-functions lexical unresolved obsolete)
-;; lexical-binding: t
 ;; End:
 
 ;;; htmlize.el ends here

@@ -15,7 +15,9 @@
 (use-elpa 'popup-switcher)
 (require 'projectile-conf)
 
-(add-to-list 'load-path "~/.emacs.d/eframe-jack-in")
+(straight-use-package
+ '(eframe-jack-in :type git :host github
+				:repo "kostafey/eframe-jack-in" :branch "master"))
 (require 'eframe-jack-in)
 (global-set-key (kbd "C-M-e") 'eframe-pop-emacs)
 (use-elpa 'temporary-persistent)

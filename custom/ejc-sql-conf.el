@@ -1,6 +1,16 @@
 ;;--------------------------------------------------------------------
 ;; Emacs SQL client `ejc-sql'.
 ;;
+(use-elpa 'cider)
+(use-elpa 'simple-httpd)
+(straight-use-package
+ '(clomacs :type git :host gitlab
+                 :repo "kostafey/clomacs" :branch "master"))
+(require 'clomacs)
+
+(straight-use-package
+ '(ejc-sql :type git :host gitlab
+           :repo "kostafey/ejc-sql" :branch "master"))
 (require 'ejc-sql)
 ;; Require completion frontend (autocomplete or company). One of them or both.
 (require 'ejc-autocomplete)

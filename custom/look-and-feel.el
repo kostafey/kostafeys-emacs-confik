@@ -33,13 +33,6 @@
 (global-display-line-numbers-mode)
 
 ;;-------------------------------------------------------------------
-;; Emacs custom color theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/organic-green-theme")
-(setq organic-green-boldless t)
-(setq organic-green-version 2)
-(load-theme 'organic-green t)
-
-;;-------------------------------------------------------------------
 ;; StatusBar config
 ;;
 (require 'mode-line-conf)
@@ -90,8 +83,8 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(scroll-bar-mode t)
-(set-scroll-bar-mode 'right) ; replace 'right with 'left to place it to the left
+(scroll-bar-mode -1)
+;; (set-scroll-bar-mode 'right) ; replace 'right with 'left to place it to the left
 
 (setq query-replace-highlight t)
 

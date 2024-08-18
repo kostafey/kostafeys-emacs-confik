@@ -214,13 +214,6 @@ This command is conveniently used together with `kill-rectangle' and `string-rec
     (fill-paragraph nil)))
 
 ;=============================================================================
-;; Wrap text with punctation or tag
-(when (require 'wrap-region nil 'noerror)
-  (wrap-region-global-mode t)
-  (wrap-region-add-wrapper "*" "*")
-  (wrap-region-add-wrapper "`" "`"))
-
-;=============================================================================
 (fset 'align-by-column-macro
    [?\M-x ?a ?l ?i ?g ?n ?- ?r ?e ?g ?e ?x ?p return ?\\ ?: return])
 
