@@ -31,6 +31,9 @@
 
 ;; C-n j (`k/scala-start-console')
 
+;; Create console project from template:
+;; sbt new scala/scala-seed.g8
+
 ;;; Code:
 
 (use-elpa 'use-package)
@@ -126,11 +129,7 @@
   (my-coding-hook)
   (k/scala-add-font-lock)
   (auto-complete-mode -1)
-  (flycheck-mode)
-  (when (boundp 'scala-mode-map)
-    (define-key scala-mode-map (kbd "<tab>") 'k/scala-indent-region))
-  (when (boundp 'scala-ts-mode-map)
-    (define-key scala-ts-mode-map (kbd "<tab>") 'k/scala-indent-region)))
+  (flycheck-mode))
 
 (add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
@@ -274,6 +273,13 @@
 (defun k/scala-switch-console ()
   (interactive)
   (switch-to-buffer-other-window (sbt:buffer-name)))
+
+(defun k/scala-start-console-or-switch ()
+  (interactive)
+  (if (and (fboundp 'sbt:buffer-name)
+           (bufferp (get-buffer (sbt:buffer-name))))
+      (k/scala-switch-console)
+    (k/scala-start-console)))
 
 (defun k/scala-eval-buffer ()
   (interactive)

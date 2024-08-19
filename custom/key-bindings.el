@@ -310,7 +310,7 @@
 ;; Scala
 ;;
 (defun kostafey-scala-mode-hook (mode-map)
-  (define-key mode-map (kbd "C-n j")   'k/scala-start-console)
+  (define-key mode-map (kbd "C-n j")   'k/scala-start-console-or-switch)
   (define-key mode-map (kbd "C-n c")   'k/scala-switch-console)
   (define-key mode-map (kbd "M-e")     'k/scala-eval-region)
   (define-key mode-map (kbd "C-n e b") 'k/scala-eval-buffer)
@@ -320,7 +320,9 @@
   (define-key mode-map (kbd "C-c RET") 'newline-and-indent)
   (define-key mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
   (define-key mode-map (kbd "C-c i")   'lsp-java-add-import)
-  (define-key mode-map (kbd "M-p")     'copy-to-clipboard-buffer-file-path))
+  (define-key mode-map (kbd "M-p")     'copy-to-clipboard-buffer-file-path)
+  (define-key mode-map (kbd "<tab>")   'k/scala-indent-region)
+  (define-key mode-map (kbd "C-c <tab>") 'yas-expand))
 (add-hook 'scala-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-mode-map)))
 (add-hook 'scala-ts-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-ts-mode-map)))
 
