@@ -102,6 +102,12 @@
 (use-package lsp-metals)
 (setq lsp-metals-fallback-scala-version "3.3.3")
 
+(defun k/lsp-clean-session ()
+  "Lsp sessions cleanup - delete known projects."
+  (interactive)
+  (delete-file "~/.emacs.d/.lsp-session-v1")
+  (setq lsp--session nil))
+
 (use-package lsp-ui)
 
 (defun k/scala-indent-region ()
