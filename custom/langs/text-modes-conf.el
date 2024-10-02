@@ -134,18 +134,28 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;;-------------------------------------------------------------------
 ;; Org-mode
 ;;
-(setq org-hide-leading-stars t)
-(setq org-log-done 'nil) ; Don't show datetime on switching to done.
+(use-package verb)
 
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :config (progn
+            (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((perl . t)
-   (ruby . t)
-   (shell  . t)
-   (python . t)
-   (emacs-lisp . t)))
+            (defun k/verb-send ()
+              (interactive)
+              (verb-kill-all-response-buffers 1)
+              (verb-send-request-on-point-other-window-stay))
+
+            (define-key org-mode-map (kbd "C-c C-c") 'k/verb-send)
+            (setq org-hide-leading-stars t)
+            (setq org-log-done 'nil) ; Don't show datetime on switching to done.
+            (org-babel-do-load-languages
+             'org-babel-load-languages
+             '((perl . t)
+               (ruby . t)
+               (shell  . t)
+               (python . t)
+               (emacs-lisp . t)))))
 
 ;; Inhibit confirmation before interactively evaluating SQL code
 ;; blocks in Org buffers.
