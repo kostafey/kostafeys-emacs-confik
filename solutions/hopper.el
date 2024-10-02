@@ -156,11 +156,22 @@
              ((or (equal 'scala-mode mode)
                   (equal 'scala-ts-mode mode)
                   (equal 'java-mode mode))
-              (if (and (boundp 'eglot--managed-mode) eglot--managed-mode)
-                  (call-interactively 'xref-find-definitions)
-                  (progn
-                    (lsp-find-definition)
-                    (recenter-top-bottom 5))))
+              (cond
+               ((and (boundp 'eglot--managed-mode) eglot--managed-mode)
+                (call-interactively 'xref-find-definitions))
+
+               ((and (boundp 'lsp-bridge-mode) (member 'lsp-bridge-mode minor-mode-list))
+                (lsp-bridge-find-def))
+
+               ((and (boundp 'lsp-metals))
+                (progn
+                  (lsp-find-definition)
+                  (recenter-top-bottom 5)))
+
+               (t
+                (let ((xref-prompt-for-identifier nil))
+                  (call-interactively 'xref-find-definitions)))
+               ))
              ;; go-mode
              ((equal 'go-mode mode)
               (if (member 'lsp-mode minor-mode-list)

@@ -11,7 +11,9 @@
 ;;   --java-opt -XX:+UseStringDeduplication  \
 ;;   --java-opt -Xss4m \
 ;;   --java-opt -Xms100m \
-;;   org.scalameta:metals_2.13:1.2.2 -o metals -f
+;;   --java-opt -Dmetals.client=emacs \
+;;   org.scalameta:metals_2.13:1.3.5 -o metals -f
+
 ;;
 ;; `Windows':
 ;; set BIN_PATH=C:\bin\
@@ -101,14 +103,13 @@
 ;; Add metals backend for lsp-mode
 (use-package lsp-metals)
 (setq lsp-metals-fallback-scala-version "3.3.3")
+;; (use-package lsp-ui)
 
 (defun k/lsp-clean-session ()
   "Lsp sessions cleanup - delete known projects."
   (interactive)
   (delete-file "~/.emacs.d/.lsp-session-v1")
   (setq lsp--session nil))
-
-(use-package lsp-ui)
 
 (defun k/scala-indent-region ()
   "Indent region or current line in Scala file."
