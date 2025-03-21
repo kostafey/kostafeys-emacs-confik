@@ -23,7 +23,6 @@
      project-explorer
      restclient
      vterm
-     dired-single
      marginalia
      vertico-directory
      lsp-ui
