@@ -182,4 +182,10 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (use-elpa 'dockerfile-mode)
 
+(use-package nginx-mode
+  :ensure t
+  :config
+  (progn
+    (setq nginx-indent-level 2)))
+
 (provide 'text-modes-conf)
