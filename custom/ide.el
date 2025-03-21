@@ -13,13 +13,8 @@
 (setq imenu-max-items 200)
 
 ;;-------------------------------------------------------------------
-;; treemacs
+;; ztree
 ;;
-(use-package treemacs
-  :ensure t
-  :defer t
-  :config
-  (progn
-    (setq treemacs-no-png-images t)))
+(use-package ztree)
 
 (provide 'ide)
