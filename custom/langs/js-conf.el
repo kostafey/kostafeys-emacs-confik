@@ -51,9 +51,12 @@
 (when (require 'npm-mode nil 'noerror)
   (npm-global-mode)
 
+  (defconst k/npm "npm")
+
   (defun k/npm-mode-build ()
     (interactive)
-    (npm-mode--exec-process "npm run build --prefer-offline --no-audit"))
+    (npm-mode--exec-process
+     (format "%s run build --prefer-offline --no-audit" k/npm)))
 
   (let ((mode-maps (list js-mode-map js2-mode-map js-json-mode-map
                          js-jsx-mode-map web-mode-map)))

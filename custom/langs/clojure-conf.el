@@ -44,6 +44,9 @@
   (cider-eval-buffer buffer)
   (my-cider-in-ns))
 
+;; C-M-x, C-c C-c
+;; `cider-eval-defun-at-point'
+
 (setq cider-default-repl-command "lein")
 
 ;;----------------------------------------------------------------------

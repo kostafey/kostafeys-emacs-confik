@@ -1,3 +1,8 @@
+(require 'elpa-conf)
+(use-elpa 'rust-mode)
+(use-elpa 'flycheck-rust)
+
+
 (when (require 'rust-mode nil 'noerror)
   ;; --------
   ;; flycheck
