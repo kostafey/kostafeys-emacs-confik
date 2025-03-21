@@ -2,6 +2,9 @@
 
 (require 'elpa-conf)
 
+(use-package exec-path-from-shell
+  :config (exec-path-from-shell-initialize))
+
 (use-package vterm
   :ensure t
   :bind (:map vterm-mode-map
