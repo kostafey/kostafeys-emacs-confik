@@ -166,8 +166,9 @@ not in the top of the frame."
 (defun my-web-mode-hook ()
   (my-coding-hook)
   (setq-default indent-tabs-mode nil)
-  ;; (setq indent-line-function 'web-mode-indent-line)
-  (setq-local indent-line-function 'indent-relative))
+  (setq indent-line-function 'web-mode-indent-line)
+  ;; (setq-local indent-line-function 'indent-relative)
+  )
 
 (defun my-lisp-coding-hook ()
   (my-common-coding-hook)

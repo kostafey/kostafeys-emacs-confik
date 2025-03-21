@@ -197,7 +197,8 @@
     (define-key org-mode-map (kbd "M-<right>") nil)
     (define-key org-mode-map (kbd "C-c C-p") 'k/el-pprint-eval-last-sexp)
     (define-key org-mode-map (kbd "C-a") nil)
-    (define-key org-mode-map (kbd "M-a") nil)))
+    (define-key org-mode-map (kbd "M-a") nil)
+    (define-key org-mode-map (kbd "C-j") 'join-next-line-space-n)))
 
 ;;===================================================================
 ;; Scrolling
