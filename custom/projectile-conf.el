@@ -5,7 +5,7 @@
 
 (projectile-mode)
 (setq projectile-indexing-method 'native)
-(setq projectile-enable-caching t)
+(setq projectile-enable-caching 'persistent)
 
 (defun k/projectile--find-file (invalidate-cache &optional ff-variant)
   "Jump to a project's file using completion.
