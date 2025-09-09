@@ -46,6 +46,15 @@
                     (region-end))))
       (- end beg))))
 
+(defun region-selection-count-lines ()
+  (if (not mark-active)
+      0
+    (let ((beg (min (region-beginning)
+                    (region-end)))
+          (end (max (region-beginning)
+                    (region-end))))
+      (count-lines beg end))))
+
 ;;;###autoload
 (defun hard-rewrite-mode ()
   "Workaround for the case when selected text not replaced by insertions."

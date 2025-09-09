@@ -42,7 +42,9 @@
        ")"
        '(:eval (when mark-active
                  (propertize
-                  (format " %s" (region-selection-length))
+                  (format " %s:%s"
+                          (region-selection-length)
+                          (region-selection-count-lines))
                   'face 'font-lock-constant-face)))
        ;; " %i "
        ;; (add-to-list 'global-mode-string '(" %i"))
