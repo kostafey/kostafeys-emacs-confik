@@ -190,6 +190,10 @@
              ((equal 'ejc-sql-mode mode)
               (apply 'ejc-describe-entity
                      (ejc-get-prompt-symbol-under-point "Describe entity")))
+             ;; php-mode
+             ((equal 'php-mode mode)
+              (let ((xref-prompt-for-identifier nil))
+                (call-interactively 'xref-find-definitions)))
              ;; other modes
              (t
               (if (and (functionp 'semantic-ia-fast-jump)

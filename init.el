@@ -73,6 +73,7 @@
 (require 'xml-conf)
 (require 'go-conf)
 (require 'fennel-conf)
+(require 'php-conf)
 ;; (require 'common-lisp-conf)
 ;; (require 'mql-mode)
 ;; (require 'sphinx-frontend)
