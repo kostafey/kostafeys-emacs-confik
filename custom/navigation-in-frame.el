@@ -58,9 +58,9 @@
 ;; Interact with browser
 ;;
 (defun find-browser-executable ()
-  (cond ((executable-find "google-chrome-stable") "google-chrome-stable")
-        ((executable-find "chromium") "chromium")
+  (cond ((executable-find "chromium") "chromium")
         ((executable-find "chromium-browser") "chromium-browser")
+        ((executable-find "google-chrome-stable") "google-chrome-stable")
         ((executable-find "palemoon") "palemoon")
         ((executable-find "firefox") "firefox")
         (t (message "Cant find any browser in the PATH."))))

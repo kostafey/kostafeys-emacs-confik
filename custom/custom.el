@@ -6,74 +6,27 @@
  '(auth-source-save-behavior nil)
  '(magit-save-some-buffers 'dontask)
  '(package-selected-packages
-   '(scala-ts-mode
-     go-mode
-     company-fuzzy
-     session
-     consult
-     vertico-posframe
-     mini-popup
-     mini-popup.el
-     dockerfile-mode
-     npm-mode
-     jdecomp
-     lsp-java
-     fennel-mode
-     company-quickhelp
-     project-explorer
-     restclient
-     vterm
-     marginalia
-     vertico-directory
-     lsp-ui
-     lsp-metals
-     flycheck
-     sbt-mode
-     scala-mode
-     use-package
-     lsp-mode
-     yaml-mode
-     rainbow-mode
-     minions
-     csv-mode
-     markdown-toc
-     graphviz-dot-mode
-     lorem-ipsum
-     web-mode
-     rjsx-mode
-     skewer-mode
-     ac-cider
-     circe
-     tabbar
-     temporary-persistent
-     idle-highlight-mode
-     simple-httpd
-     cider
-     diffview
-     rg
-     eshell-prompt-extras
-     projectile
-     popup-switcher
-     ac-etags
-     company-mode
-     company
-     auto-complete
-     yasnippet
-     smex
-     ace-jump-mode
-     highlight-symbol
-     ag
-     flx-isearch
-     flx-ido
-     flx
-     goto-last-change
-     multiple-cursors
-     git-gutter-fringe
-     git-gutter
-     paredit-everywhere
-     paredit
-     rainbow-delimiters
-     magit)))
+   '(scala-ts-mode go-mode company-fuzzy session consult vertico-posframe
+                   mini-popup mini-popup.el dockerfile-mode npm-mode jdecomp
+                   lsp-java fennel-mode company-quickhelp project-explorer
+                   restclient vterm marginalia vertico-directory lsp-ui
+                   lsp-metals flycheck sbt-mode scala-mode use-package
+                   lsp-mode yaml-mode rainbow-mode minions csv-mode
+                   markdown-toc graphviz-dot-mode lorem-ipsum web-mode
+                   rjsx-mode skewer-mode ac-cider circe tabbar
+                   temporary-persistent idle-highlight-mode simple-httpd cider
+                   diffview rg eshell-prompt-extras projectile popup-switcher
+                   ac-etags company-mode company auto-complete yasnippet smex
+                   ace-jump-mode highlight-symbol ag flx-isearch flx-ido flx
+                   goto-last-change multiple-cursors git-gutter-fringe
+                   git-gutter paredit-everywhere paredit rainbow-delimiters
+                   magit))
+ '(safe-local-variable-values
+   '((scala-indent:default-run-on-strategy quote
+                                           scala-indent:keywords-only-strategy)
+     (scala-indent:default-run-on-strategy
+      . scala-indent:keywords-only-strategy)
+     (scala-indent:indent-value-expression) (scala-indent:step . 2))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
