@@ -111,6 +111,8 @@
 (add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
 
 ;; `lsp-server'
+(add-hook 'rjsx-mode-hook 'lsp)
+
 ;; npm install -g eslint
 (setq flycheck-checker-error-threshold 10000)
 

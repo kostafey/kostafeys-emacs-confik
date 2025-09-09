@@ -194,6 +194,10 @@
              ((equal 'php-mode mode)
               (let ((xref-prompt-for-identifier nil))
                 (call-interactively 'xref-find-definitions)))
+             ;; rjsx-mode
+             ((equal 'rjsx-mode mode)
+              (let ((xref-prompt-for-identifier nil))
+                (call-interactively 'xref-find-definitions)))
              ;; other modes
              (t
               (if (and (functionp 'semantic-ia-fast-jump)
