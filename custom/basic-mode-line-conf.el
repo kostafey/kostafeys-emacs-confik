@@ -1,13 +1,3 @@
-(require 'elpa-conf)
-(use-elpa 'use-package)
-
-;;=============================================================================
-;; mode-line (emacs status bar) config
-;;
-(use-package minions
-  :ensure t
-  :config (minions-mode 1))
-
 (setq-default
  projectile-mode-line-prefix " "
  mode-line-format
@@ -111,4 +101,4 @@
        ")"
        ))
 
-(provide 'mode-line-conf)
+(provide 'basic-mode-line-conf)

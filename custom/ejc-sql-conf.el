@@ -1,11 +1,15 @@
 ;;--------------------------------------------------------------------
 ;; Emacs SQL client `ejc-sql'.
 ;;
-(use-elpa 'cider)
-(use-elpa 'simple-httpd)
+(straight-use-package
+ '(cider :type git :host github
+         :repo "clojure-emacs/cider" :branch "master"))
+(straight-use-package
+ '(simple-httpd :type git :host github
+                :repo "skeeto/emacs-web-server" :branch "master"))
 (straight-use-package
  '(clomacs :type git :host gitlab
-                 :repo "kostafey/clomacs" :branch "master"))
+           :repo "kostafey/clomacs" :branch "master"))
 (require 'clomacs)
 
 (straight-use-package

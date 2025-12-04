@@ -7,19 +7,47 @@
 (setq organic-green-version 2)
 (load-theme 'organic-green t)
 
-;;-------------------------------------------------------------------
-(require 'elpa-conf)
-(use-elpa 'dash)
-(use-elpa 'rainbow-delimiters)
-(use-elpa 'idle-highlight-mode)
-(use-elpa 'paredit)
-(use-elpa 'paredit-everywhere)
-(use-elpa 'tabbar)
-(use-elpa 'breadcrumb)
+;;=============================================================================
+;; mode-line (emacs status bar) config
+;;
+(use-package minions
+  :straight '(minions :type git :host github
+					            :repo "tarsius/minions" :branch "main")
+  :config (minions-mode 1))
 
+;;-------------------------------------------------------------------
+(straight-use-package
+ '(dash :type git :host github
+				:repo "magnars/dash.el" :branch "master"))
 ;; Font lock of dash functions in emacs lisp buffers
 (eval-after-load "dash" '(dash-enable-font-lock))
 
+(straight-use-package
+ '(rainbow-delimiters :type git :host github
+				              :repo "Fanael/rainbow-delimiters" :branch "master"))
+
+;; This minor mode sets background color to strings that match color
+;; names, e.g. #0000ff is displayed in white with a blue background.
+(straight-use-package
+ '(rainbow-mode :type git :host github
+				        :repo "emacsmirror/rainbow-mode" :branch "master"))
+
+(straight-use-package
+ '(emacs-idle-highlight-mode :type git :host codeberg
+				                     :repo "ideasman42/emacs-idle-highlight-mode" :branch "main"))
+(straight-use-package
+ '(paredit :type git :host nil
+				   :fetch "https://paredit.org/cgit/paredit/" :branch "master"))
+(straight-use-package
+ '(paredit-everywhere :type git :host github
+				              :repo "purcell/paredit-everywhere" :branch "master"))
+
+(straight-use-package
+ '(tabbar :type git :host github
+				  :repo "dholm/tabbar" :branch "master"))
+(straight-use-package
+ '(breadcrumb :type git :host github
+				      :repo "joaotavora/breadcrumb" :branch "master"))
 ;;-------------------------------------------------------------------
 ;; Tabs - Tabbar
 
@@ -32,17 +60,6 @@
 
 (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
 (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)
-
-(setq tabbar-buffer-groups-function
-      '(lambda ()
-         (list
-          (cond
-           ((and (find (aref (buffer-name (current-buffer)) 0) " *")
-                 (not (string-match
-                       "^\\*temp\\(-[0-9]+\\)?\\*$"
-                       (buffer-name b))))
-            "*")
-           (t "All Buffers")))))
 
 (setq tabbar-buffer-list-function
       '(lambda ()

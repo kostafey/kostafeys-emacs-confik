@@ -1,15 +1,33 @@
-(require 'elpa-conf)
+(straight-use-package
+ '(yasnippet :type git :host github
+				     :repo "joaotavora/yasnippet" :branch "master"))
+(straight-use-package
+ '(yasnippet-snippets :type git :host github
+				              :repo "AndreaCrotti/yasnippet-snippets" :branch "master"))
+(straight-use-package
+ '(auto-complete :type git :host github
+				         :repo "auto-complete/auto-complete" :branch "master"))
+(straight-use-package
+ '(ac-etags :type git :host github
+				    :repo "emacsorphanage/ac-etags" :branch "master"))
+(straight-use-package
+ '(company :type git :host github
+				   :repo "company-mode/company-mode" :branch "master"))
+(straight-use-package
+ '(company-quickhelp :type git :host github
+				             :repo "company-mode/company-quickhelp" :branch "master"))
+(straight-use-package
+ '(company-fuzzy :type git :host github
+				         :repo "jcs-elpa/company-fuzzy" :branch "master"))
 
 ;;===================================================================
 ;; Yet Another Snippet extension
 ;;
-(use-elpa 'yasnippet)
+(yas-global-mode 1)
 ;; personal snippets
 (setq yas-snippet-dirs
-    (append yas-snippet-dirs
-            (list "~/.emacs.d/custom/mysnippets")))
-
-(yas-global-mode 1)
+      (append yas-snippet-dirs
+              (list "~/.emacs.d/custom/mysnippets")))
 
 (defun yas/next-field-or-maybe-expand-1 ()
   (interactive)
@@ -29,13 +47,9 @@
      (setq *yas-invokation-point* (point))
      (yas/next-field-or-maybe-expand-1))))
 
-;; https://github.com/AndreaCrotti/yasnippet-snippets
-(use-elpa 'yasnippet-snippets)
-
 ;;===================================================================
 ;; auto-complete
 ;;
-(use-elpa 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
 (global-auto-complete-mode -1)
@@ -45,7 +59,6 @@
 (setq ac-auto-start 2)
 (setq ac-dwim t)               ; Do what i mean
 
-(use-elpa 'ac-etags)
 (setq ac-etags-requires 2)
 (eval-after-load "etags"
   '(progn
@@ -79,8 +92,6 @@ Pages up through completion menu."
 ;;=============================================================================
 ;; company-mode
 ;;
-(use-elpa 'company)
-
 ;; The minimum prefix length for idle completion.
 (setq company-minimum-prefix-length 1)
 
@@ -121,7 +132,6 @@ With ARG, move by that many elements."
 (company-ac-setup)
 
 ;; Company quickhelp
-(use-elpa 'company-quickhelp)
 (company-quickhelp-mode)
 (eval-after-load 'company
   '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
@@ -145,7 +155,7 @@ With ARG, move by that many elements."
           (const :tag "company-mode" :value company-mode)))
 
 (with-eval-after-load 'completition-conf
-  (case k/complete-frontend
+  (cl-case k/complete-frontend
     ('auto-complete
      (global-auto-complete-mode t))
     ('company-mode

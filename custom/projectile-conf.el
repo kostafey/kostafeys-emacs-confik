@@ -1,7 +1,8 @@
 ;;; projectile-conf.el -- Projectile custom configuration.
 
-(require 'elpa-conf)
-(use-elpa 'projectile)
+(straight-use-package
+ '(projectile :type git :host github
+			        :repo "bbatsov/projectile" :branch "master"))
 
 (projectile-mode)
 (setq projectile-indexing-method 'native)

@@ -1,4 +1,4 @@
-;;; basic.el.el -- Basic keybindings & custom configuration.
+;;; basic-keys.el --- Basic keybindings & custom configuration.
 
 ;; No third-party dependencies.
 (require 'redo)
@@ -733,4 +733,4 @@ Don't mess with special buffers."
                                                   (cua-set-mark))
                                               (mouse-set-point e)))
 
-(provide 'basic)
+(provide 'basic-keys)

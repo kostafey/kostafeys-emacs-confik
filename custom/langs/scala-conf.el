@@ -38,9 +38,6 @@
 
 ;;; Code:
 
-(use-elpa 'use-package)
-(require 'use-package)
-
 ;; Enable defer and ensure by default for use-package
 ;; Keep auto-save/backup files separate from source code:  https://github.com/scalameta/metals/issues/1027
 (setq use-package-always-defer t
@@ -50,6 +47,8 @@
 
 ;; Enable scala-mode and sbt-mode
 (use-package scala-mode
+  :straight '(scala-mode :type git :host github
+			                   :repo "hvesalai/emacs-scala-mode" :branch "master")
   :mode "\\.s\\(cala\\|bt\\)$"
   :config (setq scala-indent:step 2
                 scala-indent:indent-value-expression t
@@ -69,10 +68,14 @@
                    (propertize (number-to-string scala-indent:step)
                                'face 'font-lock-keyword-face))))
 
-(use-elpa 'restclient)
+(use-package restclient
+  :straight '(restclient :type git :host github
+			                   :repo "emacsmirror/restclient" :branch "master"))
 (add-to-list 'auto-mode-alist '("\\routes$" . restclient-mode))
 
 (use-package sbt-mode
+  :straight '(sbt-mode :type git :host github
+			                 :repo "hvesalai/emacs-sbt-mode" :branch "master")
   :commands sbt-start sbt-command
   :config
   ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
@@ -88,9 +91,13 @@
           "-Djline.terminal=jline.UnsupportedTerminal")))
 
 ;; Enable nice rendering of diagnostics like compile errors.
-(use-package flycheck)
+(use-package flycheck
+  :straight '(flycheck :type git :host github
+			                 :repo "flycheck/flycheck" :branch "master"))
 
 (use-package lsp-mode
+  :straight '(lsp-mode :type git :host github
+			                 :repo "emacs-lsp/lsp-mode" :branch "master")
   ;; Optional - enable lsp-mode automatically in scala files
   :hook ((scala-mode . lsp)
          (scala-ts-mode . lsp))
@@ -101,7 +108,9 @@
             (setq lsp-ui-sideline-diagnostic-max-lines 8)))
 
 ;; Add metals backend for lsp-mode
-(use-package lsp-metals)
+(use-package lsp-metals
+  :straight '(lsp-metals :type git :host github
+			                   :repo "emacs-lsp/lsp-metals" :branch "master"))
 (setq lsp-metals-fallback-scala-version "3.3.3")
 ;; (use-package lsp-ui)
 

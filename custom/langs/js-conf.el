@@ -1,11 +1,27 @@
-(require 'elpa-conf)
-(use-elpa 'skewer-mode)
+;;; js-conf.el
+
+(use-package skewer-mode
+  :straight '(skewer-mode :type git :host github
+			                    :repo "skeeto/skewer-mode" :branch "master"))
+
 (setq native-comp-jit-compilation-deny-list
       '("js2-mode" "rjsx-mode"))
-(use-elpa 'rjsx-mode)
-(use-elpa 'js2-mode)
-(use-elpa 'npm-mode)
-(use-elpa 'web-mode)
+(use-package rjsx-mode ; <- js2-mode
+  :straight '(rjsx-mode :type git :host github
+			                  :repo "felipeochoa/rjsx-mode" :branch "master")
+  :init (require 'rjsx-mode))
+;; (use-package js2-mode
+;;   :straight '(js2-mode :type git :host github
+;; 			                 :repo "mooz/js2-mode" :branch "master"))
+
+(use-package npm-mode
+  :straight '(npm-mode :type git :host github
+			                 :repo "mojochao/npm-mode" :branch "master"))
+(use-package web-mode
+  :straight '(web-mode :type git :host github
+			                 :repo "fxbois/web-mode" :branch "master")
+  :init (require 'web-mode))
+
 (require 'typescript-mode nil 'noerror)
 
 ;;------------------------------------------------------------
@@ -126,7 +142,7 @@
 
 ;;------------------------------------------------------------
 ;; rjsx-mode
-(require 'basic)
+(require 'basic-keys)
 
 (defun k/rjsx-forward (&optional select)
   (interactive)

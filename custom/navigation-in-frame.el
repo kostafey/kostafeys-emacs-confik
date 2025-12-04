@@ -13,6 +13,7 @@
 ;;-----------------------------------------------------------------------------
 ;; ibuffer
 ;;
+(require 'ibuffer)
 (setq-default ibuffer-default-sorting-mode 'major-mode)    ; sorting
 (setq ibuffer-never-show-predicates (list "^\\*" "magit")) ; filter buffers
 

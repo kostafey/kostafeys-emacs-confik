@@ -1,7 +1,4 @@
-;;; go-mode configuration
-(require 'elpa-conf)
-(use-elpa 'use-package)
-(require 'appearance)
+;;; go-conf.el --- go-mode configuration
 
 ;;---------------------
 ;; Environment example:
@@ -27,7 +24,9 @@
 ;; go install github.com/rogpeppe/godef@latest
 ;; go install golang.org/x/tools/cmd/godoc@latest
 ;; Assume gofmt provided with golang SDK distribution.
-(use-elpa 'go-mode)
+(straight-use-package
+ '(go-mode :type git :host github
+				   :repo "dominikh/go-mode.el" :branch "master"))
 
 (add-hook 'go-mode-hook
           (lambda ()
@@ -40,6 +39,8 @@
 ;; LSP
 ;; go install golang.org/x/tools/gopls@latest
 (use-package lsp-mode
+  :straight '(lsp-mode :type git :host github
+			                 :repo "emacs-lsp/lsp-mode" :branch "master")
   :hook ((go-mode . lsp-deferred)
          (go-mode . my-common-coding-hook)))
 

@@ -35,7 +35,7 @@
 ;;-------------------------------------------------------------------
 ;; StatusBar config
 ;;
-(require 'mode-line-conf)
+(require 'basic-mode-line-conf)
 
 ;;-------------------------------------------------------------------
 ;; Cursor config
@@ -173,5 +173,5 @@
                                        (match-end 1)
                                        ?λ))))))
 
-(provide 'look-and-feel)
+(provide 'basic-look-and-feel)
 

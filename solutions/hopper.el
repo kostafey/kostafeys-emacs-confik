@@ -9,8 +9,8 @@
 ;;; Code:
 
 (require 's)
-(require 'basic)
-(require 'ejc-sql)
+(require 'basic-keys)
+(require 'ejc-sql-conf)
 (require 'clojure-conf)
 
 (defun hop-buffer-mode (buffer-or-string)

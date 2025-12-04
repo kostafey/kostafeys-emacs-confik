@@ -1,9 +1,17 @@
-(require 'elpa-conf)
-(use-elpa 'use-package)
-(use-elpa 'magit)
-(use-elpa 'multi-magit)
-(use-elpa 'darcsum)
-(use-elpa 'diffview)
+(require 'cl-lib)
+
+(straight-use-package
+ '(magit :type git :host github
+				 :repo "magit/magit" :branch "main"))
+(straight-use-package
+ '(multi-magit :type git :host github
+				       :repo "luismbo/multi-magit" :branch "master"))
+(straight-use-package
+ '(darcsum :type git :host github
+				   :repo "emacsmirror/darcsum" :branch "master"))
+(straight-use-package
+ '(diffview :type git :host github
+				    :repo "mgalgs/diffview-mode" :branch "master"))
 
 (setq magit-auto-revert-mode nil)
 
@@ -11,12 +19,12 @@
  '(magit-save-some-buffers (quote dontask)))
 
 (defun k/magit-status-mode ()
-  (loop for m in (list magit-diff-mode-map
-                       magit-file-section-map
-                       magit-hunk-section-map
-                       magit-unstaged-section-map
-                       magit-staged-section-map)
-        do (define-key m (kbd "C-c") 'cua-copy-region)))
+  (cl-loop for m in (list magit-diff-mode-map
+                          magit-file-section-map
+                          magit-hunk-section-map
+                          magit-unstaged-section-map
+                          magit-staged-section-map)
+           do (define-key m (kbd "C-c") 'cua-copy-region)))
 
 (add-hook 'magit-status-mode-hook #'k/magit-status-mode)
 
@@ -63,12 +71,16 @@
   (multi-magit-status))
 
 (use-package git-gutter
-  :ensure t
+  :straight '(git-gutter
+              :type git :host github
+				      :repo "emacsorphanage/git-gutter" :branch "master")
   :config
   (global-git-gutter-mode t))
 
 (use-package git-gutter-fringe
-  :ensure t
+  :straight '(git-gutter-fringe
+              :type git :host github
+	            :repo "emacsorphanage/git-gutter-fringe" :branch "master")
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [#b11100000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b11100000] nil nil '(center repeated))

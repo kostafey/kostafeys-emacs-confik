@@ -1,11 +1,22 @@
-(require 'elpa-conf)
-(use-elpa 'cider)
+;;; clojure-conf.el
+
+(straight-use-package
+ '(cider :type git :host github
+         :repo "clojure-emacs/cider" :branch "master"))
+(straight-use-package
+ '(lsp-mode :type git :host github
+            :repo "emacs-lsp/lsp-mode" :branch "master"))
+(straight-use-package
+ '(dash :type git :host github
+				:repo "magnars/dash.el" :branch "master"))
+(straight-use-package
+ '(emacs-libvterm :type git :host github
+			            :repo "akermu/emacs-libvterm" :branch "master"))
 
 ;;----------------------------------------------------------------------
 ;; clojure
 ;;
 ;; lsp
-(use-elpa 'lsp-mode)
 (add-hook 'clojure-mode-hook 'lsp)
 (add-hook 'clojurescript-mode-hook 'lsp)
 (add-hook 'clojurec-mode-hook 'lsp)
@@ -65,8 +76,6 @@
 ;;----------------------------------------------------------------------
 ;; eval in vterm
 ;;
-(use-elpa 'dash)
-(use-elpa 'vterm)
 
 (defun k/vterm-buffer ()
   "Set buffer `vterm-buffer-name' or return nil if buffer does not exist."

@@ -27,37 +27,30 @@
 ;; Reusable customization
 (add-to-list 'load-path (expand-file-name "solutions" site-lisp-path))
 ;; (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
-(add-to-list 'load-path (expand-file-name "popup-switcher" site-lisp-path))
 
 ;; No third-party dependencies
 (require 'basic-text-editing)
-(require 'basic)
-(require 'look-and-feel)
-(require 'switch-language)
+(require 'basic-keys)
+(require 'basic-switch-language)
+(require 'basic-look-and-feel)
+
 ;; Use third-party dependencies
-(require 'elpa-conf)
 (require 'straight-conf)
 (require 'appearance)
 (require 'minibuffer-conf)
 (require 'version-control)
 (require 'ack-conf)
-
 ;;-------------------------------------------------------------------
 ;; auto-customized custom-set-variables
 (setq custom-file (concat site-lisp-path "custom/custom.el"))
 (load custom-file)
 ;;-------------------------------------------------------------------
-
-(require 'ejc-sql-conf nil 'noerror)
-
 (require 'key-bindings)
-
 (require 'ide)
 (require 'history-conf)
 (require 'text-modes-conf)
 ;; (require 'foreign)
 (require 'perfomance-conf)
-(require 'eframe-windmove)
 (require 'tree-sitter-conf)
 ;; (require 'irc-conf)
 (require 'translate-conf)
@@ -80,11 +73,6 @@
 ;; (require 'lua-conf)
 ;; (require 'rust-conf)
 ;; (require 'auctex-conf)
-
-;;-------------------------------------------------------------------
-;; Packages without customization
-;;
-(use-elpa 'rainbow-mode)
 
 ;;-------------------------------------------------------------------
 ;;; In praise of Emacs, The One True Editor

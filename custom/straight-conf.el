@@ -14,4 +14,14 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(defun straight-highlight-initialize ()
+  (font-lock-add-keywords
+   'emacs-lisp-mode
+   '(("straight-use-package\\b" . font-lock-keyword-face)
+     ("straight-use-package '\\(.*\\)[ )]" (1 font-lock-function-name-face)))))
+
+(eval-after-load "straight-conf"
+  (lambda ()
+    (straight-highlight-initialize)))
+
 (provide 'straight-conf)

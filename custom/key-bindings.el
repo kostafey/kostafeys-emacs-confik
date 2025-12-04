@@ -1,32 +1,51 @@
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
-(require 'elpa-conf)
-(use-elpa 'session)
-(use-elpa 'multiple-cursors)
-(use-elpa 'flx)
-(use-elpa 'flx-ido)
-(use-elpa 'flx-isearch)
+(straight-use-package
+ '(popup-switcher :type git :host github
+				          :repo "kostafey/popup-switcher" :branch "master"))
+(straight-use-package
+ '(session :type git :host github
+				   :repo "emacsattic/session" :branch "master"))
+(straight-use-package
+ '(multiple-cursors :type git :host github
+				            :repo "magnars/multiple-cursors.el" :branch "master"))
+(use-package flx
+  :straight '(flx :type git :host github
+			            :repo "lewang/flx" :branch "master")
+  :load-path "~/.emacs.d/straight/repos/flx"
+  :init (progn
+          (require 'flx)
+          (require 'flx-ido)))
+(straight-use-package
+ '(flx-isearch :type git :host github
+			         :repo "PythonNut/flx-isearch" :branch "master"))
+(straight-use-package
+ '(highlight-symbol :type git :host github
+			              :repo "nschum/highlight-symbol.el" :branch "master"))
+(straight-use-package
+ '(ace-jump-mode :type git :host github
+			           :repo "winterTTr/ace-jump-mode" :branch "master"))
+
 (require 'ack-conf)
-(use-elpa 'highlight-symbol)
-(use-elpa 'ace-jump-mode)
-(use-elpa 'smex)
 (require 'navigation-in-frame)
 (require 'completition-conf)
-(use-elpa 'popup-switcher)
 (require 'projectile-conf)
 
 (straight-use-package
  '(eframe-jack-in :type git :host github
-				:repo "kostafey/eframe-jack-in" :branch "master"))
+				          :repo "kostafey/eframe-jack-in" :branch "master"))
 (require 'eframe-jack-in)
+(require 'eframe-windmove)
 (global-set-key (kbd "C-M-e") 'eframe-pop-emacs)
-(use-elpa 'temporary-persistent)
+
+(straight-use-package
+ '(temporary-persistent :type git :host github
+				                :repo "kostafey/temporary-persistent" :branch "master"))
 
 (require 'shell-conf)
 (require 'dired-conf)
 (require 'reencoding-file)
 (require 'version-control)
-(require 'org)
 
 ;;-------------------------------------------------------------------
 ;; multiple-cursors
@@ -357,6 +376,7 @@
 ;;----------------------------------------------------------------------
 ;; SQL
 ;;
+(require 'ejc-sql-conf nil 'noerror)
 (when (require 'ejc-sql nil 'noerror)
   (eval-after-load "ejc-sql"
     '(progn
@@ -367,10 +387,10 @@
        (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
        (global-set-key (kbd "C-x C-s") 'ejc-get-temp-editor-buffer)
        (global-set-key (kbd "C-M-<next>") (lambda ()
-                                     (interactive)
-                                     (if (equal (buffer-name)
-                                                ejc-results-buffer-name)
-                                         (ejc-show-next-result))))
+                                            (interactive)
+                                            (if (equal (buffer-name)
+                                                       ejc-results-buffer-name)
+                                                (ejc-show-next-result))))
        (global-set-key (kbd "C-M-<prior>") (lambda ()
                                              (interactive)
                                              (if (equal (buffer-name)
@@ -432,11 +452,13 @@
   (global-set-key (kbd "C-M-g p") 'git-gutter:popup-hunk))
 
 (setq smerge-command-prefix (kbd "C-c s"))
-(define-key smerge-mode-map (kbd "C-c s n") 'smerge-next)
-(define-key smerge-mode-map (kbd "C-c s p") 'smerge-prev)
-(define-key smerge-mode-map (kbd "C-c s RET") 'smerge-keep-current)
-(define-key smerge-mode-map (kbd "C-c s u") 'smerge-keep-upper)
-(define-key smerge-mode-map (kbd "C-c s l") 'smerge-keep-lower)
+(defun kostafey-smerge-mode-hook ()
+  (define-key smerge-mode-map (kbd "C-c s n") 'smerge-next)
+  (define-key smerge-mode-map (kbd "C-c s p") 'smerge-prev)
+  (define-key smerge-mode-map (kbd "C-c s RET") 'smerge-keep-current)
+  (define-key smerge-mode-map (kbd "C-c s u") 'smerge-keep-upper)
+  (define-key smerge-mode-map (kbd "C-c s l") 'smerge-keep-lower))
+(add-hook 'smerge-mode-hook 'kostafey-smerge-mode-hook)
 
 ;;===================================================================
 ;; Org-mode
@@ -445,14 +467,16 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
 
-(define-key dired-mode-map [f1] nil)
-(define-key dired-mode-map (kbd "M-z") nil)
-(define-key dired-mode-map (kbd "M-p")
-  'copy-to-clipboard-dired-current-directory)
-(define-key dired-mode-map (kbd "C-<home>") 'dired-home)
-(define-key dired-mode-map (kbd "C-<end>") 'dired-end)
-(define-key dired-mode-map (kbd "C-<up>") 'diredp-up-directory-reuse-dir-buffer)
-(define-key dired-mode-map (kbd "C-<down>") 'diredp-find-file-reuse-dir-buffer)
+(defun kostafey-dired-mode-hook ()
+  (define-key dired-mode-map [f1] nil)
+  (define-key dired-mode-map (kbd "M-z") nil)
+  (define-key dired-mode-map (kbd "M-p")
+              'copy-to-clipboard-dired-current-directory)
+  (define-key dired-mode-map (kbd "C-<home>") 'dired-home)
+  (define-key dired-mode-map (kbd "C-<end>") 'dired-end)
+  (define-key dired-mode-map (kbd "C-<up>") 'diredp-up-directory-reuse-dir-buffer)
+  (define-key dired-mode-map (kbd "C-<down>") 'diredp-find-file-reuse-dir-buffer))
+(add-hook 'dired-mode-hook 'kostafey-dired-mode-hook)
 
 (provide 'key-bindings)
 

@@ -10,10 +10,13 @@
 ;;-----------------------------------------------------------------------------
 ;; lsp-java
 ;;
-(use-package lsp-mode :ensure t)
+(use-package lsp-mode
+  :straight '(lsp-mode :type git :host github
+			                 :repo "emacs-lsp/lsp-mode" :branch "master"))
 
 (use-package lsp-java
-  :ensure t
+  :straight '(lsp-java :type git :host github
+			                 :repo "emacs-lsp/lsp-java" :branch "master")
   :after lsp
   :config (progn (add-hook 'java-mode-hook 'lsp)
                  (custom-set-variables '(lsp-ui-sideline-enable nil)
@@ -174,7 +177,9 @@
 ;; mvn org.apache.maven.plugins:maven-dependency-plugin:get \
 ;;   -Dartifact=org.benf:cfr:0.139
 ;;
-(use-package jdecomp :ensure t)
+(use-package jdecomp
+  :straight '(jdecomp :type git :host github
+			                :repo "xiongtx/jdecomp" :branch "master"))
 
 (let ((home (if (eq system-type 'windows-nt)
                 (s-replace-all

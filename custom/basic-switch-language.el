@@ -1,8 +1,4 @@
-;;; switch-language.el -- Use cyrillic keys for commands input.
-
-(when (eq system-type 'windows-nt)
-  (require 'unicode-fonts)
-  (unicode-fonts-setup))
+;;; basic-switch-language.el -- Use cyrillic keys for commands input.
 
 ;;------------------------------------------------------------------
 ;; emacs version 24 or later
@@ -51,4 +47,4 @@
 ;;   (eval `(define-key key-translation-map
 ;;            (kbd ,(concat "M-" (string from))) (kbd ,(concat "M-" (string to))))))
 
-(provide 'switch-language)
+(provide 'basic-switch-language)

@@ -1,5 +1,6 @@
-(require 'elpa-conf)
-(use-elpa 'use-package)
+;;; text-modes-conf.el
+
+(straight-use-package 'org)
 
 ;;-------------------------------------------------------------------
 ;; Wrap text with punctation or tag
@@ -59,10 +60,12 @@
   "<Box>" _ "</Box>")
 
 ;;-------------------------------------------------------------------
-(use-elpa 'lorem-ipsum)
+(use-package lorem-ipsum
+  :straight '(lorem-ipsum :type git :host github
+			                    :repo "jschaf/emacs-lorem-ipsum" :branch "master"))
 
 ;;-------------------------------------------------------------------
-; sh-mode
+;; sh-mode
 (add-to-list 'auto-mode-alist '("\\.xsessionrc$" . sh-mode))
 
 ;;-------------------------------------------------------------------
@@ -96,11 +99,13 @@
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
-(use-elpa 'markdown-toc)
+(use-package markdown-toc
+  :straight '(markdown-toc :type git :host github
+			                     :repo "ardumont/markdown-toc" :branch "master"))
 
 ;;-------------------------------------------------------------------
 ;; CSV
-(use-elpa 'csv-mode)
+(straight-use-package 'csv-mode)
 ;; M-x `csv-align-mode'
 
 (defun k/csv-get-field-index ()
@@ -134,7 +139,9 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;;-------------------------------------------------------------------
 ;; Org-mode
 ;;
-(use-package verb)
+(use-package verb
+  :straight '(verb :type git :host github
+			             :repo "federicotdn/verb" :branch "main"))
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
@@ -168,22 +175,36 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 (require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
 
+;; Allow Emacs to handle the passphrase input in the minibuffer
+;; instead of a separate dialog.
+(setq epg-pinentry-mode 'loopback)
+
 ;;-------------------------------------------------------------------
 ;; graphviz-dot-mode
 ;;
 (use-package graphviz-dot-mode
-  :ensure t
+  :straight '(graphviz-dot-mode :type git :host github
+			                          :repo "ppareit/graphviz-dot-mode"
+                                :branch "master")
   :config
   (progn
     (setq graphviz-dot-indent-width 4)
     (add-hook 'graphviz-dot-mode-hook 'company-mode)))
 
-(use-elpa 'yaml-mode)
+(use-package yaml-mode
+  :straight '(yaml-mode :type git :host github
+			                          :repo "yoshiki/yaml-mode"
+                                :branch "master"))
 
-(use-elpa 'dockerfile-mode)
+(use-package dockerfile-mode
+  :straight '(dockerfile-mode :type git :host github
+			                        :repo "spotify/dockerfile-mode"
+                              :branch "master"))
 
 (use-package nginx-mode
-  :ensure t
+  :straight '(nginx-mode :type git :host github
+			                   :repo "ajc/nginx-mode"
+                         :branch "master")
   :config
   (progn
     (setq nginx-indent-level 2)))

@@ -1,5 +1,3 @@
-(use-elpa 'use-package)
-
 ;;-------------------------------------------------------------------
 ;; imenu
 ;;
@@ -15,6 +13,9 @@
 ;;-------------------------------------------------------------------
 ;; ztree
 ;;
-(use-package ztree)
+;
+(use-package ztree
+  :straight '(ztree :type git :host github
+			              :repo "fourier/ztree" :branch "master"))
 
 (provide 'ide)
