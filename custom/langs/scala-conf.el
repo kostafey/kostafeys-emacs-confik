@@ -2,34 +2,11 @@
 
 ;;; Commentary:
 
-;; # Make sure to use coursier v1.1.0-M9 or newer.
-;; `Linux':
-;; curl -L -o coursier https://git.io/coursier
-;; chmod +x coursier
-;; coursier bootstrap \
-;;   --java-opt -XX:+UseG1GC \
-;;   --java-opt -XX:+UseStringDeduplication  \
-;;   --java-opt -Xss4m \
-;;   --java-opt -Xms100m \
-;;   --java-opt -Dmetals.client=emacs \
-;;   org.scalameta:metals_2.13:1.3.5 -o metals -f
+;; # Install `coursier'
+;; https://get-coursier.io/docs/cli-installation
 
-;;
-;; `Windows':
-;; set BIN_PATH=C:\bin\
-;; curl -L -o "%BIN_PATH%coursier" https://git.io/coursier-cli
-;; curl -L -o "%BIN_PATH%coursier.bat" https://git.io/coursier-bat
-;; coursier bootstrap ^
-;;   --java-opt -Xss4m ^
-;;   --java-opt -Xms100m ^
-;;   --java-opt -Dmetals.client=emacs ^
-;;   org.scalameta:metals_2.12:0.9.4 ^
-;;   -r bintray:scalacenter/releases ^
-;;   -r sonatype:snapshots ^
-;;   -o %BIN_PATH%metals-emacs -f
-
-;; Run for new projects:
-;; M-x `lsp-metals-build-import'
+;; # Install `metals'
+;; coursier install metals-emacs
 
 ;; C-n j (`k/scala-start-console')
 
@@ -94,31 +71,6 @@
 (use-package flycheck
   :straight '(flycheck :type git :host github
 			                 :repo "flycheck/flycheck" :branch "master"))
-
-(use-package lsp-mode
-  :straight '(lsp-mode :type git :host github
-			                 :repo "emacs-lsp/lsp-mode" :branch "master")
-  ;; Optional - enable lsp-mode automatically in scala files
-  :hook ((scala-mode . lsp)
-         (scala-ts-mode . lsp))
-  :config (progn
-            (setq lsp-ui-doc-show-with-mouse nil)
-            (setq lsp-prefer-flymake nil)
-            (setq lsp-before-save-edits nil)
-            (setq lsp-ui-sideline-diagnostic-max-lines 8)))
-
-;; Add metals backend for lsp-mode
-(use-package lsp-metals
-  :straight '(lsp-metals :type git :host github
-			                   :repo "emacs-lsp/lsp-metals" :branch "master"))
-(setq lsp-metals-fallback-scala-version "3.3.3")
-;; (use-package lsp-ui)
-
-(defun k/lsp-clean-session ()
-  "Lsp sessions cleanup - delete known projects."
-  (interactive)
-  (delete-file "~/.emacs.d/.lsp-session-v1")
-  (setq lsp--session nil))
 
 (defun k/scala-indent-region ()
   "Indent region or current line in Scala file."
@@ -315,6 +267,59 @@
 (defun k/scala-compile ()
   (interactive)
   (sbt-command "compile"))
+
+(defcustom k/scala-lsp-frontend 'eglot
+  "Choose scala lsp frontend for Emacs."
+  :type '(choice 'lsp-mode
+                 'eglot))
+
+(case k/scala-lsp-frontend
+  ;;;;;;;;;;;;;;
+  ;; lsp-mode ;;
+  ;;;;;;;;;;;;;;
+  ('lsp-mode
+   ;; Run for new projects:
+   ;; M-x `lsp-metals-build-import'
+   (progn
+     (use-package lsp-mode
+       :straight '(lsp-mode :type git :host github
+			                      :repo "emacs-lsp/lsp-mode" :branch "master")
+       ;; Optional - enable lsp-mode automatically in scala files
+       :hook ((scala-mode . lsp)
+              (scala-ts-mode . lsp))
+       :config (progn
+                 (setq lsp-ui-doc-show-with-mouse nil)
+                 (setq lsp-prefer-flymake nil)
+                 (setq lsp-before-save-edits nil)
+                 (setq lsp-ui-sideline-diagnostic-max-lines 8)))
+
+     ;; Add metals backend for lsp-mode
+     (use-package lsp-metals
+       :straight '(lsp-metals :type git :host github
+			                        :repo "emacs-lsp/lsp-metals" :branch "master"))
+     (setq lsp-metals-fallback-scala-version "3.3.3")
+     ;; (use-package lsp-ui)
+
+     (defun k/lsp-clean-session ()
+       "Lsp sessions cleanup - delete known projects."
+       (interactive)
+       (delete-file "~/.emacs.d/.lsp-session-v1")
+       (setq lsp--session nil))))
+  ;;;;;;;;;;;
+  ;; eglot ;;
+  ;;;;;;;;;;;
+  ('eglot
+   (progn
+     (use-package eglot
+       :straight t
+       :defer t
+       :config (progn
+                 (add-to-list 'eglot-server-programs
+                              '(scala-mode . ("metals-emacs")))
+                 (add-to-list 'eglot-server-programs
+                              '(scala-ts-mode . ("metals-emacs"))))
+       :hook ((scala-mode . eglot-ensure)
+              (scala-ts-mode . eglot-ensure))))))
 
 (provide 'scala-conf)
 
