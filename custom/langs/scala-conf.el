@@ -314,6 +314,8 @@
        :straight t
        :defer t
        :config (progn
+                 (setq eglot-code-actions-display-functions nil)
+                 (setq eldoc-echo-area-use-multiline-p nil)
                  (add-to-list 'eglot-server-programs
                               '(scala-mode . ("metals-emacs")))
                  (add-to-list 'eglot-server-programs
