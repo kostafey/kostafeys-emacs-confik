@@ -97,7 +97,8 @@
   (my-coding-hook)
   (k/scala-add-font-lock)
   (auto-complete-mode -1)
-  (flycheck-mode))
+  (when (not (eq (file-name-extension (buffer-file-name)) "sbt"))
+    (flycheck-mode)))
 
 (add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
@@ -287,6 +288,8 @@
        ;; Optional - enable lsp-mode automatically in scala files
        :hook ((scala-mode . lsp)
               (scala-ts-mode . lsp))
+       :bind (:map scala-mode-map
+              ("C-c i" . 'lsp-java-add-import))
        :config (progn
                  (setq lsp-ui-doc-show-with-mouse nil)
                  (setq lsp-prefer-flymake nil)
@@ -313,6 +316,8 @@
      (use-package eglot
        :straight t
        :defer t
+       :bind (:map scala-mode-map
+              ("C-c i" . 'eglot-code-action-quickfix))
        :config (progn
                  (setq eglot-code-actions-display-functions nil)
                  (setq eldoc-echo-area-use-multiline-p nil)

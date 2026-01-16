@@ -31,6 +31,7 @@
   (kill-region (line-beginning-position) (line-end-position))
   (delete-char 1))
 
+(global-set-key (kbd "C-S-x") 'k/kill-and-copy-whole-line)
 (global-set-key (kbd "C-M-x") 'k/kill-and-copy-whole-line)
 (define-key emacs-lisp-mode-map (kbd "C-M-x") 'k/kill-and-copy-whole-line)
 

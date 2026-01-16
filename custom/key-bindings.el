@@ -343,7 +343,6 @@
   (define-key mode-map (kbd "C-n k")   'k/scala-compile)
   (define-key mode-map (kbd "C-c RET") 'newline-and-indent)
   (define-key mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
-  (define-key mode-map (kbd "C-c i")   'lsp-java-add-import)
   (define-key mode-map (kbd "M-p")     'copy-to-clipboard-buffer-file-path)
   (define-key mode-map (kbd "<tab>")   'k/scala-indent-region)
   (define-key mode-map (kbd "C-c <tab>") 'yas-expand))
