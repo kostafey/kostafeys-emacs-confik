@@ -317,7 +317,8 @@
        :straight t
        :defer t
        :bind (:map scala-mode-map
-              ("C-c i" . 'eglot-code-action-quickfix))
+              ("C-c i" . 'eglot-code-action-quickfix)
+              ("C-c h" . 'eldoc-doc-buffer))
        :config (progn
                  (setq eglot-code-actions-display-functions nil)
                  (setq eldoc-echo-area-use-multiline-p nil)
