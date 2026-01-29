@@ -30,6 +30,7 @@
 
 (add-hook 'go-mode-hook
           (lambda ()
+            (font-lock-mode)
             (setq indent-tabs-mode nil)
             (setq tab-width 4)))
 ;; eldoc
