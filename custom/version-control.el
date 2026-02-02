@@ -96,4 +96,10 @@
 (add-hook 'find-file-hook #'my-enable-smerge-maybe)
 (add-hook 'after-revert-hook #'my-enable-smerge-maybe)
 
+(defun k/diff (new)
+  "Compare current buffer file with other one."
+  (interactive (list (read-file-name "Compare with file: ")))
+  (let ((old (buffer-file-name)))
+    (diff old new)))
+
 (provide 'version-control)
