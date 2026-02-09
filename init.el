@@ -55,6 +55,7 @@
 (require 'tree-sitter-conf)
 ;; (require 'irc-conf)
 (require 'translate-conf)
+(require 'llm-conf)
 
 ;;-------------------------------------------------------------------
 ;; Programming languages configs
