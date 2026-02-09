@@ -2,7 +2,7 @@
 
 ;; Start server:
 ;; -------------
-;; llama-server -m ~/.cache/llama.cpp/Qwen_Qwen2.5-Coder-3B-Instruct-GGUF_qwen2.5-coder-3b-instruct-q4_k_m.gguf -c 20480
+;; llama-server -m ~/.cache/llama.cpp/Qwen_Qwen2.5-Coder-3B-Instruct-GGUF_qwen2.5-coder-3b-instruct-q4_k_m.gguf -c 40960
 
 (use-package gptel
   :straight 'gptel
@@ -34,6 +34,7 @@
 
   :bind (("M-C-A b" . k/gptel-add-file)
          ("M-C-A s" . gptel-send)
+         ("M-C-A m" . gptel-menu)
          ("M-C-A q" . gptel-context-quit)
          ("M-C-A c" . k/gptel-context-print)
          ("M-C-A r" . gptel-context-remove-all)))
