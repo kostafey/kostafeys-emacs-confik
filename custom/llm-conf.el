@@ -30,13 +30,37 @@
             (defun k/gptel-context-print ()
               "Output gptel-context variable in minibuffer as message."
               (interactive)
-              (message "Current gptel context: \n%s" gptel-context)))
+              (message "Current gptel context: \n%s" gptel-context))
+
+            (defun k/gptel-minibuffer ()
+              "Prompt for a query in the minibuffer."
+              (interactive)
+              (let ((prompt (read-string (format
+                                          "Query %s: "
+                                          (propertize "gptel"
+                                                      'face 'font-lock-keyword-face)))))
+                (when prompt
+                  (progn
+                    (gptel--sanitize-model)
+                    (let (
+                          (fsm (gptel-make-fsm :handlers gptel-send--handlers)))
+                      (gptel-request prompt
+                        :stream gptel-stream
+                        :transforms gptel-prompt-transform-functions
+                        :fsm fsm)
+                      (message "Querying %s..."
+                               (thread-first (gptel-fsm-info fsm)
+                                             (plist-get :backend)
+                                             (or gptel-backend)
+                                             (gptel-backend-name))))
+                    (gptel--update-status " Waiting..." 'warning))))))
 
   :bind (("M-C-A b" . k/gptel-add-file)
          ("M-C-A s" . gptel-send)
          ("M-C-A m" . gptel-menu)
          ("M-C-A q" . gptel-context-quit)
          ("M-C-A c" . k/gptel-context-print)
-         ("M-C-A r" . gptel-context-remove-all)))
+         ("M-C-A r" . gptel-context-remove-all)
+         ("M-C-A x" . k/gptel-minibuffer)))
 
 (provide 'llm-conf)
