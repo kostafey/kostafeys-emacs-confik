@@ -55,7 +55,13 @@
                              :stream t
                              :protocol "http"
                              :host "localhost:8080"
-                             :models '(Qwen_Qwen2.5-Coder-3B-Instruct-GGUF)))
+                             :models '(Qwen_Qwen2.5-Coder-3B-Instruct-GGUF))
+             gptel-directives
+             '((default     . "You are a large language model and a helpful assistant. Respond concisely.")
+               (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+               (code-only   . "Output ONLY the requested code. No prose, no markdown formatting, and no ``` blocks.")
+               (writing     . "You are a large language model and a writing assistant. Respond concisely.")
+               (chat        . "You are a large language model and a conversation partner. Respond concisely.")))
 
             (defun k/gptel-add-file ()
               "Send the current buffer-file to gptel-add-file function."
@@ -70,28 +76,45 @@
               (interactive)
               (message "Current gptel context: \n%s" gptel-context))
 
+            (defun k/gptel-strip-code-blocks (beg end)
+              "Remove markdown code blocks from the LLM response."
+              (when (not (equal (get-language-from-mode) "Unknown"))
+                (save-excursion
+                  (goto-char beg)
+                  (while (re-search-forward "^```.*$" end t)
+                    (replace-match "")))))
+
+            (add-hook 'gptel-post-response-functions #'k/gptel-strip-code-blocks)
+
             (defun k/gptel-minibuffer ()
               "Prompt for a query in the minibuffer."
               (interactive)
               (let* ((prog-lang (get-language-from-mode))
+                     (programming-buffer-p (not (equal prog-lang "Unknown")))
+                     (system-message (if programming-buffer-p
+                                         (cdr (assq 'code-only gptel-directives))
+                                       (cdr (assq 'default gptel-directives))))
                      (prompt (read-string
                               (format "Query gptel%s: "
-                                      (if (not (equal prog-lang "Unknown"))
+                                      (if programming-buffer-p
                                           (format " (%s)" prog-lang)
                                         "")))))
                 (when prompt
                   (progn
                     (gptel--sanitize-model)
-                    (let (
-                          (fsm (gptel-make-fsm :handlers gptel-send--handlers)))
+                    (let ((fsm (gptel-make-fsm :handlers gptel-send--handlers)))
                       (gptel-request
                           (format "%s%s"
-                                  (if (not (equal prog-lang "Unknown"))
-                                      (format "Use programming language: %s. "
+                                  (if programming-buffer-p
+                                      (format (concat "Use programming language: %s. "
+                                                      "Do NOT write explanations. "
+                                                      "Output ONLY the code. "
+                                                      "Do not use markdown code blocks (```) for code. ")
                                               prog-lang)
                                     "")
                                   prompt)
                         :stream gptel-stream
+                        :system system-message
                         :transforms gptel-prompt-transform-functions
                         :fsm fsm)
                       (message "Querying %s..."
