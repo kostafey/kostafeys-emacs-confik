@@ -96,9 +96,7 @@
 (defun k/scala-mode-hook ()
   (my-coding-hook)
   (k/scala-add-font-lock)
-  (auto-complete-mode -1)
-  (when (not (eq (file-name-extension (buffer-file-name)) "sbt"))
-    (flycheck-mode)))
+  (auto-complete-mode -1))
 
 (add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
@@ -322,6 +320,7 @@
        :config (progn
                  (setq eglot-code-actions-display-functions nil)
                  (setq eldoc-echo-area-use-multiline-p nil)
+                 (setq eglot-ignored-server-capabilities '(:codeActionProvider))
                  (add-to-list 'eglot-server-programs
                               '(scala-mode . ("metals-emacs")))
                  (add-to-list 'eglot-server-programs
