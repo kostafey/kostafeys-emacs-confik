@@ -26,7 +26,8 @@
   (my-coding-hook)
   (c-set-offset 'arglist-intro '+)
   (define-key java-mode-map (kbd "C-x C-e") #'jshell-eval-last-expr)
-  (define-key java-mode-map (kbd "M-e") #'jshell-eval-region))
+  (define-key java-mode-map (kbd "M-e") #'jshell-eval-region)
+  (define-key java-mode-map (kbd "C-M-a") nil))
 
 (add-hook 'java-mode-hook #'k/java-mode-hook)
 (add-hook 'java-mode-hook #'lsp)
