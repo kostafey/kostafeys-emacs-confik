@@ -89,7 +89,11 @@
             (defun k/gptel-minibuffer ()
               "Prompt for a query in the minibuffer."
               (interactive)
-              (let* ((prog-lang (get-language-from-mode))
+              (let* ((selected-region (when (use-region-p)
+                                        (let ((beg (region-beginning))
+                                              (end (region-end)))
+                                          (buffer-substring beg end))))
+                     (prog-lang (get-language-from-mode))
                      (programming-buffer-p (not (equal prog-lang "Unknown")))
                      (system-message (if programming-buffer-p
                                          (cdr (assq 'code-only gptel-directives))
@@ -104,7 +108,10 @@
                     (gptel--sanitize-model)
                     (let ((fsm (gptel-make-fsm :handlers gptel-send--handlers)))
                       (gptel-request
-                          (format "%s%s"
+                          (format "%s%s%s"
+                                  (if selected-region
+                                      (concat selected-region "\n")
+                                    "")
                                   (if programming-buffer-p
                                       (format (concat "Use programming language: %s. "
                                                       "Do NOT write explanations. "
