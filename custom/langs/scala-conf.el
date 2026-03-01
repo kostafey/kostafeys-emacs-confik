@@ -320,7 +320,8 @@
        :config (progn
                  (setq eglot-code-actions-display-functions nil)
                  (setq eldoc-echo-area-use-multiline-p nil)
-                 (setq eglot-ignored-server-capabilities '(:codeActionProvider))
+                 (setq eglot-ignored-server-capabilities nil)
+                 (setq eglot-code-action-indications '(margin))
                  (add-to-list 'eglot-server-programs
                               '(scala-mode . ("metals-emacs")))
                  (add-to-list 'eglot-server-programs
