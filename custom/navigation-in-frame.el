@@ -59,19 +59,19 @@
 ;; Interact with browser
 ;;
 (defun find-browser-executable ()
-  (cond ((executable-find "chromium") "chromium")
-        ((executable-find "chromium-browser") "chromium-browser")
-        ((executable-find "google-chrome-stable") "google-chrome-stable")
-        ((executable-find "palemoon") "palemoon")
-        ((executable-find "firefox") "firefox")
-        (t (message "Cant find any browser in the PATH."))))
+  (let ((win-edge "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")
+        (win-chrome "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"))
+   (cond ((executable-find "chromium") "chromium")
+         ((executable-find "chromium-browser") "chromium-browser")
+         ((executable-find "google-chrome-stable") "google-chrome-stable")
+         ((executable-find "palemoon") "palemoon")
+         ((executable-find "firefox") "firefox")
+         ((executable-find win-chrome) win-chrome)
+         ((executable-find win-edge) win-edge)
+         (t (message "Cant find any browser in the PATH.")))))
 
-(if (eq system-type 'windows-nt)
-    (setq browse-url-browser-function 'browse-url-generic
-          browse-url-generic-program
-          "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe")
-  (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program (find-browser-executable)))
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program (find-browser-executable))
 
 (defun google (&optional arg)
   "Google the selected region if any, display a query prompt otherwise."

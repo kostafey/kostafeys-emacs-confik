@@ -43,33 +43,6 @@
             (darcsum-repository-root)))
           (t (magit-status)))))
 
-(defvar k/use-gitall t)
-
-(defun k/multy-magit-status ()
-  "Set directories list to check their git status."
-  (interactive)
-  (let* ((current-project (magit-toplevel))
-         (root (concat-path current-project ".."))
-         (dirs (-map
-                (lambda (d) (concat-path root d))
-                (-filter
-                 (lambda (d) (and (not (s-starts-with? "." d))
-                             (file-directory-p
-                              (concat-path root d))
-                             (magit-git-repo-p (concat-path root d))))
-                 (if k/use-gitall
-                     (s-split
-                      "\n"
-                      (->
-                       (s-split "Total affected:"
-                                (let ((default-directory root))
-                                  (shell-command-to-string "gitall status")))
-                       cadr
-                       s-trim))
-                   (directory-files root))))))
-    (setq multi-magit-selected-repositories dirs))
-  (multi-magit-status))
-
 (use-package git-gutter
   :straight '(git-gutter
               :type git :host github

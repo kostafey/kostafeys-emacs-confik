@@ -133,8 +133,12 @@ With ARG, move by that many elements."
 
 ;; Company quickhelp
 (company-quickhelp-mode)
+
 (eval-after-load 'company
-  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
+  '(progn
+     (define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin)
+     ;; Disable complete on RET
+     (define-key company-active-map (kbd "RET") nil)))
 
 (use-package company-fuzzy
   ;; :hook (company-mode . company-fuzzy-mode)

@@ -158,6 +158,8 @@
 (global-set-key (kbd "C-c g") 'google)
 (global-set-key (kbd "C-x g") 'goto-url)
 (global-set-key (kbd "C-c C-g") #'(lambda () (interactive) (google -1)))
+(global-set-key (kbd "C-M-w") #'(lambda () (interactive)
+                                  (browse-url "http://www.google.com")))
 ;;
 ;;===================================================================
 
@@ -415,7 +417,6 @@
 (add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
 
 (global-set-key (kbd "M-w") 'get-vc-status)
-(global-set-key (kbd "C-M-w") 'k/multy-magit-status)
 
 (eval-after-load "diffview"
   '(progn
