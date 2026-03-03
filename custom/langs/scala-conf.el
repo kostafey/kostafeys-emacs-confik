@@ -272,6 +272,10 @@
   :type '(choice 'lsp-mode
                  'eglot))
 
+(defun k/scala-mode-hook ()
+  (define-key scala-mode-map (kbd "C-c i") 'eglot-code-action-quickfix)
+  (define-key scala-mode-map (kbd "C-c h") 'eldoc-doc-buffer))
+
 (case k/scala-lsp-frontend
   ;;;;;;;;;;;;;;
   ;; lsp-mode ;;
@@ -314,9 +318,6 @@
      (use-package eglot
        :straight t
        :defer t
-       :bind (:map scala-mode-map
-              ("C-c i" . 'eglot-code-action-quickfix)
-              ("C-c h" . 'eldoc-doc-buffer))
        :config (progn
                  (setq eglot-code-actions-display-functions nil)
                  (setq eldoc-echo-area-use-multiline-p nil)
@@ -327,6 +328,7 @@
                  (add-to-list 'eglot-server-programs
                               '(scala-ts-mode . ("metals-emacs"))))
        :hook ((scala-mode . eglot-ensure)
+              (scala-mode . k/scala-mode-hook)
               (scala-ts-mode . eglot-ensure))))))
 
 (provide 'scala-conf)
