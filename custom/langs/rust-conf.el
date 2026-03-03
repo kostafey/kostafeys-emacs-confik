@@ -1,7 +1,10 @@
-(require 'elpa-conf)
-(use-elpa 'rust-mode)
-(use-elpa 'flycheck-rust)
+(straight-use-package
+ '(rust-mode :type git :host github
+					   :repo "rust-lang/rust-mode" :branch "master"))
 
+(straight-use-package
+ '(flycheck-rust :type git :host github
+					       :repo "flycheck/flycheck-rust" :branch "master"))
 
 (when (require 'rust-mode nil 'noerror)
   ;; --------
@@ -39,28 +42,6 @@
   (add-hook 'rust-mode-hook 'k/rust-compile)
   (define-key rust-mode-map (kbd "C-c C-c") 'compile)
   (define-key rust-mode-map (kbd "C-x c") 'k/rust-compile-release)
-
-  ;; ----------------------------------------
-  ;; autocompletion & code navigation & eldoc
-  ;; `install:' rustup toolchain add nightly
-  ;;            rustup component add rust-src
-  ;;            cargo +nightly install racer
-  ;;       `or' cargo install racer
-  (when (require 'racer nil 'noerror)
-    (setq racer-rust-src-path
-          (if (file-exists-p racer-rust-src-path)
-              racer-rust-src-path
-            (expand-file-name "library"
-                              (file-name-directory racer-rust-src-path)))))
-
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
-
-  (add-hook 'racer-mode-hook #'company-mode)
-  (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-  (setq company-tooltip-align-annotations t)
-  (setq company-idle-delay 0.5)
-  (setq company-minimum-prefix-length 0)
 
   ;; ----------
   ;; formatting

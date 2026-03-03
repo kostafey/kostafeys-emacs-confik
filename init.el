@@ -73,7 +73,7 @@
 ;; (require 'mql-mode)
 ;; (require 'sphinx-frontend)
 ;; (require 'lua-conf)
-;; (require 'rust-conf)
+(require 'rust-conf)
 ;; (require 'auctex-conf)
 
 ;;-------------------------------------------------------------------
