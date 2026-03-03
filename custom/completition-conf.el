@@ -138,7 +138,8 @@ With ARG, move by that many elements."
   '(progn
      (define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin)
      ;; Disable complete on RET
-     (define-key company-active-map (kbd "RET") nil)))
+     (define-key company-active-map (kbd "RET") nil)
+     (define-key company-active-map (kbd "<return>") nil)))
 
 (use-package company-fuzzy
   ;; :hook (company-mode . company-fuzzy-mode)
