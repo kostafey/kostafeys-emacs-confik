@@ -10,6 +10,9 @@
   :config (exec-path-from-shell-initialize))
 
 (straight-use-package
+ '(exec-path-from-shell :type git :host github
+			                  :repo "purcell/exec-path-from-shell" :branch "master"))
+(straight-use-package
  '(emacs-libvterm :type git :host github
 			            :repo "akermu/emacs-libvterm" :branch "master"))
 
