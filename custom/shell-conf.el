@@ -4,6 +4,9 @@
  '(eshell-prompt-extras :type git :host github
 			                  :repo "suzzvv/eshell-prompt-extras" :branch "master"))
 (straight-use-package
+ '(exec-path-from-shell :type git :host github
+			                  :repo "purcell/exec-path-from-shell" :branch "master"))
+(straight-use-package
  '(emacs-libvterm :type git :host github
 			            :repo "akermu/emacs-libvterm" :branch "master"))
 

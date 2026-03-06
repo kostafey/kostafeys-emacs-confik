@@ -21,11 +21,12 @@ filename.scala:123
 (filename.scala:123)"
   (interactive "P")
   (projectile-maybe-invalidate-cache invalidate-cache)
-  (let* ((clipboard-contents (current-kill 0))
+  (let* ((clipboard-contents (when kill-ring (current-kill 0)))
          (file-with-line-number-matchp
-          (eq 0
-              (string-match "^(?[A-z0-9_-]+\\.\\(scala\\|xml\\|jsx\\):[0-9]+)?"
-                            clipboard-contents))))
+          (when clipboard-contents
+            (eq 0
+                (string-match "^(?[A-z0-9_-]+\\.\\(scala\\|xml\\|jsx\\):[0-9]+)?"
+                              clipboard-contents)))))
     (if file-with-line-number-matchp
         (let* ((file-name-s (replace-regexp-in-string
                              "^(?" ""

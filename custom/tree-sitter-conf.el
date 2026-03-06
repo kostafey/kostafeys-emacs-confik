@@ -34,15 +34,18 @@
 ;; Check: (treesit-language-available-p 'scala)
 ;; All TC modes: C-h a -ts-mode$
 
-(straight-use-package
- '(scala-ts-mode :type git :host gitlab
-                 :repo "kostafey/scala-ts-mode" :branch "dev"))
-(add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
+(when (eq system-type 'gnu/linux)
 
-(straight-use-package
- '(html-ts-mode :type git :host github
-                :repo "mickeynp/html-ts-mode" :branch "master"))
-(add-to-list 'auto-mode-alist '("\\.xml$" . html-ts-mode))
+  (straight-use-package
+   '(scala-ts-mode :type git :host gitlab
+                   :repo "kostafey/scala-ts-mode" :branch "dev"))
+  (add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
+
+  (straight-use-package
+   '(html-ts-mode :type git :host github
+                  :repo "mickeynp/html-ts-mode" :branch "master"))
+
+  (add-to-list 'auto-mode-alist '("\\.xml$" . html-ts-mode)))
 
 ;; Decoration level to be used by tree-sitter fontifications.
 (setq treesit-font-lock-level 4)
