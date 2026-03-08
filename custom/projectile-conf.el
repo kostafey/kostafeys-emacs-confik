@@ -1,4 +1,4 @@
-;;; projectile-conf.el -- Projectile custom configuration.
+;;; projectile-conf.el -- Projectile custom configuration. -*- lexical-binding: t -*-
 
 (straight-use-package
  '(projectile :type git :host github
@@ -80,17 +80,20 @@ filename.scala:123
                (root (project-root project))
                (project-files-relative-names t)
                (all-files (project-files project))
-               (file (project--read-file-name
-                      project                                       ; project
-                      (format "Find file [%s]:"
-                              (propertize line-number-s
-                                          'face
-                                          'font-lock-keyword-face)) ; prompt
-                      all-files                                     ; all-files
-                      nil                                           ; predicate
-                      'file-name-history                            ; hist
-                      file-name-s                                   ; mb-default
-                      ))
+               (setup-hook (lambda () (insert file-name-s)))
+               (file
+                (minibuffer-with-setup-hook setup-hook
+                  (project--read-file-name
+                   project                                       ; project
+                   (format "Find file [%s]:"
+                           (propertize line-number-s
+                                       'face
+                                       'font-lock-keyword-face)) ; prompt
+                   all-files                                     ; all-files
+                   nil                                           ; predicate
+                   'file-name-history                            ; hist
+                   root                                          ; mb-default
+                   )))
                (ff (or ff-variant #'find-file)))
           (when file
             (funcall ff (expand-file-name file root))
