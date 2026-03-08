@@ -219,7 +219,7 @@
 ;;
 (global-set-key [f1] 'psw-switch-buffer)
 (global-set-key [M-f1] (lambda () (interactive) (psw-switch-buffer t)))
-(global-set-key (kbd "C-M-n") 'k/projectile--find-file)
+(global-set-key (kbd "C-M-n") 'k/project-find-file)
 (global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
 (global-set-key (kbd "s-q") 'psw-navigate-files)
 (global-set-key (kbd "s-a") 'psw-navigate-files)
