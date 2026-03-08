@@ -134,12 +134,18 @@ With ARG, move by that many elements."
 ;; Company quickhelp
 (company-quickhelp-mode)
 
+(defun k/company-complete-selection ()
+  (interactive)
+  (if (eq major-mode 'eshell-mode)
+      (eshell-send-input)
+    (company-complete-selection)))
+
 (eval-after-load 'company
   '(progn
      (define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin)
-     ;; Disable complete on RET
-     (define-key company-active-map (kbd "RET") nil)
-     (define-key company-active-map (kbd "<return>") nil)))
+     ;; Disable complete on RET for `eshell-mode'.
+     (define-key company-active-map (kbd "RET") #'k/company-complete-selection)
+     (define-key company-active-map (kbd "<return>") #'k/company-complete-selection)))
 
 (use-package company-fuzzy
   ;; :hook (company-mode . company-fuzzy-mode)
