@@ -3,6 +3,12 @@
 (straight-use-package
  '(eshell-prompt-extras :type git :host github
 			                  :repo "suzzvv/eshell-prompt-extras" :branch "master"))
+(use-package exec-path-from-shell
+  :straight '(exec-path-from-shell :type git :host github
+			                             :repo "purcell/exec-path-from-shell"
+                                   :branch "master")
+  :config (exec-path-from-shell-initialize))
+
 (straight-use-package
  '(exec-path-from-shell :type git :host github
 			                  :repo "purcell/exec-path-from-shell" :branch "master"))
