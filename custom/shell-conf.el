@@ -7,7 +7,8 @@
   :straight '(exec-path-from-shell :type git :host github
 			                             :repo "purcell/exec-path-from-shell"
                                    :branch "master")
-  :config (exec-path-from-shell-initialize))
+  :config (when (eq system-type 'gnu/linux)
+              (exec-path-from-shell-initialize)))
 
 (straight-use-package
  '(exec-path-from-shell :type git :host github
