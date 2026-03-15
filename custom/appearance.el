@@ -55,7 +55,7 @@
   :config
   (setq tab-line-close-button-show nil
         tab-line-new-button-show nil
-        tab-line-separator (propertize " " 'display '(space :width (5)))
+        tab-line-separator (propertize " " 'display '(space :width (4)))
         tab-line-tab-name-function #'tab-line-tab-name-buffer
         tab-line-tabs-function #'tab-line-tabs-window-buffers
         tab-line-right-button nil
@@ -65,11 +65,11 @@
            (organic-highlight-gray "#E3F2E1")
            (organic-shadow         "#D3E0D3")
            (fg                     organic-green-black)
-           (bg                     organic-highlight-gray)
-	         (hg                     (face-attribute 'default :background))
-           (base                   (face-attribute 'mode-line :background)))
+           (fringe-bg              organic-highlight-gray)
+           (buffer-bg              (face-attribute 'default :background))
+           (tab-bg                 organic-shadow))
       (set-face-attribute 'tab-line nil
-			                    :background bg
+			                    :background fringe-bg
 			                    :foreground fg
 			                    :height 0.8
 			                    :inherit nil
@@ -79,23 +79,23 @@
 			                    :foreground fg
 			                    :weight 'normal
 			                    :inherit nil
-			                    ;; :box (list :line-width -1 :color base)
+			                    ;; :box (list :line-width -1 :color tab-bg)
                           :box nil)
       (set-face-attribute 'tab-line-tab-inactive nil
 			                    :foreground fg
-			                    :background base
+			                    :background tab-bg
 			                    :weight 'normal
 			                    :inherit nil
                           :box nil)
       (set-face-attribute 'tab-line-highlight nil
 			                    :foreground fg
-			                    :background hg
+			                    :background buffer-bg
 			                    :weight 'normal
 			                    :inherit nil
 			                    :box nil)
       (set-face-attribute 'tab-line-tab-current nil
 			                    :foreground fg
-			                    :background hg
+			                    :background buffer-bg
 			                    :weight 'semi-bold
 			                    :inherit nil
 			                    :box nil)))
