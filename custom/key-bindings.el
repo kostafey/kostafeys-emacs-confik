@@ -104,7 +104,10 @@
 (defun kostafey-markdown-mode-hook ()
   (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
   (define-key markdown-mode-map (kbd "C-M-<down>") 'highlight-symbol-next)
-  (define-key markdown-mode-map (kbd "<backspace>") nil))
+  (define-key markdown-mode-map (kbd "<backspace>") nil)
+  (define-key markdown-mode-map (kbd "M-<left>") nil)
+  (define-key markdown-mode-map (kbd "M-<right>") nil)
+  (define-key markdown-mode-map (kbd "M-p") nil))
 (add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
 
 ;; ace-jump-mode
@@ -162,12 +165,6 @@
                                   (browse-url "http://www.google.com")))
 ;;
 ;;===================================================================
-
-(defun kostafey-markdown-mode-hook ()
-  (define-key markdown-mode-map (kbd "M-<left>") nil)
-  (define-key markdown-mode-map (kbd "M-<right>") nil))
-(add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
-
 (global-set-key (kbd "M-<left>") 'meta-left)
 (global-set-key (kbd "M-<right>") 'meta-right)
 
