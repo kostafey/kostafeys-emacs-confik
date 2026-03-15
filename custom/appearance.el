@@ -48,18 +48,79 @@
 (straight-use-package
  '(breadcrumb :type git :host github
 				      :repo "joaotavora/breadcrumb" :branch "master"))
+
+(use-package tab-line
+  :ensure nil
+  :hook (after-init . global-tab-line-mode)
+  :config
+  (setq tab-line-close-button-show nil
+        tab-line-new-button-show nil
+        tab-line-separator (propertize " " 'display '(space :width (5)))
+        tab-line-tab-name-function #'tab-line-tab-name-buffer
+        tab-line-tabs-function #'tab-line-tabs-window-buffers
+        tab-line-right-button nil
+        tab-line-left-button nil)
+  (defun k/set-tab-theme ()
+    (let* ((organic-green-black    "#444D56")
+           (organic-highlight-gray "#E3F2E1")
+           (organic-shadow         "#D3E0D3")
+           (fg                     organic-green-black)
+           (bg                     organic-highlight-gray)
+	         (hg                     (face-attribute 'default :background))
+           (base                   (face-attribute 'mode-line :background)))
+      (set-face-attribute 'tab-line nil
+			                    :background bg
+			                    :foreground fg
+			                    :height 0.8
+			                    :inherit nil
+			                    :box nil)
+      (set-face-attribute 'tab-line-tab nil
+			                    :background organic-shadow
+			                    :foreground fg
+			                    :weight 'normal
+			                    :inherit nil
+			                    ;; :box (list :line-width -1 :color base)
+                          :box nil)
+      (set-face-attribute 'tab-line-tab-inactive nil
+			                    :foreground fg
+			                    :background base
+			                    :weight 'normal
+			                    :inherit nil
+                          :box nil)
+      (set-face-attribute 'tab-line-highlight nil
+			                    :foreground fg
+			                    :background hg
+			                    :weight 'normal
+			                    :inherit nil
+			                    :box nil)
+      (set-face-attribute 'tab-line-tab-current nil
+			                    :foreground fg
+			                    :background hg
+			                    :weight 'semi-bold
+			                    :inherit nil
+			                    :box nil)))
+  (k/set-tab-theme)
+
+  (dolist (mode '(ediff-mode process-menu-mode))
+    (add-to-list 'tab-line-exclude-modes mode))
+
+  (global-tab-line-mode t))
+
+(global-set-key (kbd "C-<next>") 'tab-line-switch-to-next-tab)
+(global-set-key (kbd "C-<prior>") 'tab-line-switch-to-prev-tab)
+
 ;;-------------------------------------------------------------------
 ;; Tabs - Tabbar
 
-(tabbar-mode t)
+(tabbar-mode -1)
 
 ;; Hide forward and back buttons
 (customize-set-variable 'tabbar-scroll-right-button '(("") ""))
 (customize-set-variable 'tabbar-scroll-left-button '(("") ""))
 (customize-set-variable 'tabbar-buffer-home-button '(("") ""))
 
-(global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
-(global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)
+;; (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
+;; (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)
 
 (setq tabbar-buffer-list-function
       '(lambda ()
@@ -113,13 +174,15 @@ not in the top of the frame."
 (defun toggle-tabbar-breadcrumb ()
   "Toggle between `tabbar-mode' and `breadcrumb-mode'."
   (interactive)
-  (if tabbar-mode
+  (if tab-line-mode
       (progn
-        (tabbar-mode -1)
+        ;; (tabbar-mode -1)
+        (tab-line-mode -1)
         (breadcrumb-mode t))
     (progn
       (breadcrumb-mode -1)
-      (tabbar-mode t))))
+      ;; (tabbar-mode t)
+      (tab-line-mode t))))
 
 ;;-------------------------------------------------------------------
 (when (require 'ejc-sql nil 'noerror)
