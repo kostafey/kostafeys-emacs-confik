@@ -55,7 +55,7 @@
   :config
   (setq tab-line-close-button-show nil
         tab-line-new-button-show nil
-        tab-line-separator (propertize " " 'display '(space :width (4)))
+        tab-line-separator (propertize " " 'display '(space :width (3)))
         tab-line-tab-name-function #'tab-line-tab-name-buffer
         tab-line-tabs-function #'tab-line-tabs-window-buffers
         tab-line-right-button nil
@@ -71,7 +71,7 @@
       (set-face-attribute 'tab-line nil
 			                    :background fringe-bg
 			                    :foreground fg
-			                    :height 0.8
+			                    :height 1
 			                    :inherit nil
 			                    :box nil)
       (set-face-attribute 'tab-line-tab nil
