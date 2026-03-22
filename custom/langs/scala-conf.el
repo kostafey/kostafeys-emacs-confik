@@ -96,7 +96,9 @@
 (defun k/scala-mode-hook ()
   (my-coding-hook)
   (k/scala-add-font-lock)
-  (auto-complete-mode -1))
+  (when (eglot-managed-p)
+    (define-key scala-mode-map (kbd "C-c i") 'eglot-code-action-quickfix)
+    (define-key scala-mode-map (kbd "C-c h") 'eldoc-doc-buffer)))
 
 (add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
@@ -271,10 +273,6 @@
   "Choose scala lsp frontend for Emacs."
   :type '(choice 'lsp-mode
                  'eglot))
-
-(defun k/scala-mode-hook ()
-  (define-key scala-mode-map (kbd "C-c i") 'eglot-code-action-quickfix)
-  (define-key scala-mode-map (kbd "C-c h") 'eldoc-doc-buffer))
 
 (case k/scala-lsp-frontend
   ;;;;;;;;;;;;;;
