@@ -1,10 +1,4 @@
 (straight-use-package
- '(yasnippet :type git :host github
-				     :repo "joaotavora/yasnippet" :branch "master"))
-(straight-use-package
- '(yasnippet-snippets :type git :host github
-				              :repo "AndreaCrotti/yasnippet-snippets" :branch "master"))
-(straight-use-package
  '(auto-complete :type git :host github
 				         :repo "auto-complete/auto-complete" :branch "master"))
 (straight-use-package
@@ -19,33 +13,6 @@
 (straight-use-package
  '(company-fuzzy :type git :host github
 				         :repo "jcs-elpa/company-fuzzy" :branch "master"))
-
-;;===================================================================
-;; Yet Another Snippet extension
-;;
-(yas-global-mode 1)
-;; personal snippets
-(setq yas-snippet-dirs
-      (append yas-snippet-dirs
-              (list "~/.emacs.d/custom/mysnippets")))
-
-(defun yas/next-field-or-maybe-expand-1 ()
-  (interactive)
-  (let ((yas/fallback-behavior 'return-nil))
-    (unless (yas/expand)
-      (yas/next-field))))
-
-(defun open-line-or-yas ()
-  (interactive)
-  (cond ((and (looking-back " ") (looking-at "[\s\n}]+"))
-     (insert "\n\n")
-     (indent-according-to-mode)
-     (previous-line)
-     (indent-according-to-mode))
-    ((expand-abbrev))
-    (t
-     (setq *yas-invokation-point* (point))
-     (yas/next-field-or-maybe-expand-1))))
 
 ;;===================================================================
 ;; auto-complete
@@ -88,6 +55,10 @@ Pages up through completion menu."
   (let ((counter 0))
     (dotimes (counter (1- ac-menu-height))
       (ac-previous))))
+
+(define-key ac-complete-mode-map [next] 'ac-page-next)
+(define-key ac-complete-mode-map [prior] 'ac-page-previous)
+(define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
 
 ;;=============================================================================
 ;; company-mode
@@ -155,6 +126,27 @@ With ARG, move by that many elements."
         company-fuzzy-show-annotation t
         company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")
         global-company-fuzzy-mode nil))
+
+(define-key company-search-map (kbd "<escape>") 'company-search-abort)
+(define-key company-active-map (kbd "<escape>") 'company-abort)
+(define-key company-active-map (kbd "<left>") #'(lambda() (interactive)
+                                                  (company-abort)
+                                                  (k/char-backward)))
+(define-key company-active-map (kbd "<right>") #'(lambda() (interactive)
+                                                   (company-abort)
+                                                   (k/char-forward)))
+(define-key company-active-map (kbd "C-<left>") #'(lambda() (interactive)
+                                                    (company-abort)
+                                                    (k/word-backward)))
+(define-key company-active-map (kbd "C-<right>") #'(lambda() (interactive)
+                                                     (company-abort)
+                                                     (k/word-forward)))
+(define-key company-active-map (kbd "<up>") 'k/company-select-previous)
+(define-key company-active-map (kbd "<down>") 'k/company-select-next)
+(define-key company-active-map [next] 'company-next-page)
+(define-key company-active-map [prior] 'company-previous-page)
+(define-key company-active-map (kbd "C-f") 'company-search-candidates)
+(define-key company-active-map (kbd "<tab>") 'company-complete-selection)
 
 ;;=============================================================================
 ;; common completion functions

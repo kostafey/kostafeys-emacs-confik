@@ -1,9 +1,6 @@
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
 (straight-use-package
- '(popup-switcher :type git :host github
-				          :repo "kostafey/popup-switcher" :branch "master"))
-(straight-use-package
  '(session :type git :host github
 				   :repo "emacsattic/session" :branch "master"))
 (straight-use-package
@@ -28,7 +25,6 @@
 
 (require 'ack-conf)
 (require 'navigation-in-frame)
-(require 'completition-conf)
 (require 'projectile-conf)
 
 (straight-use-package
@@ -182,45 +178,13 @@
 
 ;; to 'set-mark-command use M-s instead
 (global-set-key (kbd "C-SPC") 'start-complete)
-;;-------------------------------------------------------------------
-;; auto-complete-mode
-(define-key ac-complete-mode-map [next] 'ac-page-next)
-(define-key ac-complete-mode-map [prior] 'ac-page-previous)
-(define-key ac-complete-mode-map (kbd "C-f") 'ac-isearch)
-
-;;-------------------------------------------------------------------
-;; company-mode
-(define-key company-search-map (kbd "<escape>") 'company-search-abort)
-(define-key company-active-map (kbd "<escape>") 'company-abort)
-(define-key company-active-map (kbd "<left>") #'(lambda() (interactive)
-                                                  (company-abort)
-                                                  (k/char-backward)))
-(define-key company-active-map (kbd "<right>") #'(lambda() (interactive)
-                                                   (company-abort)
-                                                   (k/char-forward)))
-(define-key company-active-map (kbd "C-<left>") #'(lambda() (interactive)
-                                                    (company-abort)
-                                                    (k/word-backward)))
-(define-key company-active-map (kbd "C-<right>") #'(lambda() (interactive)
-                                                     (company-abort)
-                                                     (k/word-forward)))
-(define-key company-active-map (kbd "<up>") 'k/company-select-previous)
-(define-key company-active-map (kbd "<down>") 'k/company-select-next)
-(define-key company-active-map [next] 'company-next-page)
-(define-key company-active-map [prior] 'company-previous-page)
-(define-key company-active-map (kbd "C-f") 'company-search-candidates)
-(define-key company-active-map (kbd "<tab>") 'company-complete-selection)
 
 ;;===================================================================
 ;; Function keys
 ;;
-(global-set-key [f1] 'psw-switch-buffer)
-(global-set-key [M-f1] (lambda () (interactive) (psw-switch-buffer t)))
+(global-set-key [f1] 'consult-buffer)
 (global-set-key (kbd "C-M-n") 'k/project-find-file)
-(global-set-key (kbd "M-n") 'psw-switch-projectile-projects)
-(global-set-key (kbd "s-q") 'psw-navigate-files)
-(global-set-key (kbd "s-a") 'psw-navigate-files)
-(global-set-key [f2] 'psw-switch-function)
+(global-set-key [f2] 'consult-imenu)
 (global-set-key [f3] 'toggle-tabbar-breadcrumb)
 
 (global-set-key [f4] 'k/shell)
@@ -372,31 +336,6 @@
 (require 'rst)
 (define-key rst-mode-map (kbd "C-M-a") nil)
 
-;;----------------------------------------------------------------------
-;; SQL
-;;
-(require 'ejc-sql-conf nil 'noerror)
-(when (require 'ejc-sql nil 'noerror)
-  (eval-after-load "ejc-sql"
-    '(progn
-       (define-key ejc-sql-mode-keymap (kbd "C-S-s-<up>") #'(lambda() (interactive) (ejc-previous-sql t)))
-       (define-key ejc-sql-mode-keymap (kbd "C-S-s-<down>") #'(lambda() (interactive) (ejc-next-sql t)))
-       (define-key ejc-sql-mode-keymap (kbd "C-s-<up>") 'ejc-previous-sql)
-       (define-key ejc-sql-mode-keymap (kbd "C-s-<down>") 'ejc-next-sql)
-       (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
-       (global-set-key (kbd "C-x C-s") 'ejc-get-temp-editor-buffer)
-       (global-set-key (kbd "C-M-<next>") (lambda ()
-                                            (interactive)
-                                            (if (equal (buffer-name)
-                                                       ejc-results-buffer-name)
-                                                (ejc-show-next-result))))
-       (global-set-key (kbd "C-M-<prior>") (lambda ()
-                                             (interactive)
-                                             (if (equal (buffer-name)
-                                                        ejc-results-buffer-name)
-                                                 (ejc-show-prev-result)))))))
-;;
-
 (defun k/LaTeX-mode-hook ()
   (define-key LaTeX-mode-map  (kbd "C-j") 'join-next-line-space-n))
 (add-hook 'LaTeX-mode-hook 'k/LaTeX-mode-hook)
@@ -458,13 +397,9 @@
   (define-key smerge-mode-map (kbd "C-c s l") 'smerge-keep-lower))
 (add-hook 'smerge-mode-hook 'kostafey-smerge-mode-hook)
 
-;;===================================================================
-;; Org-mode
+;;----------------------------------------------------------------------
+;; dired
 ;;
-(define-key org-mode-map (kbd "C-x t") 'org-todo)
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c a") 'org-agenda)
-
 (defun kostafey-dired-mode-hook ()
   (define-key dired-mode-map [f1] nil)
   (define-key dired-mode-map (kbd "M-z") nil)

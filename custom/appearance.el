@@ -1,7 +1,7 @@
 ;;-------------------------------------------------------------------
 ;; Emacs custom color theme
 (straight-use-package
- '(organic-green-theme :type git :host gitlab
+ '(organic-green-theme :type git :host github
 					             :repo "kostafey/organic-green-theme" :branch "master"))
 (setq organic-green-boldless t)
 (setq organic-green-version 2)
@@ -71,7 +71,7 @@
       (set-face-attribute 'tab-line nil
 			                    :background fringe-bg
 			                    :foreground fg
-			                    :height 1
+			                    :height 0.9
 			                    :inherit nil
 			                    :box nil)
       (set-face-attribute 'tab-line-tab nil
@@ -79,7 +79,6 @@
 			                    :foreground fg
 			                    :weight 'normal
 			                    :inherit nil
-			                    ;; :box (list :line-width -1 :color tab-bg)
                           :box nil)
       (set-face-attribute 'tab-line-tab-inactive nil
 			                    :foreground fg
