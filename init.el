@@ -45,6 +45,8 @@
 (setq custom-file (concat site-lisp-path "custom/custom.el"))
 (load custom-file)
 ;;-------------------------------------------------------------------
+(require 'yas-conf)
+(require 'completition-corfu-conf)
 (require 'key-bindings)
 (require 'ide)
 (require 'history-conf)

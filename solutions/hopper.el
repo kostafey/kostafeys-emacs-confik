@@ -10,7 +10,6 @@
 
 (require 's)
 (require 'basic-keys)
-(require 'ejc-sql-conf)
 (require 'clojure-conf)
 
 (defun hop-buffer-mode (buffer-or-string)

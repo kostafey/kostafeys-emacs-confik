@@ -208,7 +208,10 @@
     (define-key org-mode-map (kbd "C-c C-p") 'k/el-pprint-eval-last-sexp)
     (define-key org-mode-map (kbd "C-a") nil)
     (define-key org-mode-map (kbd "M-a") nil)
-    (define-key org-mode-map (kbd "C-j") 'join-next-line-space-n)))
+    (define-key org-mode-map (kbd "C-j") 'join-next-line-space-n)
+    (define-key org-mode-map (kbd "C-x t") 'org-todo)
+    (global-set-key (kbd "C-c l") 'org-store-link)
+    (global-set-key (kbd "C-c a") 'org-agenda)))
 
 ;;===================================================================
 ;; Scrolling
