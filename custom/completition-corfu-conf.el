@@ -23,7 +23,12 @@
 
   (defun k/corfu-mode-hook ()
     ;; Settings only for Corfu
-    (setq-local completion-styles '(basic)))
-  (add-hook 'corfu-mode-hook #'k/corfu-mode-hook))
+    (setq-local completion-styles '(basic substring partial-completion flex)))
+  (add-hook 'corfu-mode-hook #'k/corfu-mode-hook)
+
+  :bind
+  (:map corfu-map
+   ("<prior>" . corfu-scroll-down)
+   ("<next>" . corfu-scroll-up)))
 
 (provide 'completition-corfu-conf)
