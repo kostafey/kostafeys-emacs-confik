@@ -6,16 +6,6 @@
 (straight-use-package
  '(multiple-cursors :type git :host github
 				            :repo "magnars/multiple-cursors.el" :branch "master"))
-(use-package flx
-  :straight '(flx :type git :host github
-			            :repo "lewang/flx" :branch "master")
-  :load-path "~/.emacs.d/straight/repos/flx"
-  :init (progn
-          (require 'flx)
-          (require 'flx-ido)))
-(straight-use-package
- '(flx-isearch :type git :host github
-			         :repo "PythonNut/flx-isearch" :branch "master"))
 (straight-use-package
  '(highlight-symbol :type git :host github
 			              :repo "nschum/highlight-symbol.el" :branch "master"))
@@ -177,7 +167,8 @@
 ;;===================================================================
 
 ;; to 'set-mark-command use M-s instead
-(global-set-key (kbd "C-SPC") 'start-complete)
+;; (global-set-key (kbd "C-SPC") 'start-complete)
+(global-set-key (kbd "C-SPC") 'completion-at-point)
 
 ;;===================================================================
 ;; Function keys

@@ -5,20 +5,19 @@
  '(cider :type git :host github
          :repo "clojure-emacs/cider" :branch "master"))
 (straight-use-package
- '(simple-httpd :type git :host github
-                :repo "skeeto/emacs-web-server" :branch "master"))
-(straight-use-package
  '(clomacs :type git :host gitlab
            :repo "kostafey/clomacs" :branch "master"))
 (require 'clomacs)
 
 (straight-use-package
- '(ejc-sql :type git :host gitlab
-           :repo "kostafey/ejc-sql" :branch "master"))
+ '(ejc-sql :type git :host nil
+           :repo "git@github.com:kostafey/ejc-sql.git"
+           :branch "master"))
 (require 'ejc-sql)
-;; Require completion frontend (autocomplete or company). One of them or both.
-(require 'ejc-autocomplete)
-(require 'ejc-company)
+;; Require completion frontend (autocomplete, company of corfu via capf).
+;; (require 'ejc-autocomplete)
+;; (require 'ejc-company)
+(require 'ejc-capf)
 
 (setq nrepl-sync-request-timeout 60)
 (setq clomacs-httpd-default-port 8090) ; Use a port other than 8080.
@@ -49,7 +48,8 @@
 (define-key ejc-sql-mode-keymap (kbd "<F8>") 'ejc-eval-user-sql-at-point)
 
 (defun k/ejc-after-emacs-init-hook ()
-  (push 'ejc-company-backend company-backends)
+  ;; Setup `company-mode' completion frontend
+  ;; (push 'ejc-company-backend company-backends)
   ;; In case of `company-mode' is used by default this can be useful:
   ;; (company-quickhelp-mode)
   )
@@ -68,9 +68,11 @@
 
 (defun k/ejc-sql-mode-hook ()
   ;; Enable one of the completion frontend by by default but not both.
-  ;; (auto-complete-mode t) ; Enable `auto-complete-mode'
-  ;; (ejc-ac-setup)
-  (company-mode t)       ; or `company-mode'.
+  ;; (auto-complete-mode t)                 ; Enable `auto-complete-mode'
+  ;; (ejc-ac-setup)                         ;
+  ;; (company-mode t)                       ; or `company-mode'.
+  (add-hook 'completion-at-point-functions  ; or `corfu-mode' via `capf'
+            #'ejc-capf nil 'local)
   (ejc-eldoc-setup)      ; Setup ElDoc.
   (font-lock-warn-todo)       ; See custom/look-and-feel.el
   (rainbow-delimiters-mode t) ; https://github.com/Fanael/rainbow-delimiters

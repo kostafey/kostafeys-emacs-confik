@@ -1,5 +1,11 @@
 ;;; completition-corfu-conf.el -- COmpletion in Region FUnction configuration
 
+(use-package fussy
+  :straight '(fussy :type git :host github
+			              :repo "jojojames/fussy" :branch "main")
+  :config
+  (fussy-setup))
+
 (use-package corfu
   :straight '(corfu :type git :host github
 			              :repo "minad/corfu" :branch "main")
@@ -23,12 +29,14 @@
 
   (defun k/corfu-mode-hook ()
     ;; Settings only for Corfu
-    (setq-local completion-styles '(basic substring partial-completion flex)))
+    (setq-local completion-styles '(basic substring partial-completion fussy)))
   (add-hook 'corfu-mode-hook #'k/corfu-mode-hook)
 
   :bind
   (:map corfu-map
    ("<prior>" . corfu-scroll-down)
-   ("<next>" . corfu-scroll-up)))
+   ("<next>" . corfu-scroll-up)
+   ("<left>" . (lambda () (interactive) (corfu-quit) (backward-char)))
+   ("<right>" . (lambda () (interactive) (corfu-quit) (forward-char)))))
 
 (provide 'completition-corfu-conf)

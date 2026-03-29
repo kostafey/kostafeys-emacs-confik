@@ -77,6 +77,7 @@
 ;; (require 'lua-conf)
 (require 'rust-conf)
 ;; (require 'auctex-conf)
+(require 'ejc-sql-conf nil 'noerror)
 
 ;;-------------------------------------------------------------------
 ;;; In praise of Emacs, The One True Editor
