@@ -421,7 +421,6 @@
 (global-set-key (kbd "M-m") 'mirror-window)
 
 (global-set-key [(control tab)] 'other-window) ; C-tab switchs to a next window
-(windmove-default-keybindings 'meta)           ; M-up/down/left/right
 
 ;;===================================================================
 ;; Switch frame
@@ -434,30 +433,26 @@
 (when (fboundp 'winner-mode)
   (winner-mode 1))
 
+;; ------------------------------------------------------------
+;; windmove
+(require 'windmove)
+
 (defun meta-left ()
   (interactive)
-  (condition-case err
+  (if (windmove-find-other-window 'left)
       (windmove-left)
-    (error
-     (if (equal err '(error "No window left from selected window"))
-         (progn
-           (hop-backward)
-           (setq this-command 'hop-backward))
-       (message "%s" err)))))
+    (error "No window left from selected window")))
 
 (defun meta-right ()
   (interactive)
-  (condition-case err
+  (if (windmove-find-other-window 'right)
       (windmove-right)
-    (error
-     (if (equal err '(error "No window right from selected window"))
-         (progn
-           (hop-forward)
-           (setq this-command 'hop-forward))
-       (message "%s" err)))))
+    (error "No window right from selected window")))
 
 (global-set-key (kbd "M-<left>") 'meta-left)
 (global-set-key (kbd "M-<right>") 'meta-right)
+(global-set-key (kbd "M-<up>") 'windmove-up)
+(global-set-key (kbd "M-<down>") 'windmove-down)
 
 ;;===================================================================
 ;;                        Text transformations
