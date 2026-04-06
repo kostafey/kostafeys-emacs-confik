@@ -3,7 +3,7 @@
 ;; Font
 (pcase system-type
   ('windows-nt
-   (set-face-font 'default "Consolas-14.5:antialias=subpixel"))
+   (set-face-font 'default "Consolas-12.0:antialias=subpixel"))
   ('gnu/linux
    (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb")))
 

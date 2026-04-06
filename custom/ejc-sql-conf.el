@@ -9,10 +9,17 @@
            :repo "kostafey/clomacs" :branch "master"))
 (require 'clomacs)
 
-(straight-use-package
- '(ejc-sql :type git :host nil
-           :repo "git@github.com:kostafey/ejc-sql.git"
-           :branch "master"))
+(pcase system-type
+  ('windows-nt
+   (straight-use-package
+    '(ejc-sql :type git :host github
+              :repo "kostafey/ejc-sql" :branch "master")))
+  ('gnu/linux
+   (straight-use-package
+    '(ejc-sql :type git :host nil
+              :repo "git@github.com:kostafey/ejc-sql.git"
+              :branch "master"))))
+
 (require 'ejc-sql)
 ;; Require completion frontend (autocomplete, company of corfu via capf).
 ;; (require 'ejc-autocomplete)
