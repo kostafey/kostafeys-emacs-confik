@@ -1,13 +1,15 @@
 ﻿
 ;;-------------------------------------------------------------------
 ;; Font
-(pcase system-type
-  ('windows-nt
-   (set-face-font 'default "Consolas-12.0:antialias=subpixel"))
-  ('gnu/linux
-   (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb")))
+(when (find-font (font-spec :name "JetBrains Mono Medium"))
+  (set-face-font 'default "JetBrains Mono Medium-12.0:antialias=subpixel")
+  (pcase system-type
+    ('windows-nt
+     (set-face-font 'default "Consolas-12.0:antialias=subpixel"))
+    ('gnu/linux
+     (set-face-font 'default "JetBrains Mono Medium-12.0:antialias=subpixel"))))
 
-;; In case of fire use this:
+;; Lookup fonts:
 ;; (font-family-list)
 ;; (find-font (font-spec :name "FiraMono"))
 
