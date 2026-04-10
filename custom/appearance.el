@@ -2,7 +2,7 @@
 ;; Emacs custom color theme
 (straight-use-package
  '(organic-green-theme :type git :host github
-					             :repo "kostafey/organic-green-theme" :branch "master"))
+                       :repo "kostafey/organic-green-theme" :branch "master"))
 (setq organic-green-boldless t)
 (setq organic-green-version 2)
 (load-theme 'organic-green t)
@@ -12,42 +12,55 @@
 ;;
 (use-package minions
   :straight '(minions :type git :host github
-					            :repo "tarsius/minions" :branch "main")
+                      :repo "tarsius/minions" :branch "main")
   :config (minions-mode 1))
 
 ;;-------------------------------------------------------------------
 (straight-use-package
  '(dash :type git :host github
-				:repo "magnars/dash.el" :branch "master"))
+        :repo "magnars/dash.el" :branch "master"))
 ;; Font lock of dash functions in emacs lisp buffers
 (eval-after-load "dash" '(dash-enable-font-lock))
 
 (straight-use-package
  '(rainbow-delimiters :type git :host github
-				              :repo "Fanael/rainbow-delimiters" :branch "master"))
+                      :repo "Fanael/rainbow-delimiters" :branch "master"))
 
 ;; This minor mode sets background color to strings that match color
 ;; names, e.g. #0000ff is displayed in white with a blue background.
-(straight-use-package
- '(rainbow-mode :type git :host github
-				        :repo "emacsmirror/rainbow-mode" :branch "master"))
+(use-package rainbow-mode
+  :straight '(rainbow-mode :type git :host github
+                           :repo "emacsmirror/rainbow-mode" :branch "master")
+  :config (progn
+            (defun k/rainbow-only-hex ()
+              "Remove named color highlights from rainbow-mode."
+              (interactive)
+              (font-lock-remove-keywords
+               nil
+               `(,@rainbow-x-colors-font-lock-keywords
+                 ,@rainbow-latex-rgb-colors-font-lock-keywords
+                 ,@rainbow-r-colors-font-lock-keywords
+                 ,@rainbow-html-colors-font-lock-keywords
+                 ,@rainbow-html-rgb-colors-font-lock-keywords))
+              (font-lock-flush))
+            (add-hook 'rainbow-mode-hook #'k/rainbow-only-hex)))
 
 (straight-use-package
  '(emacs-idle-highlight-mode :type git :host codeberg
-				                     :repo "ideasman42/emacs-idle-highlight-mode" :branch "main"))
+                             :repo "ideasman42/emacs-idle-highlight-mode" :branch "main"))
 (straight-use-package
  '(paredit :type git :host nil
-				   :fetch "https://paredit.org/cgit/paredit/" :branch "master"))
+           :fetch "https://paredit.org/cgit/paredit/" :branch "master"))
 (straight-use-package
  '(paredit-everywhere :type git :host github
-				              :repo "purcell/paredit-everywhere" :branch "master"))
+                      :repo "purcell/paredit-everywhere" :branch "master"))
 
 (straight-use-package
  '(tabbar :type git :host github
-				  :repo "dholm/tabbar" :branch "master"))
+          :repo "dholm/tabbar" :branch "master"))
 (straight-use-package
  '(breadcrumb :type git :host github
-				      :repo "joaotavora/breadcrumb" :branch "master"))
+              :repo "joaotavora/breadcrumb" :branch "master"))
 
 (use-package tab-line
   :ensure nil
@@ -69,35 +82,35 @@
            (buffer-bg              (face-attribute 'default :background))
            (tab-bg                 organic-shadow))
       (set-face-attribute 'tab-line nil
-			                    :background fringe-bg
-			                    :foreground fg
-			                    :height 0.9
-			                    :inherit nil
-			                    :box nil)
+                          :background fringe-bg
+                          :foreground fg
+                          :height 0.9
+                          :inherit nil
+                          :box nil)
       (set-face-attribute 'tab-line-tab nil
-			                    :background organic-shadow
-			                    :foreground fg
-			                    :weight 'normal
-			                    :inherit nil
+                          :background organic-shadow
+                          :foreground fg
+                          :weight 'normal
+                          :inherit nil
                           :box nil)
       (set-face-attribute 'tab-line-tab-inactive nil
-			                    :foreground fg
-			                    :background tab-bg
-			                    :weight 'normal
-			                    :inherit nil
+                          :foreground fg
+                          :background tab-bg
+                          :weight 'normal
+                          :inherit nil
                           :box nil)
       (set-face-attribute 'tab-line-highlight nil
-			                    :foreground fg
-			                    :background buffer-bg
-			                    :weight 'normal
-			                    :inherit nil
-			                    :box nil)
+                          :foreground fg
+                          :background buffer-bg
+                          :weight 'normal
+                          :inherit nil
+                          :box nil)
       (set-face-attribute 'tab-line-tab-current nil
-			                    :foreground fg
-			                    :background buffer-bg
-			                    :weight 'semi-bold
-			                    :inherit nil
-			                    :box nil)))
+                          :foreground fg
+                          :background buffer-bg
+                          :weight 'semi-bold
+                          :inherit nil
+                          :box nil)))
   (k/set-tab-theme)
 
   (dolist (mode '(ediff-mode process-menu-mode))
@@ -284,4 +297,3 @@ not in the top of the frame."
 (add-hook 'web-mode-hook        'my-web-mode-hook)
 
 (provide 'appearance)
-
