@@ -1,26 +1,23 @@
 ;;-------------------------------------------------------------------
 ;; Emacs custom color theme
-(straight-use-package
- '(organic-green-theme :type git :host github
-                       :repo "kostafey/organic-green-theme" :branch "master"))
-(setq organic-green-boldless t)
-(setq organic-green-version 2)
-(load-theme 'organic-green t)
-
-;;=============================================================================
-;; mode-line (emacs status bar) config
-;;
-(use-package minions
-  :straight '(minions :type git :host github
-                      :repo "tarsius/minions" :branch "main")
-  :config (minions-mode 1))
+(use-package organic-green-theme
+  :straight `(organic-green-theme
+              :type git :host nil
+              :repo ,(pcase system-type
+                       ('windows-nt
+                        "https://github.com/kostafey/organic-green-theme.git")
+                       ('gnu/linux
+                        "git@github.com:kostafey/organic-green-theme.git"))
+              :branch "master")
+  :config (load-theme 'organic-green t))
 
 ;;-------------------------------------------------------------------
-(straight-use-package
- '(dash :type git :host github
-        :repo "magnars/dash.el" :branch "master"))
-;; Font lock of dash functions in emacs lisp buffers
-(eval-after-load "dash" '(dash-enable-font-lock))
+(use-package dash
+  :straight '(dash :type git :host github
+                   :repo "magnars/dash.el" :branch "master")
+  :config
+  ;; Font lock of dash functions in emacs lisp buffers
+  (eval-after-load "dash" '(dash-enable-font-lock)))
 
 (straight-use-package
  '(rainbow-delimiters :type git :host github
@@ -73,45 +70,6 @@
         tab-line-tabs-function #'tab-line-tabs-window-buffers
         tab-line-right-button nil
         tab-line-left-button nil)
-  (defun k/set-tab-theme ()
-    (let* ((organic-green-black    "#444D56")
-           (organic-highlight-gray "#E3F2E1")
-           (organic-shadow         "#D3E0D3")
-           (fg                     organic-green-black)
-           (fringe-bg              organic-highlight-gray)
-           (buffer-bg              (face-attribute 'default :background))
-           (tab-bg                 organic-shadow))
-      (set-face-attribute 'tab-line nil
-                          :background fringe-bg
-                          :foreground fg
-                          :height 0.9
-                          :inherit nil
-                          :box nil)
-      (set-face-attribute 'tab-line-tab nil
-                          :background organic-shadow
-                          :foreground fg
-                          :weight 'normal
-                          :inherit nil
-                          :box nil)
-      (set-face-attribute 'tab-line-tab-inactive nil
-                          :foreground fg
-                          :background tab-bg
-                          :weight 'normal
-                          :inherit nil
-                          :box nil)
-      (set-face-attribute 'tab-line-highlight nil
-                          :foreground fg
-                          :background buffer-bg
-                          :weight 'normal
-                          :inherit nil
-                          :box nil)
-      (set-face-attribute 'tab-line-tab-current nil
-                          :foreground fg
-                          :background buffer-bg
-                          :weight 'semi-bold
-                          :inherit nil
-                          :box nil)))
-  (k/set-tab-theme)
 
   (dolist (mode '(ediff-mode process-menu-mode))
     (add-to-list 'tab-line-exclude-modes mode))

@@ -1,13 +1,36 @@
+;;; basic-mode-line-conf.el --- Mode line configuration.
+
+(defun k/show-buffer-environment ()
+  "Create a temporary buffer with current buffer's environment details."
+  (interactive)
+  (let* ((file-path (or (buffer-file-name) "No file associated"))
+         (encoding (coding-system-get buffer-file-coding-system :mime-charset))
+         (eol (nth (coding-system-eol-type buffer-file-coding-system)
+                   '("unix" "dos" "mac")))
+         (maj-mode major-mode)
+         ;; Filter minor-mode-list for active modes
+         (active-minors (cl-remove-if-not
+                         (lambda (m) (and (boundp m) (symbol-value m)))
+                         minor-mode-list)))
+    (with-current-buffer (get-buffer-create "*Buffer Environment*")
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert (format "File path:    %s\n" file-path))
+        (insert (format "Encoding:     %s\n" encoding))
+        (insert (format "Endlines:     %s\n" eol))
+        (insert (format "Major mode:   %s\n" maj-mode))
+        (insert (format "Minor modes:  %s\n"
+                        (mapconcat 'symbol-name active-minors
+                                   (format (format "\n%%%ds"
+                                                   (length "Minor modes:  "))
+                                           " "))))
+        (goto-char (point-min))
+        (help-mode) ; Adds nice formatting and 'q' to quit
+        (display-buffer (current-buffer))))))
+
 (setq-default
- projectile-mode-line-prefix " "
  mode-line-format
- (list ""
-       ;; ------------------------------------------------------------
-       ;; file encoding
-       'mode-line-mule-info
-       ;; '(:eval (propertize
-       ;;          (format "%s " buffer-file-coding-system)
-       ;;          'help-echo (format"%s" buffer-file-coding-system)))
+ (list "  "
        ;; ------------------------------------------------------------
        ;; the `buffer-name'; the file name as a tool tip
        '(:eval (propertize (buffer-name)
@@ -16,13 +39,7 @@
                            'help-echo (buffer-file-name)
                            'local-map (let ((map (make-sparse-keymap)))
                                         (define-key map [mode-line mouse-1]
-                                          (lambda (e)
-                                            (interactive "e")
-                                            (mode-line-previous-buffer e)))
-                                        (define-key map [mode-line mouse-3]
-                                          (lambda (e)
-                                            (interactive "e")
-                                            (mode-line-next-buffer e)))
+                                          'k/show-buffer-environment)
                                         map)))
        ;; ------------------------------------------------------------
        ;; line and column
@@ -36,35 +53,14 @@
                           (region-selection-length)
                           (region-selection-count-lines))
                   'face 'font-lock-constant-face)))
-       ;; " %i "
-       ;; (add-to-list 'global-mode-string '(" %i"))
        ;; ------------------------------------------------------------
        ;; csv field index for `csv-mode'
-       '(:eval (when (and (eq major-mode 'csv-mode) csv-field-index-mode)
+       '(:eval (when (and (eq major-mode 'csv-mode)
+                          csv-field-index-mode
+                          (fboundp 'k/csv-get-field-index))
                  (propertize
                   (format " %s" (k/csv-get-field-index))
                   'face 'escape-glyph)))
-       ;; ------------------------------------------------------------
-       ;; the current `major-mode' for the buffer and list of minor modes.
-       '(:eval (propertize " %m"
-                           ;; 'face '((t :foreground "black"))
-                           'help-echo (mapconcat
-                                       'identity
-                                       (-sort
-                                        'string-lessp
-                                        (-map 'symbol-name
-                                              (--filter
-                                               (and (boundp it)
-                                                    (symbol-value it))
-                                               minor-mode-list)))
-                                       "\n")
-                           'mouse-face 'mode-line-highlight
-                           'local-map (let ((map (make-sparse-keymap)))
-                                        (define-key map [mode-line mouse-1]
-                                          'describe-mode)
-                                        (define-key map [mode-line mouse-3]
-                                          'minions-minor-modes-menu)
-                                        map)))
        ;; ------------------------------------------------------------
        ;; version control data
        '(:eval (propertize (if (vc-mode-line buffer-file-name)
@@ -72,13 +68,19 @@
                              "")
                            'face 'font-lock-constant-face))
        ;; ------------------------------------------------------------
-       ;; `projectile'
-       '(:eval (propertize (if (projectile-project-root)
-                               (projectile-default-mode-line)
-                             "")
-                           'mouse-face 'mode-line-highlight
-                           'local-map (make-mode-line-mouse-map
-                                       'mouse-1 'projectile-mode-menu)))
+       ;; `project' see (project-mode-line-format) fn
+       '(:eval (propertize
+                (if (project-current)
+                    (format " [%s]"
+                            (when-let* ((project (project-current)))
+                              (let ((last-coding-system-used last-coding-system-used))
+                                (propertize
+                                 (project-name project)
+                                 'face project-mode-line-face
+                                 'mouse-face 'mode-line-highlight
+                                 'help-echo "mouse-1: Project menu"
+                                 'local-map project-mode-line-map))))
+                  "")))
        ;; ------------------------------------------------------------
        ;; read only, insert/overwrite, edited signs
        " (" ;; insert vs overwrite mode, input-method in a tooltip
@@ -87,7 +89,8 @@
                            'help-echo (concat "Buffer is in "
                                               (if overwrite-mode
                                                   "overwrite"
-                                                "insert") " mode")))
+                                                "insert")
+                                              " mode")))
        ;; was this buffer modified since the last save?
        '(:eval (when (buffer-modified-p)
                  (concat ","  (propertize "*"
@@ -98,7 +101,27 @@
                  (concat ","  (propertize "RO"
                                           'face 'font-lock-string-face
                                           'help-echo "Buffer is read-only"))))
-       ")"
-       ))
+       ") "
+       ;; ------------------------------------------------------------
+       ;; file encoding
+       ;; 'mode-line-mule-info
+       '(:eval (propertize
+                (format "%s/%s"
+                        (let ((base (coding-system-base buffer-file-coding-system)))
+                          (if (eq base 'prefer-utf-8)
+                              'utf-8
+                            base))
+                        (let ((eol (coding-system-eol-type buffer-file-coding-system)))
+                          (cond ((eq eol 0) "unix")
+                                ((eq eol 1) "dos")
+                                ((eq eol 2) "mac")
+                                (t "unknown"))))
+                'help-echo (format"%s\n%s\n%s\n%s"
+                                  buffer-file-coding-system
+                                  "[f8]		recode-buffer-rotate-ring"
+                                  "[C-f8]	eol-buffer-rotate-ring"
+                                  "[M-f8]	describe-coding-system")))))
 
 (provide 'basic-mode-line-conf)
+
+;;; basic-mode-line-conf.el ends here

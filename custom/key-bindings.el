@@ -188,7 +188,9 @@
 
 (global-set-key [f8] 'recode-buffer-rotate-ring)
 (global-set-key [C-f8] 'eol-buffer-rotate-ring)
-(global-set-key [f9] 'auto-fill-mode); enable/disable lines auto-fill
+(global-set-key [M-f8] (lambda () (interactive)
+                         (describe-coding-system buffer-file-coding-system)))
+(global-set-key [f9] 'auto-fill-mode)   ; enable/disable lines auto-fill
 (global-set-key [f10] 'smerge-mode)
 (global-set-key [f12] 'flyspell-mode)   ; enable/disable spell checking
 ;; yasnippet

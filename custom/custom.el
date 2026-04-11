@@ -11,7 +11,7 @@
                    lsp-java fennel-mode company-quickhelp project-explorer
                    restclient vterm marginalia vertico-directory lsp-ui
                    lsp-metals flycheck sbt-mode scala-mode use-package
-                   lsp-mode yaml-mode rainbow-mode minions csv-mode
+                   lsp-mode yaml-mode rainbow-mode csv-mode
                    markdown-toc graphviz-dot-mode lorem-ipsum web-mode
                    rjsx-mode skewer-mode ac-cider circe tabbar
                    temporary-persistent idle-highlight-mode simple-httpd cider
