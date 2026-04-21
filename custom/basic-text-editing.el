@@ -536,7 +536,7 @@ Version 2015-09-14."
     (insert (decode-coding-string (url-unhex-string -input-str) 'utf-8))))
 
 ;;;###autoload
-(defun get-random-uuid ()
+(defun generate-random-uuid ()
   (let ((myStr (md5 (format "%s%s%s%s%s%s%s%s%s%s"
                             (user-uid)
                             (emacs-pid)
@@ -548,13 +548,13 @@ Version 2015-09-14."
                             (buffer-string)
                             (random)
                             (recent-keys)))))
-    (insert (format "%s-%s-4%s-%s%s-%s"
-                    (substring myStr 0 8)
-                    (substring myStr 8 12)
-                    (substring myStr 13 16)
-                    (format "%x" (+ 8 (random 4)))
-                    (substring myStr 17 20)
-                    (substring myStr 20 32)))))
+    (format "%s-%s-4%s-%s%s-%s"
+            (substring myStr 0 8)
+            (substring myStr 8 12)
+            (substring myStr 13 16)
+            (format "%x" (+ 8 (random 4)))
+            (substring myStr 17 20)
+            (substring myStr 20 32))))
 
 ;;;###autoload
 (defun insert-random-uuid ()
@@ -571,7 +571,14 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
   ;; Edited by Hideki Saito further to generate all valid variants for "N" in
   ;; xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx format.
   (interactive)
-  (insert get-random-uuid))
+  (insert (generate-random-uuid)))
+
+;;;###autoload
+(defun get-random-uuid ()
+  (interactive)
+  (let ((uuid (generate-random-uuid)))
+    (kill-new uuid)
+    (message (format "UUID copied to clipboard: %s" uuid))))
 
 (defun spaces-to-tabs ()
   "Replace 4 spaces with a tab char."

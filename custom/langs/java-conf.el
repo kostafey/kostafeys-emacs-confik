@@ -10,27 +10,29 @@
 ;;-----------------------------------------------------------------------------
 ;; lsp-java
 ;;
-(use-package lsp-mode
-  :straight '(lsp-mode :type git :host github
-			                 :repo "emacs-lsp/lsp-mode" :branch "master"))
+(when (eq system-type 'gnu/linux)
 
-(use-package lsp-java
-  :straight '(lsp-java :type git :host github
-			                 :repo "emacs-lsp/lsp-java" :branch "master")
-  :after lsp
-  :config (progn (add-hook 'java-mode-hook 'lsp)
-                 (custom-set-variables '(lsp-ui-sideline-enable nil)
-                                       '(lsp-ui-doc-enable nil))))
+  (use-package lsp-mode
+    :straight '(lsp-mode :type git :host github
+			                   :repo "emacs-lsp/lsp-mode" :branch "master"))
 
-(defun k/java-mode-hook ()
-  (my-coding-hook)
-  (c-set-offset 'arglist-intro '+)
-  (define-key java-mode-map (kbd "C-x C-e") #'jshell-eval-last-expr)
-  (define-key java-mode-map (kbd "M-e") #'jshell-eval-region)
-  (define-key java-mode-map (kbd "C-M-a") nil))
+  (use-package lsp-java
+    :straight '(lsp-java :type git :host github
+			                   :repo "emacs-lsp/lsp-java" :branch "master")
+    :after lsp
+    :config (progn (add-hook 'java-mode-hook 'lsp)
+                   (custom-set-variables '(lsp-ui-sideline-enable nil)
+                                         '(lsp-ui-doc-enable nil))))
 
-(add-hook 'java-mode-hook #'k/java-mode-hook)
-(add-hook 'java-mode-hook #'lsp)
+  (defun k/java-mode-hook ()
+    (my-coding-hook)
+    (c-set-offset 'arglist-intro '+)
+    (define-key java-mode-map (kbd "C-x C-e") #'jshell-eval-last-expr)
+    (define-key java-mode-map (kbd "M-e") #'jshell-eval-region)
+    (define-key java-mode-map (kbd "C-M-a") nil))
+
+  (add-hook 'java-mode-hook #'k/java-mode-hook)
+  (add-hook 'java-mode-hook #'lsp))
 
 ;;-----------------------------------------------------------------------------
 ;; jshell
