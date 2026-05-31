@@ -51,6 +51,7 @@
 (require 'ide)
 (require 'history-conf)
 (require 'text-modes-conf)
+(require 'faq-to-csv)
 ;; (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
 ;; (require 'foreign)
 (require 'perfomance-conf)
