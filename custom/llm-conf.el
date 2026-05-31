@@ -2,7 +2,24 @@
 
 ;; Start server:
 ;; -------------
+;; `Qwen2.5-Coder-3B'
 ;; llama-server -m ~/.cache/llama.cpp/Qwen_Qwen2.5-Coder-3B-Instruct-GGUF_qwen2.5-coder-3b-instruct-q4_k_m.gguf -c 40960
+;; `Qwen2.5-Coder-7B'
+;; run:
+;; llama-server \
+;;   -m ~/.cache/llama.cpp/bartowski_Qwen2.5-Coder-7B-Instruct-GGUF_Qwen2.5-Coder-7B-Instruct-Q4_K_M.gguf \
+;;   --port 8080 \
+;;   --ctx-size 20480 \
+;;   --n-gpu-layers 99 \
+;;   --parallel 2 \
+;;   --cont-batching
+;; download:
+;; llama-server \
+;;   --hf-repo bartowski/Qwen2.5-Coder-7B-Instruct-GGUF \
+;;   --hf-file Qwen2.5-Coder-7B-Instruct-Q4_K_M.gguf \
+;;   --port 8080 \
+;;   --ctx-size 16384 \
+;;   --n-gpu-layers 35
 
 (defun get-language-from-mode ()
   "Get the programming language name from the mode name."
