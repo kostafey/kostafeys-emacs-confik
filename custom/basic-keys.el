@@ -439,13 +439,15 @@
 
 (defun meta-left ()
   (interactive)
-  (if (windmove-find-other-window 'left)
+  (if (or (windmove-find-other-window 'left)
+          (> (length (frame-list)) 1))
       (windmove-left)
     (error "No window left from selected window")))
 
 (defun meta-right ()
   (interactive)
-  (if (windmove-find-other-window 'right)
+  (if (or (windmove-find-other-window 'right)
+          (> (length (frame-list)) 1))
       (windmove-right)
     (error "No window right from selected window")))
 
