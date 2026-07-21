@@ -603,4 +603,17 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
   (let ((sort-fold-case t))
     (call-interactively 'sort-lines)))
 
+(defun normalize-region-to-snake-case ()
+  "Replace region: spaces, colons, hyphens → \"_\"; collapse consecutive underscores."
+  (interactive)
+  (when (use-region-p)
+    (let* ((start (region-beginning))
+           (end   (region-end))
+           (text  (buffer-substring-no-properties start end))
+           (result (replace-regexp-in-string
+                    "_\\{2,\\}" "_"
+                    (replace-regexp-in-string "[ :-]" "_" text))))
+      (delete-region start end)
+      (insert result))))
+
 (provide 'basic-text-editing)

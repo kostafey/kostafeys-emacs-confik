@@ -95,5 +95,11 @@ Encoding changes through rotation of `evm-coding-systems-list'."
 
 ;;=============================================================================
 
+(defun remove-utf-8-bom ()
+  "Remove the BOM from the current buffer by setting coding system to UTF-8."
+  (interactive)
+  (set-buffer-file-coding-system 'utf-8)
+  (save-buffer))
+
 (provide 'reencoding-file)
 
