@@ -13,46 +13,9 @@
  '(diffview :type git :host github
             :repo "mgalgs/diffview-mode" :branch "master"))
 
-(when (eq system-type 'windows-nt)
-  ;; Disable the compilation attempt as it will be compiled manually (below).
-  (straight-use-package
-   '(libgit :type git
-            :host github
-            :repo "magit/libegit2"
-            :files ("*.el" "*.dll")
-            :build (:not compile)))
-
-  (use-package libgit
-    :straight t
-    :init
-    ;; Indicate where to look for a dynamic module by adding the path
-    ;; to `load-path'
-    (add-to-list 'load-path (straight--build-dir "libgit"))
-    :config
-    ;; Load the Magit integration
-    (require 'magit-libgit nil t))
-
-  ;; Build:
-  ;; ---
-  ;; winget install Kitware.CMake
-  ;; winget install MSYS2.MSYS2
-  ;; & "C:\msys64\usr\bin\bash.exe" -lc "pacman -S --noconfirm mingw-w64-x86_64-gcc mingw-w64-x86_64-make libgit2"
-  ;; cd %USERPROFILE%\AppData\Roaming\.emacs.d\straight\repos\libegit2
-  ;; mkdir build
-  ;; cd build
-  ;; $env:PATH = "C:\msys64\mingw64\bin;C:\msys64\usr\bin;" + $env:PATH
-  ;; cmake .. -G "MinGW Makefiles" `
-  ;;   "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" `
-  ;;   "-DCMAKE_C_COMPILER=C:/msys64/mingw64/bin/gcc.exe" `
-  ;;   "-DCMAKE_MAKE_PROGRAM=C:/msys64/mingw64/bin/mingw32-make.exe"
-  ;; & "C:\msys64\mingw64\bin\mingw32-make.exe"
-  ;; copy "libegit2.dll" ..\..\..\build\libgit\
-
-  ;; Check:
-  ;; ---
-  ;; (featurep 'libgit)
-  )
-
+;; Disable auto-reverting of file-visiting buffers after Magit commands (a
+;; notable cost with many buffers open).  A plain `setq' suffices: Magit defers
+;; the mode's activation until after init specifically so this value is honored.
 (setq magit-auto-revert-mode nil)
 
 (custom-set-variables
@@ -68,20 +31,40 @@
 
 (add-hook 'magit-status-mode-hook #'k/magit-status-mode)
 
+;;-----------------------------------------------------------------------------
+;; Magit performance on Windows
+;;
+(when (eq system-type 'windows-nt)
+  ;; Drop the status sections that each cost extra git round-trips: the
+  ;; ahead/behind counts against upstream and pushremote, plus the tags header
+  ;; (`git describe').  Re-add any you miss.
+  (with-eval-after-load 'magit-status
+    (dolist (section '(magit-insert-unpushed-to-pushremote
+                       magit-insert-unpushed-to-upstream-or-recent
+                       magit-insert-unpulled-from-pushremote
+                       magit-insert-unpulled-from-upstream))
+      (remove-hook 'magit-status-sections-hook section))
+    (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)))
+
+;; `vc-backend' probes every backend in `vc-handled-backends' in order,
+;; spawning a subprocess per backend — painfully slow on Windows.  We only
+;; drive Git (darcs goes through darcsum, not vc), so probe nothing else.
+;; Also speeds up every `find-file' and `my-enable-smerge-maybe' below.
+(setq vc-handled-backends '(Git))
+
 (defun get-vc-status ()
-  "Call status function according to the actual vc system of the active file."
+  "Open the VCS status buffer for the current buffer's repository.
+Use darcsum for a darcs working tree and Magit for everything else.
+
+Backend detection via `vc-backend' is deliberately avoided: the only
+non-darcs case also opens Magit, so the probe was pure overhead (a
+subprocess per handled backend, slow on Windows)."
   (interactive)
-  (let ((vc-type (downcase
-                  (format "%s"
-                          (vc-backend
-                           (buffer-file-name (current-buffer)))))))
-    (cond ((equal vc-type "git")
-           (magit-status))
-          ((and (boundp 'darcsum-repository-root)
-                (not (equal (darcsum-repository-root) nil)))
-           (darcsum-whatsnew
-            (darcsum-repository-root)))
-          (t (magit-status)))))
+  (let ((darcs-root (and (fboundp 'darcsum-repository-root)
+                         (ignore-errors (darcsum-repository-root)))))
+    (if darcs-root
+        (darcsum-whatsnew darcs-root)
+      (magit-status))))
 
 (use-package git-gutter
   :straight '(git-gutter
