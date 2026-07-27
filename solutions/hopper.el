@@ -37,6 +37,11 @@
 (defvar hop-positions-max-length 20)
 (defvar hop-current-pos 0)
 
+(defvar-local hop-arrived-via-hop nil
+  "Non-nil if the current buffer was entered via `hop-at-point'.
+Used by `eframe-kill-buffer' to return to the previous position with
+`hop-backward' after the buffer is killed.")
+
 (defun hop-clear ()
   (interactive)
   (setq hop-positions (list))
@@ -126,7 +131,7 @@
                   (thing-at-point 'url))))
         (if (and url (string-match hop-url-regexp url))
             (browse-url url)
-          (progn
+          (let ((hop-origin-buffer (current-buffer)))
             (push-mark)
             (hop-update-positions (current-buffer) (point) :hop)
             (cond
@@ -205,7 +210,9 @@
                   (condition-case nil
                       (semantic-ia-fast-jump point)
                     (error (hop-default-tag)))
-                (hop-default-tag))))))))))
+                (hop-default-tag))))
+            (unless (eq (current-buffer) hop-origin-buffer)
+              (setq-local hop-arrived-via-hop t))))))))
 
 (defun hop-at-point-other-window (point)
   "Jump to the entity definition at POINT position at neighboring window."
