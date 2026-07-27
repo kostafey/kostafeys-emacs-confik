@@ -26,7 +26,7 @@
 ;; ripgrep  - rg
 (defun k/rg ()
   (interactive)
-  (if (projectile-project-root)
+  (if (project-current)
       (command-execute 'rg-project)
     (command-execute 'rg)))
 

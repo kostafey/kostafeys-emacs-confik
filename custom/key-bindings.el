@@ -15,7 +15,7 @@
 
 (require 'ack-conf)
 (require 'navigation-in-frame)
-(require 'projectile-conf)
+(require 'project-conf)
 
 (straight-use-package
  '(eframe-jack-in :type git :host github

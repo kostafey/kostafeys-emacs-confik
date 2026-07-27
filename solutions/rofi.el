@@ -52,18 +52,16 @@
    :switcher 'find-file))
 
 ;;;###autoload
-(defun rofi-switch-projectile-files ()
+(defun rofi-switch-project-files ()
   (interactive)
-  (rofi
-   :prompt "Project files"
-   :items-list (let ((current-projectile-mode projectile-mode)
-                     (files (projectile-current-project-files)))
-                 (setq projectile-mode current-projectile-mode)
-                 files)
-   :item-name-getter 'identity
-   :switcher (lambda (file)
-               (find-file
-                (expand-file-name file
-                                  (projectile-project-root))))))
+  (let* ((project (project-current t))
+         (root (project-root project)))
+    (rofi
+     :prompt "Project files"
+     :items-list (mapcar (lambda (file) (file-relative-name file root))
+                         (project-files project))
+     :item-name-getter 'identity
+     :switcher (lambda (file)
+                 (find-file (expand-file-name file root))))))
 
 (provide 'rofi)

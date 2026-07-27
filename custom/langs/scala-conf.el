@@ -227,7 +227,9 @@
 
 (defun k/scala-find-root (orig-fun &rest args)
   (setq-local sbt:buffer-project-root
-              (projectile-project-root)))
+              (let ((project (project-current)))
+                (when project
+                  (expand-file-name (project-root project))))))
 
 (advice-add 'sbt:find-root
             :around

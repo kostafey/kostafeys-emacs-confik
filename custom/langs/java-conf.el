@@ -5,7 +5,7 @@
 ;; - `CATALINA_HOME'
 
 ;; The server installation will be in `lsp-java-server-install-dir'
-;; Run all tests: `projectile-test-project'
+;; Run all tests: `mvn test' (see the `maven-def-task' commands below)
 
 ;;-----------------------------------------------------------------------------
 ;; lsp-java
@@ -83,7 +83,7 @@
 (defmacro maven-def-task (name command)
   `(defun ,name ()
      (interactive)
-     (cd (projectile-project-root))
+     (cd (project-root (project-current t)))
      (compile ,command t)))
 
 (maven-def-task maven-tomcat-deploy "mvn tomcat7:redeploy")

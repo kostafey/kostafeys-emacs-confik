@@ -15,7 +15,7 @@
                    markdown-toc graphviz-dot-mode lorem-ipsum web-mode
                    rjsx-mode skewer-mode ac-cider circe tabbar
                    temporary-persistent idle-highlight-mode simple-httpd cider
-                   diffview rg eshell-prompt-extras projectile popup-switcher
+                   diffview rg eshell-prompt-extras popup-switcher
                    ac-etags company-mode company auto-complete yasnippet smex
                    ace-jump-mode highlight-symbol ag flx-isearch flx-ido flx
                    goto-last-change multiple-cursors git-gutter-fringe
