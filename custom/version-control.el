@@ -2,16 +2,56 @@
 
 (straight-use-package
  '(magit :type git :host github
-				 :repo "magit/magit" :branch "main"))
+         :repo "magit/magit" :branch "main"))
 (straight-use-package
  '(multi-magit :type git :host github
-				       :repo "luismbo/multi-magit" :branch "master"))
+               :repo "luismbo/multi-magit" :branch "master"))
 (straight-use-package
  '(darcsum :type git :host github
-				   :repo "emacsmirror/darcsum" :branch "master"))
+           :repo "emacsmirror/darcsum" :branch "master"))
 (straight-use-package
  '(diffview :type git :host github
-				    :repo "mgalgs/diffview-mode" :branch "master"))
+            :repo "mgalgs/diffview-mode" :branch "master"))
+
+(when (eq system-type 'windows-nt)
+  ;; Disable the compilation attempt as it will be compiled manually (below).
+  (straight-use-package
+   '(libgit :type git
+            :host github
+            :repo "magit/libegit2"
+            :files ("*.el" "*.dll")
+            :build (:not compile)))
+
+  (use-package libgit
+    :straight t
+    :init
+    ;; Indicate where to look for a dynamic module by adding the path
+    ;; to `load-path'
+    (add-to-list 'load-path (straight--build-dir "libgit"))
+    :config
+    ;; Load the Magit integration
+    (require 'magit-libgit nil t))
+
+  ;; Build:
+  ;; ---
+  ;; winget install Kitware.CMake
+  ;; winget install MSYS2.MSYS2
+  ;; & "C:\msys64\usr\bin\bash.exe" -lc "pacman -S --noconfirm mingw-w64-x86_64-gcc mingw-w64-x86_64-make libgit2"
+  ;; cd %USERPROFILE%\AppData\Roaming\.emacs.d\straight\repos\libegit2
+  ;; mkdir build
+  ;; cd build
+  ;; $env:PATH = "C:\msys64\mingw64\bin;C:\msys64\usr\bin;" + $env:PATH
+  ;; cmake .. -G "MinGW Makefiles" `
+  ;;   "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" `
+  ;;   "-DCMAKE_C_COMPILER=C:/msys64/mingw64/bin/gcc.exe" `
+  ;;   "-DCMAKE_MAKE_PROGRAM=C:/msys64/mingw64/bin/mingw32-make.exe"
+  ;; & "C:\msys64\mingw64\bin\mingw32-make.exe"
+  ;; copy "libegit2.dll" ..\..\..\build\libgit\
+
+  ;; Check:
+  ;; ---
+  ;; (featurep 'libgit)
+  )
 
 (setq magit-auto-revert-mode nil)
 
@@ -46,14 +86,14 @@
 (use-package git-gutter
   :straight '(git-gutter
               :type git :host github
-				      :repo "emacsorphanage/git-gutter" :branch "master")
+              :repo "emacsorphanage/git-gutter" :branch "master")
   :config
   (global-git-gutter-mode t))
 
 (use-package git-gutter-fringe
   :straight '(git-gutter-fringe
               :type git :host github
-	            :repo "emacsorphanage/git-gutter-fringe" :branch "master")
+              :repo "emacsorphanage/git-gutter-fringe" :branch "master")
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [#b11100000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b11100000] nil nil '(center repeated))
