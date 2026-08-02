@@ -92,6 +92,29 @@ subprocess per handled backend, slow on Windows)."
 (add-hook 'find-file-hook #'my-enable-smerge-maybe)
 (add-hook 'after-revert-hook #'my-enable-smerge-maybe)
 
+(defun k/display-buffer-in-next-window (buffer _alist)
+  "Display BUFFER in the window next to the selected one.
+Split the frame when it holds a single window, so there always is a
+neighboring window to reuse.  Meant to be used as a `display-buffer'
+action function; returns the window BUFFER is shown in."
+  (when (one-window-p 'nomini)
+    (split-window-right))
+  (let ((window (next-window (selected-window) 'nomini)))
+    (set-window-buffer window buffer)
+    window))
+
+(defun k/magit-diff-visit-worktree-file-other-window ()
+  "From a diff visit the worktree version of the file at point.
+Like `magit-diff-visit-worktree-file' — always the \"real\" file of the
+working tree, with point on the line corresponding to the position inside
+the diff — but the file is shown in the neighboring window (the frame is
+split when it holds a single window) and that window gets selected, so
+the Magit buffer stays visible.  Cf. `hop-at-point-other-window'."
+  (interactive)
+  (let ((display-buffer-overriding-action
+         (list #'k/display-buffer-in-next-window)))
+    (magit-diff-visit-worktree-file-other-window)))
+
 (defun k/diff (new)
   "Compare current buffer file with other one."
   (interactive (list (read-file-name "Compare with file: ")))

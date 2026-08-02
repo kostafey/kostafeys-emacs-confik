@@ -345,6 +345,11 @@
   (define-key magit-mode-map (kbd "C-s-<up>") 'magit-section-backward))
 (add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
 
+(defun k/magit-status-mode-hook ()
+  (define-key magit-status-mode-map (kbd "C-x d")
+              'k/magit-diff-visit-worktree-file-other-window))
+(add-hook 'magit-status-mode-hook 'k/magit-status-mode-hook)
+
 (global-set-key (kbd "M-w") 'get-vc-status)
 
 (eval-after-load "diffview"
