@@ -71,6 +71,17 @@
     (message value)
     result))
 
+(defun copy-file-name-and-line ()
+  "Copy the current buffer's file path and line number to the clipboard."
+  (interactive)
+  (if (buffer-file-name)
+      (let ((formatted-string (format "%s:%d"
+                                      (file-name-nondirectory (buffer-file-name))
+                                      (line-number-at-pos))))
+        (kill-new formatted-string)
+        (message "%s" formatted-string))
+    (message "This buffer is not visiting a file.")))
+
 (provide 'file-ops)
 
 ;;; file-ops.el ends here

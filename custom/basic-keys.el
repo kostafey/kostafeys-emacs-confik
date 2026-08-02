@@ -636,6 +636,7 @@ When there is a text selection, act on the region."
 
 (global-set-key (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
 (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
+(global-set-key (kbd "M-o") 'copy-file-name-and-line)
 
 (defun copy-to-clipboard-git-branch ()
   (interactive)
