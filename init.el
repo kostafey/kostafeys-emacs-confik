@@ -45,6 +45,9 @@
 (setq custom-file (concat site-lisp-path "custom/custom.el"))
 (load custom-file)
 ;;-------------------------------------------------------------------
+;; Must precede any module loading a tree-sitter major mode (`text-modes-conf'
+;; pulls in `asciidoc-mode', which initializes the library at load time).
+(require 'tree-sitter-conf)
 (require 'yas-conf)
 (require 'completition-corfu-conf)
 (require 'key-bindings)
@@ -55,7 +58,6 @@
 ;; (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
 ;; (require 'foreign)
 (require 'perfomance-conf)
-(require 'tree-sitter-conf)
 ;; (require 'irc-conf)
 (require 'translate-conf)
 (require 'llm-conf)

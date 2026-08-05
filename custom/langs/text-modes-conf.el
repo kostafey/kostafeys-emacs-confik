@@ -209,4 +209,12 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
   (progn
     (setq nginx-indent-level 2)))
 
+;; After installing the package, run:
+;; M-x `asciidoc-install-grammars'
+(use-package asciidoc-mode
+  :straight '(asciidoc-mode
+              :type git :host github
+			        :repo "bbatsov/asciidoc-mode"
+              :branch "main"))
+
 (provide 'text-modes-conf)
