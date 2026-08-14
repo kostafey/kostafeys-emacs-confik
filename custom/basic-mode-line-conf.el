@@ -28,6 +28,19 @@
         (help-mode) ; Adds nice formatting and 'q' to quit
         (display-buffer (current-buffer))))))
 
+(defvar-local k/mode-line-total-lines nil
+  "Stores the total number of lines in the current buffer for mode-line.")
+
+(defun k/mode-line-update-total-lines (&rest _args)
+  (setq k/mode-line-total-lines (1- (line-number-at-pos (point-max)))))
+
+(defun k/mode-line-init-total-lines ()
+  (k/mode-line-update-total-lines)
+  ;; Recalculate only when the text has actually changed (insertion/deletion)
+  (add-hook 'after-change-functions #'k/mode-line-update-total-lines nil t))
+
+(add-hook 'find-file-hook #'k/mode-line-init-total-lines)
+
 (setq-default
  mode-line-format
  (list "  "
@@ -44,7 +57,10 @@
        ;; ------------------------------------------------------------
        ;; line and column
        " (" ;; '%02' to set to 2 chars at least; prevents flickering
-       (propertize "%02l" 'face 'font-lock-string-face) ","
+       (propertize "%02l" 'face 'font-lock-string-face) "/"
+       '(:eval (propertize (format "%02d" k/mode-line-total-lines)
+                           'face 'font-lock-string-face))
+       ","
        (propertize "%02c" 'face 'font-lock-string-face)
        ")"
        '(:eval (when mark-active
