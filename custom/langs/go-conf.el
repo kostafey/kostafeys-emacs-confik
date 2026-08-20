@@ -33,8 +33,11 @@
             (font-lock-mode)
             (setq indent-tabs-mode nil)
             (setq tab-width 4)))
-;; eldoc
-(add-hook 'go-mode-hook 'go-eldoc-setup)
+;; eldoc comes from gopls, via `lsp-mode' below (`lsp-eldoc-enable-hover').
+;; The `go-eldoc' hook that used to sit here was dead weight: the package was
+;; never declared, so every .go buffer opened with `File mode specification
+;; error: (void-function go-eldoc-setup)', and upstream is orphaned anyway --
+;; it drove the `gocode' daemon that gopls replaced.
 
 ;; --------
 ;; LSP
