@@ -29,15 +29,56 @@
         (display-buffer (current-buffer))))))
 
 (defvar-local k/mode-line-total-lines nil
-  "Stores the total number of lines in the current buffer for mode-line.")
+  "Total number of lines in the current buffer, for the mode line.
+Nil until `k/mode-line-init-total-lines' has run in this buffer.")
 
 (defun k/mode-line-update-total-lines (&rest _args)
-  (setq k/mode-line-total-lines (1- (line-number-at-pos (point-max)))))
+  "Recount the lines of the current buffer.  Return the new count.
+`count-lines' rather than `line-number-at-pos' on `point-max': the
+latter counts line *separators*, so it is short by one whenever the
+buffer does not end in a newline."
+  (setq k/mode-line-total-lines (count-lines (point-min) (point-max))))
+
+(defvar k/mode-line-total-lines-sync-limit (* 4 1024 1024)
+  "Region size up to which the line count is refreshed on every change.
+`count-lines' costs some 0.5 ms at this size -- imperceptible per
+keystroke -- so there is nothing to gain by deferring it.  Past it the
+recount waits for `k/mode-line-total-lines-idle-delay' instead.")
+
+(defvar k/mode-line-total-lines-idle-delay 0.3
+  "Idle seconds before recounting lines in an oversized buffer.")
+
+(defvar-local k/mode-line-total-lines-timer nil
+  "Pending idle timer for this buffer's line recount, if any.")
+
+(defun k/mode-line-refresh-total-lines (&rest _args)
+  "Refresh `k/mode-line-total-lines' after a change in the current buffer.
+Ordinary buffers are recounted right away.  Past
+`k/mode-line-total-lines-sync-limit' the recount is deferred until Emacs
+goes idle, so a burst of keystrokes costs one pass over the buffer
+instead of one per character."
+  (if (<= (- (point-max) (point-min)) k/mode-line-total-lines-sync-limit)
+      (k/mode-line-update-total-lines)
+    (when (timerp k/mode-line-total-lines-timer)
+      (cancel-timer k/mode-line-total-lines-timer))
+    (setq k/mode-line-total-lines-timer
+          (run-with-idle-timer
+           k/mode-line-total-lines-idle-delay nil
+           ;; The timer fires in whatever buffer happens to be current, so
+           ;; carry ours along -- and it may well be gone by then.
+           (lambda (buffer)
+             (when (buffer-live-p buffer)
+               (with-current-buffer buffer
+                 (setq k/mode-line-total-lines-timer nil)
+                 (k/mode-line-update-total-lines)
+                 (force-mode-line-update))))
+           (current-buffer)))))
 
 (defun k/mode-line-init-total-lines ()
-  (k/mode-line-update-total-lines)
+  "Start tracking the line count of the current buffer.  Return the count."
   ;; Recalculate only when the text has actually changed (insertion/deletion)
-  (add-hook 'after-change-functions #'k/mode-line-update-total-lines nil t))
+  (add-hook 'after-change-functions #'k/mode-line-refresh-total-lines nil t)
+  (k/mode-line-update-total-lines))
 
 (add-hook 'find-file-hook #'k/mode-line-init-total-lines)
 
@@ -58,7 +99,11 @@
        ;; line and column
        " (" ;; '%02' to set to 2 chars at least; prevents flickering
        (propertize "%02l" 'face 'font-lock-string-face) "/"
-       '(:eval (propertize (format "%02d" k/mode-line-total-lines)
+       ;; `find-file-hook' only covers buffers visiting a file, so the count
+       ;; is nil in *scratch*, dired, magit, help, ... where `format' would
+       ;; then signal mid-redisplay.  Start tracking on first display instead.
+       '(:eval (propertize (format "%2d" (or k/mode-line-total-lines
+                                             (k/mode-line-init-total-lines)))
                            'face 'font-lock-string-face))
        ","
        (propertize "%02c" 'face 'font-lock-string-face)
@@ -118,6 +163,13 @@
                                           'face 'font-lock-string-face
                                           'help-echo "Buffer is read-only"))))
        ") "
+       ;; ------------------------------------------------------------
+       ;; major mode; the mode symbol itself as a tool tip
+       ;; `mode-name' is a mode-line construct, not necessarily a string --
+       ;; hence `format-mode-line' rather than plain concatenation.
+       '(:eval (propertize (format-mode-line mode-name)
+                           'help-echo (format "Major mode: %s" major-mode)))
+       " "
        ;; ------------------------------------------------------------
        ;; file encoding
        ;; 'mode-line-mule-info
