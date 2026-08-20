@@ -55,31 +55,7 @@
 ;;       (mapcar #'car treesit-language-source-alist))
 (setq
  treesit-language-source-alist
- ;; NOTE on the asciidoc grammars (used by `asciidoc-mode'):
- ;;
- ;; - they need ABI 15, i.e. the libtree-sitter shim above;
- ;;
- ;; - they are pinned to 8d6d71e, the last commit before the grammar renamed
- ;;   the `ltalic' node to `italic'.  asciidoc-mode still queries `(ltalic)',
- ;;   so at grammar HEAD every inline font-lock query dies with
- ;;   `treesit-query-error'.  The older v0.9.0 tag is no good either: it
- ;;   predates `typographic_quote', which asciidoc-mode also queries.  Drop the
- ;;   pin once asciidoc-mode catches up with the rename;
- ;;
- ;; - the pin is a bare SHA, and `treesit' passes a revision to `git clone -b'
- ;;   (tags/branches only) -- unless the "URL" is a local repository, in which
- ;;   case it does a plain `git checkout'.  Hence the local clone below; it was
- ;;   made blobless + sparse (`--filter=blob:none', only the two src/ dirs), so
- ;;   re-checking out this SHA works offline, other revisions need network.
- ;;
- ;; - beware: `M-x asciidoc-install-grammars' ignores this alist (it binds its
- ;;   own recipes, unpinned), but it skips languages that already load, so it
- ;;   is a no-op now.  Reinstall via `M-x treesit-install-language-grammar'.
- '((asciidoc "~/.emacs.d/tree-sitter-src/tree-sitter-asciidoc"
-             "8d6d71e" "tree-sitter-asciidoc/src")
-   (asciidoc-inline "~/.emacs.d/tree-sitter-src/tree-sitter-asciidoc"
-                    "8d6d71e" "tree-sitter-asciidoc_inline/src")
-   (bash "https://github.com/tree-sitter/tree-sitter-bash")
+ '((bash "https://github.com/tree-sitter/tree-sitter-bash")
    (cmake "https://github.com/uyha/tree-sitter-cmake")
    (css "https://github.com/tree-sitter/tree-sitter-css")
    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
@@ -95,6 +71,52 @@
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
    (yaml "https://github.com/ikatyang/tree-sitter-yaml")
    (scala "https://github.com/tree-sitter/tree-sitter-scala")))
+
+;;-------------------------------------------------------------------
+;; The asciidoc grammars (used by `asciidoc-mode') are registered separately,
+;; and only where their local clone exists -- currently the MS Windows box.
+;; Listing them unconditionally breaks grammar installation everywhere else:
+;; `treesit' would `git clone' a path that is not there, which also takes down
+;; the install-everything form above.  To enable them on another machine:
+;;
+;;   git clone --filter=blob:none --sparse \
+;;     https://github.com/cathaysia/tree-sitter-asciidoc \
+;;     ~/.emacs.d/tree-sitter-src/tree-sitter-asciidoc
+;;   cd ~/.emacs.d/tree-sitter-src/tree-sitter-asciidoc
+;;   git sparse-checkout set tree-sitter-asciidoc/src tree-sitter-asciidoc_inline/src
+;;   git checkout 8d6d71e
+;;
+;; Why it looks like this:
+;;
+;; - the grammars need ABI 15, i.e. the libtree-sitter shim above;
+;;
+;; - they are pinned to 8d6d71e, the last commit before the grammar renamed
+;;   the `ltalic' node to `italic'.  asciidoc-mode still queries `(ltalic)',
+;;   so at grammar HEAD every inline font-lock query dies with
+;;   `treesit-query-error'.  The older v0.9.0 tag is no good either: it
+;;   predates `typographic_quote', which asciidoc-mode also queries.  Drop the
+;;   pin once asciidoc-mode catches up with the rename;
+;;
+;; - the pin is a bare SHA, and `treesit' passes a revision to `git clone -b'
+;;   (tags/branches only) -- unless the "URL" is a local repository, in which
+;;   case it does a plain `git checkout'.  Hence the local clone; blobless +
+;;   sparse, so re-checking out this SHA works offline, other revisions need
+;;   network;
+;;
+;; - beware: `M-x asciidoc-install-grammars' ignores this alist (it binds its
+;;   own recipes, unpinned), but it skips languages that already load, so it
+;;   is a no-op once they are installed.  Reinstall via
+;;   `M-x treesit-install-language-grammar'.
+(let ((asciidoc-src (expand-file-name "tree-sitter-src/tree-sitter-asciidoc"
+                                      user-emacs-directory)))
+  (when (file-directory-p asciidoc-src)
+    (setq treesit-language-source-alist
+          (append `((asciidoc ,asciidoc-src
+                              "8d6d71e" "tree-sitter-asciidoc/src")
+                    (asciidoc-inline ,asciidoc-src
+                                     "8d6d71e" "tree-sitter-asciidoc_inline/src"))
+                  treesit-language-source-alist))))
+;;-------------------------------------------------------------------
 
 ;; Check: (treesit-language-available-p 'scala)
 ;; All TC modes: C-h a -ts-mode$

@@ -211,10 +211,19 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 ;; After installing the package, run:
 ;; M-x `asciidoc-install-grammars'
+;;
+;; Keep this deferred (the autoloads already claim `.adoc'/`.asciidoc').
+;; Loading asciidoc-mode eagerly pulls in `flymake' while `load-path' still
+;; only has the built-in one -- straight's `flymake' (an eglot dependency)
+;; joins `load-path' later, in `scala-conf'.  `eglot' then greets every LSP
+;; buffer with `require-with-check' => "Feature `flymake' is now provided by a
+;; different file".  Deferring means the require happens after init, when
+;; straight's copy is the one that gets loaded.
 (use-package asciidoc-mode
-  :straight '(asciidoc-mode
-              :type git :host github
-			        :repo "bbatsov/asciidoc-mode"
-              :branch "main"))
+  :defer t
+  :straight (asciidoc-mode
+             :type git :host github
+             :repo "bbatsov/asciidoc-mode"
+             :branch "main"))
 
 (provide 'text-modes-conf)
