@@ -49,7 +49,6 @@
 ;; `vc-backend' probes every backend in `vc-handled-backends' in order,
 ;; spawning a subprocess per backend — painfully slow on Windows.  We only
 ;; drive Git (darcs goes through darcsum, not vc), so probe nothing else.
-;; Also speeds up every `find-file' and `my-enable-smerge-maybe' below.
 (setq vc-handled-backends '(Git))
 
 (defun get-vc-status ()
@@ -65,6 +64,25 @@ subprocess per handled backend, slow on Windows)."
     (if darcs-root
         (darcsum-whatsnew darcs-root)
       (magit-status))))
+
+;; `git-gutter:in-git-repository-p' shells out to `git rev-parse
+;; --is-inside-work-tree', and `global-git-gutter-mode' asks it twice for
+;; every file opened: `after-change-major-mode-hook' runs once for the
+;; `fundamental-mode' that `find-file' starts from, and once for the real
+;; mode.  Answer from the file system instead -- which is what git-gutter
+;; itself does for svn, hg and bzr, in `git-gutter:in-repository-common-p'.
+(defun k/git-gutter-in-git-repository-p ()
+  "Non-nil when `default-directory' sits inside a git working tree.
+A `.git' file (a linked worktree, a submodule) counts; being inside the
+`.git' directory itself does not.  Unlike `git rev-parse' this misses a
+tree named by `GIT_DIR'/`GIT_WORK_TREE' alone -- a fair trade at some
+190 ms per subprocess, twice per file, on MS Windows."
+  (and (locate-dominating-file default-directory ".git")
+       (not (string-match-p (regexp-quote "/.git/") default-directory))
+       t))
+
+(advice-add 'git-gutter:in-git-repository-p
+            :override #'k/git-gutter-in-git-repository-p)
 
 (use-package git-gutter
   :straight '(git-gutter
@@ -83,7 +101,13 @@ subprocess per handled backend, slow on Windows)."
   (define-fringe-bitmap 'git-gutter-fr:deleted [#b11111111] nil nil '(center repeated)))
 
 (defun my-enable-smerge-maybe ()
-  (when (and buffer-file-name (vc-backend buffer-file-name))
+  "Turn on `smerge-mode' when the buffer holds conflict markers.
+No `vc-backend' probe first: it spends a `git ls-files' -- and a second
+`git ls-tree' for a file that is not in the index, which here is most of
+them -- to answer a question the regexp below settles in microseconds.
+On MS Windows, where spawning a process costs some 190 ms, that probe
+was a third of the time it took to open a file."
+  (when buffer-file-name
     (save-excursion
       (goto-char (point-min))
       (when (re-search-forward "^<<<<<<< " nil t)

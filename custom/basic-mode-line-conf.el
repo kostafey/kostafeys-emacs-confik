@@ -82,6 +82,89 @@ instead of one per character."
 
 (add-hook 'find-file-hook #'k/mode-line-init-total-lines)
 
+;;-----------------------------------------------------------------------------
+;; Git branch
+;;
+;; The mode line used to call `vc-mode-line', which does not so much display
+;; the VC data as compute it: three `git' subprocesses on the first redisplay
+;; of every buffer -- some 0.6 s on MS Windows, where spawning a process runs
+;; about 190 ms -- and it does that inside redisplay, exactly while the file
+;; is being put on screen.  `perfomance-conf.el' takes `vc-refresh-state' off
+;; `find-file-hook' to dodge that very cost; the mode line quietly put it back.
+;;
+;; Most of it goes into the file *state* (`git status'), and the git-gutter
+;; fringe already reports that, line by line.  What is left worth showing is
+;; the branch -- and that is one short file read.
+
+(defvar k/mode-line-git-branch-poll 1.0
+  "Seconds a branch name is trusted before `HEAD' is looked at again.")
+
+(defvar k/mode-line-git-branch-cache (make-hash-table :test 'equal)
+  "Branch names keyed by `HEAD' file: HEAD -> (CHECKED-AT MTIME BRANCH).")
+
+(defvar-local k/mode-line-git-head 'unset
+  "The `HEAD' file that governs this buffer, nil when there is none.
+`unset' until `k/mode-line-git-head-file' has looked it up.")
+
+(defun k/mode-line-file-first-line (file)
+  "Return the first line of FILE, trimmed, or nil if it cannot be read."
+  (ignore-errors
+    (with-temp-buffer
+      (insert-file-contents file nil 0 200)
+      (string-trim (buffer-substring-no-properties
+                    (point-min) (line-end-position))))))
+
+(defun k/mode-line-git-head-file ()
+  "Return the `HEAD' file of the repository holding the current buffer.
+Nil for a buffer visiting no file, or one outside a working tree.  The
+answer is kept in the buffer: `locate-dominating-file' walks up the
+directory tree, which is more than the mode line may redo on every
+redisplay."
+  (when (eq k/mode-line-git-head 'unset)
+    (setq k/mode-line-git-head
+          (when-let* ((file buffer-file-name)
+                      (root (locate-dominating-file file ".git"))
+                      (dot-git (expand-file-name ".git" root))
+                      (git-dir
+                       (if (file-directory-p dot-git)
+                           dot-git
+                         ;; A linked worktree or a submodule: `.git' is a
+                         ;; file reading "gitdir: <path>".
+                         (when-let* ((s (k/mode-line-file-first-line dot-git))
+                                     (_ (string-prefix-p "gitdir: " s)))
+                           (expand-file-name (string-trim (substring s 8))
+                                             root)))))
+            (expand-file-name "HEAD" git-dir))))
+  k/mode-line-git-head)
+
+(defun k/mode-line-git-branch ()
+  "Return the branch of the current buffer's file, or nil.
+A detached `HEAD' yields the abbreviated commit instead.  The value is
+read straight from `.git/HEAD', cached per repository, and refreshed
+only when that file's modification time changes -- and, since this runs
+from the mode line, at most every `k/mode-line-git-branch-poll' seconds.
+A `git checkout' therefore shows up within a second, at the price of one
+`stat', and never a subprocess."
+  (when-let* ((head (k/mode-line-git-head-file)))
+    (let ((entry (or (gethash head k/mode-line-git-branch-cache)
+                     (puthash head (list 0 nil nil)
+                              k/mode-line-git-branch-cache)))
+          (now (float-time)))
+      (when (>= (- now (nth 0 entry)) k/mode-line-git-branch-poll)
+        (setf (nth 0 entry) now)
+        (let ((mtime (file-attribute-modification-time (file-attributes head))))
+          (unless (equal mtime (nth 1 entry))
+            (setf (nth 1 entry) mtime)
+            (setf (nth 2 entry)
+                  (when-let* ((s (and mtime (k/mode-line-file-first-line head))))
+                    (if (string-prefix-p "ref: " s)
+                        (let ((ref (substring s (length "ref: "))))
+                          (if (string-prefix-p "refs/heads/" ref)
+                              (substring ref (length "refs/heads/"))
+                            ref))
+                      (substring s 0 (min 7 (length s)))))))))
+      (nth 2 entry))))
+
 (setq-default
  mode-line-format
  (list "  "
@@ -123,11 +206,12 @@ instead of one per character."
                   (format " %s" (k/csv-get-field-index))
                   'face 'escape-glyph)))
        ;; ------------------------------------------------------------
-       ;; version control data
-       '(:eval (propertize (if (vc-mode-line buffer-file-name)
-                               vc-mode
-                             "")
-                           'face 'font-lock-constant-face))
+       ;; git branch, read from `.git/HEAD' -- see above for why not `vc'
+       '(:eval (when-let* ((branch (k/mode-line-git-branch)))
+                 (propertize (concat " Git-" branch)
+                             'face 'font-lock-constant-face
+                             'help-echo (format "Git branch, from %s"
+                                                (k/mode-line-git-head-file)))))
        ;; ------------------------------------------------------------
        ;; `project' see (project-mode-line-format) fn
        '(:eval (propertize
