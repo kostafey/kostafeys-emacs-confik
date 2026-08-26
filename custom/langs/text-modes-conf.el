@@ -103,6 +103,65 @@
   :straight '(markdown-toc :type git :host github
 			                     :repo "ardumont/markdown-toc" :branch "master"))
 
+;; `markdown-syntax-propertize-comments' gives up scanning the whole region as
+;; soon as it meets a `<!--' that sits inside inline code or a code block, so
+;; every real comment after e.g. a literal `` `<!-- x -->` `` in the text loses
+;; its comment syntax.  Skip such a match and keep scanning instead.
+(defun k/markdown-syntax-propertize-comments (start end)
+  "Match HTML comments from the START to END."
+  (let (finish)
+    (goto-char start)
+    (while (not finish)
+      (let* ((in-comment (nth 4 (syntax-ppss)))
+             (comment-begin (nth 8 (syntax-ppss))))
+        (cond
+         ;; Comment start
+         ((and (not in-comment)
+               (re-search-forward markdown-regex-comment-start end t))
+          (if (or (markdown-inline-code-at-point-p)
+                  (markdown-code-block-at-point-p))
+              ;; Not a comment after all, look for the next one.
+              (goto-char (min (match-end 0) end (point-max)))
+            (let ((open-beg (match-beginning 0)))
+              (put-text-property open-beg (1+ open-beg)
+                                 'syntax-table (string-to-syntax "<"))
+              (goto-char (min (1+ (match-end 0)) end (point-max))))))
+         ;; Comment end
+         ((and in-comment comment-begin
+               (re-search-forward markdown-regex-comment-end end t))
+          (let ((comment-end (match-end 0)))
+            (put-text-property (1- comment-end) comment-end
+                               'syntax-table (string-to-syntax ">"))
+            ;; Remove any other text properties inside the comment
+            (remove-text-properties comment-begin comment-end
+                                    markdown--syntax-properties)
+            (put-text-property comment-begin comment-end
+                               'markdown-comment (list comment-begin comment-end))
+            (goto-char (min comment-end end (point-max)))))
+         ;; Nothing found
+         (t (setq finish t)))))
+    nil))
+
+(with-eval-after-load 'markdown-mode
+  (advice-add 'markdown-syntax-propertize-comments
+              :override #'k/markdown-syntax-propertize-comments))
+
+;; HTML comments are fontified with `markdown-comment-face' via
+;; `font-lock-syntactic-face-function', but keyword fontification wins over it
+;; on heading lines, so `# Title <!-- note -->' loses the comment face.
+;; Re-apply the face on top of the regions markdown-mode has propertized as
+;; comments.
+(defun k/markdown-match-comment (last)
+  "Match the next `<!-- ... -->' comment region up to LAST."
+  (markdown-match-propertized-text 'markdown-comment last))
+
+(defun k/markdown-comment-highlight-initialize ()
+  (font-lock-add-keywords
+   nil '((k/markdown-match-comment . (0 'markdown-comment-face t)))
+   'append))
+
+(add-hook 'markdown-mode-hook 'k/markdown-comment-highlight-initialize)
+
 ;;-------------------------------------------------------------------
 ;; CSV
 (straight-use-package 'csv-mode)
