@@ -72,11 +72,22 @@
     result))
 
 (defun copy-file-name-and-line ()
-  "Copy the current buffer's file path and line number to the clipboard."
+  "Copy the current buffer's file name and line number to the clipboard."
   (interactive)
   (if (buffer-file-name)
       (let ((formatted-string (format "%s:%d"
                                       (file-name-nondirectory (buffer-file-name))
+                                      (line-number-at-pos))))
+        (kill-new formatted-string)
+        (message "%s" formatted-string))
+    (message "This buffer is not visiting a file.")))
+
+(defun copy-file-path-and-line ()
+  "Copy the current buffer's file path and line number to the clipboard."
+  (interactive)
+  (if (buffer-file-name)
+      (let ((formatted-string (format "%s:%d"
+                                      (buffer-file-name)
                                       (line-number-at-pos))))
         (kill-new formatted-string)
         (message "%s" formatted-string))
