@@ -19,7 +19,13 @@
 
 (use-package vterm
   :bind (:map vterm-mode-map
-         ("C-<insert>" . vterm-yank)))
+         ("C-<insert>" . vterm-yank)
+         ;; Navigate among windows and frames the same way as in any other
+         ;; mode, do not pass M-<arrow> through to the terminal.
+         ("M-<left>"   . meta-left)
+         ("M-<right>"  . meta-right)
+         ("M-<up>"     . windmove-up)
+         ("M-<down>"   . windmove-down)))
 
 (defcustom k/default-shell 'eshell
   "Set default shell type. Possible values are one of:
