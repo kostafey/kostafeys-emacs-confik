@@ -171,7 +171,16 @@ way; agent-shell is the only buffer here that needs it."
          (agent-shell-mode . k/agent-shell-enable-paste-override))
   :config
   (setq agent-shell-anthropic-authentication
-        (agent-shell-anthropic-make-authentication :login t)))
+        (agent-shell-anthropic-make-authentication :login t))
+  ;; Restoring a session defaults to `minimal': the title only, over
+  ;; `session/resume', which replays no messages -- hence a resumed shell
+  ;; that looks empty, unlike `/resume' in the terminal.  `full' replays the
+  ;; whole conversation instead, via `session/load'; agents that don't
+  ;; advertise `session/load' quietly fall back to the old behaviour.
+  ;; Replaying a multi-megabyte conversation in one go is the heaviest thing
+  ;; this mode does, so if the memory watchdog ever catches a restore, step
+  ;; down to `first-last' (first and last turns) or `last'.
+  (setq agent-shell-session-restore-verbosity 'full))
 
 ;; The agent icon in the header line is not governed by a face at all.
 ;; `agent-shell--fetch-agent-icon' downloads a PNG from lobe-icons — for
