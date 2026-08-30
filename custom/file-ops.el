@@ -1,4 +1,4 @@
-;;; file-ops.el --- Some handy file & buffer operations.
+;;; file-ops.el --- Some handy file & buffer operations.  -*- lexical-binding: t -*-
 
 ;; Function that kills the current buffer and removes
 ;; the file it is connected to.
@@ -51,8 +51,8 @@
         t))))
 
 (defun copy-to-clipboard-buffer-file-path ()
-  (interactive)
   "Copy current file path to the clipboard."
+  (interactive)
   (let* ((value (if (eq system-type 'windows-nt)
                     (let ((uri (replace-regexp-in-string
                                 "/" "\\\\" (buffer-file-name))))
@@ -60,35 +60,64 @@
                               (substring uri 1)))
                   (buffer-file-name)))
          (result (kill-new value)))
-    (message value)
+    (message "%s" value)
     result))
 
 (defun copy-to-clipboard-buffer-file-name ()
-  (interactive)
   "Copy current file name to the clipboard."
+  (interactive)
   (let* ((value (file-name-nondirectory (buffer-file-name)))
          (result (kill-new value)))
-    (message value)
+    (message "%s" value)
     result))
 
+(defun file-ops--line-reference ()
+  "Return the current line number, or \"START-END\" over an active region.
+
+A region ending at the beginning of a line does not reach into that
+line -- selecting three whole lines leaves point on the fourth -- so
+that last line is dropped and the range reads 5-7 rather than 5-8.
+A region inside a single line reads as that one line, not a range."
+  (if (use-region-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (end (if (and (> end beg)
+                           (= end (save-excursion
+                                    (goto-char end)
+                                    (line-beginning-position))))
+                      (1- end)
+                    end))
+             (first (line-number-at-pos beg))
+             (last (line-number-at-pos end)))
+        (if (= first last)
+            (number-to-string first)
+          (format "%d-%d" first last)))
+    (number-to-string (line-number-at-pos))))
+
 (defun copy-file-name-and-line ()
-  "Copy the current buffer's file name and line number to the clipboard."
+  "Copy the current buffer's file name and line number to the clipboard.
+
+With an active region, copy the range of lines it spans instead, as
+file.java:5-10."
   (interactive)
   (if (buffer-file-name)
-      (let ((formatted-string (format "%s:%d"
+      (let ((formatted-string (format "%s:%s"
                                       (file-name-nondirectory (buffer-file-name))
-                                      (line-number-at-pos))))
+                                      (file-ops--line-reference))))
         (kill-new formatted-string)
         (message "%s" formatted-string))
     (message "This buffer is not visiting a file.")))
 
 (defun copy-file-path-and-line ()
-  "Copy the current buffer's file path and line number to the clipboard."
+  "Copy the current buffer's file path and line number to the clipboard.
+
+With an active region, copy the range of lines it spans instead, as
+/path/to/file.java:5-10."
   (interactive)
   (if (buffer-file-name)
-      (let ((formatted-string (format "%s:%d"
+      (let ((formatted-string (format "%s:%s"
                                       (buffer-file-name)
-                                      (line-number-at-pos))))
+                                      (file-ops--line-reference))))
         (kill-new formatted-string)
         (message "%s" formatted-string))
     (message "This buffer is not visiting a file.")))
