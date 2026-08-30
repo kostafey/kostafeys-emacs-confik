@@ -31,19 +31,32 @@
 ;; enough to clear the whole overlay moves the view.  Pixel scrolling
 ;; vscrolls through such an element instead.  Mind the inverted naming in
 ;; pixel-scroll.el: its "up" goes towards the beginning of the buffer.
+(defvar-local k/agent-shell--pixel-scrolled nil
+  "Non-nil when the command now finishing scrolled this buffer by pixels.
+Read and cleared by `k/agent-shell--tolerate-partial-line'.")
+
+(defun k/agent-shell-pixel-scroll (direction pixels)
+  "Scroll PIXELS towards the buffer's beginning if DIRECTION is `up', else end.
+Records the scroll so the redisplay that follows tolerates a partially
+visible line -- see `k/agent-shell--tolerate-partial-line'."
+  (setq k/agent-shell--pixel-scrolled t)
+  (if (eq direction 'up)
+      (pixel-scroll-precision-scroll-up pixels)
+    (pixel-scroll-precision-scroll-down pixels)))
+
 (defun k/agent-shell-previous-input-or-scroll-down ()
   "Go to previous input at the prompt, scroll one line back elsewhere."
   (interactive)
   (if (shell-maker-point-at-last-prompt-p)
       (call-interactively #'comint-previous-input)
-    (pixel-scroll-precision-scroll-up (default-line-height))))
+    (k/agent-shell-pixel-scroll 'up (default-line-height))))
 
 (defun k/agent-shell-next-input-or-scroll-up ()
   "Go to next input at the prompt, scroll one line forward elsewhere."
   (interactive)
   (if (shell-maker-point-at-last-prompt-p)
       (call-interactively #'comint-next-input)
-    (pixel-scroll-precision-scroll-down (default-line-height))))
+    (k/agent-shell-pixel-scroll 'down (default-line-height))))
 
 ;; The mouse wheel walks into the same wall.  `mouse-wheel-scroll-amount' is 1
 ;; and `mouse-wheel-progressive-speed' is nil, so every click is exactly
@@ -61,16 +74,16 @@
   (interactive "e")
   (with-selected-window (or (mwheel-event-window event) (selected-window))
     (ignore-errors
-      (pixel-scroll-precision-scroll-up
-       (* (k/agent-shell-wheel-lines) (default-line-height))))))
+      (k/agent-shell-pixel-scroll
+       'up (* (k/agent-shell-wheel-lines) (default-line-height))))))
 
 (defun k/agent-shell-wheel-scroll-down (event)
   "Scroll the window under EVENT one step towards the end of the buffer."
   (interactive "e")
   (with-selected-window (or (mwheel-event-window event) (selected-window))
     (ignore-errors
-      (pixel-scroll-precision-scroll-down
-       (* (k/agent-shell-wheel-lines) (default-line-height))))))
+      (k/agent-shell-pixel-scroll
+       'down (* (k/agent-shell-wheel-lines) (default-line-height))))))
 
 (defun k/agent-shell-paste-dwim (&optional arg)
   "Paste a clipboard image as file context, or paste text as usual.
@@ -113,13 +126,24 @@ ARG is passed on to it."
   "Let `k/agent-shell-paste-override-map' win over cua-mode here."
   (setq-local k/agent-shell-paste-override t))
 
-(defun k/agent-shell-allow-partial-lines ()
-  "Let a partially scrolled line survive redisplay in this buffer.
-Otherwise redisplay scrolls back to show the line point is on in
-full, undoing a pixel-sized scroll.  `pixel-scroll-precision-mode'
-clears this flag globally and rebinds the mouse wheel along the
-way; agent-shell is the only buffer here that needs it."
-  (setq-local make-cursor-line-fully-visible nil))
+(defun k/agent-shell--tolerate-partial-line ()
+  "Allow a partially visible cursor line, but only after a pixel scroll.
+
+`make-cursor-line-fully-visible' has to be nil for a pixel-sized scroll
+to survive: otherwise redisplay scrolls back to show the line point is on
+in full, undoing it.  Left nil for the whole buffer, though, it also
+stops the window scrolling when point simply moves onto the partly
+visible last line -- the one-line scroll every other buffer does.
+
+Redisplay reads the flag after `post-command-hook' runs, so it can be
+decided per command from here: nil for the redisplay following a scroll,
+t for every other one."
+  (setq-local make-cursor-line-fully-visible (not k/agent-shell--pixel-scrolled))
+  (setq k/agent-shell--pixel-scrolled nil))
+
+(defun k/agent-shell-manage-partial-lines ()
+  "Arrange for `k/agent-shell--tolerate-partial-line' to run in this buffer."
+  (add-hook 'post-command-hook #'k/agent-shell--tolerate-partial-line nil t))
 
 ;; agent-shell — the agent speaks ACP to a native Emacs buffer, so this is
 ;; not a terminal: the CLI's own slash commands (`/exit' & co.) don't apply.
@@ -167,7 +191,7 @@ way; agent-shell is the only buffer here that needs it."
          ;; C-v is handled by `k/agent-shell-paste-override-map' instead:
          ;; a binding here would be shadowed by cua-mode.
          ("S-<insert>" . k/agent-shell-paste-dwim))
-  :hook ((agent-shell-mode . k/agent-shell-allow-partial-lines)
+  :hook ((agent-shell-mode . k/agent-shell-manage-partial-lines)
          (agent-shell-mode . k/agent-shell-enable-paste-override))
   :config
   (setq agent-shell-anthropic-authentication
