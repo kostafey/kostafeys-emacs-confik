@@ -96,6 +96,36 @@ instead of one per character."
 ;; fringe already reports that, line by line.  What is left worth showing is
 ;; the branch -- and that is one short file read.
 
+;; `project-current' is autoloaded, `project-name' is not; declaring it keeps
+;; the byte-compiler quiet without loading `project' at startup.
+(declare-function project-name "project" (project))
+
+(defvar-local k/mode-line-project nil
+  "Cached project of this buffer as (DIRECTORY . NAME), NAME possibly nil.
+Keyed by directory so a buffer that changes `default-directory' -- a
+shell following a `cd', say -- does not keep showing the old project.")
+
+(defun k/mode-line-project-name ()
+  "Return the project name of the current buffer, or nil.
+Cached per buffer for the same reason as `k/mode-line-git-head-file':
+`project-current' walks up the directory tree, and `project-name' reads
+dir-locals at every level on the way, which is far more than the mode
+line may redo on every redisplay.  A profile of an ordinary session put
+`project-name' at some four percent of all CPU, spent almost entirely in
+`locate-dominating-file'.
+
+`last-coding-system-used' is rebound around the lookup because reading
+those files sets it, and the mode line displays it elsewhere."
+  (let ((dir default-directory))
+    (unless (and (consp k/mode-line-project)
+                 (equal (car k/mode-line-project) dir))
+      (setq k/mode-line-project
+            (cons dir
+                  (let ((last-coding-system-used last-coding-system-used))
+                    (when-let* ((project (project-current)))
+                      (project-name project))))))
+    (cdr k/mode-line-project)))
+
 (defvar k/mode-line-git-branch-poll 1.0
   "Seconds a branch name is trusted before `HEAD' is looked at again.")
 
@@ -214,18 +244,14 @@ A `git checkout' therefore shows up within a second, at the price of one
                                                 (k/mode-line-git-head-file)))))
        ;; ------------------------------------------------------------
        ;; `project' see (project-mode-line-format) fn
-       '(:eval (propertize
-                (if (project-current)
-                    (format " [%s]"
-                            (when-let* ((project (project-current)))
-                              (let ((last-coding-system-used last-coding-system-used))
-                                (propertize
-                                 (project-name project)
-                                 'face project-mode-line-face
-                                 'mouse-face 'mode-line-highlight
-                                 'help-echo "mouse-1: Project menu"
-                                 'local-map project-mode-line-map))))
-                  "")))
+       '(:eval (when-let* ((name (k/mode-line-project-name)))
+                 (concat " ["
+                         (propertize name
+                                     'face project-mode-line-face
+                                     'mouse-face 'mode-line-highlight
+                                     'help-echo "mouse-1: Project menu"
+                                     'local-map project-mode-line-map)
+                         "]")))
        ;; ------------------------------------------------------------
        ;; read only, insert/overwrite, edited signs
        " (" ;; insert vs overwrite mode, input-method in a tooltip
