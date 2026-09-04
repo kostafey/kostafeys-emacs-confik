@@ -1,5 +1,8 @@
 ;;; agent-shell-conf.el
 
+;; Install acp for `calude' to use it in the agent-shell:
+;; npm install -g @agentclientprotocol/claude-agent-acp
+
 (require 'pixel-scroll)
 (require 'mwheel)
 
@@ -182,7 +185,9 @@ t for every other one."
               :repo "xenodium/agent-shell"
               :branch "main")
   :after (shell-maker acp)
-  :bind (("C-M-a j" . agent-shell)
+  ;; `k/agent-shell' rather than `agent-shell': it brings the Emacs MCP
+  ;; server up first -- see the MCP bridge section at the end of this file.
+  :bind (("C-M-a j" . k/agent-shell)
          :map agent-shell-mode-map
          ("C-<up>" . k/agent-shell-previous-input-or-scroll-down)
          ("C-<down>" . k/agent-shell-next-input-or-scroll-up)
@@ -252,8 +257,12 @@ with no icon in it."
 ;; stable to be written into an MCP config, so pin it.  And every tool body
 ;; runs inside `claude-code-ide-mcp-server-with-session-context', which errors
 ;; out unless the session id taken from the URL path is a registered one, so
-;; register a session up front.  Its project directory scopes the tools;
-;; re-register with another directory to point them at a different project.
+;; a session has to be registered before the agent calls anything.  Its
+;; project directory scopes the tools; re-register with another directory to
+;; point them at a different project.
+;;
+;; Both happen on the first `k/agent-shell' rather than at startup, so an
+;; Emacs that never talks to an agent never opens the port.
 (defconst k/emacs-mcp-session-id "emacs"
   "Session id in the Emacs MCP server URL path.
 The agent reaches the tools at http://localhost:PORT/mcp/SESSION-ID.")
@@ -280,9 +289,32 @@ The agent reaches the tools at http://localhost:PORT/mcp/SESSION-ID.")
   (setq claude-code-ide-mcp-server-port 51234)
   :after web-server
   :config
-  (claude-code-ide-emacs-tools-setup)
-  (claude-code-ide-mcp-server-ensure-server)
-  (claude-code-ide-mcp-server-register-session
-   k/emacs-mcp-session-id (expand-file-name user-emacs-directory) nil))
+  ;; Registers the tools and flips `claude-code-ide-enable-mcp-server', which
+  ;; `claude-code-ide-mcp-server-ensure-server' refuses to start without.
+  ;; Neither opens a port on its own.
+  (claude-code-ide-emacs-tools-setup))
+
+(defun k/agent-shell-ensure-mcp-server ()
+  "Start the Emacs MCP server and register its session unless already up.
+Returns the port, or nil when the server could not be started -- callers
+carry on either way, since the tools are an addition to what the agent
+can do on its own and not a precondition for talking to it."
+  (when-let* (((fboundp 'claude-code-ide-mcp-server-ensure-server))
+              (port (claude-code-ide-mcp-server-ensure-server)))
+    ;; Stopping the server clears the session table, so a session registered
+    ;; before a restart is gone; registering resets the session's last-active
+    ;; buffer, so leave a live one alone.
+    (unless (claude-code-ide-mcp-server-get-session-context
+             k/emacs-mcp-session-id)
+      (claude-code-ide-mcp-server-register-session
+       k/emacs-mcp-session-id (expand-file-name user-emacs-directory) nil))
+    port))
+
+(defun k/agent-shell (&optional arg)
+  "Start or reuse an agent shell with the Emacs MCP tools server running.
+ARG is passed to `agent-shell' untouched, prefix behaviour and all."
+  (interactive "P")
+  (k/agent-shell-ensure-mcp-server)
+  (agent-shell arg))
 
 (provide 'agent-shell-conf)
