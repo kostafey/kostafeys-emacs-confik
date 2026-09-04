@@ -1,23 +1,18 @@
 ;;; shell-conf.el --- Eshell & shell related configuration.
 
-(straight-use-package
- '(eshell-prompt-extras :type git :host github
-			                  :repo "suzzvv/eshell-prompt-extras" :branch "master"))
+(use-package eshell-prompt-extras
+  :vc (:url "https://github.com/suzzvv/eshell-prompt-extras.git"
+       :branch "master")
+  :defer t)
 (use-package exec-path-from-shell
-  :straight '(exec-path-from-shell :type git :host github
-			                             :repo "purcell/exec-path-from-shell"
-                                   :branch "master")
+  :vc (:url "https://github.com/purcell/exec-path-from-shell.git"
+       :branch "master")
   :config (when (eq system-type 'gnu/linux)
               (exec-path-from-shell-initialize)))
 
-(straight-use-package
- '(exec-path-from-shell :type git :host github
-			                  :repo "purcell/exec-path-from-shell" :branch "master"))
-(straight-use-package
- '(emacs-libvterm :type git :host github
-			            :repo "akermu/emacs-libvterm" :branch "master"))
-
 (use-package vterm
+  :vc (:url "https://github.com/akermu/emacs-libvterm.git"
+       :branch "master")
   :bind (:map vterm-mode-map
          ("C-<insert>" . vterm-yank)
          ;; Navigate among windows and frames the same way as in any other

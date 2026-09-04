@@ -15,17 +15,21 @@
 
 ;;; Code:
 
-;; Enable defer and ensure by default for use-package
+;; Enable defer by default for use-package
 ;; Keep auto-save/backup files separate from source code:  https://github.com/scalameta/metals/issues/1027
+;;
+;; `use-package-always-ensure' is deliberately gone with straight: its default
+;; predicate excludes only `:load-path', so it would have added `:ensure t' to
+;; every declaration that already carries `:vc', and package.el would race
+;; package-vc for the same package name.
 (setq use-package-always-defer t
-      use-package-always-ensure t
       backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 ;; Enable scala-mode and sbt-mode
 (use-package scala-mode
-  :straight '(scala-mode :type git :host github
-			                   :repo "hvesalai/emacs-scala-mode" :branch "master")
+  :vc (:url "https://github.com/hvesalai/emacs-scala-mode.git"
+       :branch "master")
   :mode "\\.s\\(cala\\|bt\\)$"
   :config (setq scala-indent:step 2
                 scala-indent:indent-value-expression t
@@ -45,14 +49,20 @@
                    (propertize (number-to-string scala-indent:step)
                                'face 'font-lock-keyword-face))))
 
+;; `package-vc' reads `Package-Requires' from every file in a checkout, so the
+;; two optional frontends in this one -- `restclient-helm.el' and
+;; `restclient-jq.el' -- would pull helm, helm-core, async, wfnames and
+;; jq-mode off MELPA as tarballs.  straight never saw them: it builds what a
+;; recipe names.  `:ignored-files' also deletes them from the checkout.
 (use-package restclient
-  :straight '(restclient :type git :host github
-			                   :repo "emacsmirror/restclient" :branch "master"))
+  :vc (:url "https://github.com/emacsmirror/restclient.git"
+       :branch "master"
+       :ignored-files ("restclient-helm.el" "restclient-jq.el")))
 (add-to-list 'auto-mode-alist '("\\routes$" . restclient-mode))
 
 (use-package sbt-mode
-  :straight '(sbt-mode :type git :host github
-			                 :repo "hvesalai/emacs-sbt-mode" :branch "master")
+  :vc (:url "https://github.com/hvesalai/emacs-sbt-mode.git"
+       :branch "master")
   :commands sbt-start sbt-command
   :config
   ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
@@ -69,8 +79,8 @@
 
 ;; Enable nice rendering of diagnostics like compile errors.
 (use-package flycheck
-  :straight '(flycheck :type git :host github
-			                 :repo "flycheck/flycheck" :branch "master"))
+  :vc (:url "https://github.com/flycheck/flycheck.git"
+       :branch "master"))
 
 (defun k/scala-indent-region ()
   "Indent region or current line in Scala file."
@@ -285,8 +295,8 @@
    ;; M-x `lsp-metals-build-import'
    (progn
      (use-package lsp-mode
-       :straight '(lsp-mode :type git :host github
-			                      :repo "emacs-lsp/lsp-mode" :branch "master")
+       :vc (:url "https://github.com/emacs-lsp/lsp-mode.git"
+            :branch "master")
        ;; Optional - enable lsp-mode automatically in scala files
        :hook ((scala-mode . lsp)
               (scala-ts-mode . lsp))
@@ -300,8 +310,8 @@
 
      ;; Add metals backend for lsp-mode
      (use-package lsp-metals
-       :straight '(lsp-metals :type git :host github
-			                        :repo "emacs-lsp/lsp-metals" :branch "master"))
+       :vc (:url "https://github.com/emacs-lsp/lsp-metals.git"
+            :branch "master"))
      (setq lsp-metals-fallback-scala-version "3.3.3")
      ;; (use-package lsp-ui)
 
@@ -315,8 +325,13 @@
   ;;;;;;;;;;;
   ('eglot
    (progn
+     ;; `eglot' ships with Emacs, and `use-package-vc-install' skips a
+     ;; package that `package-installed-p' reports -- which a built-in copy
+     ;; satisfies.  Claim the ELPA git mirror explicitly instead; it also
+     ;; brings the flymake/xref/project/jsonrpc versions it insists on, which
+     ;; `package-conf' has already put ahead of the built-in ones.
+     (k/package-vc-install 'eglot "https://github.com/emacs-straight/eglot.git" "master")
      (use-package eglot
-       :straight t
        :defer t
        :config (progn
                  (setq eglot-code-actions-display-functions nil)

@@ -1,11 +1,13 @@
 ;;; yas-conf.el -- Yet Another Snippet extension configuration
 
-(straight-use-package
- '(yasnippet :type git :host github
-				     :repo "joaotavora/yasnippet" :branch "master"))
-(straight-use-package
- '(yasnippet-snippets :type git :host github
-				              :repo "AndreaCrotti/yasnippet-snippets" :branch "master"))
+(use-package yasnippet
+  :vc (:url "https://github.com/joaotavora/yasnippet.git"
+       :branch "master")
+  :defer t)
+(use-package yasnippet-snippets
+  :vc (:url "https://github.com/AndreaCrotti/yasnippet-snippets.git"
+       :branch "master")
+  :defer t)
 
 (yas-global-mode 1)
 ;; personal snippets

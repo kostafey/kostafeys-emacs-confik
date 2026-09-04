@@ -1,6 +1,9 @@
 ;;; text-modes-conf.el
 
-(straight-use-package 'org)
+;; Org ships with Emacs, and `use-package's `:vc' skips a package that
+;; `package-installed-p' reports -- which a built-in copy satisfies.  The GNU
+;; ELPA mirror below is the same git repository straight cloned for `org'.
+(k/package-vc-install 'org "https://github.com/emacs-straight/org-mode.git" "main" "lisp")
 
 ;;-------------------------------------------------------------------
 ;; Wrap text with punctation or tag
@@ -61,8 +64,8 @@
 
 ;;-------------------------------------------------------------------
 (use-package lorem-ipsum
-  :straight '(lorem-ipsum :type git :host github
-			                    :repo "jschaf/emacs-lorem-ipsum" :branch "master"))
+  :vc (:url "https://github.com/jschaf/emacs-lorem-ipsum.git"
+       :branch "master"))
 
 ;;-------------------------------------------------------------------
 ;; sh-mode
@@ -100,8 +103,8 @@
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
 (use-package markdown-toc
-  :straight '(markdown-toc :type git :host github
-			                     :repo "ardumont/markdown-toc" :branch "master"))
+  :vc (:url "https://github.com/ardumont/markdown-toc.git"
+       :branch "master"))
 
 ;; `markdown-syntax-propertize-comments' gives up scanning the whole region as
 ;; soon as it meets a `<!--' that sits inside inline code or a code block, so
@@ -164,7 +167,10 @@
 
 ;;-------------------------------------------------------------------
 ;; CSV
-(straight-use-package 'csv-mode)
+(use-package csv-mode
+  :vc (:url "https://github.com/emacs-straight/csv-mode.git"
+       :branch "master")
+  :defer t)
 ;; M-x `csv-align-mode'
 
 (defun k/csv-get-field-index ()
@@ -199,8 +205,8 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;; Org-mode
 ;;
 (use-package verb
-  :straight '(verb :type git :host github
-			             :repo "federicotdn/verb" :branch "main"))
+  :vc (:url "https://github.com/federicotdn/verb.git"
+       :branch "main"))
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
@@ -241,29 +247,29 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;;-------------------------------------------------------------------
 ;; graphviz-dot-mode
 ;;
+;; `graphviz-dot-flycheck.el' requires flycheck "20250527.907" -- a MELPA
+;; date version that no git checkout can satisfy, so leaving it in place
+;; fetches a second, tarball flycheck beside the one `scala-conf' claims.
 (use-package graphviz-dot-mode
-  :straight '(graphviz-dot-mode :type git :host github
-			                          :repo "ppareit/graphviz-dot-mode"
-                                :branch "master")
+  :vc (:url "https://github.com/ppareit/graphviz-dot-mode.git"
+       :branch "master"
+       :ignored-files ("graphviz-dot-flycheck.el"))
   :config
   (progn
     (setq graphviz-dot-indent-width 4)
     (add-hook 'graphviz-dot-mode-hook 'company-mode)))
 
 (use-package yaml-mode
-  :straight '(yaml-mode :type git :host github
-			                          :repo "yoshiki/yaml-mode"
-                                :branch "master"))
+  :vc (:url "https://github.com/yoshiki/yaml-mode.git"
+       :branch "master"))
 
 (use-package dockerfile-mode
-  :straight '(dockerfile-mode :type git :host github
-			                        :repo "spotify/dockerfile-mode"
-                              :branch "master"))
+  :vc (:url "https://github.com/spotify/dockerfile-mode.git"
+       :branch "master"))
 
 (use-package nginx-mode
-  :straight '(nginx-mode :type git :host github
-			                   :repo "ajc/nginx-mode"
-                         :branch "master")
+  :vc (:url "https://github.com/ajc/nginx-mode.git"
+       :branch "master")
   :config
   (progn
     (setq nginx-indent-level 2)))
@@ -272,17 +278,16 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 ;; M-x `asciidoc-install-grammars'
 ;;
 ;; Keep this deferred (the autoloads already claim `.adoc'/`.asciidoc').
-;; Loading asciidoc-mode eagerly pulls in `flymake' while `load-path' still
-;; only has the built-in one -- straight's `flymake' (an eglot dependency)
-;; joins `load-path' later, in `scala-conf'.  `eglot' then greets every LSP
-;; buffer with `require-with-check' => "Feature `flymake' is now provided by a
-;; different file".  Deferring means the require happens after init, when
-;; straight's copy is the one that gets loaded.
+;; Loading asciidoc-mode eagerly pulls in `flymake', and the copy that answers
+;; has to be the ELPA one `eglot' insists on, or `require-with-check' greets
+;; every LSP buffer with "Feature `flymake' is now provided by a different
+;; file".  `package-conf' claims that copy before any module is loaded and
+;; `package-activate-all' puts it ahead of the built-in from the next start
+;; on, so the ordering is no longer fragile -- but there is still no reason to
+;; load a mode at init that nothing has asked for.
 (use-package asciidoc-mode
   :defer t
-  :straight (asciidoc-mode
-             :type git :host github
-             :repo "bbatsov/asciidoc-mode"
-             :branch "main"))
+  :vc (:url "https://github.com/bbatsov/asciidoc-mode.git"
+       :branch "main"))
 
 (provide 'text-modes-conf)

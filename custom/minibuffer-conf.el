@@ -9,9 +9,8 @@
 ;; vertico.el - VERTical Interactive COmpletion
 ;;
 (use-package vertico
-  :straight '(vertico
-              :type git :host github
-              :repo "minad/vertico" :branch "main")
+  :vc (:url "https://github.com/minad/vertico.git"
+       :branch "main")
   :init
   (vertico-mode)
   :config
@@ -22,12 +21,16 @@
           completion-ignore-case t)))
 
 ;; Configure directory extension.
+;;
+;; The extensions sit in a subdirectory of the vertico repository, and
+;; package.el puts only the package's own lisp directory on `load-path' --
+;; there is no `:files' to widen it with.  Claiming the same repository under
+;; this name, with `:lisp-dir', gives the extension a checkout of its own.
 (use-package vertico-directory
-  :straight '(vertico
-              :type git :host github
-              :repo "minad/vertico" :branch "main")
+  :vc (:url "https://github.com/minad/vertico.git"
+       :branch "main"
+       :lisp-dir "extensions")
   :after vertico
-  :ensure nil
   ;; More convenient directory navigation commands
   :bind (:map vertico-map
               ("RET" . vertico-directory-enter)
@@ -35,9 +38,8 @@
               ("M-DEL" . vertico-directory-delete-word)))
 
 (use-package marginalia
-  :straight '(marginalia
-              :type git :host github
-              :repo "minad/marginalia" :branch "main")
+  :vc (:url "https://github.com/minad/marginalia.git"
+       :branch "main")
   ;; Either bind `marginalia-cycle' globally or only in the minibuffer
   :bind (("M-A" . marginalia-cycle)
          :map minibuffer-local-map
@@ -51,9 +53,8 @@
   (marginalia-mode))
 
 (use-package consult
-  :straight '(consult
-              :type git :host github
-              :repo "minad/consult" :branch "main")
+  :vc (:url "https://github.com/minad/consult.git"
+       :branch "main")
   :config (progn
             (setq register-preview-delay 1)
             (setq consult-async-min-input 3)

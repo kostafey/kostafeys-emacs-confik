@@ -1,8 +1,10 @@
 ;;; php-conf.el --- PHP configuration for lsp
 
-(straight-use-package
- '(php-mode :type git :host github
-				    :repo "emacs-php/php-mode" :branch "master"))
+(use-package php-mode
+  :vc (:url "https://github.com/emacs-php/php-mode.git"
+       :branch "master"
+       :lisp-dir "lisp")
+  :defer t)
 
 (add-hook 'php-mode-hook 'lsp)
 

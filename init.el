@@ -35,7 +35,7 @@
 (require 'basic-look-and-feel)
 
 ;; Use third-party dependencies
-(require 'straight-conf)
+(require 'package-conf)
 (require 'appearance)
 (require 'minibuffer-conf)
 (require 'version-control)

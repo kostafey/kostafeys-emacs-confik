@@ -1,9 +1,8 @@
 ;;; translate-conf.el
 
 (use-package google-translate
-  :straight '(google-translate :type git :host github
-			                         :repo "atykhonov/google-translate"
-                               :branch "master")
+  :vc (:url "https://github.com/atykhonov/google-translate.git"
+       :branch "master")
   :init (progn
           (require 'google-translate)
           (require 'google-translate-smooth-ui))

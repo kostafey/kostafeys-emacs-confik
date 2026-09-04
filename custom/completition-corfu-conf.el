@@ -1,14 +1,14 @@
 ;;; completition-corfu-conf.el -- COmpletion in Region FUnction configuration
 
 (use-package fussy
-  :straight '(fussy :type git :host github
-			              :repo "jojojames/fussy" :branch "main")
+  :vc (:url "https://github.com/jojojames/fussy.git"
+       :branch "main")
   :config
   (fussy-setup))
 
 (use-package corfu
-  :straight '(corfu :type git :host github
-			              :repo "minad/corfu" :branch "main")
+  :vc (:url "https://github.com/minad/corfu.git"
+       :branch "main")
 
   :init
   ;; Recommended: Enable Corfu globally.  Recommended since many modes provide

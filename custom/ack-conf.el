@@ -1,9 +1,9 @@
 (require 'functions)
 
-(straight-use-package
- '(rg
-   :type git :host github
-   :repo "dajva/rg.el" :branch "master"))
+(use-package rg
+  :vc (:url "https://github.com/dajva/rg.el.git"
+       :branch "master")
+  :defer t)
 
 ;;----------------------------------------------------------------------
 ;; ack

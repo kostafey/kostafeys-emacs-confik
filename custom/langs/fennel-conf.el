@@ -1,8 +1,8 @@
 ;;; fennel-conf.el
 
 (use-package fennel-mode
-  :straight '(fennel-mode :type git :host github
-			                    :repo "emacsmirror/fennel-mode" :branch "master")
+  :vc (:url "https://github.com/emacsmirror/fennel-mode.git"
+       :branch "master")
   :config
   (progn
     (setq fennel-program "fennel --repl")))

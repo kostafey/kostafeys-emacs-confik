@@ -13,12 +13,29 @@
 (when (eq system-type 'gnu/linux)
 
   (use-package lsp-mode
-    :straight '(lsp-mode :type git :host github
-			                   :repo "emacs-lsp/lsp-mode" :branch "master"))
+    :vc (:url "https://github.com/emacs-lsp/lsp-mode.git"
+         :branch "master"))
+
+  ;; `lsp-java' pulls these in, and each of them needs `lsp-mode' -- which is
+  ;; why they are claimed here and not in `package-conf's dependency list,
+  ;; which runs long before any lsp package exists.  Listed in dependency
+  ;; order: `dap-mode' wants both of the others.
+  (use-package lsp-treemacs
+    :vc (:url "https://github.com/emacs-lsp/lsp-treemacs.git"
+         :branch "master")
+    :defer t)
+  (use-package lsp-docker
+    :vc (:url "https://github.com/emacs-lsp/lsp-docker.git"
+         :branch "master")
+    :defer t)
+  (use-package dap-mode
+    :vc (:url "https://github.com/emacs-lsp/dap-mode.git"
+         :branch "master")
+    :defer t)
 
   (use-package lsp-java
-    :straight '(lsp-java :type git :host github
-			                   :repo "emacs-lsp/lsp-java" :branch "master")
+    :vc (:url "https://github.com/emacs-lsp/lsp-java.git"
+         :branch "master")
     :after lsp
     :config (progn (add-hook 'java-mode-hook 'lsp)
                    (custom-set-variables '(lsp-ui-sideline-enable nil)
@@ -181,8 +198,8 @@
 ;;   -Dartifact=org.benf:cfr:0.139
 ;;
 (use-package jdecomp
-  :straight '(jdecomp :type git :host github
-			                :repo "xiongtx/jdecomp" :branch "master"))
+  :vc (:url "https://github.com/xiongtx/jdecomp.git"
+       :branch "master"))
 
 (let ((home (if (eq system-type 'windows-nt)
                 (s-replace-all

@@ -1,9 +1,9 @@
 
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("ELPA" . "https://tromey.com/elpa/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("m-stable" . "https://stable.melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")))
+;; `package-conf' leaves `package-archives' empty -- everything is installed
+;; from git -- so `use-elpa' cannot reach an archive as it stands, and the two
+;; modules that call it (`lua-conf', `irc-conf') are both commented out of
+;; `init.el'.  Reviving either one means either giving those packages a `:vc'
+;; recipe or setting `package-archives' first.
 
 (defun use-elpa (name)
   (when (not (require name nil 'noerror))

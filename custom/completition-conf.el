@@ -1,18 +1,23 @@
-(straight-use-package
- '(auto-complete :type git :host github
-				         :repo "auto-complete/auto-complete" :branch "master"))
-(straight-use-package
- '(ac-etags :type git :host github
-				    :repo "emacsorphanage/ac-etags" :branch "master"))
-(straight-use-package
- '(company :type git :host github
-				   :repo "company-mode/company-mode" :branch "master"))
-(straight-use-package
- '(company-quickhelp :type git :host github
-				             :repo "company-mode/company-quickhelp" :branch "master"))
-(straight-use-package
- '(company-fuzzy :type git :host github
-				         :repo "jcs-elpa/company-fuzzy" :branch "master"))
+(use-package auto-complete
+  :vc (:url "https://github.com/auto-complete/auto-complete.git"
+       :branch "master")
+  :defer t)
+(use-package ac-etags
+  :vc (:url "https://github.com/emacsorphanage/ac-etags.git"
+       :branch "master")
+  :defer t)
+(use-package company
+  :vc (:url "https://github.com/company-mode/company-mode.git"
+       :branch "master")
+  :defer t)
+(use-package company-quickhelp
+  :vc (:url "https://github.com/company-mode/company-quickhelp.git"
+       :branch "master")
+  :defer t)
+(use-package company-fuzzy
+  :vc (:url "https://github.com/jcs-elpa/company-fuzzy.git"
+       :branch "master")
+  :defer t)
 
 ;;===================================================================
 ;; auto-complete

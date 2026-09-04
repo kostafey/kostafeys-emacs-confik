@@ -1,10 +1,12 @@
-(straight-use-package
- '(rust-mode :type git :host github
-					   :repo "rust-lang/rust-mode" :branch "master"))
+(use-package rust-mode
+  :vc (:url "https://github.com/rust-lang/rust-mode.git"
+       :branch "master")
+  :defer t)
 
-(straight-use-package
- '(flycheck-rust :type git :host github
-					       :repo "flycheck/flycheck-rust" :branch "master"))
+(use-package flycheck-rust
+  :vc (:url "https://github.com/flycheck/flycheck-rust.git"
+       :branch "master")
+  :defer t)
 
 (when (require 'rust-mode nil 'noerror)
   ;; --------
