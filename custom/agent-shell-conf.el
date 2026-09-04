@@ -9,16 +9,12 @@
 ;; `agent-shell' dependencies: the underlying shell interface and the
 ;; Agent Client Protocol layer (neither is available in ELPA).
 (use-package shell-maker
-  :straight `(shell-maker
-              :type git :host github
-              :repo "xenodium/shell-maker"
-              :branch "main"))
+  :vc (:url "https://github.com/xenodium/shell-maker.git"
+       :branch "main"))
 
 (use-package acp
-  :straight `(acp
-              :type git :host github
-              :repo "xenodium/acp.el"
-              :branch "main"))
+  :vc (:url "https://github.com/xenodium/acp.el.git"
+       :branch "main"))
 
 ;; `comint-mode-map' (inherited via `shell-maker-mode-map') takes C-<arrow>
 ;; for input history, shadowing the global line scrolling from `basic-keys'.
@@ -180,10 +176,8 @@ t for every other one."
 ;; The single-letter keys (n p r + - 0) self-insert while point is at the
 ;; input prompt, so they only navigate out in the transcript above it.
 (use-package agent-shell
-  :straight `(agent-shell
-              :type git :host github
-              :repo "xenodium/agent-shell"
-              :branch "main")
+  :vc (:url "https://github.com/xenodium/agent-shell.git"
+       :branch "main")
   :after (shell-maker acp)
   ;; `k/agent-shell' rather than `agent-shell': it brings the Emacs MCP
   ;; server up first -- see the MCP bridge section at the end of this file.
@@ -267,24 +261,19 @@ with no icon in it."
   "Session id in the Emacs MCP server URL path.
 The agent reaches the tools at http://localhost:PORT/mcp/SESSION-ID.")
 
-;; `web-server' is a hard dependency of claude-code-ide, but straight names
-;; local repo directories after the repo basename alone, and two unrelated
-;; projects share the name "emacs-web-server": eschulte's (this package) and
-;; skeeto's (which is simple-httpd).  Whichever is cloned first wins the
-;; directory, and here it was skeeto's, so straight built a web-server with
-;; no web-server.el in it, `ws-start' stayed undefined and the MCP server
-;; failed to start.  A distinct `:local-repo' keeps the two apart.
+;; `web-server' is a hard dependency of claude-code-ide.  Two unrelated
+;; projects share the repository name "emacs-web-server": eschulte's (this
+;; package) and skeeto's (which is `simple-httpd').  straight named its
+;; checkouts after the repository basename, so the two collided over one
+;; directory and needed a `:local-repo' to be kept apart.  package.el names a
+;; checkout after the package, so the collision cannot arise here.
 (use-package web-server
-  :straight `(web-server
-              :type git :host github
-              :repo "eschulte/emacs-web-server"
-              :local-repo "eschulte-emacs-web-server"))
+  :vc (:url "https://github.com/eschulte/emacs-web-server.git"
+       :branch "master"))
 
 (use-package claude-code-ide
-  :straight `(claude-code-ide
-              :type git :host nil
-              :repo "https://github.com/manzaltu/claude-code-ide.el"
-              :branch "main")
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el"
+       :branch "main")
   :init
   (setq claude-code-ide-mcp-server-port 51234)
   :after web-server

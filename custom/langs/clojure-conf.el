@@ -1,17 +1,22 @@
 ;;; clojure-conf.el
 
-(straight-use-package
- '(cider :type git :host github
-         :repo "clojure-emacs/cider" :branch "master"))
-(straight-use-package
- '(lsp-mode :type git :host github
-            :repo "emacs-lsp/lsp-mode" :branch "master"))
-(straight-use-package
- '(dash :type git :host github
-				:repo "magnars/dash.el" :branch "master"))
-(straight-use-package
- '(emacs-libvterm :type git :host github
-			            :repo "akermu/emacs-libvterm" :branch "master"))
+(use-package cider
+  :vc (:url "https://github.com/clojure-emacs/cider.git"
+       :branch "master"
+       :lisp-dir "lisp")
+  :defer t)
+(use-package lsp-mode
+  :vc (:url "https://github.com/emacs-lsp/lsp-mode.git"
+       :branch "master")
+  :defer t)
+(use-package dash
+  :vc (:url "https://github.com/magnars/dash.el.git"
+       :branch "master")
+  :defer t)
+(use-package vterm
+  :vc (:url "https://github.com/akermu/emacs-libvterm.git"
+       :branch "master")
+  :defer t)
 
 ;;----------------------------------------------------------------------
 ;; clojure

@@ -24,9 +24,10 @@
 ;; go install github.com/rogpeppe/godef@latest
 ;; go install golang.org/x/tools/cmd/godoc@latest
 ;; Assume gofmt provided with golang SDK distribution.
-(straight-use-package
- '(go-mode :type git :host github
-				   :repo "dominikh/go-mode.el" :branch "master"))
+(use-package go-mode
+  :vc (:url "https://github.com/dominikh/go-mode.el.git"
+       :branch "master")
+  :defer t)
 
 (add-hook 'go-mode-hook
           (lambda ()
@@ -43,8 +44,8 @@
 ;; LSP
 ;; go install golang.org/x/tools/gopls@latest
 (use-package lsp-mode
-  :straight '(lsp-mode :type git :host github
-			                 :repo "emacs-lsp/lsp-mode" :branch "master")
+  :vc (:url "https://github.com/emacs-lsp/lsp-mode.git"
+       :branch "master")
   :hook ((go-mode . lsp-deferred)
          (go-mode . my-common-coding-hook)))
 

@@ -63,7 +63,8 @@
       "Unknown"))))
 
 (use-package gptel
-  :straight 'gptel
+  :vc (:url "https://github.com/karthink/gptel.git"
+       :branch "master")
   :config (progn
             ;; Llama.cpp offers an OpenAI compatible API
             (setq

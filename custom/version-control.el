@@ -1,17 +1,22 @@
 (require 'cl-lib)
 
-(straight-use-package
- '(magit :type git :host github
-         :repo "magit/magit" :branch "main"))
-(straight-use-package
- '(multi-magit :type git :host github
-               :repo "luismbo/multi-magit" :branch "master"))
-(straight-use-package
- '(darcsum :type git :host github
-           :repo "emacsmirror/darcsum" :branch "master"))
-(straight-use-package
- '(diffview :type git :host github
-            :repo "mgalgs/diffview-mode" :branch "master"))
+(use-package magit
+  :vc (:url "https://github.com/magit/magit.git"
+       :branch "main"
+       :lisp-dir "lisp")
+  :defer t)
+(use-package multi-magit
+  :vc (:url "https://github.com/luismbo/multi-magit.git"
+       :branch "master")
+  :defer t)
+(use-package darcsum
+  :vc (:url "https://github.com/emacsmirror/darcsum.git"
+       :branch "master")
+  :defer t)
+(use-package diffview
+  :vc (:url "https://github.com/mgalgs/diffview-mode.git"
+       :branch "master")
+  :defer t)
 
 ;; Disable auto-reverting of file-visiting buffers after Magit commands (a
 ;; notable cost with many buffers open).  A plain `setq' suffices: Magit defers
@@ -85,16 +90,14 @@ tree named by `GIT_DIR'/`GIT_WORK_TREE' alone -- a fair trade at some
             :override #'k/git-gutter-in-git-repository-p)
 
 (use-package git-gutter
-  :straight '(git-gutter
-              :type git :host github
-              :repo "emacsorphanage/git-gutter" :branch "master")
+  :vc (:url "https://github.com/emacsorphanage/git-gutter.git"
+       :branch "master")
   :config
   (global-git-gutter-mode t))
 
 (use-package git-gutter-fringe
-  :straight '(git-gutter-fringe
-              :type git :host github
-              :repo "emacsorphanage/git-gutter-fringe" :branch "master")
+  :vc (:url "https://github.com/emacsorphanage/git-gutter-fringe.git"
+       :branch "master")
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [#b11100000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b11100000] nil nil '(center repeated))

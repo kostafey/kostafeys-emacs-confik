@@ -15,7 +15,7 @@
 ;;
 ;
 (use-package ztree
-  :straight '(ztree :type git :host github
-			              :repo "fourier/ztree" :branch "master"))
+  :vc (:url "https://github.com/fourier/ztree.git"
+       :branch "master"))
 
 (provide 'ide)

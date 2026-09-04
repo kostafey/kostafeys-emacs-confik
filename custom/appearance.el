@@ -1,33 +1,37 @@
 ;;-------------------------------------------------------------------
 ;; Emacs custom color theme
+;;
+;; `:vc' takes a literal spec, so the protocol cannot be picked inside it the
+;; way the straight recipe did with a backquote.  `k/package-vc-install' is an
+;; ordinary function, and evaluates its arguments.
+(k/package-vc-install
+ 'organic-green-theme
+ (pcase system-type
+   ('windows-nt "https://github.com/kostafey/organic-green-theme.git")
+   ('gnu/linux  "git@github.com:kostafey/organic-green-theme.git"))
+ "master")
+
 (use-package organic-green-theme
-  :straight `(organic-green-theme
-              :type git :host nil
-              :repo ,(pcase system-type
-                       ('windows-nt
-                        "https://github.com/kostafey/organic-green-theme.git")
-                       ('gnu/linux
-                        "git@github.com:kostafey/organic-green-theme.git"))
-              :branch "master")
   :config (load-theme 'organic-green t))
 
 ;;-------------------------------------------------------------------
+;; Claimed in `package-conf' along with the rest of the dependency closure --
+;; half of it needs `dash', so it has to be on disk before any of it is.
 (use-package dash
-  :straight '(dash :type git :host github
-                   :repo "magnars/dash.el" :branch "master")
   :config
   ;; Font lock of dash functions in emacs lisp buffers
   (eval-after-load "dash" '(dash-enable-font-lock)))
 
-(straight-use-package
- '(rainbow-delimiters :type git :host github
-                      :repo "Fanael/rainbow-delimiters" :branch "master"))
+(use-package rainbow-delimiters
+  :vc (:url "https://github.com/Fanael/rainbow-delimiters.git"
+       :branch "master")
+  :defer t)
 
 ;; This minor mode sets background color to strings that match color
 ;; names, e.g. #0000ff is displayed in white with a blue background.
 (use-package rainbow-mode
-  :straight '(rainbow-mode :type git :host github
-                           :repo "emacsmirror/rainbow-mode" :branch "master")
+  :vc (:url "https://github.com/emacsmirror/rainbow-mode.git"
+       :branch "master")
   :config (progn
             (defun k/rainbow-only-hex ()
               "Remove named color highlights from rainbow-mode."
@@ -42,22 +46,31 @@
               (font-lock-flush))
             (add-hook 'rainbow-mode-hook #'k/rainbow-only-hex)))
 
-(straight-use-package
- '(emacs-idle-highlight-mode :type git :host codeberg
-                             :repo "ideasman42/emacs-idle-highlight-mode" :branch "main"))
-(straight-use-package
- '(paredit :type git :host nil
-           :fetch "https://paredit.org/cgit/paredit/" :branch "master"))
-(straight-use-package
- '(paredit-everywhere :type git :host github
-                      :repo "purcell/paredit-everywhere" :branch "master"))
+(use-package idle-highlight-mode
+  :vc (:url "https://codeberg.org/ideasman42/emacs-idle-highlight-mode.git"
+       :branch "main")
+  :defer t)
+;; Upstream is paredit.org; this is its emacsmirror copy, as for
+;; `rainbow-mode', `restclient', `darcsum' and `fennel-mode' -- paredit.org
+;; stopped resolving, and the straight checkout only kept working because it
+;; had been cloned back when it did.
+(use-package paredit
+  :vc (:url "https://github.com/emacsmirror/paredit.git"
+       :branch "master")
+  :defer t)
+(use-package paredit-everywhere
+  :vc (:url "https://github.com/purcell/paredit-everywhere.git"
+       :branch "master")
+  :defer t)
 
-(straight-use-package
- '(tabbar :type git :host github
-          :repo "dholm/tabbar" :branch "master"))
-(straight-use-package
- '(breadcrumb :type git :host github
-              :repo "joaotavora/breadcrumb" :branch "master"))
+(use-package tabbar
+  :vc (:url "https://github.com/dholm/tabbar.git"
+       :branch "master")
+  :defer t)
+(use-package breadcrumb
+  :vc (:url "https://github.com/joaotavora/breadcrumb.git"
+       :branch "master")
+  :defer t)
 
 (use-package tab-line
   :ensure nil

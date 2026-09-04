@@ -1,24 +1,26 @@
 ;;--------------------------------------------------------------------
 ;; Emacs SQL client `ejc-sql'.
 ;;
-(straight-use-package
- '(cider :type git :host github
-         :repo "clojure-emacs/cider" :branch "master"))
-(straight-use-package
- '(clomacs :type git :host gitlab
-           :repo "kostafey/clomacs" :branch "master"))
+(use-package cider
+  :vc (:url "https://github.com/clojure-emacs/cider.git"
+       :branch "master"
+       :lisp-dir "lisp")
+  :defer t)
+(use-package clomacs
+  :vc (:url "https://gitlab.com/kostafey/clomacs.git"
+       :branch "master"
+       :lisp-dir "src/elisp")
+  :defer t)
 (require 'clomacs)
 
-(pcase system-type
-  ('windows-nt
-   (straight-use-package
-    '(ejc-sql :type git :host github
-              :repo "kostafey/ejc-sql" :branch "master")))
-  ('gnu/linux
-   (straight-use-package
-    '(ejc-sql :type git :host nil
-              :repo "git@github.com:kostafey/ejc-sql.git"
-              :branch "master"))))
+;; `:vc' takes a literal spec and cannot choose the protocol by platform;
+;; `k/package-vc-install' evaluates its arguments.
+(k/package-vc-install
+ 'ejc-sql
+ (pcase system-type
+   ('windows-nt "https://github.com/kostafey/ejc-sql.git")
+   ('gnu/linux  "git@github.com:kostafey/ejc-sql.git"))
+ "master")
 
 (require 'ejc-sql)
 ;; Require completion frontend (autocomplete, company of corfu via capf).

@@ -40,7 +40,6 @@
 ;;-------------------------------------------------------------------
 
 (require 'treesit)
-(require 'straight)
 
 ;; Check if Emacs is built with tree-sitter library
 ;; (treesit-available-p)
@@ -123,14 +122,16 @@
 
 (when (eq system-type 'gnu/linux)
 
-  (straight-use-package
-   '(scala-ts-mode :type git :host gitlab
-                   :repo "kostafey/scala-ts-mode" :branch "dev"))
+  (use-package scala-ts-mode
+    :vc (:url "https://gitlab.com/kostafey/scala-ts-mode.git"
+         :branch "dev")
+    :defer t)
   (add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
 
-  (straight-use-package
-   '(html-ts-mode :type git :host github
-                  :repo "mickeynp/html-ts-mode" :branch "master"))
+  (use-package html-ts-mode
+    :vc (:url "https://github.com/mickeynp/html-ts-mode.git"
+         :branch "master")
+    :defer t)
 
   (add-to-list 'auto-mode-alist '("\\.xml$" . html-ts-mode)))
 

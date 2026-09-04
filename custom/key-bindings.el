@@ -1,32 +1,38 @@
 ;;; key-bindings.el -- A collection of key bindings (default and custom).
 
-(straight-use-package
- '(session :type git :host github
-				   :repo "emacsattic/session" :branch "master"))
-(straight-use-package
- '(multiple-cursors :type git :host github
-				            :repo "magnars/multiple-cursors.el" :branch "master"))
-(straight-use-package
- '(highlight-symbol :type git :host github
-			              :repo "nschum/highlight-symbol.el" :branch "master"))
-(straight-use-package
- '(ace-jump-mode :type git :host github
-			           :repo "winterTTr/ace-jump-mode" :branch "master"))
+(use-package session
+  :vc (:url "https://github.com/emacsattic/session.git"
+       :branch "master")
+  :defer t)
+(use-package multiple-cursors
+  :vc (:url "https://github.com/magnars/multiple-cursors.el.git"
+       :branch "master")
+  :defer t)
+(use-package highlight-symbol
+  :vc (:url "https://github.com/nschum/highlight-symbol.el.git"
+       :branch "master")
+  :defer t)
+(use-package ace-jump-mode
+  :vc (:url "https://github.com/winterTTr/ace-jump-mode.git"
+       :branch "master")
+  :defer t)
 
 (require 'ack-conf)
 (require 'navigation-in-frame)
 (require 'project-conf)
 
-(straight-use-package
- '(eframe-jack-in :type git :host github
-				          :repo "kostafey/eframe-jack-in" :branch "master"))
+(use-package eframe-jack-in
+  :vc (:url "https://github.com/kostafey/eframe-jack-in.git"
+       :branch "master")
+  :defer t)
 (require 'eframe-jack-in)
 (require 'eframe-windmove)
 (global-set-key (kbd "C-M-e") 'eframe-pop-emacs)
 
-(straight-use-package
- '(temporary-persistent :type git :host github
-				                :repo "kostafey/temporary-persistent" :branch "master"))
+(use-package temporary-persistent
+  :vc (:url "https://github.com/kostafey/temporary-persistent.git"
+       :branch "master")
+  :defer t)
 
 (require 'shell-conf)
 (require 'dired-conf)
