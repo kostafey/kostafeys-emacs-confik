@@ -45,9 +45,12 @@
 (straight-use-package
  '(emacs-idle-highlight-mode :type git :host codeberg
                              :repo "ideasman42/emacs-idle-highlight-mode" :branch "main"))
+;; paredit.org stopped resolving; this checkout only kept working because it
+;; was cloned back when it did.  The emacsmirror copy carries the same
+;; history -- its tip is the commit already checked out here.
 (straight-use-package
- '(paredit :type git :host nil
-           :fetch "https://paredit.org/cgit/paredit/" :branch "master"))
+ '(paredit :type git :host github
+           :repo "emacsmirror/paredit" :branch "master"))
 (straight-use-package
  '(paredit-everywhere :type git :host github
                       :repo "purcell/paredit-everywhere" :branch "master"))
