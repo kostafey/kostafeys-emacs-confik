@@ -76,4 +76,68 @@
          ("M-g" . consult-goto-line)
          ("C-x C-x" . consult-global-mark)))
 
+;;-------------------------------------------------------------------
+;; Kill buffers from the completion list, like `psw-switch-buffer' does.
+;;
+(defun k/vertico--buffer-name (cand)
+  "Return the buffer name completion candidate CAND stands for, or nil.
+CAND is either a plain string, the (NAME . BUFFER) cons that
+`internal-complete-buffer' hands to its predicate, or a `consult--multi'
+string carrying a `multi-category' property."
+  (let* ((key (if (consp cand) (car cand) cand))
+         (multi (and (stringp key) (> (length key) 0)
+                     (get-text-property 0 'multi-category key))))
+    (cond ((bufferp key) (buffer-name key))
+          (multi (and (eq (car multi) 'buffer) (cdr multi)))
+          ((stringp key) (substring-no-properties key)))))
+
+(defun k/vertico--candidate-buffer ()
+  "Return the live buffer the current Vertico candidate names, or nil."
+  (when (memq (vertico--metadata-get 'category) '(buffer multi-category))
+    (let ((cand (and (>= vertico--index 0)
+                     (nth vertico--index vertico--candidates))))
+      (when-let ((name (and cand (k/vertico--buffer-name cand))))
+        (get-buffer name)))))
+
+(defun k/vertico--hide-buffer (name pred)
+  "Return a predicate like PRED that also rejects the buffer called NAME."
+  (lambda (cand &rest args)
+    (and (not (equal name (k/vertico--buffer-name cand)))
+         (or (null pred) (apply pred cand args)))))
+
+(defun k/vertico-kill-buffer ()
+  "Kill the buffer named by the current candidate, keeping the list open.
+On anything that is not a buffer fall back to the global binding of the
+key, so C-k still kills a line and C-d still deletes a character."
+  (interactive)
+  (if-let ((buf (k/vertico--candidate-buffer)))
+      (let ((cand (nth vertico--index vertico--candidates))
+            (name (buffer-name buf)))
+        (when (kill-buffer buf)
+          ;; `consult-buffer' builds its candidates once, so the killed
+          ;; buffer would return on the next recompute unless it is filtered
+          ;; out.  `minibuffer-completion-predicate' is bound per session,
+          ;; so the wrapper goes away with the session.
+          (setq minibuffer-completion-predicate
+                (k/vertico--hide-buffer name minibuffer-completion-predicate))
+          ;; Drop it from the current list as well, so the recompute locks
+          ;; onto the next candidate instead of jumping back to the top.
+          (setq vertico--candidates (delq cand vertico--candidates)
+                vertico--total (length vertico--candidates)
+                vertico--index (min vertico--index (1- vertico--total))
+                vertico--lock-candidate t
+                ;; Invalidate the cache; `vertico--exhibit' on
+                ;; `post-command-hook' redraws right after this command.
+                vertico--input nil)))
+    (when-let ((fallback (global-key-binding (this-command-keys-vector))))
+      (call-interactively fallback))))
+
+(with-eval-after-load 'vertico
+  (define-key vertico-map (kbd "C-k") #'k/vertico-kill-buffer)
+  (define-key vertico-map (kbd "C-d") #'k/vertico-kill-buffer))
+
+;; `kill-buffer' asks before killing a modified buffer, and that prompt is
+;; a minibuffer inside the minibuffer.
+(setq enable-recursive-minibuffers t)
+
 (provide 'minibuffer-conf)
