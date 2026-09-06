@@ -35,6 +35,7 @@
 ;; in dedicated buffer.
 (setq ejc-org-mode-show-results nil)
 (setq ejc-use-flx t)                          ; Enable `flx' fuzzy matching.
+(setq ejc-complete-on-dot t)                  ; Complete on the dot pressed.
 (setq ejc-completion-system 'standard)
 (setq ejc-result-table-impl 'ejc-result-mode) ; Set major-mode for results.
 ;; (setq ejc-result-table-impl 'orgtbl-mode)  ; Default major-mode for results.

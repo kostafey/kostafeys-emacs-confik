@@ -20,11 +20,13 @@
   (corfu-history-mode)
   (corfu-popupinfo-mode)
 
-  ;; Enable auto completion, configure delay, trigger and quitting
+  ;; Enable auto completion, configure delay and quitting.
+  ;; There is no trigger chars option in `corfu', a mode-specific command
+  ;; bound to the trigger char is used instead, e.g. `ejc-dot-pressed'
+  ;; with `ejc-complete-on-dot' set - see custom/ejc-sql-conf.el
   (setq corfu-auto t
         corfu-auto-delay 0.2
         corfu-auto-prefix 2
-        corfu-auto-trigger "."          ;; Custom trigger characters
         corfu-quit-no-match 'separator) ;; or t
 
   (defun k/corfu-mode-hook ()
