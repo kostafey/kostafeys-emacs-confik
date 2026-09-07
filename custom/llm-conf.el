@@ -3,23 +3,9 @@
 ;; Start server:
 ;; -------------
 ;; `Qwen2.5-Coder-3B'
-;; llama-server -m ~/.cache/llama.cpp/Qwen_Qwen2.5-Coder-3B-Instruct-GGUF_qwen2.5-coder-3b-instruct-q4_k_m.gguf -c 40960
-;; `Qwen2.5-Coder-7B'
-;; run:
-;; llama-server \
-;;   -m ~/.cache/llama.cpp/bartowski_Qwen2.5-Coder-7B-Instruct-GGUF_Qwen2.5-Coder-7B-Instruct-Q4_K_M.gguf \
-;;   --port 8080 \
-;;   --ctx-size 20480 \
-;;   --n-gpu-layers 99 \
-;;   --parallel 2 \
-;;   --cont-batching
-;; download:
-;; llama-server \
-;;   --hf-repo bartowski/Qwen2.5-Coder-7B-Instruct-GGUF \
-;;   --hf-file Qwen2.5-Coder-7B-Instruct-Q4_K_M.gguf \
-;;   --port 8080 \
-;;   --ctx-size 16384 \
-;;   --n-gpu-layers 35
+;; llama-server -m ~/.cache/llama.cpp/Qwen_Qwen2.5-Coder-3B-Instruct-GGUF_qwen2.5-coder-3b-instruct-q5_k_m.gguf -c 40960
+;;
+;; llama serve -hf bartowski/Qwen2.5-Coder-3B-Instruct-GGUF:Q5_K_M --port 8012 --cors-origins "http://localhost:8012"
 
 (defun get-language-from-mode ()
   "Get the programming language name from the mode name."
@@ -71,7 +57,7 @@
              gptel-backend (gptel-make-openai "llama-cpp"
                              :stream t
                              :protocol "http"
-                             :host "localhost:8080"
+                             :host "localhost:8012"
                              :models '(Qwen_Qwen2.5-Coder-3B-Instruct-GGUF))
              gptel-directives
              '((default     . "You are a large language model and a helpful assistant. Respond concisely.")
@@ -146,7 +132,38 @@
                                              (plist-get :backend)
                                              (or gptel-backend)
                                              (gptel-backend-name))))
-                    (gptel--update-status " Waiting..." 'warning))))))
+                    (gptel--update-status " Waiting..." 'warning)))))
+
+            (defun k/gptel-rewrite ()
+              "Rewrite text for technical documentation."
+              (interactive)
+              (let* ((selected-region (progn
+                                        (when (not (use-region-p))
+                                          (mark-paragraph))
+                                       (let ((beg (region-beginning))
+                                             (end (region-end)))
+                                         (buffer-substring beg end))))
+                     (system-message (format "%s %s"
+                                             (assq 'writing gptel-directives)
+                                             "Rewrite this text in canonical English for technical documentation.")))
+                (progn
+                  (gptel--sanitize-model)
+                  (let ((fsm (gptel-make-fsm :handlers gptel-send--handlers)))
+                    (gptel-request
+                      (format "%s"
+                              (if selected-region
+                                  (concat selected-region "\n")
+                                (mark-paragraph)))
+                      :stream gptel-stream
+                      :system system-message
+                      :transforms gptel-prompt-transform-functions
+                      :fsm fsm)
+                    (message "Querying %s..."
+                             (thread-first (gptel-fsm-info fsm)
+                                           (plist-get :backend)
+                                           (or gptel-backend)
+                                           (gptel-backend-name))))
+                  (gptel--update-status " Waiting..." 'warning)))))
 
   :bind (("M-C-a b" . k/gptel-add-file)
          ("M-C-a s" . gptel-send)
@@ -155,6 +172,7 @@
          ("M-C-a c" . k/gptel-context-print)
          ("M-C-a l" . k/gptel-context-print)
          ("M-C-a r" . gptel-context-remove-all)
-         ("M-C-a x" . k/gptel-minibuffer)))
+         ("M-C-a x" . k/gptel-minibuffer)
+         ("M-C-a w" . k/gptel-rewrite)))
 
 (provide 'llm-conf)
