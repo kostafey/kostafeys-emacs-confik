@@ -195,14 +195,15 @@ were."
                                  (mark-paragraph)
                                  (cons (region-beginning) (region-end)))))
                      (selected-region (buffer-substring (car bounds) (cdr bounds)))
-                     (system-message (format "%s %s"
-                                             (cdr (assq 'writing gptel-directives))
-                                             "Rewrite this text in canonical English for technical documentation.")))
+                     (system-message (cdr (assq 'writing gptel-directives))))
                 (k/flash-region (car bounds) (cdr bounds))
                 (gptel--sanitize-model)
                 (let ((fsm (gptel-make-fsm :handlers gptel-send--handlers)))
                   (gptel-request
-                      (concat selected-region "\n")
+                      (format "%s: `%s`. %s."
+                              "Rewrite this text in canonical English for technical documentation"
+                              (concat selected-region)
+                              "Do not quote the result text")
                     :stream gptel-stream
                     :system system-message
                     :position (copy-marker (cdr bounds))
