@@ -103,12 +103,6 @@
 (add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
-(defun k/scala-flash-region (start end &optional timeout)
-  "Temporarily highlight region from START to END."
-  (let ((overlay (make-overlay start end)))
-    (overlay-put overlay 'face 'secondary-selection)
-    (run-with-timer (or timeout 0.2) nil 'delete-overlay overlay)))
-
 (defun k/scala-skip-sexp (val)
   (ignore-errors
     (while (or
@@ -126,8 +120,8 @@
 
 (defun k/scala-check-package (pname)
   (when (equal (format "%s" (preceding-sexp)) "package")
-    (k/scala-flash-region (line-beginning-position)
-                           (line-end-position))
+    (k/flash-region (line-beginning-position)
+                    (line-end-position))
     (sbt-send-region (concat "import " pname "._"))
     t))
 
@@ -222,7 +216,7 @@
   (cl-multiple-value-bind
       (start end)
       (k/scala-get-last-scala-expr)
-    (k/scala-flash-region start end)
+    (k/flash-region start end)
     (k/scala-eval-region start end)))
 
 (defun k/scala-find-root (orig-fun &rest args)
@@ -255,12 +249,12 @@
 (defun k/scala-eval-buffer ()
   (interactive)
   (save-excursion
-    (k/scala-flash-region (point-max) (point-min))
+    (k/flash-region (point-max) (point-min))
     (k/scala-eval-region (point-max) (point-min))))
 
 (defun k/scala-eval-line ()
   (interactive)
-  (k/scala-flash-region
+  (k/flash-region
       (line-beginning-position)
       (point))
      (k/scala-eval-region

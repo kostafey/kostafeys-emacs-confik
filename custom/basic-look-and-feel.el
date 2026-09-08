@@ -74,6 +74,15 @@
   '(advice-add 'describe-face :before #'my-describe-face))
 
 ;;-------------------------------------------------------------------
+;; Temporary region highlight
+;;
+(defun k/flash-region (start end &optional timeout)
+  "Temporarily highlight region from START to END."
+  (let ((overlay (make-overlay start end)))
+    (overlay-put overlay 'face 'secondary-selection)
+    (run-with-timer (or timeout 0.2) nil 'delete-overlay overlay)))
+
+;;-------------------------------------------------------------------
 ;; Non-nil means no need to redraw entire frame after suspending.
 (setq no-redraw-on-reenter nil)
 ;; t means update isn't paused when input is detected.

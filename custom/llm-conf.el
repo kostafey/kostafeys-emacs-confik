@@ -185,8 +185,9 @@ for every chunk, so the cursor stays put for the whole response.  The
 
             (defun k/gptel-rewrite ()
               "Rewrite the region, or the paragraph at point, for technical documentation.
-The response is inserted after the source text, while point, the mark
-and the scroll position stay where they were."
+The source text flashes to show what was sent, the response is inserted
+after it, and point, the mark and the scroll position stay where they
+were."
               (interactive)
               (let* ((bounds (if (use-region-p)
                                  (cons (region-beginning) (region-end))
@@ -197,6 +198,7 @@ and the scroll position stay where they were."
                      (system-message (format "%s %s"
                                              (cdr (assq 'writing gptel-directives))
                                              "Rewrite this text in canonical English for technical documentation.")))
+                (k/flash-region (car bounds) (cdr bounds))
                 (gptel--sanitize-model)
                 (let ((fsm (gptel-make-fsm :handlers gptel-send--handlers)))
                   (gptel-request

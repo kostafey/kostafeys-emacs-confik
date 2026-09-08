@@ -67,14 +67,14 @@
   (cl-multiple-value-bind
       (start end)
       (k/scala-get-last-scala-expr)
-    (k/scala-flash-region start end)
+    (k/flash-region start end)
     (jshell-send (buffer-substring start end))))
 
 (defun jshell-eval-region (start end)
   (interactive "r")
   (let ((data (trim-string
                (buffer-substring-no-properties start end))))
-    (k/scala-flash-region start end)
+    (k/flash-region start end)
     (jshell-send data)))
 
 ;;--------------------------------------------------------------------

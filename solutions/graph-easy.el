@@ -92,12 +92,6 @@
     (shell-command-to-string
      (format graph-easy-command filename))))
 
-(defun graph-easy-flash-region (start end &optional timeout)
-  "Temporarily highlight region from START to END."
-  (let ((overlay (make-overlay start end)))
-    (overlay-put overlay 'face 'secondary-selection)
-    (run-with-timer (or timeout 0.2) nil 'delete-overlay overlay)))
-
 (defun graph-easy-run ()
   (interactive)
   (save-excursion
@@ -128,7 +122,7 @@
                              (insert uncommented-result)
                              (comment-region (point-min) (point-max))
                              (buffer-substring (point-min) (1- (point-max)))))))
-            (graph-easy-flash-region beg end)
+            (k/flash-region beg end)
             (delete-region (progn
                              (goto-char out)
                              (next-line)
