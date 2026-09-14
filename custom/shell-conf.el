@@ -31,6 +31,65 @@
          ("M-<up>"     . windmove-up)
          ("M-<down>"   . windmove-down)))
 
+;; Pasting into a ghostel terminal, screenshots included.
+;;
+;; cua-mode keeps its CUA keys in `cua--cua-keys-keymap', published through
+;; `emulation-mode-map-alists', and those maps outrank both the major mode map
+;; and `ghostel-semi-char-mode-map' -- so C-v resolves to `cua-paste' and a
+;; binding in ghostel's own maps would never be consulted.  Join the same
+;; mechanism, in front of cua's entry, switched on per buffer.  (S-<insert> is
+;; absent from that keymap, which is why it can be bound the ordinary way.)
+(defvar-local k/ghostel-paste-override nil
+  "Non-nil where `k/ghostel-paste-override-map' should take effect.")
+
+(defvar k/ghostel-paste-override-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-v") #'k/ghostel-paste-dwim)
+    map)
+  "Keymap reclaiming the paste key from cua-mode inside ghostel buffers.")
+
+(add-to-list 'emulation-mode-map-alists
+             `((k/ghostel-paste-override . ,k/ghostel-paste-override-map)))
+
+(defun k/ghostel-enable-paste-override ()
+  "Let `k/ghostel-paste-override-map' win over cua-mode here."
+  (setq-local k/ghostel-paste-override t))
+
+(defun k/ghostel-clipboard-image-p ()
+  "Non-nil when the clipboard holds an image rather than text.
+X11 advertises what it can convert the selection to; a screenshot taken
+by any of the usual tools offers `image/png' among its TARGETS."
+  (and (display-graphic-p)
+       (let ((targets (ignore-errors (gui-get-selection 'CLIPBOARD 'TARGETS))))
+         (and (vectorp targets)
+              (seq-some (lambda (target)
+                          (string-prefix-p "image/" (symbol-name target)))
+                        targets)))))
+
+(defun k/ghostel-paste-dwim ()
+  "Paste the clipboard into the terminal, screenshots included.
+
+A screenshot reaches Claude Code as a keystroke rather than as data: the
+CLI answers C-v by reading the clipboard itself -- `xclip' under X11,
+`wl-paste' under Wayland, `Get-Clipboard' on Windows -- and puts an
+`[Image #N]' chip in its prompt.  Nothing has to travel through Emacs,
+which has no way to hand a picture to a PTY anyway.
+
+The image branch is limited to Claude Code buffers on purpose: to a
+shell C-v means `quoted-insert', so sending it there would only arm the
+next keystroke to be taken literally.
+
+Everything else is a text paste through `ghostel-yank', which wraps it
+in bracketed paste -- a multi-line paste then arrives as one block
+instead of as a run of Return keys, which is what `cua-paste' would have
+produced by inserting into the buffer and leaving ghostel's foreign-edit
+forwarding to pick the text up."
+  (interactive)
+  (if (and (k/ghostel-clipboard-image-p)
+           (bound-and-true-p claude-code-ide--session))
+      (ghostel-send-key "v" "ctrl")
+    (ghostel-yank)))
+
 (use-package ghostel
   :straight `(ghostel
               :type git :host nil
@@ -57,9 +116,13 @@
          ("C-<prior>"  . eframe-previous-buffer)
          ("C-<next>"   . eframe-next-buffer)
          ("<delete>"   . (lambda () (interactive) (ghostel-send-key "d" "ctrl")))
+         ;; C-v is handled by `k/ghostel-paste-override-map' instead: a binding
+         ;; here would be shadowed by cua-mode.
+         ("S-<insert>" . k/ghostel-paste-dwim)
          :map project-prefix-map
          ("m" . ghostel-project)
          ("M" . ghostel-project-list-buffers))
+  :hook (ghostel-mode . k/ghostel-enable-paste-override)
   :config
   (defun k/ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
