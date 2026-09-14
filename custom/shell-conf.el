@@ -105,6 +105,11 @@ forwarding to pick the text up."
   ;; wiped on every rebuild/update of the package.
   :custom (ghostel-module-directory
            (expand-file-name "ghostel/" user-emacs-directory))
+  ;; Terminal palette slot 6.  `ansi-color-cyan' is cyan3 (#00CDCD), which
+  ;; barely holds together on a light background -- and it is what the Claude
+  ;; Code TUI paints the option digits of its prompts with: those come as
+  ;; plain SGR 36, not as a theme colour, so only the palette can reach them.
+  :custom-face (ghostel-color-cyan ((t (:foreground "#0065CC"))))
   :bind (("C-x g" . ghostel)
          :map ghostel-semi-char-mode-map
          ("C-f"  . consult-line)
