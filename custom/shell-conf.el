@@ -124,6 +124,33 @@ forwarding to pick the text up."
          ;; C-v is handled by `k/ghostel-paste-override-map' instead: a binding
          ;; here would be shadowed by cua-mode.
          ("S-<insert>" . k/ghostel-paste-dwim)
+         ;; Selecting and sexp motion as in any other buffer (`basic-keys').
+         ;; Semi-char mode would otherwise forward these to the program, which
+         ;; has no use for them; run as Emacs commands they take the buffer
+         ;; into copy mode on their own -- `ghostel-mark-activation-input-mode'
+         ;; answers the mark, `ghostel-point-leave-input-mode' the bare motion
+         ;; -- and there the global bindings carry on from where these leave
+         ;; off, the terminal frozen while the region is picked out.
+         ("S-<right>"     . (lambda () (interactive) (k/char-forward t)))
+         ("S-<left>"      . (lambda () (interactive) (k/char-backward t)))
+         ("S-<up>"        . (lambda () (interactive) (k/line-previous t)))
+         ("S-<down>"      . (lambda () (interactive) (k/line-next t)))
+         ("S-<home>"      . (lambda () (interactive) (k/line-beginning t)))
+         ("S-<end>"       . (lambda () (interactive) (k/line-end t)))
+         ("C-S-<right>"   . (lambda () (interactive) (k/word-forward t)))
+         ("C-S-<left>"    . (lambda () (interactive) (k/word-backward t)))
+         ;; Motion with no region of its own has to say so: ghostel wires
+         ;; `ghostel-maybe-leave-input' into isearch and the minibuffer only,
+         ;; and leaves other jumps to call it.  Without it point drifts off
+         ;; the cursor and the next redraw hauls it back.
+         ("C-M-<right>"   . (lambda () (interactive)
+                              (k/sexp-forward) (ghostel-maybe-leave-input)))
+         ("C-M-<left>"    . (lambda () (interactive)
+                              (k/sexp-backward) (ghostel-maybe-leave-input)))
+         ("C-M-S-<right>" . (lambda () (interactive) (k/sexp-forward t)))
+         ("C-M-S-<left>"  . (lambda () (interactive) (k/sexp-backward t)))
+         ("C-S-<home>"    . (lambda () (interactive) (k/buffer-beginning t)))
+         ("C-S-<end>"     . (lambda () (interactive) (k/buffer-end t)))
          :map project-prefix-map
          ("m" . ghostel-project)
          ("M" . ghostel-project-list-buffers))
