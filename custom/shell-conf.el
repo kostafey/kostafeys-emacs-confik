@@ -112,7 +112,9 @@ forwarding to pick the text up."
   :custom-face (ghostel-color-cyan ((t (:foreground "#0065CC"))))
   :bind (("C-x g" . ghostel)
          :map ghostel-semi-char-mode-map
-         ("C-f"  . consult-line)
+         ("C-f"  . isearch-forward)
+         ("C-r"  . isearch-backward)
+         ("M-a"  . ace-jump-mode)
          ("C-k"  . k/ghostel-send-C-k-and-kill)
          ("M-<left>"   . meta-left)
          ("M-<right>"  . meta-right)
