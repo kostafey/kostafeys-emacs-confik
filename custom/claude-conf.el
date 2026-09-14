@@ -17,15 +17,71 @@
               :repo "eschulte/emacs-web-server"
               :local-repo "eschulte-emacs-web-server"))
 
-;; `claude-code-ide-continue' always starts a *new* instance -- a second one
-;; forks the same conversation into a second terminal -- so it is only the
-;; right entry point while this project has no session at all.  Once one is
-;; running, the same key should just take us back to it.
+(defun k/claude-code-ide--live-session-p (project-dir)
+  "Non-nil when PROJECT-DIR has a Claude Code instance with a live buffer."
+  (seq-some (lambda (session)
+              (buffer-live-p (claude-code-ide-mcp-session-buffer session)))
+            (claude-code-ide-mcp--sessions-for-project project-dir)))
+
+;; `/exit' does not end the conversation any more: the CLI keeps it as a
+;; background session, and it is still there after the terminal that ran it is
+;; gone.  `claude agents --json' lists what is running -- around 150 ms, and
+;; only on the path that is about to spawn a terminal anyway -- and
+;; `claude attach ID' opens one of them here.
+(defun k/claude-code-ide--background-session (project-dir)
+  "Return the id of the newest CLI session running in PROJECT-DIR, or nil.
+`--cwd' scopes the listing to PROJECT-DIR and below, so a session started
+in a subdirectory of the project counts as well.  Runs through
+`process-file', which puts the query on the same host as a TRAMP project."
+  (with-temp-buffer
+    (let ((default-directory project-dir))
+      (when (eq 0 (process-file claude-code-ide-cli-path nil t nil
+                                "agents" "--json" "--cwd"
+                                (file-local-name (directory-file-name project-dir))))
+        (goto-char (point-min))
+        (when-let* ((sessions (ignore-errors
+                                (json-parse-buffer :object-type 'alist
+                                                   :array-type 'list))))
+          (alist-get 'id
+                     (car (sort sessions
+                                (lambda (a b)
+                                  (> (or (alist-get 'startedAt a) 0)
+                                     (or (alist-get 'startedAt b) 0)))))))))))
+
+(defvar k/claude-code-ide--attach-id nil
+  "Background session id to attach to, bound around the spawn.")
+
+(defun k/claude-code-ide--attach-command (build &rest args)
+  "Return a `claude attach' command while attaching, else BUILD with ARGS.
+None of what BUILD assembles applies to an attach: the session is already
+running, carrying the MCP config and system prompt it was started with,
+and `attach' is a subcommand that would reject those flags anyway."
+  (if k/claude-code-ide--attach-id
+      (concat claude-code-ide-cli-path " attach "
+              (shell-quote-argument k/claude-code-ide--attach-id))
+    (apply build args)))
+
+(with-eval-after-load 'claude-code-ide
+  (advice-add 'claude-code-ide--build-claude-command
+              :around #'k/claude-code-ide--attach-command))
+
 (defun k/claude-code-ide ()
-  "Go to this project's Claude Code buffer, or continue its last conversation.
-Sessions are looked up by project root, so named and numbered instances
-count too, not just the plain `*claude-code[PROJECT]*' buffer.  With a
-prefix argument and several instances running,
+  "Bring up this project's Claude Code, whatever state it is in.
+
+An instance running in Emacs is switched to; a conversation the CLI still
+has running in the background is attached to -- that is the one true
+continuation, since the process never died -- and anything else starts a
+fresh session.
+
+Deliberately no `claude -c': continuing the last conversation of a
+directory means resurrecting whatever was last discussed there, whole,
+at a cost that grows with it -- the transcripts here run to megabytes.
+`/resume' picks a conversation from inside a session instead, by name and
+on purpose.
+
+Instances are looked up in the registry by project root, so named and
+numbered ones count too, not just the plain `*claude-code[PROJECT]*'
+buffer.  With a prefix argument and several running,
 `claude-code-ide-switch-to-buffer' asks which one to switch to."
   (interactive)
   ;; The keybinding fires before the package is loaded -- `:bind' autoloads
@@ -34,12 +90,18 @@ prefix argument and several instances running,
   ;; A session outlives the terminal whose process has died; left in the
   ;; registry it would pass for a live one and send us to a dead buffer.
   (claude-code-ide--cleanup-dead-sessions)
-  (if (seq-some (lambda (session)
-                  (buffer-live-p (claude-code-ide-mcp-session-buffer session)))
-                (claude-code-ide-mcp--sessions-for-project
-                 (claude-code-ide--get-working-directory)))
-      (call-interactively #'claude-code-ide-switch-to-buffer)
-    (call-interactively #'claude-code-ide-continue)))
+  (let* ((project-dir (claude-code-ide--get-working-directory))
+         (live (k/claude-code-ide--live-session-p project-dir))
+         (background (unless live
+                       (k/claude-code-ide--background-session project-dir))))
+    (cond
+     (live
+      (call-interactively #'claude-code-ide-switch-to-buffer))
+     (background
+      (let ((k/claude-code-ide--attach-id background))
+        (claude-code-ide)))
+     (t
+      (call-interactively #'claude-code-ide)))))
 
 (use-package claude-code-ide
   :straight `(claude-code-ide
