@@ -62,7 +62,7 @@
 ;; (require 'irc-conf)
 (require 'translate-conf)
 (require 'llm-conf)
-(require 'agent-shell-conf)
+(require 'claude-conf)
 
 ;;-------------------------------------------------------------------
 ;; Programming languages configs
