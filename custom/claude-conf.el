@@ -121,6 +121,13 @@ buffer.  With a prefix argument and several running,
   ;; the full width is not to hand it a file.  A region still reaches Claude
   ;; while it is active, and a file can always be named in the prompt.
   (setq claude-code-ide-share-opened-file nil)
+  ;; A side window is not an ordinary one: Emacs refuses to split it or to
+  ;; make it the only window, so C-x 1/2/3 answer "Cannot split side window"
+  ;; there, and the package dedicates it on top of that -- strongly, which is
+  ;; what turns C-<prior> / C-<next> into "Window is strongly dedicated to its
+  ;; buffer".  Both go with the side window: the dedication is applied under
+  ;; the same condition, and a plain `display-buffer' takes over.
+  (setq claude-code-ide-use-side-window nil)
   ;; Exposes xref, imenu, project and diagnostics back to the agent, and flips
   ;; `claude-code-ide-enable-mcp-server' so the session claude-code-ide starts
   ;; brings that server up with it.
