@@ -45,28 +45,45 @@ UTF-8 on the way in.")
   "Shortest prefix that triggers a dictionary lookup.
 Below this the popup is noise: two letters match thousands of words.")
 
-(defvar k/dict-prog-mode-completion nil
-  "Whether dictionary words are offered in `prog-mode' buffers.
-Off by default: in code the popup should hold identifiers, not every
-English word sharing their prefix.  `cape-dabbrev' keeps completing the
-words of the open buffers either way, so switching this off does not
-leave a code buffer without word completion.
+(defvar k/dict-prog-mode-completion 'comments
+  "Where dictionary words are offered in `prog-mode' buffers.
 
-Toggle it with `k/dict-toggle-prog-mode-completion', or set it
-buffer-locally to decide one buffer at a time.")
+  nil         nowhere, the popup holds identifiers only
+  `comments'  in comments and strings, which is where the prose is
+  t           everywhere in the buffer
 
-(defun k/dict-toggle-prog-mode-completion (&optional buffer-only)
-  "Switch dictionary completion in code buffers on or off.
-With a prefix argument BUFFER-ONLY, switch it in this buffer alone and
-leave the other buffers as they are."
+`comments' by default: a comment is written in English or Russian like
+any other text, while the code around it is not.  `cape-dabbrev' pays
+no attention to this setting, so a code buffer completes the words of
+the buffers around it whichever value is in force.
+
+Cycle it with `k/dict-cycle-prog-mode-completion', or set it
+buffer-locally, from a mode hook, to decide one language at a time.")
+
+(defconst k/dict-prog-mode-states '(nil comments t)
+  "The values `k/dict-prog-mode-completion' cycles through.")
+
+(defun k/dict--state-description (state)
+  "Return how STATE of `k/dict-prog-mode-completion' reads out loud."
+  (pcase state
+    ('nil "off")
+    ('comments "comments and strings")
+    (_ "everywhere")))
+
+(defun k/dict-cycle-prog-mode-completion (&optional buffer-only)
+  "Cycle dictionary completion in code buffers.
+The states follow `k/dict-prog-mode-states': off, comments and strings,
+everywhere.  With a prefix argument BUFFER-ONLY, cycle it in this buffer
+alone and leave the other buffers as they are."
   (interactive "P")
-  (let ((value (not k/dict-prog-mode-completion)))
+  (let* ((rest (cdr (memq k/dict-prog-mode-completion k/dict-prog-mode-states)))
+         (value (car (or rest k/dict-prog-mode-states))))
     (if buffer-only
         (setq-local k/dict-prog-mode-completion value)
       (kill-local-variable 'k/dict-prog-mode-completion)
       (setq-default k/dict-prog-mode-completion value))
     (message "Dictionary completion in code buffers: %s%s"
-             (if value "on" "off")
+             (k/dict--state-description value)
              (if buffer-only " (this buffer)" ""))))
 
 ;;-------------------------------------------------------------------
@@ -220,12 +237,28 @@ capitalized prefix has to be capitalized back."
                     k/dict-files))))
 
 ;;;###autoload
+(defun k/dict--prose-at-point-p ()
+  "Return non-nil when point sits in a comment or in a string."
+  (let ((state (syntax-ppss)))
+    (or (nth 3 state)                   ; inside a string
+        (nth 4 state))))                ; inside a comment
+
+(defun k/dict-capf-active-p ()
+  "Return non-nil when the dictionary should answer at point.
+Outside `prog-mode' it always should; inside, that is what
+`k/dict-prog-mode-completion' decides."
+  (if (derived-mode-p 'prog-mode)
+      (pcase k/dict-prog-mode-completion
+        ('nil nil)
+        ('comments (k/dict--prose-at-point-p))
+        (_ t))
+    t))
+
 (defun k/dict-capf ()
   "Complete the word at point from the dictionaries in `k/dict-files'.
 Answers in every buffer but a `prog-mode' one, where it waits for
 `k/dict-prog-mode-completion'."
-  (let ((beg (and (or k/dict-prog-mode-completion
-                      (not (derived-mode-p 'prog-mode)))
+  (let ((beg (and (k/dict-capf-active-p)
                   (car (bounds-of-thing-at-point 'word)))))
     (when (and beg (>= (- (point) beg) k/dict-min-prefix))
       (let ((buffer (current-buffer))
