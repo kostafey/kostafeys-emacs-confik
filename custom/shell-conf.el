@@ -18,6 +18,10 @@
 			            :repo "akermu/emacs-libvterm" :branch "master"))
 
 (use-package vterm
+  :straight `(vterm
+              :type git :host nil
+              :repo "https://github.com/akermu/emacs-libvterm"
+              :branch "master")
   :bind (:map vterm-mode-map
          ("C-<insert>" . vterm-yank)
          ;; Navigate among windows and frames the same way as in any other
@@ -26,6 +30,48 @@
          ("M-<right>"  . meta-right)
          ("M-<up>"     . windmove-up)
          ("M-<down>"   . windmove-down)))
+
+(use-package ghostel
+  :straight `(ghostel
+              :type git :host nil
+              :repo "https://github.com/dakra/ghostel"
+              :branch "main"
+              ;; Same file set as the upstream MELPA recipe: without it
+              ;; straight links only `lisp/*.el' into the build directory,
+              ;; ghostel finds no bundled `etc/terminfo/' and falls back to
+              ;; TERM=xterm-256color (choppy redraws in Claude Code & co).
+              :files (:defaults "etc" "src" "vendor"
+                                "build.zig" "build.zig.zon" "symbols.map"))
+  ;; Keep the native module outside the straight build directory, which is
+  ;; wiped on every rebuild/update of the package.
+  :custom (ghostel-module-directory
+           (expand-file-name "ghostel/" user-emacs-directory))
+  :bind (("C-x m" . ghostel)
+         :map ghostel-semi-char-mode-map
+         ("C-f"  . consult-line)
+         ("C-k"  . k/ghostel-send-C-k-and-kill)
+         ("M-<left>"   . meta-left)
+         ("M-<right>"  . meta-right)
+         ("M-<up>"     . windmove-up)
+         ("M-<down>"   . windmove-down)
+         ("C-<prior>"  . eframe-previous-buffer)
+         ("C-<next>"   . eframe-next-buffer)
+         ("<delete>"   . (lambda () (interactive) (ghostel-send-key "d" "ctrl")))
+         :map project-prefix-map
+         ("m" . ghostel-project)
+         ("M" . ghostel-project-list-buffers))
+  :config
+  (defun k/ghostel-send-C-k-and-kill ()
+    "Send `C-k' to ghostel.
+Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (point) (line-end-position))
+    (ghostel-send-key "k" "ctrl"))
+
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
+  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer))
+  )
 
 (defcustom k/default-shell 'eshell
   "Set default shell type. Possible values are one of:
