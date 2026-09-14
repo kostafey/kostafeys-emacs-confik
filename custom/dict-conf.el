@@ -45,6 +45,30 @@ UTF-8 on the way in.")
   "Shortest prefix that triggers a dictionary lookup.
 Below this the popup is noise: two letters match thousands of words.")
 
+(defvar k/dict-prog-mode-completion nil
+  "Whether dictionary words are offered in `prog-mode' buffers.
+Off by default: in code the popup should hold identifiers, not every
+English word sharing their prefix.  `cape-dabbrev' keeps completing the
+words of the open buffers either way, so switching this off does not
+leave a code buffer without word completion.
+
+Toggle it with `k/dict-toggle-prog-mode-completion', or set it
+buffer-locally to decide one buffer at a time.")
+
+(defun k/dict-toggle-prog-mode-completion (&optional buffer-only)
+  "Switch dictionary completion in code buffers on or off.
+With a prefix argument BUFFER-ONLY, switch it in this buffer alone and
+leave the other buffers as they are."
+  (interactive "P")
+  (let ((value (not k/dict-prog-mode-completion)))
+    (if buffer-only
+        (setq-local k/dict-prog-mode-completion value)
+      (kill-local-variable 'k/dict-prog-mode-completion)
+      (setq-default k/dict-prog-mode-completion value))
+    (message "Dictionary completion in code buffers: %s%s"
+             (if value "on" "off")
+             (if buffer-only " (this buffer)" ""))))
+
 ;;-------------------------------------------------------------------
 ;; Word list preparation
 
@@ -197,8 +221,12 @@ capitalized prefix has to be capitalized back."
 
 ;;;###autoload
 (defun k/dict-capf ()
-  "Complete the word at point from the dictionaries in `k/dict-files'."
-  (let ((beg (car (bounds-of-thing-at-point 'word))))
+  "Complete the word at point from the dictionaries in `k/dict-files'.
+Answers in every buffer but a `prog-mode' one, where it waits for
+`k/dict-prog-mode-completion'."
+  (let ((beg (and (or k/dict-prog-mode-completion
+                      (not (derived-mode-p 'prog-mode)))
+                  (car (bounds-of-thing-at-point 'word)))))
     (when (and beg (>= (- (point) beg) k/dict-min-prefix))
       (let ((buffer (current-buffer))
             (start (copy-marker beg))
