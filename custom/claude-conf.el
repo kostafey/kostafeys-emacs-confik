@@ -58,4 +58,33 @@ prefix argument and several instances running,
   ;; brings that server up with it.
   (claude-code-ide-emacs-tools-setup))
 
+;; The MCP tools server answers `initialize', `tools/list' and `tools/call',
+;; and signals `json-rpc-error' for every other method -- a symbol the package
+;; never passes to `define-error'.  Carrying no `error-conditions', it slips
+;; through the `condition-case' in
+;; `claude-code-ide-mcp-http-server--handle-post' and dies in the process
+;; filter as "peculiar error: -32601, Method not found".  The noise in
+;; *Messages* is the lesser half: the reply is never sent either, so whoever
+;; asked waits for a response that will not come.  Defining the symbol hands
+;; the handler back its own error path.
+(define-error 'json-rpc-error "JSON-RPC error" 'error)
+
+;; What trips it are the capability probes a client sends after `initialize'.
+;; Answer them as a server holding neither resources nor prompts should, so
+;; the common case does not have to travel the error path at all.
+(defun k/claude-code-ide-mcp-dispatch-probes (dispatch method params)
+  "Answer the MCP capability probes, leaving the rest to DISPATCH.
+METHOD and PARAMS are passed through untouched."
+  (pcase method
+    ("resources/list" '((resources . [])))
+    ("resources/templates/list" '((resourceTemplates . [])))
+    ("prompts/list" '((prompts . [])))
+    ;; An empty JSON object, which an empty alist would encode as `null'.
+    ("ping" (make-hash-table :test 'equal))
+    (_ (funcall dispatch method params))))
+
+(with-eval-after-load 'claude-code-ide-mcp-http-server
+  (advice-add 'claude-code-ide-mcp-http-server--dispatch
+              :around #'k/claude-code-ide-mcp-dispatch-probes))
+
 (provide 'claude-conf)
