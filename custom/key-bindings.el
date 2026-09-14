@@ -24,9 +24,12 @@
 (require 'eframe-windmove)
 (global-set-key (kbd "C-M-e") 'eframe-pop-emacs)
 
-(straight-use-package
- '(temporary-persistent :type git :host github
-				                :repo "kostafey/temporary-persistent" :branch "master"))
+(use-package temporary-persistent
+  :straight `(temporary-persistent
+              :type git :host github
+				      :repo "kostafey/temporary-persistent" :branch "master")
+  :config
+  (setq temporary-persistent-default-major-mode 'markdown-mode))
 
 (require 'shell-conf)
 (require 'dired-conf)
