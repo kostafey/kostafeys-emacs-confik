@@ -46,7 +46,7 @@
   ;; wiped on every rebuild/update of the package.
   :custom (ghostel-module-directory
            (expand-file-name "ghostel/" user-emacs-directory))
-  :bind (("C-x m" . ghostel)
+  :bind (("C-x g" . ghostel)
          :map ghostel-semi-char-mode-map
          ("C-f"  . consult-line)
          ("C-k"  . k/ghostel-send-C-k-and-kill)
