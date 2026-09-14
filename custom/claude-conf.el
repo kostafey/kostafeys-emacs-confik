@@ -53,6 +53,12 @@ prefix argument and several instances running,
   ;; Code TUI with the fewest artifacts.  It wants the bundled xterm-ghostty
   ;; terminfo that `shell-conf' arranges for ghostel to ship.
   (setq claude-code-ide-terminal-backend 'ghostel)
+  ;; The CLI draws its "In <file>" label inside the prompt row and takes the
+  ;; columns for it out of the input field -- there is no layout in it that
+  ;; would put the label on a line of its own, so the only way to type across
+  ;; the full width is not to hand it a file.  A region still reaches Claude
+  ;; while it is active, and a file can always be named in the prompt.
+  (setq claude-code-ide-share-opened-file nil)
   ;; Exposes xref, imenu, project and diagnostics back to the agent, and flips
   ;; `claude-code-ide-enable-mcp-server' so the session claude-code-ide starts
   ;; brings that server up with it.
