@@ -50,6 +50,7 @@
 (require 'tree-sitter-conf)
 (require 'yas-conf)
 (require 'completition-corfu-conf)
+(require 'dict-conf)
 (require 'key-bindings)
 (require 'ide)
 (require 'history-conf)

@@ -125,6 +125,7 @@
                                   prompt)
                         :stream gptel-stream
                         :system system-message
+                        :callback #'k/gptel--insert-keeping-cursor
                         :transforms gptel-prompt-transform-functions
                         :fsm fsm)
                       (message "Querying %s..."
@@ -216,7 +217,130 @@ were."
                                          (plist-get :backend)
                                          (or gptel-backend)
                                          (gptel-backend-name))))
-                (gptel--update-status " Waiting..." 'warning))))
+                (gptel--update-status " Waiting..." 'warning)))
+
+            ;;-------------------------------------------------------
+            ;; Inline suggestion
+            ;;
+            ;; The LLM continues the text before point and the result is
+            ;; shown as a shadowed overlay, the way a copilot does it.  This
+            ;; is deliberately not a `completion-at-point' function: capfs
+            ;; have to answer synchronously, while a request to the local
+            ;; server takes long enough for `corfu' to have moved on.  Word
+            ;; completion in the corfu popup comes from the dictionaries in
+            ;; `dict-conf.el' instead.
+
+            (defvar k/llm-suggest-context-chars 2000
+              "How much text before point is sent as context.")
+
+            (defvar k/llm-suggest-overlay nil
+              "Overlay showing the suggestion, if any.")
+
+            (defvar k/llm-suggest--exit nil
+              "Function deactivating `k/llm-suggest-map'.")
+
+            (defvar k/llm-suggest-map
+              (let ((map (make-sparse-keymap)))
+                (define-key map (kbd "TAB") #'k/llm-suggest-accept)
+                (define-key map (kbd "<tab>") #'k/llm-suggest-accept)
+                (define-key map (kbd "C-<return>") #'k/llm-suggest-accept)
+                (define-key map (kbd "C-g") #'k/llm-suggest-dismiss)
+                map)
+              "Keymap active while a suggestion is on screen.
+Any key outside of it dismisses the suggestion and runs as usual.")
+
+            (defun k/llm-suggest--clear ()
+              "Remove the suggestion overlay and its transient keymap."
+              (when (overlayp k/llm-suggest-overlay)
+                (delete-overlay k/llm-suggest-overlay))
+              (setq k/llm-suggest-overlay nil)
+              ;; Cleared first: this function is also the map's exit hook,
+              ;; so it would otherwise call itself.
+              (let ((exit k/llm-suggest--exit))
+                (setq k/llm-suggest--exit nil)
+                (when exit (funcall exit))))
+
+            (defun k/llm-suggest-dismiss ()
+              "Discard the suggestion on screen."
+              (interactive)
+              (k/llm-suggest--clear)
+              (message "Suggestion dismissed"))
+
+            (defun k/llm-suggest-accept ()
+              "Insert the suggestion on screen."
+              (interactive)
+              (let ((overlay k/llm-suggest-overlay))
+                (if (not (overlayp overlay))
+                    (k/llm-suggest--clear)
+                  (let ((text (overlay-get overlay 'k/llm-suggest))
+                        (position (overlay-start overlay)))
+                    (k/llm-suggest--clear)
+                    (goto-char position)
+                    (insert text)))))
+
+            (defun k/llm-suggest--clean (text)
+              "Drop markdown fences and surrounding newlines from TEXT.
+A leading space is kept, it is often exactly what the continuation
+needs, but a leading newline is not: it is what is left over once a
+fenced block loses its fence, and inserting it would break the line."
+              (string-trim-right
+               (replace-regexp-in-string
+                "\\`\n+" ""
+                (replace-regexp-in-string "^```.*$" "" text))))
+
+            (defun k/llm-suggest--show (text marker)
+              "Show TEXT as the suggested continuation at MARKER."
+              (if (or (string-empty-p text) (not (marker-buffer marker)))
+                  (message "No suggestion")
+                (with-current-buffer (marker-buffer marker)
+                  (let ((display (propertize text 'face 'shadow))
+                        (overlay (make-overlay marker marker nil t t)))
+                    ;; Keeps the cursor drawn before the suggestion instead
+                    ;; of after it.
+                    (put-text-property 0 1 'cursor t display)
+                    (overlay-put overlay 'k/llm-suggest text)
+                    (overlay-put overlay 'after-string display)
+                    (setq k/llm-suggest-overlay overlay
+                          k/llm-suggest--exit
+                          (set-transient-map k/llm-suggest-map t
+                                             #'k/llm-suggest--clear))
+                    (message "TAB accepts the suggestion, any other key drops it")))))
+
+            (defun k/llm-suggest ()
+              "Ask the LLM to continue the text before point.
+The suggestion is shown inline; \\[k/llm-suggest-accept] inserts it."
+              (interactive)
+              (k/llm-suggest--clear)
+              (let* ((beg (max (point-min) (- (point) k/llm-suggest-context-chars)))
+                     (prefix (buffer-substring-no-properties beg (point)))
+                     (prog-lang (get-language-from-mode))
+                     (programming-buffer-p (not (equal prog-lang "Unknown")))
+                     (system-message (if programming-buffer-p
+                                         (cdr (assq 'code-only gptel-directives))
+                                       (cdr (assq 'writing gptel-directives))))
+                     (marker (copy-marker (point))))
+                (gptel--sanitize-model)
+                (gptel-request
+                    (format (concat "Continue the %s below, starting exactly at its end. "
+                                    "Output ONLY the continuation: no explanation, "
+                                    "no quotes, no markdown code blocks (```), "
+                                    "and do not repeat any of the given text. "
+                                    "Keep it to %s.\n\n%s")
+                            (if programming-buffer-p
+                                (format "%s code" prog-lang)
+                              "text")
+                            (if programming-buffer-p "a single line" "one sentence")
+                            prefix)
+                  :stream nil
+                  :system system-message
+                  :callback
+                  (lambda (response info)
+                    (if (stringp response)
+                        (k/llm-suggest--show (k/llm-suggest--clean response) marker)
+                      (message "No suggestion: %s"
+                               (or (plist-get info :status) response)))))
+                (message "Querying %s for a suggestion..."
+                         (gptel-backend-name gptel-backend)))))
 
   :bind (("M-C-a b" . k/gptel-add-file)
          ("M-C-a s" . gptel-send)
@@ -226,6 +350,7 @@ were."
          ("M-C-a l" . k/gptel-context-print)
          ("M-C-a r" . gptel-context-remove-all)
          ("M-C-a x" . k/gptel-minibuffer)
-         ("M-C-a w" . k/gptel-rewrite)))
+         ("M-C-a w" . k/gptel-rewrite)
+         ("M-C-a i" . k/llm-suggest)))
 
 (provide 'llm-conf)

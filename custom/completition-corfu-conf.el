@@ -41,4 +41,18 @@
    ("<left>" . (lambda () (interactive) (corfu-quit) (backward-char)))
    ("<right>" . (lambda () (interactive) (corfu-quit) (forward-char)))))
 
+;;-------------------------------------------------------------------
+;; No tags completion
+;;
+;; `tags-completion-at-point-function' is the stock Emacs value of
+;; `completion-at-point-functions', so corfu reaches it in every buffer that
+;; has no capf of its own, and it visits the tags table on the way.  Nothing
+;; in this configuration builds a TAGS file, so all it ever produces is
+;; "File ... does not exist" for a table left over from some old session -
+;; see `history-conf.el', where `desktop' is told to stop restoring one.
+;; Words in prose come from the dictionaries in `dict-conf.el' instead.
+(setq-default completion-at-point-functions
+              (delq 'tags-completion-at-point-function
+                    (default-value 'completion-at-point-functions)))
+
 (provide 'completition-corfu-conf)
