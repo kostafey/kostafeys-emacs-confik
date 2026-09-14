@@ -26,8 +26,13 @@
 
 (use-package temporary-persistent
   :straight `(temporary-persistent
-              :type git :host github
-				      :repo "kostafey/temporary-persistent" :branch "master")
+              :type git :host nil
+              :repo ,(pcase system-type
+                       ('windows-nt
+                        "https://github.com/kostafey/temporary-persistent.git")
+                       ('gnu/linux
+                        "git@github.com:kostafey/temporary-persistent.git"))
+              :branch "master")
   :config
   (setq temporary-persistent-default-major-mode 'markdown-mode))
 
