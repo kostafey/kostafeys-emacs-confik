@@ -29,10 +29,20 @@
 ;; only on the path that is about to spawn a terminal anyway -- and
 ;; `claude attach ID' opens one of them here.
 (defun k/claude-code-ide--background-session (project-dir)
-  "Return the id of the newest CLI session running in PROJECT-DIR, or nil.
+  "Return the id of the newest background session in PROJECT-DIR, or nil.
 `--cwd' scopes the listing to PROJECT-DIR and below, so a session started
-in a subdirectory of the project counts as well.  Runs through
-`process-file', which puts the query on the same host as a TRAMP project."
+in a subdirectory of the project counts as well.
+
+The listing also carries the `interactive' sessions -- the ones a
+terminal is already running, another Emacs, a VS Code panel, a shell of
+my own -- and those have to go: `claude attach' is for the sessions no
+terminal owns, and an interactive entry does not even carry an `id' to
+attach by, only the `sessionId' that `attach' refuses.  Left in, the
+newest of them is what the sort picks and the attach quietly never
+happens.
+
+Runs through `process-file', which puts the query on the same host as a
+TRAMP project."
   (with-temp-buffer
     (let ((default-directory project-dir))
       (when (eq 0 (process-file claude-code-ide-cli-path nil t nil
@@ -43,7 +53,10 @@ in a subdirectory of the project counts as well.  Runs through
                                 (json-parse-buffer :object-type 'alist
                                                    :array-type 'list))))
           (alist-get 'id
-                     (car (sort sessions
+                     (car (sort (seq-filter
+                                 (lambda (session)
+                                   (equal (alist-get 'kind session) "background"))
+                                 sessions)
                                 (lambda (a b)
                                   (> (or (alist-get 'startedAt a) 0)
                                      (or (alist-get 'startedAt b) 0)))))))))))
@@ -61,9 +74,50 @@ and `attach' is a subcommand that would reject those flags anyway."
               (shell-quote-argument k/claude-code-ide--attach-id))
     (apply build args)))
 
+;; The `--mcp-config' JSON reaches the command line escaped for `sh -c' -- a
+;; backslash before every quote -- and only the vterm backend, the one that
+;; hands the command to a shell, ever undoes that.  ghostel and eat split the
+;; same string themselves with `split-string-shell-command' and exec the
+;; program directly, and on Windows that split leaves the escaping in place:
+;; `shell.el' gives the parser `shell-file-name-quote-list' for its unescaping
+;; rules, and that is nil here, because a backslash is a directory separator
+;; rather than an escape character.  What the CLI gets is
+;; `{\"mcpServers\":...}', which is not JSON, so it takes the argument for a
+;; file name instead and exits: "Invalid MCP configuration: MCP config file
+;; not found".
+;;
+;; That exit lands about a second in -- past the liveness check at the end of
+;; `claude-code-ide--start-session', which is what would have reported it --
+;; so the session announces itself as started and the process sentinel tears
+;; the terminal down right after: no ghostel buffer, no error, nothing but the
+;; "Claude Code started in ..." line left in *Messages*.
+(defun k/claude-code-ide--unescape-mcp-config (parsed)
+  "Undo the `sh' escaping of the `--mcp-config' argument in PARSED.
+PARSED is the (PROGRAM . ARGS) cons that
+`claude-code-ide--parse-command-string' returns.  One pass removing a
+backslash before any character inverts both escaping steps the package
+applies, the doubling of backslashes and the quoting of quotes.
+
+Windows only: everywhere else the split has already done it, and a
+second round would eat backslashes that belong to the JSON."
+  (if (not (eq system-type 'windows-nt))
+      parsed
+    (let ((mcp-config nil))
+      (cons (car parsed)
+            (mapcar (lambda (arg)
+                      (if mcp-config
+                          (progn
+                            (setq mcp-config nil)
+                            (replace-regexp-in-string "\\\\\\(.\\)" "\\1" arg))
+                        (setq mcp-config (equal arg "--mcp-config"))
+                        arg))
+                    (cdr parsed))))))
+
 (with-eval-after-load 'claude-code-ide
   (advice-add 'claude-code-ide--build-claude-command
-              :around #'k/claude-code-ide--attach-command))
+              :around #'k/claude-code-ide--attach-command)
+  (advice-add 'claude-code-ide--parse-command-string
+              :filter-return #'k/claude-code-ide--unescape-mcp-config))
 
 (defun k/claude-code-ide ()
   "Bring up this project's Claude Code, whatever state it is in.
