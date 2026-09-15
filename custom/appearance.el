@@ -167,6 +167,21 @@ not in the top of the frame."
   (k/select-window-fix-tabbar))
 
 ;;-------------------------------------------------------------------
+(use-package writeroom-mode
+  :straight '(writeroom-mode
+              :type git :host github
+              :repo "joostkremers/writeroom-mode" :branch "master")
+  :config
+  (add-hook 'writeroom-mode-enable-hook
+            (lambda ()
+              (display-line-numbers-mode -1)
+              (global-display-fill-column-indicator-mode -1)))
+  (add-hook 'writeroom-mode-disable-hook
+            (lambda ()
+              (display-line-numbers-mode 1)
+              (global-display-fill-column-indicator-mode 1))))
+
+;;-------------------------------------------------------------------
 ;; Paredit customization
 ;;
 (put 'paredit-forward 'CUA 'move)
