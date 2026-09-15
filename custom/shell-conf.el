@@ -115,6 +115,10 @@ forwarding to pick the text up."
          ("C-f"  . isearch-forward)
          ("C-r"  . isearch-backward)
          ("M-a"  . ace-jump-mode)
+         ("<f1>" . consult-buffer)
+         ;; Only in semi-char mode: copy mode keeps M-w for
+         ;; `ghostel-readonly-copy', which is what it is there for.
+         ("M-w"  . get-vc-status)
          ("C-k"  . k/ghostel-send-C-k-and-kill)
          ("M-<left>"   . meta-left)
          ("M-<right>"  . meta-right)
