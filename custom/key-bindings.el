@@ -106,6 +106,57 @@
 
 ;; ace-jump-mode
 (setq ace-jump-mode-scope 'window)
+
+;; `ace-jump-char-category' reads the ASCII table and nothing else: digits,
+;; A-Z, a-z, then punctuation, and everything above is `other', which both
+;; entry points refuse with "[AceJump] Non-printable character".  A Cyrillic
+;; letter lands there, so the query char could only ever be Latin.  Letters of
+;; any script are word constituents in the buffer's syntax table -- ask that
+;; instead, and leave the rest of the classification alone.
+(defun k/ace-jump-char-category (category-fn query-char)
+  "Treat any word-constituent QUERY-CHAR as a letter, not the ASCII ones only.
+CATEGORY-FN is the advised `ace-jump-char-category'."
+  (let ((category (funcall category-fn query-char)))
+    (if (and (eq category 'other)
+             (characterp query-char)
+             (eq (char-syntax query-char) ?w))
+        'alpha
+      category)))
+
+(advice-add 'ace-jump-char-category :around #'k/ace-jump-char-category)
+
+;; The labels themselves stay Latin, and `ace-jump-do' publishes them in an
+;; `overriding-local-map' whose catch-all entry ends the jump -- so a keystroke
+;; from the Cyrillic layout aborts rather than being translated, and having
+;; just typed a Cyrillic query char is precisely when that layout is on.  Give
+;; every move key its twin, feeding the Latin one back into the command loop:
+;; `ace-jump-move' reads the keystroke itself to index the candidates, so it
+;; has to see the real event.  The mapping is the one `reverse-input-method'
+;; already built in `local-function-key-map' (see `basic-switch-language').
+(defun k/cyrillic-key-to-latin (char)
+  "Return the character CHAR would have typed on a Latin layout, or nil."
+  (let ((translation (and (characterp char)
+                          (lookup-key local-function-key-map (vector char)))))
+    (and (vectorp translation)
+         (= (length translation) 1)
+         (characterp (aref translation 0))
+         (aref translation 0))))
+
+(defun k/ace-jump-move-translated ()
+  "Re-issue the pressed key as the Latin character it stands for."
+  (interactive)
+  (when-let* ((latin (k/cyrillic-key-to-latin last-command-event)))
+    (setq unread-command-events (list latin))))
+
+(defun k/ace-jump-accept-cyrillic-labels (&rest _)
+  "Accept the jump labels typed without leaving the Cyrillic layout."
+  (when (keymapp overriding-local-map)
+    (dolist (char (append (number-sequence ?\u0410 ?\u044F) (list ?\u0401 ?\u0451)))
+      (when (memq (k/cyrillic-key-to-latin char) ace-jump-mode-move-keys)
+        (define-key overriding-local-map (vector char)
+                    #'k/ace-jump-move-translated)))))
+
+(advice-add 'ace-jump-do :after #'k/ace-jump-accept-cyrillic-labels)
 (global-unset-key (kbd "M-a"))
 (when (require 'ace-jump-mode nil 'noerror)
   (define-key global-map (kbd "M-a") 'ace-jump-mode))
