@@ -179,7 +179,8 @@ not in the top of the frame."
   (add-hook 'writeroom-mode-disable-hook
             (lambda ()
               (display-line-numbers-mode 1)
-              (global-display-fill-column-indicator-mode 1))))
+              (global-display-fill-column-indicator-mode 1)))
+  :bind (("C-<f11>" . writeroom-mode)))
 
 ;;-------------------------------------------------------------------
 ;; Paredit customization
