@@ -126,6 +126,11 @@ forwarding to pick the text up."
          ("M-<down>"   . windmove-down)
          ("C-<prior>"  . eframe-previous-buffer)
          ("C-<next>"   . eframe-next-buffer)
+         ;; Scrolling with the keys `basic-keys' gives it everywhere else:
+         ;; a wheel notch for the program, a line for the buffer -- see
+         ;; `k/ghostel-scroll'.
+         ("C-<up>"     . k/ghostel-scroll-backward)
+         ("C-<down>"   . k/ghostel-scroll-forward)
          ("<delete>"   . (lambda () (interactive) (ghostel-send-key "d" "ctrl")))
          ;; C-v is handled by `k/ghostel-paste-override-map' instead: a binding
          ;; here would be shadowed by cua-mode.
@@ -168,6 +173,51 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
     (interactive)
     (kill-ring-save (point) (line-end-position))
     (ghostel-send-key "k" "ctrl"))
+
+  ;; Scrolling with C-<up> / C-<down>, the keys `basic-keys' gives it
+  ;; everywhere else.
+  ;;
+  ;; Where the scrollback lives decides what they can do.  Under a fullscreen
+  ;; TUI -- Claude Code, and anything else on the alternate screen -- the
+  ;; buffer holds the visible grid and nothing more: there is no history above
+  ;; `point-min' to scroll to, and the transcript worth scrolling is the
+  ;; program's own.  Which is why the wheel scrolls one of those and
+  ;; `scroll-down-line' scrolls nothing: ghostel hands a wheel notch to the
+  ;; program whenever it has asked to track the mouse.
+  ;;
+  ;; So these keys build the event the wheel would have sent and give it to
+  ;; the function ghostel's own wheel intercept uses, which encodes whichever
+  ;; mouse protocol is in force.  It declines for a program that ignores the
+  ;; mouse -- a shell, whose scrollback ghostel does materialize into the
+  ;; buffer -- and in copy and Emacs modes, where the buffer is the thing to
+  ;; scroll; the line scroll below then runs, exactly as the wheel falls back
+  ;; to it.
+  (defun k/ghostel-scroll (button count)
+    "Scroll COUNT wheel notches: BUTTON 4 back, 5 forward.
+Sent to the program while it tracks the mouse, applied to the buffer a
+line at a time otherwise."
+    (let ((event (list (if (eq button 4) 'wheel-up 'wheel-down)
+                       ;; Aimed at the cursor, or at the window corner when
+                       ;; the cursor is out of sight.
+                       (or (posn-at-point) (posn-at-x-y 0 0))))
+          (scroll (if (eq button 4) #'scroll-down-line #'scroll-up-line)))
+      (condition-case err
+          (dotimes (_ (or count 1))
+            (unless (ghostel--forward-scroll-event event button)
+              (funcall scroll 1)))
+        ;; Say so rather than ding, the way `mwheel-scroll' does.
+        ((beginning-of-buffer end-of-buffer)
+         (message "%s" (error-message-string err))))))
+
+  (defun k/ghostel-scroll-backward (&optional count)
+    "Scroll back through the scrollback, COUNT notches (one by default)."
+    (interactive "p")
+    (k/ghostel-scroll 4 count))
+
+  (defun k/ghostel-scroll-forward (&optional count)
+    "Scroll forward through the scrollback, COUNT notches (one by default)."
+    (interactive "p")
+    (k/ghostel-scroll 5 count))
 
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
   (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
