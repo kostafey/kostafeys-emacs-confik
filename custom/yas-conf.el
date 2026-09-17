@@ -7,11 +7,14 @@
  '(yasnippet-snippets :type git :host github
 				              :repo "AndreaCrotti/yasnippet-snippets" :branch "master"))
 
-(yas-global-mode 1)
+(require 'yasnippet)
+
 ;; personal snippets
 (setq yas-snippet-dirs
       (append yas-snippet-dirs
               (list "~/.emacs.d/custom/mysnippets")))
+
+(yas-global-mode 1)
 
 (defun yas/next-field-or-maybe-expand-1 ()
   (interactive)

@@ -263,7 +263,7 @@ CATEGORY-FN is the advised `ace-jump-char-category'."
 (defvar yasnippet-prefix "\C-y")
 (global-unset-key yasnippet-prefix)
 (global-set-key (concat yasnippet-prefix "n") 'yas/new-snippet)
-(global-set-key (concat yasnippet-prefix "f") 'yas/find-snippets)
+(global-set-key (concat yasnippet-prefix "f") 'yas-describe-tables)
 (global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
 (global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
 
