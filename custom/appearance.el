@@ -79,6 +79,18 @@
 
   (global-tab-line-mode t))
 
+;; `tab-line-auto-hscroll' switches to the hidden ` *tab-line-hscroll*'
+;; buffer unconditionally, so once anything kills it every
+;; `(:eval (tab-line-format))' signals "Selecting deleted buffer" and the
+;; tab line silently renders as an empty strip until Emacs is restarted.
+(defun k/tab-line-ensure-hscroll-buffer (&rest _)
+  "Recreate `tab-line-auto-hscroll-buffer' when it has been killed."
+  (unless (buffer-live-p tab-line-auto-hscroll-buffer)
+    (setq tab-line-auto-hscroll-buffer
+          (generate-new-buffer " *tab-line-hscroll*"))))
+
+(advice-add 'tab-line-auto-hscroll :before #'k/tab-line-ensure-hscroll-buffer)
+
 (global-set-key (kbd "C-<next>") 'tab-line-switch-to-next-tab)
 (global-set-key (kbd "C-<prior>") 'tab-line-switch-to-prev-tab)
 

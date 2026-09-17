@@ -688,10 +688,15 @@ Don't mess with special buffers."
       (kill-buffer buffer))))
 
 (defun kill-special-buffers ()
-  "Kill special buffers but the current one."
+  "Kill special buffers but the current one.
+Buffers whose name starts with a space are internal working buffers of
+Emacs itself (e.g. \" *tab-line-hscroll*\"); killing them silently breaks
+the feature that owns them, so leave them alone."
   (interactive)
   (dolist (buffer (buffer-list))
-    (unless (or (eql buffer (current-buffer)) (buffer-file-name buffer))
+    (unless (or (eql buffer (current-buffer))
+                (buffer-file-name buffer)
+                (string-prefix-p " " (buffer-name buffer)))
       (let ((kill-buffer-query-functions nil))
         (kill-buffer buffer)))))
 
