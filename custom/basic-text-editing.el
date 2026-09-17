@@ -68,6 +68,18 @@ arg - is a searching word (char)"
               (format-time-string "%d.%m.%Y")
             (format-time-string "%Y-%m-%d"))))
 
+(defun insert-mode (mode-name)
+  (interactive "sEnter mode-name: ")
+  (let ((mode (format "%s-mode" mode-name)))
+    (if (fboundp (intern mode))
+        (save-excursion
+          (goto-char (point-min))
+          (insert (format "-*- mode: %s -*-\n" mode-name))
+          (line-move -1)
+          (funcall (intern mode))
+          (comment-or-uncomment-this))
+      (message (format "Can't find %s" mode)))))
+
 ;; SQL cleanup
 ;; "\|\(\\n\)\|\+
 (defun insert-crear-sql-regexp()
