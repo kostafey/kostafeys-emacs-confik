@@ -68,13 +68,17 @@ arg - is a searching word (char)"
               (format-time-string "%d.%m.%Y")
             (format-time-string "%Y-%m-%d"))))
 
-(defun insert-mode (mode-name)
+(defun insert-mode (name)
+  "Insert a `-*- mode: NAME -*-' file variable line and switch to that mode.
+The line goes to the top of the buffer and is commented out according
+to the new mode's syntax.  NAME is the mode name without the `-mode'
+suffix, e.g. \"sql\" for `sql-mode'."
   (interactive "sEnter mode-name: ")
-  (let ((mode (format "%s-mode" mode-name)))
+  (let ((mode (format "%s-mode" name)))
     (if (fboundp (intern mode))
         (save-excursion
           (goto-char (point-min))
-          (insert (format "-*- mode: %s -*-\n" mode-name))
+          (insert (format "-*- mode: %s -*-\n" name))
           (line-move -1)
           (funcall (intern mode))
           (comment-or-uncomment-this))
