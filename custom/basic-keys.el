@@ -129,10 +129,17 @@
        (if select (k/select) (k/deselect)) (k/step-backward-word))
 
 (defun k/sexp-forward (&optional select) (interactive)
-       (if select (k/select) (k/deselect)) (forward-sexp 1))
+       (if select (k/select) (k/deselect))
+       (pcase major-mode
+         ('markdown-mode (markdown-forward-block 1))
+         ('org-mode      (org-forward-element))
+         (_              (forward-sexp 1))))
 (defun k/sexp-backward (&optional select) (interactive)
-       (if select (k/select) (k/deselect)) (backward-sexp 1))
-
+       (if select (k/select) (k/deselect))
+       (pcase major-mode
+         ('markdown-mode (markdown-backward-block 1))
+         ('org-mode      (org-backward-element))
+         (_              (backward-sexp 1))))
 (defun k/line-beginning (&optional select) (interactive)
        (if select (k/select) (k/deselect)) (beginning-of-line))
 (defun k/line-end (&optional select) (interactive)
