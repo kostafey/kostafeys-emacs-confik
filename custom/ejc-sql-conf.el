@@ -5,8 +5,8 @@
  '(cider :type git :host github
          :repo "clojure-emacs/cider" :branch "master"))
 (straight-use-package
- '(clomacs :type git :host gitlab
-           :repo "kostafey/clomacs" :branch "master"))
+ '(clomacs :type git :host github
+           :repo "clojure-emacs/clomacs" :branch "master"))
 (require 'clomacs)
 
 (pcase system-type
