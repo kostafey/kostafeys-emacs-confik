@@ -132,13 +132,19 @@
        (if select (k/select) (k/deselect))
        (pcase major-mode
          ('markdown-mode (markdown-forward-block 1))
-         ('org-mode      (org-forward-element))
+         ('org-mode      (if (string-prefix-p "#+begin_src"
+                                              (thing-at-point 'line t))
+                             (org-forward-element)
+                           (forward-sexp 1)))
          (_              (forward-sexp 1))))
 (defun k/sexp-backward (&optional select) (interactive)
        (if select (k/select) (k/deselect))
        (pcase major-mode
          ('markdown-mode (markdown-backward-block 1))
-         ('org-mode      (org-backward-element))
+         ('org-mode      (if (string-prefix-p "#+end_src"
+                                              (thing-at-point 'line t))
+                             (org-backward-element)
+                           (backward-sexp 1)))
          (_              (backward-sexp 1))))
 (defun k/line-beginning (&optional select) (interactive)
        (if select (k/select) (k/deselect)) (beginning-of-line))
@@ -217,6 +223,8 @@
     (define-key org-mode-map (kbd "M-a") nil)
     (define-key org-mode-map (kbd "C-j") 'join-next-line-space-n)
     (define-key org-mode-map (kbd "C-x t") 'org-todo)
+    (define-key org-mode-map (kbd "C-S-<up>") 'toggle-letter-case)
+    (define-key org-mode-map (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)
     (global-set-key (kbd "C-c l") 'org-store-link)
     (global-set-key (kbd "C-c a") 'org-agenda)))
 
