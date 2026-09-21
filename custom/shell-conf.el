@@ -167,6 +167,35 @@ forwarding to pick the text up."
          ("M" . ghostel-project-list-buffers))
   :hook (ghostel-mode . k/ghostel-enable-paste-override)
   :config
+  ;; Copying several lines out of a full-screen TUI.
+  ;;
+  ;; Every copy out of a ghostel buffer runs through
+  ;; `ghostel--filter-soft-wraps', which drops the newline of each row the
+  ;; terminal marked as soft-wrapped -- so a shell line that spilled over the
+  ;; right edge comes back as the single line it logically is.
+  ;;
+  ;; On the alternate screen that rule misfires.  A TUI paints the grid row by
+  ;; row, and Claude Code (like anything built on Ink) ends a row that reaches
+  ;; the last column by letting the terminal wrap rather than by writing the
+  ;; newline itself.  Its panels are padded to the full width, so nearly every
+  ;; row carries the soft-wrap flag and a copied block -- a code listing, a
+  ;; diff, a command it proposes -- arrives as one long line with the padding
+  ;; baked into the middle of it.
+  ;;
+  ;; Nothing distinguishes those rows from a genuine spillover, but on the
+  ;; alternate screen the distinction does not matter: there is no scrollback
+  ;; to reflow, the program has already laid the text out for this width, and
+  ;; the rows on screen are the lines to copy.  Keep them, and let the trailing
+  ;; whitespace trim `ghostel--clean-copy-text' does next take off the padding.
+  (defun k/ghostel-keep-alt-screen-rows (filter-fn text)
+    "Keep the row newlines in TEXT while the alternate screen is up.
+FILTER-FN is the advised `ghostel--filter-soft-wraps', used as usual
+for the main screen, where a wrapped row really is a continuation."
+    (if (ghostel-alt-screen-p) text (funcall filter-fn text)))
+
+  (advice-add 'ghostel--filter-soft-wraps :around
+              #'k/ghostel-keep-alt-screen-rows)
+
   (defun k/ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
 Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
