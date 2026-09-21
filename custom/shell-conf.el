@@ -196,6 +196,35 @@ for the main screen, where a wrapped row really is a continuation."
   (advice-add 'ghostel--filter-soft-wraps :around
               #'k/ghostel-keep-alt-screen-rows)
 
+  ;; Where an ace-jump lands.
+  ;;
+  ;; ghostel answers a jump out of the live input on its own only for the two
+  ;; it is wired into, isearch and the minibuffer, and leaves every other one
+  ;; to call `ghostel-maybe-leave-input' -- otherwise point drifts off the
+  ;; cursor and the next redraw hauls it back, the same way the sexp motions
+  ;; above have to say so.  `M-a' is the jump used here most.
+  ;;
+  ;; It goes to Emacs mode rather than to the copy mode
+  ;; `ghostel-point-leave-input-mode' would pick, because the reason to jump
+  ;; into a terminal is to read or copy something while the program keeps
+  ;; working, and copy mode freezes exactly the output being followed.  The
+  ;; buffer is read-only either way, so everything reached from there -- the
+  ;; selection keys, `M-w', hyperlinks -- behaves identically.
+  ;;
+  ;; `ace-jump-mode-end-hook' runs only after the jump itself, on both the
+  ;; single-candidate and the label-selected paths, so an aborted jump leaves
+  ;; the mode alone.
+  (defun k/ghostel-ace-jump-leave-input ()
+    "Enter `ghostel-emacs-mode' where an ace-jump landed in a terminal.
+A no-op outside ghostel buffers, and in copy and Emacs modes, which are
+read-only already -- `ghostel-emacs-mode' toggles, and calling it there
+would drop the jump straight back into the terminal."
+    (when (and (derived-mode-p 'ghostel-mode)
+               (not (memq ghostel--input-mode '(copy emacs))))
+      (ghostel-emacs-mode)))
+
+  (add-hook 'ace-jump-mode-end-hook #'k/ghostel-ace-jump-leave-input)
+
   (defun k/ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
 Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
