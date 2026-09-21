@@ -120,6 +120,15 @@ forwarding to pick the text up."
          ;; `ghostel-readonly-copy', which is what it is there for.
          ("M-w"  . get-vc-status)
          ("C-k"  . k/ghostel-send-C-k-and-kill)
+         ;; `ghostel-mode-map' sends C-g on to the program, and Claude Code
+         ;; answers ^G by opening the prompt in $EDITOR -- a window outside
+         ;; Emacs, with the session parked on "Save and close editor to
+         ;; continue..." until it is closed.  Nothing here wants to type ^G
+         ;; anyway: the interrupt is `C-c C-c' and the quit `C-c C-\', and
+         ;; `C-q C-g' still sends it for the rare program that reads it.
+         ;; Copy and Emacs modes bind C-g to `ghostel-readonly-exit', char
+         ;; mode goes on sending it -- both are what they should be.
+         ("C-g"  . k/ghostel-keyboard-quit)
          ("M-<left>"   . meta-left)
          ("M-<right>"  . meta-right)
          ("M-<up>"     . windmove-up)
@@ -224,6 +233,17 @@ would drop the jump straight back into the terminal."
       (ghostel-emacs-mode)))
 
   (add-hook 'ace-jump-mode-end-hook #'k/ghostel-ace-jump-leave-input)
+
+  (defun k/ghostel-keyboard-quit ()
+    "Quit, instead of sending `C-g' to the program.
+`ghostel-mode' binds `inhibit-quit' so that C-g reaches the keymap as
+an ordinary key -- but reading it still raised `quit-flag', and nothing
+lowers it here, so it would fire as a stray quit in the first buffer
+that does not inhibit it.  `ghostel-send-C-g' clears the flag for the
+same reason; do that, then quit as everywhere else."
+    (interactive)
+    (setq quit-flag nil)
+    (keyboard-quit))
 
   (defun k/ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
