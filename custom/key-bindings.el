@@ -259,6 +259,10 @@ CATEGORY-FN is the advised `ace-jump-char-category'."
 (global-set-key [f9] 'auto-fill-mode)   ; enable/disable lines auto-fill
 (global-set-key [f10] 'smerge-mode)
 (global-set-key [f12] 'flyspell-mode)   ; enable/disable spell checking
+;; Russian words typed past the intended key, see `ru-typo-conf'
+(global-set-key [S-f12] 'k/ru-typo-mode)         ; correct while typing
+(global-set-key [C-f12] 'k/ru-typo-correct-word) ; correct the word at point
+(global-set-key [M-f12] 'k/ru-typo-accept-word)  ; leave that word alone
 ;; yasnippet
 (defvar yasnippet-prefix "\C-y")
 (global-unset-key yasnippet-prefix)

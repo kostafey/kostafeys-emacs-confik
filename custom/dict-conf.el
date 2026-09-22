@@ -229,6 +229,25 @@ capitalized prefix has to be capitalized back."
               (forward-line 1))
             (nreverse words)))))))
 
+(defun k/dict--member-p (file word)
+  "Return non-nil when WORD is a line of word list FILE.
+WORD has to be down-cased already: the word lists are."
+  (let ((buffer (k/dict--buffer file)))
+    (when (buffer-live-p buffer)
+      (with-current-buffer buffer
+        (save-excursion
+          (k/dict--lower-bound word)
+          (equal word (k/dict--line)))))))
+
+(defun k/dict-known-word-p (word &optional files)
+  "Return non-nil when WORD is spelled the way FILES spell it.
+FILES default to `k/dict-files\='.  The lookup is the binary search of
+`k/dict--lower-bound\=', so asking after a single word costs the same
+handful of line comparisons a completion does."
+  (let ((word (downcase word)))
+    (seq-some (lambda (file) (k/dict--member-p file word))
+              (or files k/dict-files))))
+
 (defun k/dict-words (input)
   "Return the dictionary words completing INPUT, cased like INPUT."
   (let ((prefix (downcase input)))
