@@ -3,9 +3,27 @@
 ;; Start server:
 ;; -------------
 ;; `Qwen2.5-Coder-3B'
-;; llama-server -m ~/.cache/llama.cpp/Qwen_Qwen2.5-Coder-3B-Instruct-GGUF_qwen2.5-coder-3b-instruct-q5_k_m.gguf -c 40960
-;;
 ;; llama serve -hf bartowski/Qwen2.5-Coder-3B-Instruct-GGUF:Q5_K_M --port 8012 --cors-origins "http://localhost:8012"
+;;
+;; `Qwen3-8B'
+;; reasoning-budget 128:
+;; llama serve -hf Qwen/Qwen3-8B-GGUF:Q4_K_M --reasoning-format deepseek --reasoning-budget 128 --reasoning-budget-message "Enough thinking, give the final answer now." -c 16384 -ngl 99 --port 8012 --cors-origins "http://localhost:8012"
+;; thinking off:
+;; llama serve -hf Qwen/Qwen3-8B-GGUF:Q4_K_M --reasoning off -c 16384 -ngl 99 --port 8012 --cors-origins "http://localhost:8012"
+;;
+;; Qwen3 thinks by default. `--reasoning-format deepseek' keeps the thoughts
+;; out of `message.content' and `gptel-include-reasoning' set to nil drops
+;; them, but they are still generated and still cost time:
+;; proofreading one sentence took 264 tokens of thinking, 5.3 s, and
+;; arrived at the same answer 18 tokens gave without it.  The budget cuts
+;; the thought short at 128 tokens, some two seconds at ~50 tok/s, and the
+;; message asks for the answer instead of leaving it cut off mid-sentence.
+;;
+;; Thinking off costs nothing on rewriting, proofreading and code, but it
+;; does cost `k/llm-suggest': asked to continue a sentence, the model
+;; repeated it back instead, three runs out of five, against none out of
+;; five with thinking on.  The instruction is the hard part there, not the
+;; text.
 
 (defun get-language-from-mode ()
   "Get the programming language name from the mode name."
@@ -64,7 +82,8 @@
                (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
                (code-only   . "Output ONLY the requested code. No prose, no markdown formatting, and no ``` blocks.")
                (writing     . "You are a large language model and a writing assistant. Respond concisely.")
-               (chat        . "You are a large language model and a conversation partner. Respond concisely.")))
+               (chat        . "You are a large language model and a conversation partner. Respond concisely."))
+             gptel-include-reasoning nil)
 
             (defun k/gptel-add-file ()
               "Send the current buffer-file to gptel-add-file function."
