@@ -182,6 +182,14 @@ buffer.  With a prefix argument and several running,
   ;; buffer".  Both go with the side window: the dedication is applied under
   ;; the same condition, and a plain `display-buffer' takes over.
   (setq claude-code-ide-use-side-window nil)
+  ;; Registers the session with the account, which is what lists it in the
+  ;; Code section of the phone app.  Without it a session started here is a
+  ;; local process and nothing off this machine knows it exists.  The flag
+  ;; takes an optional name, and the package appends the extra flags ahead
+  ;; of `--mcp-config', so the parser meets an option rather than a name
+  ;; and leaves both alone.  A conversation resumed through `claude attach'
+  ;; misses out: that path replaces the whole command, extra flags and all.
+  (setq claude-code-ide-cli-extra-flags "--remote-control")
   ;; Exposes xref, imenu, project and diagnostics back to the agent, and flips
   ;; `claude-code-ide-enable-mcp-server' so the session claude-code-ide starts
   ;; brings that server up with it.
