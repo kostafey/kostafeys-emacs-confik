@@ -2,6 +2,9 @@
 
 ;; Start server:
 ;; -------------
+;; `-hf' downloads models to the Hugging Face cache, `~/.cache/huggingface/hub'
+;; (`$HF_HOME/hub' if set).
+;;
 ;; `Qwen2.5-Coder-3B'
 ;; llama serve -hf bartowski/Qwen2.5-Coder-3B-Instruct-GGUF:Q5_K_M --port 8012
 ;;
@@ -15,13 +18,22 @@
 ;; llama serve -hf Qwen/Qwen3-8B-GGUF:Q4_K_M --reasoning off -c 16384 -ngl 99 --port 8012
 ;;
 ;; `Qwen3-4B'
+;; Vulkan:
 ;; llama serve -hf Qwen/Qwen3-4B-GGUF:Q4_K_M --reasoning off -c 4096 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --port 8012
+;; CUDA:
+;; llama serve -hf Qwen/Qwen3-4B-GGUF:Q4_K_M --reasoning off -c 40960 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 --port 8012
 ;;
 ;; `Gemma-3-4B'
+;; Vulkan:
 ;; llama serve -hf unsloth/gemma-3-4b-it-GGUF:Q4_K_M --no-mmproj -c 8192 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --port 8012
+;; CUDA:
+;; llama serve -hf unsloth/gemma-3-4b-it-GGUF:Q4_K_M --no-mmproj -c 131072 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 --port 8012
 ;;
 ;; `Ministral-3-3B'
+;; Vulkan:
 ;; llama serve -hf unsloth/Ministral-3-3B-Instruct-2512-GGUF:Q5_K_M --no-mmproj -c 8192 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --temp 0.15 --port 8012
+;; CUDA:
+;; llama serve -hf unsloth/Ministral-3-3B-Instruct-2512-GGUF:Q5_K_M --no-mmproj -c 65536 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 --temp 0.15 --port 8012
 ;;
 ;; Qwen3 thinks by default. `--reasoning-format deepseek' keeps the thoughts
 ;; out of `message.content' and `gptel-include-reasoning' set to nil drops
