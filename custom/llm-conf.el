@@ -20,6 +20,9 @@
 ;; `Gemma-3-4B'
 ;; llama serve -hf unsloth/gemma-3-4b-it-GGUF:Q4_K_M --no-mmproj -c 8192 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --port 8012
 ;;
+;; `Ministral-3-3B'
+;; llama serve -hf unsloth/Ministral-3-3B-Instruct-2512-GGUF:Q5_K_M --no-mmproj -c 8192 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --temp 0.15 --port 8012
+;;
 ;; Qwen3 thinks by default. `--reasoning-format deepseek' keeps the thoughts
 ;; out of `message.content' and `gptel-include-reasoning' set to nil drops
 ;; them, but they are still generated and still cost time:
