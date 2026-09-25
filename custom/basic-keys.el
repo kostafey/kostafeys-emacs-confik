@@ -128,24 +128,51 @@
 (defun k/word-backward (&optional select) (interactive)
        (if select (k/select) (k/deselect)) (k/step-backward-word))
 
+(defun k/code-block-fences ()
+  "Return (OPEN . CLOSE) - beginnings of the opening and closing fence
+lines of the markdown/org code block at point, or nil."
+  (cond
+   ((derived-mode-p 'markdown-mode)
+    (when-let* ((bounds (markdown-get-enclosing-fenced-block-construct)))
+      (cons (save-excursion (goto-char (car bounds))
+                            (line-beginning-position))
+            (save-excursion (goto-char (cadr bounds))
+                            (skip-chars-backward " \t\n")
+                            (line-beginning-position)))))
+   ((derived-mode-p 'org-mode)
+    (let ((el (org-element-at-point)))
+      (when (string-suffix-p "-block" (symbol-name (org-element-type el)))
+        (cons (org-element-property :post-affiliated el)
+              (save-excursion (goto-char (org-element-property :end el))
+                              (skip-chars-backward " \t\n")
+                              (line-beginning-position))))))))
+
+(defun k/code-block-content-at-fence (fence)
+  "When the current line is the FENCE (`open' or `close') line of a code
+block, return (BEG . END) of the block content without the fence lines."
+  (when-let* ((fences (k/code-block-fences))
+              ((< (car fences) (cdr fences)))
+              ((= (line-beginning-position)
+                  (if (eq fence 'open) (car fences) (cdr fences)))))
+    (let ((beg (save-excursion (goto-char (car fences))
+                               (forward-line 1)
+                               (point))))
+      (cons beg (max beg (1- (cdr fences)))))))
+
 (defun k/sexp-forward (&optional select) (interactive)
-       (if select (k/select) (k/deselect))
-       (pcase major-mode
-         ('markdown-mode (markdown-forward-block 1))
-         ('org-mode      (if (string-prefix-p "#+begin_src"
-                                              (thing-at-point 'line t))
-                             (org-forward-element)
-                           (forward-sexp 1)))
-         (_              (forward-sexp 1))))
+       (let ((content (k/code-block-content-at-fence 'open)))
+         (when content (goto-char (car content)))
+         (if select (k/select) (k/deselect))
+         (if content
+             (goto-char (cdr content))
+           (forward-sexp 1))))
 (defun k/sexp-backward (&optional select) (interactive)
-       (if select (k/select) (k/deselect))
-       (pcase major-mode
-         ('markdown-mode (markdown-backward-block 1))
-         ('org-mode      (if (string-prefix-p "#+end_src"
-                                              (thing-at-point 'line t))
-                             (org-backward-element)
-                           (backward-sexp 1)))
-         (_              (backward-sexp 1))))
+       (let ((content (k/code-block-content-at-fence 'close)))
+         (when content (goto-char (cdr content)))
+         (if select (k/select) (k/deselect))
+         (if content
+             (goto-char (car content))
+           (backward-sexp 1))))
 (defun k/line-beginning (&optional select) (interactive)
        (if select (k/select) (k/deselect)) (beginning-of-line))
 (defun k/line-end (&optional select) (interactive)
