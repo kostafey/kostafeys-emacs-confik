@@ -58,12 +58,16 @@
 (defun k/ghostel-clipboard-image-p ()
   "Non-nil when the clipboard holds an image rather than text.
 X11 advertises what it can convert the selection to; a screenshot taken
-by any of the usual tools offers `image/png' among its TARGETS."
+by any of the usual tools offers `image/png' among its TARGETS.  Windows
+lists raw clipboard format names instead: `BITMAP', `DIB' and `DIBV5'
+for any picture, plus `PNG' from the Snipping Tool."
   (and (display-graphic-p)
        (let ((targets (ignore-errors (gui-get-selection 'CLIPBOARD 'TARGETS))))
          (and (vectorp targets)
               (seq-some (lambda (target)
-                          (string-prefix-p "image/" (symbol-name target)))
+                          (let ((name (symbol-name target)))
+                            (or (string-prefix-p "image/" name)
+                                (member name '("BITMAP" "DIB" "DIBV5" "PNG")))))
                         targets)))))
 
 (defun k/ghostel-paste-dwim ()
@@ -73,7 +77,8 @@ A screenshot reaches Claude Code as a keystroke rather than as data: the
 CLI answers C-v by reading the clipboard itself -- `xclip' under X11,
 `wl-paste' under Wayland, `Get-Clipboard' on Windows -- and puts an
 `[Image #N]' chip in its prompt.  Nothing has to travel through Emacs,
-which has no way to hand a picture to a PTY anyway.
+which has no way to hand a picture to a PTY anyway.  On Windows the CLI
+listens for M-v instead, C-v being the console's own text paste there.
 
 The image branch is limited to Claude Code buffers on purpose: to a
 shell C-v means `quoted-insert', so sending it there would only arm the
@@ -87,7 +92,9 @@ forwarding to pick the text up."
   (interactive)
   (if (and (k/ghostel-clipboard-image-p)
            (bound-and-true-p claude-code-ide--session))
-      (ghostel-send-key "v" "ctrl")
+      (if (eq system-type 'windows-nt)
+          (ghostel-send-key "v" "meta")
+        (ghostel-send-key "v" "ctrl"))
     (ghostel-yank)))
 
 (use-package ghostel
