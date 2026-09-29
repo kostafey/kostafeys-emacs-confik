@@ -239,6 +239,19 @@ not in the top of the frame."
   (idle-highlight-mode t)
   (font-lock-warn-todo))
 
+;; -------------------------------------------------------------------
+;; By default `idle-highlight-mode' skips symbols inside strings entirely;
+;; in eglot buffers let it highlight them too.
+(defun k/eglot-idle-highlight-setup ()
+  (if (eglot-managed-p)
+      (setq-local idle-highlight-exceptions-face
+                  (remq 'font-lock-string-face
+                        (default-value 'idle-highlight-exceptions-face)))
+    (kill-local-variable 'idle-highlight-exceptions-face)))
+
+(add-hook 'eglot-managed-mode-hook #'k/eglot-idle-highlight-setup)
+;; -------------------------------------------------------------------
+
 (defun my-coding-hook ()
   (my-common-coding-hook)
   (paredit-everywhere-mode)
