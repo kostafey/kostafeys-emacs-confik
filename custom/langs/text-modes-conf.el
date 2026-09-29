@@ -231,6 +231,26 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (setq org-fontify-quote-and-verse-blocks nil)
 
+;; Fontify markdown-style `code` with `org-code' face, the same as ~code~.
+(defun k/org-match-backtick-code (last)
+  "Match the next `code' span up to LAST, skipping src/example blocks."
+  (let (found)
+    (while (and (not found)
+                (re-search-forward "`\\([^`\n]+\\)`" last t))
+      (unless (save-match-data
+                (save-excursion
+                  (goto-char (match-beginning 0))
+                  (org-in-block-p '("src" "example" "export"))))
+        (setq found t)))
+    found))
+
+(defun k/org-backtick-code-highlight-initialize ()
+  (font-lock-add-keywords
+   nil '((k/org-match-backtick-code . (0 'org-code t)))
+   'append))
+
+(add-hook 'org-mode-hook 'k/org-backtick-code-highlight-initialize)
+
 (require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
 
