@@ -60,17 +60,18 @@
 
 (defun get-vc-status ()
   "Open the VCS status buffer for the current buffer's repository.
-Use darcsum for a darcs working tree and Magit for everything else.
+Use darcsum for a darcs working tree, `pijul-record-preview' for a
+Pijul one and Magit for everything else.
 
 Backend detection via `vc-backend' is deliberately avoided: the only
-non-darcs case also opens Magit, so the probe was pure overhead (a
+other case also opens Magit, so the probe was pure overhead (a
 subprocess per handled backend, slow on Windows)."
   (interactive)
   (let ((darcs-root (and (fboundp 'darcsum-repository-root)
                          (ignore-errors (darcsum-repository-root)))))
-    (if darcs-root
-        (darcsum-whatsnew darcs-root)
-      (magit-status))))
+    (cond (darcs-root (darcsum-whatsnew darcs-root))
+          ((pijul-repository-root) (pijul-record-preview))
+          (t (magit-status)))))
 
 ;; `git-gutter:in-git-repository-p' shells out to `git rev-parse
 ;; --is-inside-work-tree', and `global-git-gutter-mode' asks it twice for
