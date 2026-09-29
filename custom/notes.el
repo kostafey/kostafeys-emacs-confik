@@ -103,6 +103,7 @@ as an .org file unless the name has an extension of its own."
   (consult-ripgrep k/notes-dir))
 
 (global-set-key (kbd "M-<f1>") #'k/notes)
+(global-set-key (kbd "C-x M-<f1>") #'k/notes-search)
 
 (provide 'notes)
 
