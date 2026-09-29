@@ -79,6 +79,33 @@
   (advice-add 'magit-get :around #'memoize-git-config)
   (advice-add 'magit-get-boolean :around #'memoize-git-config))
 
+;;------------------------------------------------------------
+;; Lisp backtrace of a frozen Emacs, for ~/freeze-collect.sh
+
+;; The script writes a file name into the request file and sends SIGUSR2.
+;; `debug-on-event' turns the signal into a quit that calls `debug' with the
+;; spinning code still on the stack, and this advice writes that stack out.
+;; The *Backtrace* buffer alone is not enough: nobody can see it on a dead
+;; display, and the debugger stays out altogether when it has already been
+;; entered for the same input event.  Costs one `file-exists-p' per `debug'.
+(defconst k/freeze-backtrace-request "~/.emacs-freeze-backtrace-request"
+  "Exists while `freeze-collect.sh' waits for a Lisp backtrace.
+Holds the name of the file to write it to.")
+
+(defun k/freeze-dump-backtrace (&rest _)
+  "Write the Lisp backtrace where `k/freeze-backtrace-request' asks."
+  (let ((request (expand-file-name k/freeze-backtrace-request)))
+    (when (file-exists-p request)
+      (ignore-errors
+        (let ((target (with-temp-buffer
+                        (insert-file-contents request)
+                        (buffer-string)))
+              (trace (with-output-to-string (backtrace))))
+          (delete-file request)
+          (with-temp-file target (insert trace)))))))
+
+(advice-add 'debug :before #'k/freeze-dump-backtrace)
+
 (provide 'perfomance-conf)
 
 ;;; perfomance-conf.el ends here
