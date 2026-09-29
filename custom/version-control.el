@@ -51,6 +51,13 @@
 ;; drive Git (darcs goes through darcsum, not vc), so probe nothing else.
 (setq vc-handled-backends '(Git))
 
+;; ------------------------------------------------------------
+;; pijul
+(add-to-list 'load-path (concat site-lisp-path "artifacts/pijul/"))
+(require 'pijul)
+(global-pijul-mode 1)
+;; ------------------------------------------------------------
+
 (defun get-vc-status ()
   "Open the VCS status buffer for the current buffer's repository.
 Use darcsum for a darcs working tree and Magit for everything else.
