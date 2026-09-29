@@ -224,4 +224,30 @@ METHOD and PARAMS are passed through untouched."
   (advice-add 'claude-code-ide-mcp-http-server--dispatch
               :around #'k/claude-code-ide-mcp-dispatch-probes))
 
+;; Left arrow on an empty prompt opens the agents view, and the CLI offers no
+;; key binding to turn that off.  A misclick there is not harmless: the view
+;; moves the conversation into a daemon-run background session, which the
+;; terminal here then follows through `claude attach' -- a client that redraws
+;; the screen twice a second, idle or not, so the cursor flickers and the
+;; buffer lags.  `/exit' and an Emacs restart leave the daemon running, and
+;; `k/claude-code-ide' attaches to it again; only `claude stop ID' ends it.
+;;
+;; Swallow the key where it can do nothing else: with the terminal cursor
+;; right after the prompt mark, ">" and a no-break space, there is no text to
+;; its left to move over.
+(defun k/ghostel-claude-left ()
+  "Send <left> to the terminal, unless at the start of a Claude Code prompt."
+  (interactive)
+  (if (and ghostel--cursor-char-pos
+           (equal (save-excursion
+                    (goto-char ghostel--cursor-char-pos)
+                    (buffer-substring-no-properties (line-beginning-position)
+                                                    (point)))
+                  "> "))
+      (message "Left arrow ignored: it opens the agents view here")
+    (ghostel--send-event)))
+
+(with-eval-after-load 'ghostel
+  (define-key ghostel-semi-char-mode-map (kbd "<left>") #'k/ghostel-claude-left))
+
 (provide 'claude-conf)
