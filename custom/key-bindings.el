@@ -39,9 +39,7 @@
   ;; is loaded lazily, so register the source once `consult' is there.
   (with-eval-after-load 'consult
     (add-to-list 'consult-buffer-sources 'temporary-persistent-consult-source t)
-    (add-to-list 'consult-buffer-filter "\\`\\*temp\\(-[0-9]+\\)?\\*\\'"))
-  :bind
-  ("M-<f1>" . temporary-persistent-consult-switch-buffer))
+    (add-to-list 'consult-buffer-filter "\\`\\*temp\\(-[0-9]+\\)?\\*\\'")))
 
 (require 'shell-conf)
 (require 'dired-conf)

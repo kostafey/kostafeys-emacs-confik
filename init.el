@@ -53,6 +53,7 @@
 (require 'dict-conf)
 (require 'ru-typo-conf)
 (require 'key-bindings)
+(require 'notes)
 (require 'ide)
 (require 'history-conf)
 (require 'text-modes-conf)
