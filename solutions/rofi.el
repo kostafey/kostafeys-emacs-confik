@@ -1,7 +1,5 @@
 ;;; rofi.el --- switch to other buffers and files via rofi. -*- lexical-binding: t -*-
 
-(use-elpa 'popup-switcher)
-
 (cl-defun rofi (&key
                 prompt
                 items-list
@@ -32,14 +30,13 @@
   (interactive "P")
   (rofi
    :prompt "Buffer"
-   :items-list (psw-get-buffer-list arg)
-   :item-name-getter (lambda (buffer)
-                       (with-current-buffer buffer
-                         (if (and psw-mark-modified-buffers
-                                  (buffer-modified-p)
-                                  (not (psw-is-temp-buffer)))
-                             (concat (buffer-name) " *")
-                           (buffer-name))))
+   :items-list (seq-remove
+                (lambda (buffer)
+                  (or (minibufferp buffer)
+                      (string-prefix-p " " (buffer-name buffer))
+                      (and arg (not (buffer-file-name buffer)))))
+                (buffer-list))
+   :item-name-getter 'buffer-name
    :switcher 'switch-to-buffer))
 
 ;;;###autoload

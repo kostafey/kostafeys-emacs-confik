@@ -1,16 +1,6 @@
 ;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.
 
 ;;-----------------------------------------------------------------------------
-;; popup-switcher
-;;
-(defun psw-org-mode-hook ()
-  (if (equal major-mode 'org-mode)
-      (outline-show-all)))
-(add-hook 'psw-before-menu-hook 'psw-org-mode-hook)
-(setq psw-use-flx t)
-(setq psw-popup-position 'fill-column)
-
-;;-----------------------------------------------------------------------------
 ;; ibuffer
 ;;
 (require 'ibuffer)
