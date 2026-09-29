@@ -38,6 +38,7 @@
 (require 'straight-conf)
 (require 'appearance)
 (require 'minibuffer-conf)
+(require 'pijul-conf)
 (require 'version-control)
 (require 'ack-conf)
 ;;-------------------------------------------------------------------

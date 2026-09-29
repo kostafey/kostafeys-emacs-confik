@@ -51,26 +51,21 @@
 ;; drive Git (darcs goes through darcsum, not vc), so probe nothing else.
 (setq vc-handled-backends '(Git))
 
-;; ------------------------------------------------------------
-;; pijul
-(add-to-list 'load-path (concat site-lisp-path "artifacts/pijul/"))
-(require 'pijul)
-(global-pijul-mode 1)
-;; ------------------------------------------------------------
-
 (defun get-vc-status ()
   "Open the VCS status buffer for the current buffer's repository.
 Use darcsum for a darcs working tree, `pijul-record-preview' for a
-Pijul one and Magit for everything else.
+Pijul one (when `pijul-conf' is loaded) and Magit for everything else.
 
 Backend detection via `vc-backend' is deliberately avoided: the only
 other case also opens Magit, so the probe was pure overhead (a
 subprocess per handled backend, slow on Windows)."
   (interactive)
   (let ((darcs-root (and (fboundp 'darcsum-repository-root)
-                         (ignore-errors (darcsum-repository-root)))))
+                         (ignore-errors (darcsum-repository-root))))
+        (pijul-root (and (fboundp 'pijul-repository-root)
+                         (pijul-repository-root))))
     (cond (darcs-root (darcsum-whatsnew darcs-root))
-          ((pijul-repository-root) (pijul-record-preview))
+          (pijul-root (pijul-record-preview))
           (t (magit-status)))))
 
 ;; `git-gutter:in-git-repository-p' shells out to `git rev-parse
