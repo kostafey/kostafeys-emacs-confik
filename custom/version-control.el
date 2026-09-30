@@ -91,6 +91,13 @@ tree named by `GIT_DIR'/`GIT_WORK_TREE' alone -- a fair trade at some
   :straight '(git-gutter
               :type git :host github
               :repo "emacsorphanage/git-gutter" :branch "master")
+  ;; `:bind' alone would defer loading until the first key press, leaving
+  ;; `global-git-gutter-mode' off at startup.
+  :demand t
+  :bind (("C-M-g <down>" . git-gutter:next-hunk)
+         ("C-M-g <up>" . git-gutter:previous-hunk)
+         ("C-M-g p" . git-gutter:popup-hunk)
+         ("C-M-g r" . git-gutter:revert-hunk))
   :config
   (global-git-gutter-mode t))
 

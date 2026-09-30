@@ -449,11 +449,6 @@ CATEGORY-FN is the advised `ace-jump-char-category'."
              (do-side-by-side #'(lambda nil (scroll-up-line 1))))))
      (add-hook 'diffview-mode-hook 'kostafey-diffview-mode-hook)))
 
-(when (require 'git-gutter nil 'noerror)
-  (global-set-key (kbd "C-M-g <down>") 'git-gutter:next-hunk)
-  (global-set-key (kbd "C-M-g <up>") 'git-gutter:previous-hunk)
-  (global-set-key (kbd "C-M-g p") 'git-gutter:popup-hunk))
-
 (setq smerge-command-prefix (kbd "C-c s"))
 (defun kostafey-smerge-mode-hook ()
   (define-key smerge-mode-map (kbd "C-c s n") 'smerge-next)
