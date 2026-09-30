@@ -183,14 +183,118 @@ its temporary file."
       (delete-file file))
     (message "pijul record cancelled")))
 
+;; ------------------------------------------------------------
+;; pijul log
+
+(defvar k/pijul-log-font-lock-keywords
+  '(("^Change \\([A-Z0-9]+\\)" 1 'font-lock-constant-face)
+    ("^\\(?:Author\\|Date\\): .*$" . 'font-lock-comment-face))
+  "Font-lock keywords for `k/pijul-log-mode'.")
+
+(defvar-local k/pijul-log--root nil
+  "Repository root this `k/pijul-log-mode' buffer shows the log of.")
+
+(defun k/pijul--output (root &rest args)
+  "Run pijul with ARGS in ROOT; return its output, or signal on failure."
+  (let ((default-directory root)
+        (coding-system-for-read 'utf-8))
+    (with-temp-buffer
+      (unless (zerop (apply #'call-process pijul-context-program nil t nil args))
+        (user-error "pijul %s failed: %s"
+                    (string-join args " ") (string-trim (buffer-string))))
+      (buffer-string))))
+
+(defun k/pijul-log--revert (&rest _)
+  (let ((inhibit-read-only t)
+        (line (line-number-at-pos)))
+    (erase-buffer)
+    (insert (k/pijul--output k/pijul-log--root "log"))
+    (goto-char (point-min))
+    (forward-line (1- line))))
+
+(defvar k/pijul-log-mode-map
+  (let ((m (make-sparse-keymap)))
+    (define-key m (kbd "RET") #'k/pijul-log-show-change)
+    (define-key m (kbd "n") #'k/pijul-log-next)
+    (define-key m (kbd "p") #'k/pijul-log-previous)
+    m)
+  "Keymap for `k/pijul-log-mode'.")
+
+(define-derived-mode k/pijul-log-mode special-mode "Pijul-Log"
+  "Major mode for `pijul log' output.
+\\{k/pijul-log-mode-map}"
+  (setq-local font-lock-defaults '(k/pijul-log-font-lock-keywords t))
+  (setq-local revert-buffer-function #'k/pijul-log--revert))
+
+(defun k/pijul-log ()
+  "Show `pijul log' of the current repository.
+RET shows the change at point, n/p move between changes, g refreshes."
+  (interactive)
+  (let* ((root (or (pijul-repository-root)
+                   (and (derived-mode-p 'pijul-commit-mode)
+                        (pijul-commit--repo))
+                   (user-error "Not inside a Pijul repository")))
+         (buf (get-buffer-create
+               (format "*pijul-log: %s*"
+                       (file-name-nondirectory (directory-file-name root))))))
+    (with-current-buffer buf
+      (k/pijul-log-mode)
+      (setq k/pijul-log--root root
+            default-directory root)
+      (k/pijul-log--revert)
+      (goto-char (point-min)))
+    (pop-to-buffer buf)))
+
+(defun k/pijul-log-next ()
+  "Move to the next change."
+  (interactive)
+  (end-of-line)
+  (if (re-search-forward "^Change " nil t)
+      (beginning-of-line)
+    (message "No more changes")))
+
+(defun k/pijul-log-previous ()
+  "Move to the previous change."
+  (interactive)
+  (beginning-of-line)
+  (unless (re-search-backward "^Change " nil t)
+    (message "No previous change")))
+
+(defun k/pijul-log-show-change ()
+  "Show the change at point with `pijul change', in `pijul-commit-mode'."
+  (interactive)
+  (let* ((hash (save-excursion
+                 (end-of-line)
+                 (if (re-search-backward "^Change \\([A-Z0-9]+\\)" nil t)
+                     (match-string-no-properties 1)
+                   (user-error "No change at point"))))
+         (root k/pijul-log--root)
+         (buf (get-buffer-create (format "*pijul-change: %s*"
+                                         (substring hash 0 10)))))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t)
+            (default-directory root))
+        (erase-buffer)
+        (insert (k/pijul--output root "change" hash))
+        (goto-char (point-min))
+        (pijul-commit-mode)
+        (setq-local pijul-commit-repository root)
+        (setq default-directory root
+              buffer-read-only t)))
+    (pop-to-buffer buf)))
+;; ------------------------------------------------------------
+
 ;; `pijul-commit-mode' also edits `.pijul-commit' files during `pijul
-;; record', where `q' and `c' must self-insert: bind them only in
+;; record', where `q', `c' and `l' must self-insert: bind them only in
 ;; read-only buffers such as `*pijul-record-preview*'.
 (define-key pijul-commit-mode-map (kbd "q")
   '(menu-item "" k/pijul-commit-quit
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "c")
   '(menu-item "" k/pijul-record
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "l")
+  '(menu-item "" k/pijul-log
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 ;; Only while `pijul record' waits on this buffer via emacsclient.
 (dolist (binding '(("C-c C-c" . k/pijul-commit-finish)
