@@ -209,6 +209,13 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
             (defun k/verb-send ()
               (interactive)
+              ;; Flash the request being sent: the heading at point up
+              ;; to the next heading (child headings are separate requests).
+              (ignore-errors
+                (save-excursion
+                  (org-back-to-heading t)
+                  (k/flash-region (point)
+                                  (progn (outline-next-heading) (point)))))
               (verb-kill-all-response-buffers 1)
               (verb-send-request-on-point-other-window-stay))
 
