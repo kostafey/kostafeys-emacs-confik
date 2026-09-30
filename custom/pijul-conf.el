@@ -107,12 +107,14 @@ reading the message from the minibuffer."
      (lambda (proc _event)
        (when (memq (process-status proc) '(exit signal))
          (if (zerop (process-exit-status proc))
-             (message "pijul record: %s"
-                      (with-current-buffer (process-buffer proc)
-                        ;; The last line is "Hash: ..."; emacsclient's
-                        ;; "Waiting for Emacs..." precedes it.
-                        (or (car (last (split-string (buffer-string) "\n" t)))
-                            "done")))
+             (progn
+               (k/pijul-git-gutter-refresh root)
+               (message "pijul record: %s"
+                        (with-current-buffer (process-buffer proc)
+                          ;; The last line is "Hash: ..."; emacsclient's
+                          ;; "Waiting for Emacs..." precedes it.
+                          (or (car (last (split-string (buffer-string) "\n" t)))
+                              "done"))))
            (pop-to-buffer (process-buffer proc))))))))
 
 (defun k/pijul-commit-finish ()
@@ -155,5 +157,74 @@ its temporary file."
     `(menu-item "" ,(cdr binding)
                 :filter (lambda (cmd)
                           (and (bound-and-true-p server-buffer-clients) cmd)))))
+
+;; ------------------------------------------------------------
+;; git-gutter for Pijul
+;;
+;; git-gutter dispatches on the backend in `git-gutter:vcs-check-function'
+;; and `git-gutter:start-diff-process1'; teach both about `pijul'.  The
+;; diff is the recorded version (`pijul reset --dry-run FILE') against
+;; the file, in the `-U0' unified format git-gutter parses, produced by
+;; `git diff --no-index' (works outside any git repository).
+
+(defun k/pijul-git-gutter--recorded-file (file)
+  "Temporary file for FILE's recorded (pristine) version.
+Named after FILE rather than kept in a buffer-local variable, which a
+major mode change would wipe, leaking the file."
+  (expand-file-name (concat "pijul-gutter-" (md5 (expand-file-name file)))
+                    temporary-file-directory))
+
+(defun k/pijul-git-gutter--cleanup ()
+  (when buffer-file-name
+    (let ((recorded (k/pijul-git-gutter--recorded-file buffer-file-name)))
+      (when (file-exists-p recorded)
+        (delete-file recorded)))))
+
+(defun k/pijul-git-gutter-start-diff (file proc-buf)
+  "Start the git-gutter diff process for FILE under Pijul."
+  (add-hook 'kill-buffer-hook #'k/pijul-git-gutter--cleanup nil t)
+  (let* ((file (expand-file-name file))
+         (recorded (k/pijul-git-gutter--recorded-file file))
+         ;; Not recorded yet (untracked or only `pijul add'ed): diff the
+         ;; file against itself, i.e. show no marks, as git does.
+         (old (if (zerop (call-process pijul-context-program nil
+                                       (list :file recorded) nil
+                                       "reset" "--dry-run" file))
+                  recorded
+                file)))
+    (start-process "git-gutter" proc-buf
+                   "git" "--no-pager" "-c" "core.autocrlf=false"
+                   "diff" "--no-index" "--no-color" "--no-ext-diff" "-U0"
+                   "--" old file)))
+
+(defun k/pijul-git-gutter-check (orig vcs)
+  (if (eq vcs 'pijul)
+      (and (pijul-repository-root) t)
+    (funcall orig vcs)))
+
+(defun k/pijul-git-gutter-dispatch (orig file proc-buf)
+  (if (eq git-gutter:vcs-type 'pijul)
+      (k/pijul-git-gutter-start-diff file proc-buf)
+    (funcall orig file proc-buf)))
+
+(defun k/pijul-git-gutter-refresh (root)
+  "Redraw git-gutter marks in buffers visiting files under ROOT."
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (bound-and-true-p git-gutter-mode)
+                 buffer-file-name
+                 ;; Not `string-prefix-p': drive letter case and 8.3
+                 ;; short names differ on Windows.
+                 (file-in-directory-p buffer-file-name root))
+        (git-gutter)))))
+
+(with-eval-after-load 'git-gutter
+  ;; First, so a Pijul repository inside a git work tree wins.
+  (add-to-list 'git-gutter:handled-backends 'pijul)
+  (advice-add 'git-gutter:vcs-check-function
+              :around #'k/pijul-git-gutter-check)
+  (advice-add 'git-gutter:start-diff-process1
+              :around #'k/pijul-git-gutter-dispatch))
+;; ------------------------------------------------------------
 
 (provide 'pijul-conf)
