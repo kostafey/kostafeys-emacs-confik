@@ -76,6 +76,13 @@ out, fill in `message', save, then finish with \\[server-edit].
 With prefix argument ALL, record every change without the editor,
 reading the message from the minibuffer."
   (interactive "P")
+  ;; A second run would open another change text, and keys typed while
+  ;; the first one appears land in it (e.g. a doubled `c' in the preview).
+  (when (process-live-p (get-process "pijul-record"))
+    (let ((live (k/pijul-commit--live-buffer)))
+      (when live (pop-to-buffer live))
+      (user-error "pijul record is already running%s"
+                  (if live "; finish (C-c C-c) or cancel (C-c C-k) it" ""))))
   (let* ((root (or (pijul-repository-root)
                    (user-error "Not inside a Pijul repository")))
          (default-directory root)
@@ -117,11 +124,46 @@ reading the message from the minibuffer."
                               "done"))))
            (pop-to-buffer (process-buffer proc))))))))
 
+(defun k/pijul-commit--live-buffer ()
+  "The change-text buffer a running `pijul record' is waiting on, if any."
+  (seq-find (lambda (buf)
+              (with-current-buffer buf
+                (and (derived-mode-p 'pijul-commit-mode)
+                     (bound-and-true-p server-buffer-clients))))
+            (buffer-list)))
+
+(defun k/pijul-commit--bad-header ()
+  "Position of the first non-comment line unless it is `message = \"...'.
+Nil when the header looks right.  Catches stray keystrokes there, which
+`pijul record' only answers by reopening the file with a comment."
+  (save-excursion
+    (goto-char (point-min))
+    (while (and (not (eobp)) (looking-at-p "\\(#.*\\)?$"))
+      (forward-line 1))
+    (unless (looking-at-p "message = \"")
+      (point))))
+
 (defun k/pijul-commit-finish ()
   "Save the change text and hand it back to `pijul record'."
   (interactive)
+  (let ((bad (k/pijul-commit--bad-header)))
+    (when bad
+      (goto-char bad)
+      (user-error "The change text must start with message = \"...\"")))
   (save-buffer)
   (server-edit))
+
+(defun k/pijul-commit--warn-syntax-error ()
+  "Say so when `pijul record' reopens the change text after a parse error.
+Its only report is a comment at the top of the file, easy to miss."
+  (when (and (derived-mode-p 'pijul-commit-mode)
+             (save-excursion
+               (goto-char (point-min))
+               (looking-at-p "# Syntax errors")))
+    (message "%s" (propertize "pijul record: syntax error in the change text, fix it and C-c C-c again (C-c C-k cancels)"
+                              'face 'warning))))
+
+(add-hook 'server-visit-hook #'k/pijul-commit--warn-syntax-error)
 
 (defun k/pijul-commit-cancel ()
   "Abort the `pijul record' waiting on this buffer; record nothing.
