@@ -16,6 +16,26 @@
   '(menu-item "" k/pijul-commit-quit
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 
+(defface k/pijul-commit-added
+  '((t :inherit diff-indicator-added))
+  "Face for added (`+') lines in `pijul-commit-mode'.")
+
+(defface k/pijul-commit-removed
+  '((t :inherit diff-indicator-removed))
+  "Face for removed (`-') lines in `pijul-commit-mode'.")
+
+;; `pijul-commit-font-lock-keywords' names the `+'/`-' faces unquoted, so
+;; font-lock evaluates them as (void) variables and never colors those
+;; lines.  Swap in quoted faces of our own.
+(require 'diff-mode)                    ; for `diff-indicator-*' faces
+(setq pijul-commit-font-lock-keywords
+      (mapcar (lambda (kw)
+                (pcase (cdr kw)
+                  ('pijul-context-added (cons (car kw) ''k/pijul-commit-added))
+                  ('pijul-context-removed (cons (car kw) ''k/pijul-commit-removed))
+                  (_ kw)))
+              pijul-commit-font-lock-keywords))
+
 (defconst k/pijul-ignore-patterns '("*~" "\\#*#" ".#*")
   "Entries `k/pijul-init' appends to a new repository's `.ignore'.
 Emacs backups, auto-saves and lock files.  `.ignore' follows gitignore
