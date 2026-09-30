@@ -4,6 +4,23 @@
 (require 'pijul)
 (global-pijul-mode 1)
 
+;; `pijul-commit-mode' pops up the `*pijul-context*' palimpsest of the
+;; working copy wherever it starts.  Keep it on demand only: C-c p d.
+(advice-add 'pijul-commit--show-context :override #'ignore)
+
+(defvar-local k/pijul-commit-change-hash nil
+  "Hash of the recorded change this buffer shows; nil for the working copy.")
+
+(defun k/pijul-commit-show-context ()
+  "Show the `*pijul-context*' palimpsest of this buffer's change.
+That is the recorded change in `*pijul-change: ...*', the working copy
+elsewhere."
+  (interactive)
+  (let ((default-directory (file-name-as-directory (pijul-commit--repo))))
+    (if k/pijul-commit-change-hash
+        (pijul-context-change k/pijul-commit-change-hash)
+      (pijul-context-diff))))
+
 (defun k/pijul-commit-quit ()
   "Kill the current `pijul-commit-mode' buffer and restore its window."
   (interactive)
@@ -116,6 +133,7 @@ reading the message from the minibuffer."
          (if (zerop (process-exit-status proc))
              (progn
                (k/pijul-git-gutter-refresh root)
+               (k/pijul-record-preview-refresh root)
                (message "pijul record: %s"
                         (with-current-buffer (process-buffer proc)
                           ;; The last line is "Hash: ..."; emacsclient's
@@ -123,6 +141,26 @@ reading the message from the minibuffer."
                           (or (car (last (split-string (buffer-string) "\n" t)))
                               "done"))))
            (pop-to-buffer (process-buffer proc))))))))
+
+(defun k/pijul--close-buffer (buf)
+  "Kill BUF, if live.  Its windows go back to what they showed before,
+or away if made for it."
+  (when (buffer-live-p buf)
+    (dolist (win (get-buffer-window-list buf nil t))
+      (quit-restore-window win 'bury))
+    (kill-buffer buf)))
+
+(defun k/pijul-record-preview-refresh (root)
+  "Bring `*pijul-record-preview*' of ROOT up to date after a record.
+Close it when nothing is left to record."
+  (let ((buf (get-buffer "*pijul-record-preview*")))
+    (when (and buf
+               (let ((repo (buffer-local-value 'pijul-commit-repository buf)))
+                 (and repo (file-equal-p repo root))))
+      (if (string-empty-p (string-trim (k/pijul--output root "diff")))
+          (k/pijul--close-buffer buf)
+        (let ((default-directory root))
+          (pijul-record-preview))))))
 
 (defun k/pijul-commit--live-buffer ()
   "The change-text buffer a running `pijul record' is waiting on, if any."
@@ -186,13 +224,28 @@ its temporary file."
 ;; ------------------------------------------------------------
 ;; pijul log
 
-(defvar k/pijul-log-font-lock-keywords
-  '(("^Change \\([A-Z0-9]+\\)" 1 'font-lock-constant-face)
-    ("^\\(?:Author\\|Date\\): .*$" . 'font-lock-comment-face))
-  "Font-lock keywords for `k/pijul-log-mode'.")
+(require 'parse-time)                  ; for `parse-iso8601-time-string'
+
+(defvar k/pijul-log-limit 256
+  "How many changes `k/pijul-log' shows at first, and `+' adds.")
+
+(defface k/pijul-log-hash
+  '((t :inherit font-lock-constant-face))
+  "Face for change hashes in `k/pijul-log-mode'.")
+
+(defface k/pijul-log-author
+  '((t :inherit font-lock-variable-name-face))
+  "Face for authors in `k/pijul-log-mode'.")
+
+(defface k/pijul-log-date
+  '((t :inherit font-lock-comment-face))
+  "Face for dates in `k/pijul-log-mode'.")
 
 (defvar-local k/pijul-log--root nil
   "Repository root this `k/pijul-log-mode' buffer shows the log of.")
+
+(defvar-local k/pijul-log--count nil
+  "How many changes this `k/pijul-log-mode' buffer shows.")
 
 (defun k/pijul--output (root &rest args)
   "Run pijul with ARGS in ROOT; return its output, or signal on failure."
@@ -204,31 +257,113 @@ its temporary file."
                     (string-join args " ") (string-trim (buffer-string))))
       (buffer-string))))
 
+(defun k/pijul-log--author-name (author)
+  "The name part of AUTHOR, a `Name (login) <email>' string."
+  (string-trim
+   (if (string-match "\\`\\([^(<]*\\)" author)
+       (match-string 1 author)
+     author)))
+
+(defun k/pijul-log--entries (root count)
+  "The last COUNT changes of ROOT as a list of alists, newest first.
+`pijul log' prints \"No matching logs found\" before the JSON of an
+empty log, so parse from the first `['."
+  (let ((out (k/pijul--output root "log" "--output-format" "json"
+                              "--limit" (number-to-string count))))
+    (json-parse-string (substring out (or (string-search "[" out) 0))
+                       :object-type 'alist :array-type 'list
+                       :null-object nil)))
+
+(defun k/pijul-log--set-margin (width)
+  "Give the log buffer a right margin of WIDTH columns, in all its windows."
+  (setq right-margin-width width)
+  (dolist (win (get-buffer-window-list nil nil t))
+    (set-window-margins win (car (window-margins win)) width)))
+
 (defun k/pijul-log--revert (&rest _)
-  (let ((inhibit-read-only t)
-        (line (line-number-at-pos)))
+  "Render the log, one line per change, keeping point on its change."
+  (let* ((inhibit-read-only t)
+         (hash-at-point (get-text-property (line-beginning-position)
+                                           'k/pijul-hash))
+         (line (line-number-at-pos))
+         (entries (k/pijul-log--entries k/pijul-log--root k/pijul-log--count))
+         (rows (mapcar
+                (lambda (e)
+                  (let-alist e
+                    (list .hash
+                          (car (split-string (or .message "") "\n"))
+                          (k/pijul-log--author-name (or (car .authors) ""))
+                          (format-time-string
+                           "%Y-%m-%d %H:%M"
+                           (parse-iso8601-time-string .timestamp)))))
+                entries))
+         (author-width
+          (min 20 (apply #'max 0 (mapcar (lambda (r) (string-width (nth 2 r)))
+                                         rows)))))
+    (k/pijul-log--set-margin (+ author-width 1 16 1))
     (erase-buffer)
-    (insert (k/pijul--output k/pijul-log--root "log"))
+    (if (null rows)
+        (insert (propertize "No changes recorded" 'font-lock-face 'shadow))
+      (dolist (r rows)
+        (pcase-let ((`(,hash ,msg ,author ,date) r))
+          (insert
+           (propertize
+            (concat
+             ;; Author and date go to the right margin, as in magit: the
+             ;; message is cut at the window edge, whatever its width.
+             ;; At the line start, since a truncated line never displays
+             ;; what lies past the window edge, margin specs included.
+             (propertize
+              " " 'display
+              `((margin right-margin)
+                ,(concat
+                  (propertize (truncate-string-to-width
+                               author author-width 0 ?\s "…")
+                              'face 'k/pijul-log-author)
+                  " "
+                  (propertize date 'face 'k/pijul-log-date))))
+             (propertize (substring hash 0 8) 'font-lock-face 'k/pijul-log-hash)
+             " "
+             (if (string-empty-p msg)
+                 (propertize "(no message)" 'font-lock-face 'shadow)
+               msg))
+            'k/pijul-hash hash)
+           "\n")))
+      (when (= (length rows) k/pijul-log--count)
+        (insert (propertize "Type + to show more history\n"
+                            'font-lock-face 'shadow))))
     (goto-char (point-min))
-    (forward-line (1- line))))
+    (let ((pos (and hash-at-point
+                    (text-property-any (point-min) (point-max)
+                                       'k/pijul-hash hash-at-point))))
+      (if pos
+          (goto-char pos)
+        (forward-line (1- line))))))
+
+(defun k/pijul-log-more ()
+  "Show `k/pijul-log-limit' more changes."
+  (interactive)
+  (setq k/pijul-log--count (+ k/pijul-log--count k/pijul-log-limit))
+  (revert-buffer))
 
 (defvar k/pijul-log-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m (kbd "RET") #'k/pijul-log-show-change)
-    (define-key m (kbd "n") #'k/pijul-log-next)
-    (define-key m (kbd "p") #'k/pijul-log-previous)
+    (define-key m (kbd "n") #'next-line)
+    (define-key m (kbd "p") #'previous-line)
+    (define-key m (kbd "+") #'k/pijul-log-more)
     m)
   "Keymap for `k/pijul-log-mode'.")
 
 (define-derived-mode k/pijul-log-mode special-mode "Pijul-Log"
-  "Major mode for `pijul log' output.
+  "Major mode for `pijul log' output, one line per change.
 \\{k/pijul-log-mode-map}"
-  (setq-local font-lock-defaults '(k/pijul-log-font-lock-keywords t))
+  (setq truncate-lines t)
   (setq-local revert-buffer-function #'k/pijul-log--revert))
 
 (defun k/pijul-log ()
-  "Show `pijul log' of the current repository.
-RET shows the change at point, n/p move between changes, g refreshes."
+  "Show `pijul log' of the current repository, one line per change.
+RET shows the change at point, + shows more history, g refreshes."
   (interactive)
   (let* ((root (or (pijul-repository-root)
                    (and (derived-mode-p 'pijul-commit-mode)
@@ -240,34 +375,18 @@ RET shows the change at point, n/p move between changes, g refreshes."
     (with-current-buffer buf
       (k/pijul-log-mode)
       (setq k/pijul-log--root root
-            default-directory root)
-      (k/pijul-log--revert)
-      (goto-char (point-min)))
-    (pop-to-buffer buf)))
-
-(defun k/pijul-log-next ()
-  "Move to the next change."
-  (interactive)
-  (end-of-line)
-  (if (re-search-forward "^Change " nil t)
-      (beginning-of-line)
-    (message "No more changes")))
-
-(defun k/pijul-log-previous ()
-  "Move to the previous change."
-  (interactive)
-  (beginning-of-line)
-  (unless (re-search-backward "^Change " nil t)
-    (message "No previous change")))
+            k/pijul-log--count k/pijul-log-limit
+            default-directory root))
+    ;; Displayed first: the message column is fitted to the window.
+    (pop-to-buffer buf)
+    (k/pijul-log--revert)
+    (goto-char (point-min))))
 
 (defun k/pijul-log-show-change ()
   "Show the change at point with `pijul change', in `pijul-commit-mode'."
   (interactive)
-  (let* ((hash (save-excursion
-                 (end-of-line)
-                 (if (re-search-backward "^Change \\([A-Z0-9]+\\)" nil t)
-                     (match-string-no-properties 1)
-                   (user-error "No change at point"))))
+  (let* ((hash (or (get-text-property (line-beginning-position) 'k/pijul-hash)
+                   (user-error "No change at point")))
          (root k/pijul-log--root)
          (buf (get-buffer-create (format "*pijul-change: %s*"
                                          (substring hash 0 10)))))
@@ -279,14 +398,15 @@ RET shows the change at point, n/p move between changes, g refreshes."
         (goto-char (point-min))
         (pijul-commit-mode)
         (setq-local pijul-commit-repository root)
-        (setq default-directory root
+        (setq k/pijul-commit-change-hash hash
+              default-directory root
               buffer-read-only t)))
     (pop-to-buffer buf)))
 ;; ------------------------------------------------------------
 
 ;; `pijul-commit-mode' also edits `.pijul-commit' files during `pijul
-;; record', where `q', `c' and `l' must self-insert: bind them only in
-;; read-only buffers such as `*pijul-record-preview*'.
+;; record', where `q', `c', `l' and `d' must self-insert: bind them only
+;; in read-only buffers such as `*pijul-record-preview*'.
 (define-key pijul-commit-mode-map (kbd "q")
   '(menu-item "" k/pijul-commit-quit
               :filter (lambda (cmd) (and buffer-read-only cmd))))
@@ -295,6 +415,9 @@ RET shows the change at point, n/p move between changes, g refreshes."
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "l")
   '(menu-item "" k/pijul-log
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "d")
+  '(menu-item "" k/pijul-commit-show-context
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 ;; Only while `pijul record' waits on this buffer via emacsclient.
 (dolist (binding '(("C-c C-c" . k/pijul-commit-finish)
