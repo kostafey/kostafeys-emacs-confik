@@ -93,4 +93,7 @@ filename.scala:123
               (recenter-top-bottom))))
       (project-find-file))))
 
+;; List of additional markers to signal project roots.
+(setq project-vc-extra-root-markers '(".project"))
+
 (provide 'project-conf)
