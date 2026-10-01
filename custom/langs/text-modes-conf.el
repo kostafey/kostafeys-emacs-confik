@@ -7,7 +7,8 @@
 (when (require 'wrap-region nil 'noerror)
   (wrap-region-global-mode t)
   (wrap-region-add-wrapper "*" "*")
-  (wrap-region-add-wrapper "`" "`"))
+  (wrap-region-add-wrapper "`" "`")
+  (wrap-region-add-wrapper "~" "~"))
 
 ;;-------------------------------------------------------------------
 ;; nxhtml
