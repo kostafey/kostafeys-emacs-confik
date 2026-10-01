@@ -84,6 +84,25 @@ syntax, so a leading `#' has to be escaped.")
           (pijul-mode 1))))
     (message "Pijul repository created in %s" dir)))
 
+(defun k/pijul-add (files)
+  "Add FILES to Pijul version control; directories recursively.
+Interactively, the marked files in Dired, otherwise a file read from the
+minibuffer, defaulting to the current buffer's file."
+  (interactive
+   (list (if (derived-mode-p 'dired-mode)
+             (dired-get-marked-files)
+           (list (read-file-name "Pijul add: " nil buffer-file-name t
+                                 (and buffer-file-name
+                                      (file-name-nondirectory buffer-file-name)))))))
+  (let* ((files (mapcar #'expand-file-name files))
+         (root (or (pijul-repository-root (file-name-directory (car files)))
+                   (user-error "Not inside a Pijul repository"))))
+    (message "pijul add: %s"
+             (string-trim (apply #'k/pijul--output root "add" "-r" files)))
+    ;; Only when shown: refreshing pops the preview up.
+    (when (get-buffer-window "*pijul-record-preview*" t)
+      (k/pijul-record-preview-refresh root))))
+
 (defun k/pijul-record (&optional all)
   "Record a change in the current Pijul repository.
 Run `pijul record' asynchronously with this Emacs as its editor, so the
