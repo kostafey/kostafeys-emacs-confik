@@ -250,6 +250,7 @@ block, return (BEG . END) of the block content without the fence lines."
     (define-key org-mode-map (kbd "M-a") nil)
     (define-key org-mode-map (kbd "C-j") 'join-next-line-space-n)
     (define-key org-mode-map (kbd "C-x t") 'org-todo)
+    (define-key org-mode-map (kbd "C-x d") 'org-open-at-point)
     (define-key org-mode-map (kbd "C-S-<up>") 'toggle-letter-case)
     (define-key org-mode-map (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)
     (global-set-key (kbd "C-c l") 'org-store-link)
