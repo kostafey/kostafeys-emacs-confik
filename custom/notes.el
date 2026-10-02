@@ -4,7 +4,9 @@
 ;;
 ;; `k/notes' selects a note in `k/notes-dir' with `consult', whether it is
 ;; visited in a buffer or not.  Every candidate shows the file name followed
-;; by the `#+title:' of the note, and the input narrows the notes by both.
+;; by the title of the note -- the `#+title:' of an org note, the first
+;; level 1 header of a markdown one -- and the input narrows the notes
+;; by both.
 ;; Typing a name that matches no note creates it.  `k/notes-search' greps
 ;; the notes with `consult-ripgrep'.
 
@@ -23,20 +25,36 @@
 (defvar k/notes-history nil
   "Completion history of `k/notes'.")
 
+(defvar k/notes-title-regexps
+  '(("org"      . "^#\\+title:[ \t]*\\(.*?\\)[ \t]*$")
+    ("md"       . "^#[ \t]+\\(.*?\\)\\(?:[ \t]+#+\\)?[ \t]*$")
+    ("markdown" . "^#[ \t]+\\(.*?\\)\\(?:[ \t]+#+\\)?[ \t]*$"))
+  "Alist of a note file extension and the regexp of the note title.
+Group 1 of the regexp is the title: the `#+title:' of an org note, the
+first level 1 header of a markdown one.")
+
 (defun k/notes--title (file)
-  "Return the `#+title:' of the org FILE, or nil if it has none.
-When FILE is visited, its buffer is read, so unsaved edits count;
-otherwise only the head of the file is."
-  (let ((buffer (get-file-buffer file)))
-    (with-temp-buffer
-      (if buffer
-          (insert-buffer-substring-no-properties buffer)
-        (insert-file-contents file nil 0 4096))
-      (goto-char (point-min))
-      (let ((case-fold-search t))
-        (when (re-search-forward "^#\\+title:[ \t]*\\(.*?\\)[ \t]*$" nil t)
-          (let ((title (match-string-no-properties 1)))
-            (unless (string-empty-p title) title)))))))
+  "Return the title of the note FILE, or nil if it has none.
+The regexp of the title is the one `k/notes-title-regexps' has for the
+extension of FILE.  When FILE is visited, its buffer is searched, so
+unsaved edits count; otherwise only the head of the file is."
+  (when-let* ((regexp (cdr (assoc-string (file-name-extension file)
+                                         k/notes-title-regexps t))))
+    (let ((search
+           (lambda ()
+             (save-excursion
+               (save-restriction
+                 (widen)
+                 (goto-char (point-min))
+                 (let ((case-fold-search t))
+                   (when (re-search-forward regexp nil t)
+                     (let ((title (match-string-no-properties 1)))
+                       (unless (string-empty-p title) title)))))))))
+      (if-let* ((buffer (get-file-buffer file)))
+          (with-current-buffer buffer (funcall search))
+        (with-temp-buffer
+          (insert-file-contents file nil 0 4096)
+          (funcall search))))))
 
 (defun k/notes--items ()
   "Return the notes of `k/notes-dir', most recently modified first.
