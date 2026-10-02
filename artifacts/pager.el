@@ -1,4 +1,4 @@
-;;; pager.el --- windows-scroll commands
+;;; pager.el --- windows-scroll commands  -*- lexical-binding: t -*-
 ;;; Version 2.0 - 97-10-06
 ;;; Copyright (C) 1992-1997 Mikael Sjödin (mic@docs.uu.se)
 ;;;

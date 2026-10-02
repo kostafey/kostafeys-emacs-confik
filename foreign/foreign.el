@@ -1,4 +1,4 @@
-;;; foreign.el -- External text-manipulation programs wrapper
+;;; foreign.el -- External text-manipulation programs wrapper  -*- lexical-binding: t -*-
 
 ;; Author: Kostafey <kostafey@gmail.com>
 ;; Keywords: text-manipulation, performance

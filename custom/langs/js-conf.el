@@ -1,4 +1,4 @@
-;;; js-conf.el
+;;; js-conf.el  -*- lexical-binding: t -*-
 
 (use-package skewer-mode
   :straight '(skewer-mode :type git :host github

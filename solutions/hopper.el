@@ -1,4 +1,4 @@
-;;; hopper.el --- simplify code navigation.
+;;; hopper.el --- simplify code navigation.  -*- lexical-binding: t -*-
 
 ;;; Commentary:
 

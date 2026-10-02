@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (straight-use-package
  '(rust-mode :type git :host github
 					   :repo "rust-lang/rust-mode" :branch "master"))

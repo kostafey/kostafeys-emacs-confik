@@ -1,4 +1,4 @@
-;;; functions.el -- The collection of misc elisp helper functions.
+;;; functions.el -- The collection of misc elisp helper functions.  -*- lexical-binding: t -*-
 
 ;;; Copyright © 2013-2015 - Kostafey <kostafey@gmail.com>
 

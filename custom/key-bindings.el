@@ -1,4 +1,4 @@
-;;; key-bindings.el -- A collection of key bindings (default and custom).
+;;; key-bindings.el -- A collection of key bindings (default and custom).  -*- lexical-binding: t -*-
 
 (straight-use-package
  '(session :type git :host github
@@ -13,7 +13,7 @@
  '(ace-jump-mode :type git :host github
 			           :repo "winterTTr/ace-jump-mode" :branch "master"))
 
-(require 'ack-conf)
+(require 'rg-conf)
 (require 'navigation-in-frame)
 (require 'project-conf)
 
@@ -240,15 +240,13 @@ CATEGORY-FN is the advised `ace-jump-char-category'."
 (global-set-key [f1] 'consult-buffer)
 (global-set-key (kbd "C-M-n") 'k/project-find-file)
 (global-set-key [f2] 'consult-imenu)
-(global-set-key [f3] 'toggle-tabbar-breadcrumb)
+(global-set-key [f3] 'k/toggle-tab-line-breadcrumb)
 
 (global-set-key [f4] 'k/shell)
 (global-set-key [f5] 'dired-open)
 (global-set-key [f6] 'switch-completion-frontend)
 (global-set-key [f7] 'k/rg)
-(global-set-key [S-f7] 'k/ag)
-(global-set-key [s-f7] 'ack)
-(global-set-key [C-f7] 'ack-file)
+(global-set-key [C-f7] 'k/rg-file)
 
 (global-set-key [f8] 'recode-buffer-rotate-ring)
 (global-set-key [C-f8] 'eol-buffer-rotate-ring)
@@ -339,7 +337,6 @@ CATEGORY-FN is the advised `ace-jump-char-category'."
   (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
   (define-key clojure-mode-map (kbd "C-c C-l") nil)
   (define-key clojure-mode-map (kbd "C-c C-f") nil)
-  (define-key clojure-mode-map (kbd "C-c C-f") 'ack-file)
   (define-key clojure-mode-map (kbd "C-c RET") 'newline-and-indent)
   (define-key clojure-mode-map (kbd "M-n") 'k/clojure-switch-to-current-namespace))
 (add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)

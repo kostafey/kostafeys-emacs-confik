@@ -1,7 +1,6 @@
-;;; basic-keys.el --- Basic keybindings & custom configuration.
+;;; basic-keys.el --- Basic keybindings & custom configuration.  -*- lexical-binding: t -*-
 
 ;; No third-party dependencies.
-(require 'redo)
 (require 'basic-text-editing)
 (require 'file-ops)
 (require 'history-conf)
@@ -75,9 +74,11 @@
 ;; Undo & redo
 (global-unset-key "\C-_")
 
+;; Linear undo: `undo' (also bound to C-z by cua-mode) never undoes an undo.
+(setq undo-no-redo t)
 (global-set-key (kbd "C-z") 'undo)          ; Undo C-z
 (global-set-key [(meta backspace)] 'undo)
-(global-set-key (kbd "C-S-z") 'redo)       ; Redo C-S-z
+(global-set-key (kbd "C-S-z") 'undo-redo)  ; Redo C-S-z
 
 (global-set-key (kbd "C-q") 'quoted-insert)
 (global-set-key [(delete)] 'delete-char)
@@ -752,13 +753,8 @@ the feature that owns them, so leave them alone."
 ;;-------------------------------------------------------------------
 ;; Switch buffers
 ;;
-(if (require 'tabbar nil 'noerror)
-    (progn
-      (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
-      (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab))
-  (progn
-    (global-set-key (kbd "C-<next>") 'next-buffer)
-    (global-set-key (kbd "C-<prior>") 'previous-buffer)))
+(global-set-key (kbd "C-<next>") 'next-buffer)
+(global-set-key (kbd "C-<prior>") 'previous-buffer)
 
 ;;-------------------------------------------------------------------
 ;; buffers shortcuts

@@ -1,4 +1,4 @@
-;;; java-conf.el -- Emacs Java configuration
+;;; java-conf.el -- Emacs Java configuration  -*- lexical-binding: t -*-
 
 ;; Envieronment variables in use are:
 ;; - `JAVADOC'
@@ -38,6 +38,7 @@
 ;; jshell
 ;;
 (require 'shell-conf)
+(require 'functions)
 
 (defun jshell-get-buffer ()
   (save-window-excursion

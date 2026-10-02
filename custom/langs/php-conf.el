@@ -1,4 +1,4 @@
-;;; php-conf.el --- PHP configuration for lsp
+;;; php-conf.el --- PHP configuration for lsp  -*- lexical-binding: t -*-
 
 (straight-use-package
  '(php-mode :type git :host github

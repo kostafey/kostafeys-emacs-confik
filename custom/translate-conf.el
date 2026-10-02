@@ -1,4 +1,4 @@
-;;; translate-conf.el
+;;; translate-conf.el  -*- lexical-binding: t -*-
 
 (use-package google-translate
   :straight '(google-translate :type git :host github

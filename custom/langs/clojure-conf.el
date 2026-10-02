@@ -1,4 +1,4 @@
-;;; clojure-conf.el
+;;; clojure-conf.el  -*- lexical-binding: t -*-
 
 (straight-use-package
  '(cider :type git :host github

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (require 'functions)
 
 (setq inferior-lisp-program "ros run")

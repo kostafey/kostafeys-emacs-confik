@@ -1,4 +1,4 @@
-;;; beanshell.el
+;;; beanshell.el  -*- lexical-binding: t -*-
 ;; $Id: beanshell.el 303 2015-07-06 15:13:34Z paullandes $
 
 ;; Author: Paul Kinnucan <paulk@mathworks.com>

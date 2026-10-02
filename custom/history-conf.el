@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;-------------------------------------------------------------------
 ;; History
 ;; To have a menu of recently opened files

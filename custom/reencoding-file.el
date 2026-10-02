@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;; emacswiki.org - GnuEmacsRussification
 
 ;; Write in UNIX format regardless of the platform on which Emacs is running

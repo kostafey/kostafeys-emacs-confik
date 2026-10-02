@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (defvar xml-format-newline-attributes nil)
 
 (defun xml-format-toggle-newline-attributes ()

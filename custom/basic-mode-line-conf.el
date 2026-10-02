@@ -1,4 +1,4 @@
-;;; basic-mode-line-conf.el --- Mode line configuration.
+;;; basic-mode-line-conf.el --- Mode line configuration.  -*- lexical-binding: t -*-
 
 (defun k/show-buffer-environment ()
   "Create a temporary buffer with current buffer's environment details."

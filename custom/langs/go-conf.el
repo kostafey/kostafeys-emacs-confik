@@ -1,4 +1,4 @@
-;;; go-conf.el --- go-mode configuration
+;;; go-conf.el --- go-mode configuration  -*- lexical-binding: t -*-
 
 ;;---------------------
 ;; Environment example:

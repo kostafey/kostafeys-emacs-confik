@@ -1,4 +1,4 @@
-;;; wrap-region.el --- Wrap text with punctation or tag
+;;; wrap-region.el --- Wrap text with punctation or tag  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2008-2012 Johan Andersson
 
@@ -78,10 +78,9 @@
 
 (require 'edmacro)
 (require 'dash)
-(eval-when-compile
-  (require 'cl))
+(require 'cl-lib)
 
-(defstruct wrap-region-wrapper key left right modes)
+(cl-defstruct wrap-region-wrapper key left right modes)
 
 (defgroup wrap-region nil
   "Wrap region with delimiters."
@@ -208,6 +207,8 @@ If nil, always wrap the region."
           (goto-char (if beg-p beg* end*)))
       (deactivate-mark)))
   (run-hooks 'wrap-region-after-wrap-hook))
+
+(defvar wrap-region-mode)
 
 (defun wrap-region-fallback (key)
   "Execute function that KEY was bound to before `wrap-region-mode'."

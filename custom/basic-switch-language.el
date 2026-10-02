@@ -1,4 +1,4 @@
-;;; basic-switch-language.el -- Use cyrillic keys for commands input.
+;;; basic-switch-language.el -- Use cyrillic keys for commands input.  -*- lexical-binding: t -*-
 
 ;;------------------------------------------------------------------
 ;; emacs version 24 or later

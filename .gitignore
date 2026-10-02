@@ -11,7 +11,6 @@
 
 # ...even if they are in subdirectories
 !artifacts
-!ack
 !custom
 !langs
 !mysnippets

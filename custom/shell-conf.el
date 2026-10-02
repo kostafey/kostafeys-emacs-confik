@@ -1,4 +1,4 @@
-;;; shell-conf.el --- Eshell & shell related configuration.
+;;; shell-conf.el --- Eshell & shell related configuration.  -*- lexical-binding: t -*-
 
 (straight-use-package
  '(eshell-prompt-extras :type git :host github

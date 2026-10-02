@@ -1,4 +1,5 @@
-﻿
+;;; -*- lexical-binding: t -*-
+
 ;;-------------------------------------------------------------------
 ;; Font
 (if (find-font (font-spec :name "JetBrains Mono Medium"))

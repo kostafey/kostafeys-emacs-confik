@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;; Set of tips to increase responsibility speed for windows.
 
 ;; Disable bidirectional text support

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (straight-use-package
  '(auto-complete :type git :host github
 				         :repo "auto-complete/auto-complete" :branch "master"))

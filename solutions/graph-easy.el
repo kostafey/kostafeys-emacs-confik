@@ -1,4 +1,4 @@
-;;; graph-easy.el --- Run graph-easy in code comments.
+;;; graph-easy.el --- Run graph-easy in code comments.  -*- lexical-binding: t -*-
 
 ;;; Copyright (C) 2019 - Kostafey <kostafey@gmail.com>
 

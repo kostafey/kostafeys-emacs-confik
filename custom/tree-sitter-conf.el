@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;-------------------------------------------------------------------
 ;; MS Windows: compiler & up-to-date libtree-sitter
 ;;

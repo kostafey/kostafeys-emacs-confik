@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;=============================================================================
 ;; Byte-compilation
 ;;
@@ -5,7 +6,36 @@
 (setq max-lisp-eval-depth 500000)
 ;; cd ~/.emacs.d; emacs --batch -f batch-byte-compile **/*.el
 
-(load-file "~/.emacs.d/artifacts/redef.el")
+;;=============================================================================
+;; Indentation
+;;
+(defvar calculate-lisp-indent-last-sexp)
+
+(defun k/lisp-indent-keyword-list (orig-fun indent-point state)
+  "Indent a list starting with a keyword under its first element.
+Delegate everything else to ORIG-FUN (`lisp-indent-function').
+  before:              after:
+  (:foo bar            (:foo bar
+        :baz qux)       :baz qux)"
+  (let ((last-sexp calculate-lisp-indent-last-sexp))
+    (if (not (and (elt state 2)
+                  (save-excursion
+                    (goto-char (1+ (elt state 1)))
+                    (parse-partial-sexp (point) last-sexp 0 t)
+                    (looking-at-p ":"))))
+        (funcall orig-fun indent-point state)
+      ;; Same as the built-in branch for a non-symbol car: indent under
+      ;; the first sexp of the line holding the last complete sexp.
+      (goto-char (1+ (elt state 1)))
+      (parse-partial-sexp (point) last-sexp 0 t)
+      (unless (> (line-beginning-position 2) last-sexp)
+        (goto-char last-sexp)
+        (beginning-of-line)
+        (parse-partial-sexp (point) last-sexp 0 t))
+      (backward-prefix-chars)
+      (current-column))))
+
+(advice-add 'lisp-indent-function :around #'k/lisp-indent-keyword-list)
 
 (setq eval-expression-print-level nil)
 

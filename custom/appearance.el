@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;-------------------------------------------------------------------
 ;; Emacs custom color theme
 (use-package organic-green-theme
@@ -56,9 +57,6 @@
                       :repo "purcell/paredit-everywhere" :branch "master"))
 
 (straight-use-package
- '(tabbar :type git :host github
-          :repo "dholm/tabbar" :branch "master"))
-(straight-use-package
  '(breadcrumb :type git :host github
               :repo "joaotavora/breadcrumb" :branch "master"))
 
@@ -95,88 +93,17 @@
 (global-set-key (kbd "C-<prior>") 'tab-line-switch-to-prev-tab)
 
 ;;-------------------------------------------------------------------
-;; Tabs - Tabbar
-
-(tabbar-mode -1)
-
-;; Hide forward and back buttons
-(customize-set-variable 'tabbar-scroll-right-button '(("") ""))
-(customize-set-variable 'tabbar-scroll-left-button '(("") ""))
-(customize-set-variable 'tabbar-buffer-home-button '(("") ""))
-
-;; (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
-;; (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)
-
-(setq tabbar-buffer-list-function
-      '(lambda ()
-         (delq nil
-               (mapcar #'(lambda (b)
-                           (cond
-                            ;; Always include the current buffer.
-                            ((eq (current-buffer) b) b)
-                            ((buffer-file-name b) b)
-                            ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-                            ((buffer-live-p b) b)))
-                       (-filter
-                        (lambda (b) (or (eq (current-buffer) b)
-                                   (buffer-file-name b)
-                                   (string-match
-                                    "^\\*temp\\(-[0-9]+\\)?\\*$"
-                                    (buffer-name b))))
-                        (buffer-list))))))
-
-(defun k/select-window-fix-tabbar ()
-  "Hide `tabbar' for buffers displayed in windows located
-not in the top of the frame."
-  (when tabbar-mode
-    (-map
-     (lambda (window)
-       (let ((buffer (window-buffer window)))
-         (with-current-buffer buffer
-           (condition-case nil
-               ;; Keep `tabbar' if
-               (if (or
-                    ;; buffer is displayed in window located
-                    ;; in the top of the frame
-                    (not (> (cadr (window-edges window)) 0))
-                    (and
-                     ;; or this buffer displayed in other window too
-                     (> (length (get-buffer-window-list buffer)) 1)
-                     ;; but not only in the bottom windows.
-                     (not (-all?
-                           (lambda (w) (> (cadr (window-edges w)) 0))
-                           (get-buffer-window-list buffer)))))
-                   (tabbar-local-mode -1)
-                 ;; Hide `tabbar' otherwise.
-                 (tabbar-local-mode 1))
-             (error nil)))))
-     (window-list))
-    (global-set-key (kbd "C-<next>") 'tabbar-forward-tab)
-    (global-set-key (kbd "C-<prior>") 'tabbar-backward-tab)))
-
-;;-------------------------------------------------------------------
 ;; breadcrumb-mode
-(defun toggle-tabbar-breadcrumb ()
-  "Toggle between `tabbar-mode' and `breadcrumb-mode'."
+(defun k/toggle-tab-line-breadcrumb ()
+  "Toggle between `tab-line-mode' and `breadcrumb-mode'."
   (interactive)
   (if tab-line-mode
       (progn
-        ;; (tabbar-mode -1)
         (tab-line-mode -1)
         (breadcrumb-mode t))
     (progn
       (breadcrumb-mode -1)
-      ;; (tabbar-mode t)
       (tab-line-mode t))))
-
-;;-------------------------------------------------------------------
-(when (require 'ejc-sql nil 'noerror)
-  (add-hook 'ejc-sql-complete-query-hook 'k/select-window-fix-tabbar))
-
-(defadvice select-window (after
-                          k/select-window
-                          activate)
-  (k/select-window-fix-tabbar))
 
 ;;-------------------------------------------------------------------
 (use-package writeroom-mode
@@ -280,7 +207,6 @@ not in the top of the frame."
 (add-hook 'sbt-mode-hook        'my-coding-hook)
 (add-hook 'java-mode-hook       (lambda () (rainbow-delimiters-mode t)))
 (add-hook 'markdown-mode-hook   'my-coding-hook)
-(add-hook 'mql-mode-hook        'my-coding-hook)
 (add-hook 'tex-mode-hook        'my-coding-hook)
 (add-hook 'lua-mode-hook        'my-coding-hook)
 (add-hook 'tcl-mode-hook        'my-coding-hook)
@@ -291,7 +217,6 @@ not in the top of the frame."
 (add-hook 'typescript-mode-hook 'my-coding-hook)
 (add-hook 'tide-mode            'my-coding-hook)
 (add-hook 'sql-mode-hook        'my-coding-hook)
-(add-hook 'mql-mode-hook        'my-coding-hook)
 (add-hook 'go-mode-hook         'my-coding-hook)
 (add-hook 'powershell-mode-hook 'my-coding-hook)
 (add-hook 'rust-mode-hook       'my-coding-hook)

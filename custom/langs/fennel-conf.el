@@ -1,4 +1,4 @@
-;;; fennel-conf.el
+;;; fennel-conf.el  -*- lexical-binding: t -*-
 
 (use-package fennel-mode
   :straight '(fennel-mode :type git :host github

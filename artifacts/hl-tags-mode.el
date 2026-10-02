@@ -1,4 +1,4 @@
-;;; hl-tags-mode --- Highlight the current SGML tag context
+;;; hl-tags-mode --- Highlight the current SGML tag context  -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2011 Mike Spindel <deactivated@gmail.com>
 ;; Modified by Amit J Patel <amitp@cs.stanford.edu> for nxml-mode
@@ -29,7 +29,7 @@
           
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (defgroup hl-tags nil
   "Highlight the current tag pair in XML and SGML modes."
@@ -60,12 +60,12 @@
     (when (looking-at "<") (forward-char 1))
     (let* ((ctx (hl-tags-sgml-get-context))
            (boundaries
-            (and ctx (case (sgml-tag-type ctx)
-                       ('empty (cons ctx nil))
-                       ('close
+            (and ctx (cl-case (sgml-tag-type ctx)
+                       (empty (cons ctx nil))
+                       (close
                         (goto-char (sgml-tag-start ctx))
                         (cons (hl-tags-sgml-get-context) ctx))
-                       ('open 
+                       (open
                         (goto-char (sgml-tag-start ctx))
                         (sgml-skip-tag-forward 1)
                         (backward-char 1)

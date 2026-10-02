@@ -1,4 +1,4 @@
-;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.
+;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.  -*- lexical-binding: t -*-
 
 ;;-----------------------------------------------------------------------------
 ;; ibuffer

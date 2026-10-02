@@ -1,4 +1,4 @@
-;;; basic-text-editing.el --- set of misc text editing functions.
+;;; basic-text-editing.el --- set of misc text editing functions.  -*- lexical-binding: t -*-
 
 ;; No third-party dependencies.
 
@@ -612,6 +612,8 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
 			  "Use %s for intendation."
 			  (propertize (if current-indent-tabs "tabs" "spaces")
 						  'face 'font-lock-keyword-face)))))
+
+(defvar sort-fold-case)
 
 (defun sort-lines-nocase ()
   "Sort lines alphabetically in selected region case insensitive."

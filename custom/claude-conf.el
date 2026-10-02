@@ -1,4 +1,4 @@
-;;; claude-conf.el
+;;; claude-conf.el  -*- lexical-binding: t -*-
 
 ;; `web-server' is a hard dependency of claude-code-ide, but straight names
 ;; local repo directories after the repo basename alone, and two unrelated

@@ -1,4 +1,4 @@
-;;; yas-conf.el -- Yet Another Snippet extension configuration
+;;; yas-conf.el -- Yet Another Snippet extension configuration  -*- lexical-binding: t -*-
 
 (straight-use-package
  '(yasnippet :type git :host github

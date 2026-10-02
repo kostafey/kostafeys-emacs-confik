@@ -40,7 +40,7 @@
 (require 'minibuffer-conf)
 (require 'pijul-conf)
 (require 'version-control)
-(require 'ack-conf)
+(require 'rg-conf)
 ;;-------------------------------------------------------------------
 ;; auto-customized custom-set-variables
 (setq custom-file (concat site-lisp-path "custom/custom.el"))
@@ -79,11 +79,9 @@
 (require 'fennel-conf)
 (require 'php-conf)
 ;; (require 'common-lisp-conf)
-;; (require 'mql-mode)
 ;; (require 'sphinx-frontend)
 ;; (require 'lua-conf)
 (require 'rust-conf)
-;; (require 'auctex-conf)
 (require 'ejc-sql-conf nil 'noerror)
 
 ;;-------------------------------------------------------------------

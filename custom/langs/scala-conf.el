@@ -1,4 +1,4 @@
-;;; scala-conf.el --- Scala configuration for lsp
+;;; scala-conf.el --- Scala configuration for lsp  -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -14,6 +14,8 @@
 ;; sbt new scala/scala-seed.g8
 
 ;;; Code:
+
+(require 'functions)
 
 ;; Enable defer and ensure by default for use-package
 ;; Keep auto-save/backup files separate from source code:  https://github.com/scalameta/metals/issues/1027

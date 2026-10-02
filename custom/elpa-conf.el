@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("ELPA" . "https://tromey.com/elpa/")

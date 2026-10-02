@@ -1,4 +1,4 @@
-;;; text-modes-conf.el
+;;; text-modes-conf.el  -*- lexical-binding: t -*-
 
 (straight-use-package 'org)
 
@@ -68,12 +68,6 @@
 ;;-------------------------------------------------------------------
 ;; sh-mode
 (add-to-list 'auto-mode-alist '("\\.xsessionrc$" . sh-mode))
-
-;;-------------------------------------------------------------------
-; dos-mode
-(require 'dos)
-(autoload 'dos-mode "dos" "Edit Dos scripts." t)
-(add-to-list 'auto-mode-alist '("\\.bat$" . dos-mode))
 
 ;;-------------------------------------------------------------------
 ; log4j-mode

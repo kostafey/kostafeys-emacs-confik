@@ -1,4 +1,4 @@
-;;; completition-corfu-conf.el -- COmpletion in Region FUnction configuration
+;;; completition-corfu-conf.el -- COmpletion in Region FUnction configuration  -*- lexical-binding: t -*-
 
 (use-package fussy
   :straight '(fussy :type git :host github

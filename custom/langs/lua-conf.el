@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (require 'elpa-conf)
 (use-elpa 'lua-mode)
 
