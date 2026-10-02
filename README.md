@@ -8,3 +8,12 @@
  (_)___|_| |_| |_|\__,_|\___|___/
 
 ```
+
+## Installation
+
+Create `~/.emacs` with:
+
+```elisp
+;;; -*- lexical-binding: t -*-
+(load "~/.emacs.d/init.el")
+```
