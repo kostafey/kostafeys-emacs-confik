@@ -287,7 +287,7 @@ With ARG recode from Russian o English."
   (interactive "*r\nP")
   (save-excursion
     (goto-char beg)
-    (do () ((>= (point) end))
+    (while (< (point) end)
       (let* ((en-char (char-after (point)))
              (ru-char (if arg
                           (car (rassoc en-char u:*en/ru-table*))

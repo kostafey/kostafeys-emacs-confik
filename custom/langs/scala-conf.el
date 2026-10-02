@@ -15,6 +15,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'functions)
 
 ;; Enable defer and ensure by default for use-package
@@ -183,7 +184,7 @@
                 reg)))
     (k/scala-eval-string reg)))
 
-(defun k/scala-get-last-scala-expr ()
+(cl-defun k/scala-get-last-scala-expr ()
   (let* ((prev-str (string (preceding-char)))
          (start (point))
          (end
@@ -209,7 +210,7 @@
                      (k/scala-skip-sexp "import")
                      (when (k/scala-check-package
                             (buffer-substring start (point)))
-                       (return-from k/scala-get-last-scala-expr)))))
+                       (cl-return-from k/scala-get-last-scala-expr)))))
             (point))))
     (list start end)))
 
@@ -272,7 +273,7 @@
   :type '(choice 'lsp-mode
                  'eglot))
 
-(case k/scala-lsp-frontend
+(pcase k/scala-lsp-frontend
   ;;;;;;;;;;;;;;
   ;; lsp-mode ;;
   ;;;;;;;;;;;;;;

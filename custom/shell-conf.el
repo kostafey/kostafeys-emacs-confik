@@ -1,5 +1,7 @@
 ;;; shell-conf.el --- Eshell & shell related configuration.  -*- lexical-binding: t -*-
 
+(require 'cl-lib)
+
 (straight-use-package
  '(eshell-prompt-extras :type git :host github
 			                  :repo "suzzvv/eshell-prompt-extras" :branch "master"))
@@ -334,8 +336,8 @@ line at a time otherwise."
           (pcase k/default-shell
             ('eshell (or (if (not num)
                              (eframe-pop-buffer 'eshell-mode))
-                         (flet ((pop-to-buffer-same-window
-                                 (b) (switch-to-buffer-other-window b)))
+                         (cl-letf (((symbol-function 'pop-to-buffer-same-window)
+                                    #'switch-to-buffer-other-window))
                            (eshell num))))
             ('shell (shell shell-buffer-name)))
         (goto-char (point-max))

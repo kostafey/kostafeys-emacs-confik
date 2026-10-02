@@ -37,6 +37,7 @@
 ;;-----------------------------------------------------------------------------
 ;; jshell
 ;;
+(require 'cl-lib)
 (require 'shell-conf)
 (require 'functions)
 
@@ -138,7 +139,7 @@
 	      "\\([a-zA-Z0-9]+\\);$")))
     (save-excursion
       (goto-char (point-min))
-      (loop for pos = (search-forward-regexp regexp nil t)
+      (cl-loop for pos = (search-forward-regexp regexp nil t)
 	        while pos collect (let ((modifier (match-string 2))
 				                    (type (match-string 4))
 				                    (name (match-string 6)))
@@ -148,7 +149,7 @@
   (interactive)
   (let ((oldpoint (point)))
     (insert
-     (mapconcat (lambda (var) (apply 'make-class-getter-setter (rest var)))
+     (mapconcat (lambda (var) (apply 'make-class-getter-setter (cdr var)))
                 (apply 'extract-class-variables modifiers)
                 "\n"))
     (c-indent-region oldpoint (point) t)))

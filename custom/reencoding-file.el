@@ -88,11 +88,11 @@ Encoding changes through rotation of `evm-coding-systems-list'."
   "Circle changes end of line in the current buffer."
   (interactive)
   (let ((eol (coding-system-eol-type buffer-file-coding-system)))
-    (case eol
+    (pcase eol
       (0 (set-buffer-file-coding-system 'dos))     ; "Unix-style LF"
       (1 (set-buffer-file-coding-system 'mac))     ; "DOS-style CRLF"
       (2 (set-buffer-file-coding-system 'unix))    ; "Mac-style CR"
-      (t (set-buffer-file-coding-system 'unix))))) ; "Undecided"
+      (_ (set-buffer-file-coding-system 'unix))))) ; "Undecided"
 
 ;;=============================================================================
 
