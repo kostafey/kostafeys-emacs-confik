@@ -79,9 +79,6 @@
 ;;-------------------------------------------------------------------
 ;; Search & replace
 ;;
-;; Esc - exit from search
-(define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
-
 (when (require 'highlight-symbol nil 'noerror)
   (eval-after-load "highlight-symbol"
     '(progn
