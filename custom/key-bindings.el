@@ -10,9 +10,6 @@
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-M->" . mc/mark-all-like-this)))
-(straight-use-package
- '(highlight-symbol :type git :host github
-			              :repo "nschum/highlight-symbol.el" :branch "master"))
 (use-package ace-jump-mode
   :straight `(ace-jump-mode
               :type git :host nil
@@ -59,31 +56,35 @@
 (require 'reencoding-file)
 (require 'version-control)
 
-;;-------------------------------------------------------------------
-;; Search & replace
-;;
-(when (require 'highlight-symbol nil 'noerror)
-  (eval-after-load "highlight-symbol"
-    '(progn
-       (defun k/highlight-region (start end)
-         "Toggle highlighting of the region."
-         (interactive "r")
-         (if mark-active
-             (highlight-symbol (buffer-substring start end))
-           (highlight-symbol)))
+(use-package highlight-symbol
+  :straight (highlight-symbol :type git :host github
+                              :repo "nschum/highlight-symbol.el"
+                              :branch "master")
+  :preface
+  (defun k/highlight-thing-at-point (start end)
+    "Toggle highlighting of the symbol at point, or of the active region."
+    (interactive "r")
+    (if mark-active
+        (highlight-symbol (buffer-substring start end))
+      (highlight-symbol)))
 
-       (defun k/highlight-search ()
-         "Toggle highlighting of the region."
-         (interactive)
-         (highlight-symbol (substring-no-properties (car kill-ring))))
-
-       (global-set-key (kbd "C-<f3>") 'k/highlight-region)
-       (global-set-key (kbd "S-<f3>") 'highlight-symbol-prev)
-       (global-set-key (kbd "M-<f3>") 'highlight-symbol-remove-all)
-       (global-set-key (kbd "C-M-<up>") 'highlight-symbol-prev)
-       (global-set-key (kbd "C-M-<down>") 'highlight-symbol-next)
-
-       (define-key isearch-mode-map (kbd "C-<f3>") 'k/highlight-search))))
+  (defun k/highlight-isearch-string ()
+    "Toggle highlighting of the current search string."
+    (interactive)
+    (when (string-empty-p isearch-string)
+      (user-error "Empty search string"))
+    ;; `highlight-symbol' takes a regexp.
+    (highlight-symbol (substring-no-properties
+                       (if isearch-regexp
+                           isearch-string
+                         (regexp-quote isearch-string)))))
+  :bind (("C-<f3>" . k/highlight-thing-at-point)
+         ("S-<f3>" . highlight-symbol-prev)
+         ("M-<f3>" . highlight-symbol-remove-all)
+         ("C-M-<up>" . highlight-symbol-prev)
+         ("C-M-<down>" . highlight-symbol-next)
+         :map isearch-mode-map
+         ("C-<f3>" . k/highlight-isearch-string)))
 
 (defun kostafey-markdown-mode-hook ()
   (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
