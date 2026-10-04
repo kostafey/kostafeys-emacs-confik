@@ -61,11 +61,12 @@
                               :repo "nschum/highlight-symbol.el"
                               :branch "master")
   :preface
-  (defun k/highlight-thing-at-point (start end)
+  (defun k/highlight-thing-at-point ()
     "Toggle highlighting of the symbol at point, or of the active region."
-    (interactive "r")
-    (if mark-active
-        (highlight-symbol (buffer-substring start end))
+    (interactive)
+    (if (use-region-p)
+        (highlight-symbol
+         (regexp-quote (buffer-substring (region-beginning) (region-end))))
       (highlight-symbol)))
 
   (defun k/highlight-isearch-string ()
