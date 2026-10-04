@@ -23,7 +23,6 @@
   :custom
   (ace-jump-mode-scope 'window))
 
-(require 'rg-conf)
 (require 'navigation-in-frame)
 (require 'project-conf)
 
@@ -80,10 +79,6 @@
 ;;-------------------------------------------------------------------
 ;; Search & replace
 ;;
-(global-set-key (kbd "C-s-f") 'flx-isearch-forward)
-(global-set-key (kbd "C-s-r") 'flx-isearch-backward)
-(global-set-key (kbd "C-c r") 'k/rg)
-
 ;; Esc - exit from search
 (define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
 
@@ -198,8 +193,6 @@
 (global-set-key [f4] 'k/shell)
 (global-set-key [f5] 'dired-open)
 (global-set-key [f6] 'switch-completion-frontend)
-(global-set-key [f7] 'k/rg)
-(global-set-key [C-f7] 'k/rg-file)
 
 (global-set-key [f8] 'recode-buffer-rotate-ring)
 (global-set-key [C-f8] 'eol-buffer-rotate-ring)

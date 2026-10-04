@@ -1,8 +1,10 @@
 ;;; -*- lexical-binding: t -*-
-(straight-use-package
- '(rg
-   :type git :host github
-   :repo "dajva/rg.el" :branch "master"))
+(use-package rg
+  :straight (rg :type git :host github
+                :repo "dajva/rg.el" :branch "master")
+  :bind (("C-c r" . k/rg)
+         ("<f7>" . k/rg)
+         ("C-<f7>" . k/rg-file)))
 
 ;;----------------------------------------------------------------------
 ;; ripgrep  - rg
