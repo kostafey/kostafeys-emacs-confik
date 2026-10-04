@@ -9,15 +9,19 @@
 (straight-use-package
  '(highlight-symbol :type git :host github
 			              :repo "nschum/highlight-symbol.el" :branch "master"))
-(straight-use-package
- `(ace-jump-mode
-   :type git :host nil
-   :repo ,(pcase system-type
-            ('windows-nt
-             "https://github.com/kostafey/ace-jump-mode.git")
-            ('gnu/linux
-             "git@github.com:kostafey/ace-jump-mode.git"))
-   :branch "master"))
+(use-package ace-jump-mode
+  :straight `(ace-jump-mode
+              :type git :host nil
+              :repo ,(pcase system-type
+                       ('windows-nt
+                        "https://github.com/kostafey/ace-jump-mode.git")
+                       ('gnu/linux
+                        "git@github.com:kostafey/ace-jump-mode.git"))
+              :branch "master")
+  :bind (("M-a" . ace-jump-mode)
+         ("C-c M-a" . ace-jump-mode-pop-mark))
+  :custom
+  (ace-jump-mode-scope 'window))
 
 (require 'rg-conf)
 (require 'navigation-in-frame)
@@ -114,13 +118,6 @@
   (define-key markdown-mode-map (kbd "M-<right>") nil)
   (define-key markdown-mode-map (kbd "M-p") nil))
 (add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
-
-;; ace-jump-mode
-(setq ace-jump-mode-scope 'window)
-
-(global-unset-key (kbd "M-a"))
-(when (require 'ace-jump-mode nil 'noerror)
-  (define-key global-map (kbd "M-a") 'ace-jump-mode))
 ;;
 ;;===================================================================
 
