@@ -1,8 +1,5 @@
 ;;; key-bindings.el -- A collection of key bindings (default and custom).  -*- lexical-binding: t -*-
 
-(straight-use-package
- '(session :type git :host github
-				   :repo "emacsattic/session" :branch "master"))
 (use-package multiple-cursors
   :straight (multiple-cursors :type git :host github
                               :repo "magnars/multiple-cursors.el"
@@ -61,14 +58,6 @@
 (require 'dired-conf)
 (require 'reencoding-file)
 (require 'version-control)
-
-;;-------------------------------------------------------------------
-;; goto-last-change
-;;
-(when (require 'session nil 'noerror)
-  (setq session-jump-undo-threshold 80)  ; default was 240
-  (global-set-key (kbd "C-x x") 'session-jump-to-last-change)
-  (global-set-key (kbd "C-M-l") 'session-jump-to-last-change))
 
 ;;-------------------------------------------------------------------
 ;; Search & replace

@@ -5,6 +5,7 @@
 (require 'file-ops)
 (require 'history-conf)
 (require 'pager)
+(require 'last-change)
 
 ;;-------------------------------------------------------------------
 ;; Exit & iconify emacs
@@ -81,6 +82,8 @@
 (global-set-key (kbd "C-z") 'undo)          ; Undo C-z
 (global-set-key [(meta backspace)] 'undo)
 (global-set-key (kbd "C-S-z") 'undo-redo)  ; Redo C-S-z
+;; Jump back through the positions of recent changes
+(global-set-key (kbd "C-x x") 'last-change-jump)
 
 (global-set-key (kbd "C-q") 'quoted-insert)
 (global-set-key [(delete)] 'delete-char)
