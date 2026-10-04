@@ -3,9 +3,16 @@
 (straight-use-package
  '(session :type git :host github
 				   :repo "emacsattic/session" :branch "master"))
-(straight-use-package
- '(multiple-cursors :type git :host github
-				            :repo "magnars/multiple-cursors.el" :branch "master"))
+(use-package multiple-cursors
+  :straight (multiple-cursors :type git :host github
+                              :repo "magnars/multiple-cursors.el"
+                              :branch "master")
+  ;; Add a cursor to each line of an active region spanning multiple lines,
+  ;; or to the next, previous or all occurrences of the region text.
+  :bind (("C-S-m" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-M->" . mc/mark-all-like-this)))
 (straight-use-package
  '(highlight-symbol :type git :host github
 			              :repo "nschum/highlight-symbol.el" :branch "master"))
@@ -54,19 +61,6 @@
 (require 'dired-conf)
 (require 'reencoding-file)
 (require 'version-control)
-
-;;-------------------------------------------------------------------
-;; multiple-cursors
-;;
-(when (require 'multiple-cursors nil 'noerror)
-  ;; When you have an active region that spans multiple lines, the
-  ;; following will add a cursor to each line:
-  (global-set-key (kbd "C-S-m") 'mc/edit-lines)
-  ;; When you want to add multiple cursors not based on continuous
-  ;; lines, but based on keywords in the buffer, use:
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 ;;-------------------------------------------------------------------
 ;; goto-last-change
