@@ -232,6 +232,13 @@ for the main screen, where a wrapped row really is a continuation."
   ;; `ace-jump-mode-end-hook' runs only after the jump itself, on both the
   ;; single-candidate and the label-selected paths, so an aborted jump leaves
   ;; the mode alone.
+  ;;
+  ;; Entering Emacs mode can itself haul point back: `ghostel--enter-readonly'
+  ;; shows its entry message while the input mode is still semi-char, the
+  ;; message redisplays, and a pending window size change runs
+  ;; `ghostel--adjust-size', which re-anchors the window and snaps point to
+  ;; the terminal cursor before Emacs mode is set.  So put point back where
+  ;; the jump left it; off the cursor, Emacs mode stops following the output.
   (defun k/ghostel-ace-jump-leave-input ()
     "Enter `ghostel-emacs-mode' where an ace-jump landed in a terminal.
 A no-op outside ghostel buffers, and in copy and Emacs modes, which are
@@ -239,7 +246,9 @@ read-only already -- `ghostel-emacs-mode' toggles, and calling it there
 would drop the jump straight back into the terminal."
     (when (and (derived-mode-p 'ghostel-mode)
                (not (memq ghostel--input-mode '(copy emacs))))
-      (ghostel-emacs-mode)))
+      (let ((target (point)))
+        (ghostel-emacs-mode)
+        (goto-char target))))
 
   (add-hook 'ace-jump-mode-end-hook #'k/ghostel-ace-jump-leave-input)
 
