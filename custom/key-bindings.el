@@ -86,15 +86,6 @@
          ("C-M-<down>" . highlight-symbol-next)
          :map isearch-mode-map
          ("C-<f3>" . k/highlight-isearch-string)))
-
-(defun kostafey-markdown-mode-hook ()
-  (define-key markdown-mode-map (kbd "C-M-<up>") 'highlight-symbol-prev)
-  (define-key markdown-mode-map (kbd "C-M-<down>") 'highlight-symbol-next)
-  (define-key markdown-mode-map (kbd "<backspace>") nil)
-  (define-key markdown-mode-map (kbd "M-<left>") nil)
-  (define-key markdown-mode-map (kbd "M-<right>") nil)
-  (define-key markdown-mode-map (kbd "M-p") nil))
-(add-hook 'markdown-mode-hook 'kostafey-markdown-mode-hook)
 ;;
 ;;===================================================================
 

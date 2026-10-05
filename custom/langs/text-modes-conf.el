@@ -94,6 +94,16 @@
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
+(use-package markdown-mode
+  :straight (markdown-mode :type git :host github
+                           :repo "jrblevin/markdown-mode")
+  :defer t
+  :bind (:map markdown-mode-map
+              ;; Keep the global `copy-to-clipboard-buffer-file-path'.
+              ("M-p" . nil)
+              ;; Plain `delete-backward-char', no outdenting by levels.
+              ("DEL" . nil)))
+
 (use-package markdown-toc
   :straight '(markdown-toc :type git :host github
 			                     :repo "ardumont/markdown-toc" :branch "master"))
