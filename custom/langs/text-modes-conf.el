@@ -233,6 +233,10 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
                     (org-back-to-heading t)
                     (k/flash-region (point)
                                     (progn (outline-next-heading) (point)))))
+                ;; Show the flash before sending: expanding {{...}} templates
+                ;; (e.g. a `shell-command-to-string' call) blocks Emacs, so
+                ;; without a forced redisplay the overlay is gone unseen.
+                (redisplay t)
                 (verb-kill-all-response-buffers 1)
                 (verb-send-request-on-point-other-window-stay)))
 
