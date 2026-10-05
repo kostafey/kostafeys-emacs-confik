@@ -38,6 +38,22 @@
 ;; directly.
 (setq nrepl-use-ssh-fallback-for-remote-hosts t)
 
+(defun k/cider-context-buffer-drop-uniquify (params)
+  "Forget the `uniquify-managed' the context buffer of PARAMS copied.
+`cider--update-project-dir' copies every local variable of the current
+buffer into a hidden buffer it never kills, the permanent local
+`uniquify-managed' included.  Once the original buffer is killed, the
+copy holds a dead buffer, and every later visit of a file of the same
+name fails in `uniquify-rationalize-file-buffer-names' with \"Selecting
+deleted buffer\" -- a broken `consult' file preview, for one."
+  (when-let* ((buffer (plist-get params :--context-buffer)))
+    (with-current-buffer buffer
+      (kill-local-variable 'uniquify-managed)))
+  params)
+
+(advice-add 'cider--update-project-dir :filter-return
+            #'k/cider-context-buffer-drop-uniquify)
+
 ;; Enabling CamelCase support for editing commands(like forward-word,
 ;; backward-word, etc) in nREPL is quite useful since we often have to deal with
 ;; Java class and method names.
