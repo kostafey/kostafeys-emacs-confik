@@ -1,5 +1,16 @@
 ;;; -*- lexical-binding: t -*-
 ;;-------------------------------------------------------------------
+
+(use-package dired-single
+  :straight `(dired-single
+              :type git :host nil
+              :repo "https://github.com/emacsattic/dired-single"
+              :branch "master")
+  :config (progn
+            ;; Replace standard dired bindings to use dired-single
+            (define-key dired-mode-map (kbd "RET") 'dired-single-buffer)
+            (define-key dired-mode-map (kbd "^") (lambda () (interactive) (dired-single-buffer "..")))))
+
 ;; dired
 (setq dired-omit-files
       (rx (or (seq bol (? ".") "#")
