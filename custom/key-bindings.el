@@ -15,9 +15,9 @@
               :type git :host nil
               :repo ,(pcase system-type
                        ('windows-nt
-                        "https://github.com/kostafey/ace-jump-mode.git")
+                        "https://github.com/winterTTr/ace-jump-mode.git")
                        ('gnu/linux
-                        "git@github.com:kostafey/ace-jump-mode.git"))
+                        "git@github.com:winterTTr/ace-jump-mode.git"))
               :branch "master")
   :bind (("M-a" . ace-jump-mode)
          ("C-c M-a" . ace-jump-mode-pop-mark))
