@@ -214,15 +214,27 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
             (defun k/verb-send ()
               (interactive)
-              ;; Flash the request being sent: the heading at point up
-              ;; to the next heading (child headings are separate requests).
-              (ignore-errors
-                (save-excursion
-                  (org-back-to-heading t)
-                  (k/flash-region (point)
-                                  (progn (outline-next-heading) (point)))))
-              (verb-kill-all-response-buffers 1)
-              (verb-send-request-on-point-other-window-stay))
+              (if (org-in-src-block-p)
+                  ;; Inside a source block evaluate it (SQL goes to ejc-sql
+                  ;; via `org-babel-execute:sql'), flashing its body only.
+                  (let ((element (org-element-at-point)))
+                    (save-excursion
+                      (goto-char (org-element-property :post-affiliated element))
+                      (forward-line 1)
+                      (let ((beg (point)))
+                        (goto-char (org-element-property :end element))
+                        (skip-chars-backward " \t\n")
+                        (k/flash-region beg (line-beginning-position))))
+                    (org-ctrl-c-ctrl-c))
+                ;; Flash the request being sent: the heading at point up
+                ;; to the next heading (child headings are separate requests).
+                (ignore-errors
+                  (save-excursion
+                    (org-back-to-heading t)
+                    (k/flash-region (point)
+                                    (progn (outline-next-heading) (point)))))
+                (verb-kill-all-response-buffers 1)
+                (verb-send-request-on-point-other-window-stay)))
 
             (define-key org-mode-map (kbd "C-c C-c") 'k/verb-send)
             (setq org-hide-leading-stars t)
