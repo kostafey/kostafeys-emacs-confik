@@ -190,14 +190,6 @@
 ;;
 ;;===================================================================
 
-
-;;===================================================================
-
-(defun kostafey-lsp-signature-mode-map ()
-  (define-key lsp-signature-mode-map (kbd "M-a") 'ace-jump-mode)
-  (define-key lsp-signature-previous (kbd "M-p") 'copy-to-clipboard-buffer-file-path))
-(add-hook 'lsp-signature-mode-map-hook 'kostafey-lsp-signature-mode-map)
-
 ;;=============================================================================
 ;; Mode keys & programming language specific keys.
 ;;
