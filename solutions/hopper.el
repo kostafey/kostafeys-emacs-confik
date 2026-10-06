@@ -167,11 +167,6 @@ Used by `eframe-kill-buffer' to return to the previous position with
                ((and (boundp 'lsp-bridge-mode) (member 'lsp-bridge-mode minor-mode-list))
                 (lsp-bridge-find-def))
 
-               ((and (boundp 'lsp-metals))
-                (progn
-                  (lsp-find-definition)
-                  (recenter-top-bottom 5)))
-
                (t
                 (let ((xref-prompt-for-identifier nil))
                   (call-interactively 'xref-find-definitions)))

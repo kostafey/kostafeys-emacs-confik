@@ -1,4 +1,4 @@
-;;; scala-conf.el --- Scala configuration for lsp  -*- lexical-binding: t -*-
+;;; scala-conf.el --- Scala configuration  -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -69,11 +69,6 @@
           "-Dsbt.supershell=false"
           ;; sbt console on windows: https://github.com/hvesalai/emacs-sbt-mode/issues/44
           "-Djline.terminal=jline.UnsupportedTerminal")))
-
-;; Enable nice rendering of diagnostics like compile errors.
-(use-package flycheck
-  :straight '(flycheck :type git :host github
-			                 :repo "flycheck/flycheck" :branch "master"))
 
 (defun k/scala-indent-region ()
   "Indent region or current line in Scala file."
@@ -268,65 +263,42 @@
   (interactive)
   (sbt-command "compile"))
 
-(defcustom k/scala-lsp-frontend 'eglot
-  "Choose scala lsp frontend for Emacs."
-  :type '(choice 'lsp-mode
-                 'eglot))
+(use-package eglot
+  :straight t
+  :defer t
+  :config (progn
+            (setq eglot-code-actions-display-functions nil)
+            (setq eldoc-echo-area-use-multiline-p nil)
+            (setq eglot-ignored-server-capabilities nil)
+            (setq eglot-code-action-indications '(margin))
+            (add-to-list 'eglot-server-programs
+                         '(scala-mode . ("metals-emacs")))
+            (add-to-list 'eglot-server-programs
+                         '(scala-ts-mode . ("metals-emacs"))))
+  :hook ((scala-mode . eglot-ensure)
+         (scala-mode . k/scala-mode-hook)
+         (scala-ts-mode . eglot-ensure)))
 
-(pcase k/scala-lsp-frontend
-  ;;;;;;;;;;;;;;
-  ;; lsp-mode ;;
-  ;;;;;;;;;;;;;;
-  ('lsp-mode
-   ;; Run for new projects:
-   ;; M-x `lsp-metals-build-import'
-   (progn
-     (use-package lsp-mode
-       :straight '(lsp-mode :type git :host github
-			                      :repo "emacs-lsp/lsp-mode" :branch "master")
-       ;; Optional - enable lsp-mode automatically in scala files
-       :hook ((scala-mode . lsp)
-              (scala-ts-mode . lsp))
-       :bind (:map scala-mode-map
-              ("C-c i" . 'lsp-java-add-import))
-       :config (progn
-                 (setq lsp-ui-doc-show-with-mouse nil)
-                 (setq lsp-prefer-flymake nil)
-                 (setq lsp-before-save-edits nil)
-                 (setq lsp-ui-sideline-diagnostic-max-lines 8)))
+;;----------------------------------------------------------------------
+;; Keys
+;;
+(defun k/scala-define-keys (map)
+  "Bind the Scala commands in MAP, `scala-mode-map' or `scala-ts-mode-map'."
+  (define-key map (kbd "C-n j") 'k/scala-start-console-or-switch)
+  (define-key map (kbd "C-n c") 'k/scala-switch-console)
+  (define-key map (kbd "M-e") 'k/scala-eval-region)
+  (define-key map (kbd "C-n e b") 'k/scala-eval-buffer)
+  (define-key map (kbd "C-x C-e") 'k/scala-eval-last-scala-expr)
+  (define-key map (kbd "C-c C-e") 'k/scala-eval-line)
+  (define-key map (kbd "C-n k") 'k/scala-compile)
+  (define-key map (kbd "C-c RET") 'newline-and-indent)
+  (define-key map (kbd "<tab>") 'k/scala-indent-region)
+  (define-key map (kbd "C-c <tab>") 'yas-expand))
 
-     ;; Add metals backend for lsp-mode
-     (use-package lsp-metals
-       :straight '(lsp-metals :type git :host github
-			                        :repo "emacs-lsp/lsp-metals" :branch "master"))
-     (setq lsp-metals-fallback-scala-version "3.3.3")
-     ;; (use-package lsp-ui)
-
-     (defun k/lsp-clean-session ()
-       "Lsp sessions cleanup - delete known projects."
-       (interactive)
-       (delete-file "~/.emacs.d/.lsp-session-v1")
-       (setq lsp--session nil))))
-  ;;;;;;;;;;;
-  ;; eglot ;;
-  ;;;;;;;;;;;
-  ('eglot
-   (progn
-     (use-package eglot
-       :straight t
-       :defer t
-       :config (progn
-                 (setq eglot-code-actions-display-functions nil)
-                 (setq eldoc-echo-area-use-multiline-p nil)
-                 (setq eglot-ignored-server-capabilities nil)
-                 (setq eglot-code-action-indications '(margin))
-                 (add-to-list 'eglot-server-programs
-                              '(scala-mode . ("metals-emacs")))
-                 (add-to-list 'eglot-server-programs
-                              '(scala-ts-mode . ("metals-emacs"))))
-       :hook ((scala-mode . eglot-ensure)
-              (scala-mode . k/scala-mode-hook)
-              (scala-ts-mode . eglot-ensure))))))
+(with-eval-after-load 'scala-mode
+  (k/scala-define-keys scala-mode-map))
+(with-eval-after-load 'scala-ts-mode
+  (k/scala-define-keys scala-ts-mode-map))
 
 (provide 'scala-conf)
 

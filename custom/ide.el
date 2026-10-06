@@ -30,4 +30,12 @@
   :straight '(ztree :type git :host github
 			              :repo "fourier/ztree" :branch "master"))
 
+;;-------------------------------------------------------------------
+;; flycheck - on-the-fly syntax checking, used by rust-conf and js-conf
+;;
+(use-package flycheck
+  :straight '(flycheck :type git :host github
+			                 :repo "flycheck/flycheck" :branch "master")
+  :defer t)
+
 (provide 'ide)

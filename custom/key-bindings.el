@@ -221,22 +221,17 @@
 
 ;;----------------------------------------------------------------------
 ;; Scala
-;;
-(defun kostafey-scala-mode-hook (mode-map)
-  (define-key mode-map (kbd "C-n j")   'k/scala-start-console-or-switch)
-  (define-key mode-map (kbd "C-n c")   'k/scala-switch-console)
-  (define-key mode-map (kbd "M-e")     'k/scala-eval-region)
-  (define-key mode-map (kbd "C-n e b") 'k/scala-eval-buffer)
-  (define-key mode-map (kbd "C-x C-e") 'k/scala-eval-last-scala-expr)
-  (define-key mode-map (kbd "C-c C-e") 'k/scala-eval-line)
-  (define-key mode-map (kbd "C-n k")   'k/scala-compile)
-  (define-key mode-map (kbd "C-c RET") 'newline-and-indent)
-  (define-key mode-map (kbd "C-c ?")   'lsp-metals-toggle-show-inferred-type)
-  (define-key mode-map (kbd "M-p")     'copy-to-clipboard-buffer-file-path)
-  (define-key mode-map (kbd "<tab>")   'k/scala-indent-region)
-  (define-key mode-map (kbd "C-c <tab>") 'yas-expand))
-(add-hook 'scala-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-mode-map)))
-(add-hook 'scala-ts-mode-hook #'(lambda () (kostafey-scala-mode-hook scala-ts-mode-map)))
+;; In scala-mode and scala-ts-mode
+;; C-n j       k/scala-start-console-or-switch scala-conf.el
+;; C-n c       k/scala-switch-console        scala-conf.el
+;; M-e         k/scala-eval-region           scala-conf.el
+;; C-n e b     k/scala-eval-buffer           scala-conf.el
+;; C-x C-e     k/scala-eval-last-scala-expr  scala-conf.el
+;; C-c C-e     k/scala-eval-line             scala-conf.el
+;; C-n k       k/scala-compile               scala-conf.el
+;; C-c RET     newline-and-indent            scala-conf.el
+;; <tab>       k/scala-indent-region         scala-conf.el
+;; C-c <tab>   yas-expand                    scala-conf.el
 
 ;;----------------------------------------------------------------------
 ;; Tcl
