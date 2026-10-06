@@ -195,16 +195,6 @@
 ;;
 
 ;;----------------------------------------------------------------------
-;; lisp
-(defun kostafey-lisp-mode-hook ()
-  (define-key lisp-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
-  (define-key lisp-mode-map (kbd "C-c h") 'slime-hyperspec-lookup)
-  (define-key slime-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
-  (define-key slime-mode-map (kbd "C-c h") 'slime-hyperspec-lookup))
-(add-hook 'lisp-mode-hook 'kostafey-lisp-mode-hook)
-(add-hook 'slime-mode-hook 'kostafey-lisp-mode-hook)
-
-;;----------------------------------------------------------------------
 ;; emacs lisp
 (defun kostafey-elisp-mode-hook ()
   (define-key emacs-lisp-mode-map (kbd "C-c p")

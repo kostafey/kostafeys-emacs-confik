@@ -30,6 +30,12 @@
             (concat "file://" local-hyperspec)
           "http://www.lispworks.com/reference/HyperSpec/")))
 
+(define-key lisp-mode-map (kbd "C-c h") 'slime-hyperspec-lookup)
+(define-key slime-mode-map (kbd "C-c h") 'slime-hyperspec-lookup)
+;; SLIME takes M-p for the previous compiler note; keep the global
+;; `copy-to-clipboard-buffer-file-path' there.
+(define-key slime-mode-map (kbd "M-p") 'copy-to-clipboard-buffer-file-path)
+
 (add-hook 'slime-mode-hook 'set-up-slime-ac)
 (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
 (eval-after-load "auto-complete"
