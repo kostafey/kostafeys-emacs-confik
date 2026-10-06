@@ -99,21 +99,6 @@
 ;;
 ;;===================================================================
 
-(global-set-key (kbd "M-<left>") 'meta-left)
-(global-set-key (kbd "M-<right>") 'meta-right)
-
-(global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "S-s-<left>") (lambda () (interactive)
-                                     (shrink-window-horizontally 20)))
-(global-set-key (kbd "S-s-<right>") (lambda () (interactive)
-                                      (enlarge-window-horizontally 20)))
-(global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "s-<down>") 'shrink-window)
-(global-set-key (kbd "s-<up>") 'enlarge-window)
-;;
-;;===================================================================
-
 ;; to 'set-mark-command use M-s instead
 ;; (global-set-key (kbd "C-SPC") 'start-complete)
 (global-set-key (kbd "C-SPC") 'completion-at-point)

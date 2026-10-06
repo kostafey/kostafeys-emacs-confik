@@ -508,6 +508,16 @@ block, return (BEG . END) of the block content without the fence lines."
 (global-set-key (kbd "M-<up>") 'windmove-up)
 (global-set-key (kbd "M-<down>") 'windmove-down)
 
+;; Resize windows
+(global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-s-<left>") (lambda () (interactive)
+                                     (shrink-window-horizontally 20)))
+(global-set-key (kbd "S-s-<right>") (lambda () (interactive)
+                                      (enlarge-window-horizontally 20)))
+(global-set-key (kbd "s-<down>") 'shrink-window)
+(global-set-key (kbd "s-<up>") 'enlarge-window)
+
 ;;===================================================================
 ;;                        Text transformations
 ;
