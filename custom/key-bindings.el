@@ -49,6 +49,10 @@
                        ('gnu/linux
                         "git@github.com:kostafey/temporary-persistent.git"))
               :branch "master")
+  ;; Desktop restores the temp buffers at startup; loaded right away, it
+  ;; saves them on exit and lists them in its `consult-buffer' source.
+  :demand t
+  :bind (("C-x C-c" . temporary-persistent-switch-buffer))
   :config
   (setq temporary-persistent-default-major-mode 'markdown-mode)
   ;; `temporary-persistent' does not pull in `consult' itself, and `consult'
@@ -98,9 +102,6 @@
 ;;===================================================================
 ;; Buffers navigation
 ;;
-(when (require 'temporary-persistent nil 'noerror)
-  (global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer))
-
 (global-set-key (kbd "C-c g") 'google)
 (global-set-key (kbd "C-x u") 'goto-url)
 (global-set-key (kbd "C-c C-g") #'(lambda () (interactive) (google -1)))
