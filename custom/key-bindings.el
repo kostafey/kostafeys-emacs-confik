@@ -99,16 +99,6 @@
 ;;
 ;;===================================================================
 
-;;===================================================================
-;; Buffers navigation
-;;
-(global-set-key (kbd "C-c g") 'google)
-(global-set-key (kbd "C-x u") 'goto-url)
-(global-set-key (kbd "C-c C-g") #'(lambda () (interactive) (google -1)))
-(global-set-key (kbd "C-M-w") #'(lambda () (interactive)
-                                  (browse-url "http://www.google.com")))
-;;
-;;===================================================================
 (global-set-key (kbd "M-<left>") 'meta-left)
 (global-set-key (kbd "M-<right>") 'meta-right)
 

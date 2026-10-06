@@ -45,52 +45,6 @@
 			  " " (mode 16 16 :left :elide) " " k/path-and-process)
 		(mark " " (name 16 -1) " " filename)))
 
-;;----------------------------------------------------------------------
-;; Interact with browser
-;;
-(defun find-browser-executable ()
-  (let ((win-edge "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")
-        (win-chrome "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"))
-   (cond ((executable-find "chromium") "chromium")
-         ((executable-find "chromium-browser") "chromium-browser")
-         ((executable-find "google-chrome-stable") "google-chrome-stable")
-         ((executable-find "palemoon") "palemoon")
-         ((executable-find "firefox") "firefox")
-         ((executable-find win-chrome) win-chrome)
-         ((executable-find win-edge) win-edge)
-         (t (message "Cant find any browser in the PATH.")))))
-
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program (find-browser-executable))
-
-(defun google (&optional arg)
-  "Google the selected region if any, display a query prompt otherwise."
-  (interactive "p")
-  (let ((e1 (equal arg 1)))
-    (browse-url
-     (concat
-      "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
-      (url-hexify-string
-       (if mark-active
-           (buffer-substring (region-beginning) (region-end))
-         (read-string "Google: "
-                      (if (and e1 (symbol-at-point))
-                          (symbol-name (symbol-at-point))))))))))
-
-(defun goto-url (&optional arg)
-  "Go to selected region as URL if any, display a query prompt otherwise."
-  (interactive "p")
-  (browse-url
-   (if mark-active
-       (buffer-substring (region-beginning) (region-end))
-     (let ((entered-str
-            (read-string "Go to URL: "
-                         (if (not (equal arg 1))
-                             (symbol-name (symbol-at-point))))))
-       (if (not (equal "http" (substring entered-str 0 4)))
-           (concat "http://" entered-str)
-         entered-str)))))
-
 (provide 'navigation-in-frame)
 
 ;;; navigation-in-frame.el ends here

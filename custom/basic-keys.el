@@ -6,6 +6,7 @@
 (require 'history-conf)
 (require 'pager)
 (require 'last-change)
+(require 'web-browse)
 
 ;;-------------------------------------------------------------------
 ;; Exit & iconify emacs
@@ -773,6 +774,13 @@ the feature that owns them, so leave them alone."
 ;;-------------------------------------------------------------------
 ;; File variables
 (setq safe-local-variable-values '((scala-indent:step . 2)))
+
+;;-------------------------------------------------------------------
+;; Web browser, see solutions/web-browse.el
+(global-set-key (kbd "C-c g") 'web-browse-google)
+(global-set-key (kbd "C-c C-g") 'web-browse-google-query)
+(global-set-key (kbd "C-M-w") 'web-browse-google-home)
+(global-set-key (kbd "C-x u") 'web-browse-url)
 
 ;;===================================================================
 ;;                               Mouse
