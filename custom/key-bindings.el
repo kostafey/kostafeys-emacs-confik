@@ -27,12 +27,18 @@
 (require 'navigation-in-frame)
 (require 'project-conf)
 
-(straight-use-package
- '(eframe-jack-in :type git :host github
-				          :repo "kostafey/eframe-jack-in" :branch "master"))
-(require 'eframe-jack-in)
-(require 'eframe-windmove)
-(global-set-key (kbd "C-M-e") 'eframe-pop-emacs)
+(use-package eframe-jack-in
+  :straight (eframe-jack-in :type git :host github
+                            :repo "kostafey/eframe-jack-in"
+                            :branch "master")
+  ;; It sets up hooks and advice on load, so load it right away.
+  :demand t
+  :bind (("C-M-e" . eframe-pop-emacs)
+         ("C-w" . eframe-kill-buffer)
+         ("C-<next>" . eframe-next-buffer)
+         ("C-<prior>" . eframe-previous-buffer))
+  :config
+  (require 'eframe-windmove))
 
 (use-package temporary-persistent
   :straight `(temporary-persistent
@@ -92,12 +98,6 @@
 ;;===================================================================
 ;; Buffers navigation
 ;;
-(global-set-key (kbd "C-w") 'eframe-kill-buffer)
-(global-set-key [(control next)] 'eframe-next-buffer)      ; C-Page Up
-(global-set-key [(control prior)] 'eframe-previous-buffer) ; C-Page Down
-(global-unset-key (kbd "M-k"))
-(global-set-key (kbd "M-k f") 'make-frame)
-
 (when (require 'temporary-persistent nil 'noerror)
   (global-set-key (kbd "C-x C-c") 'temporary-persistent-switch-buffer))
 
