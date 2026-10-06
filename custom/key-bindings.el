@@ -99,39 +99,94 @@
 ;;
 ;;===================================================================
 
-;; C-SPC      completion-at-point           basic-keys.el
+;;===================================================================
+;; Point history
+;;
+;; C-x x       last-change-jump              basic-keys.el
+;;
+;;===================================================================
+
+;;===================================================================
+;; Search & replace
+;;
+;; C-c r       k/rg                          rg-conf.el
+;; In the minibuffer
+;; <escape>    abort-recursive-edit          basic-keys.el
+;; In markdown-mode, unbound to leave the global commands
+;; M-p         nil                           text-modes-conf.el
+;; DEL         nil                           text-modes-conf.el
+;;
+;;===================================================================
+
+;;===================================================================
+;; Intellectual point jumps
+;;
+;; C-M-d       hop-at-point                  ide.el
+;; C-x d       hop-at-point-other-window     ide.el
+;; M-S-<left>  hop-backward                  ide.el
+;; M-S-<right> hop-forward                   ide.el
+;; <C-mouse-1> hop-by-mouse                  ide.el
+;;
+;;===================================================================
+
+;;===================================================================
+;; Frames & windows
+;;
+;; M-k f       make-frame                    basic-keys.el
+;; M-<left>    meta-left                     basic-keys.el
+;; M-<right>   meta-right                    basic-keys.el
+;; s-<left>    shrink-window-horizontally    basic-keys.el
+;; s-<right>   enlarge-window-horizontally   basic-keys.el
+;; S-s-<left>  shrink-window-horizontally    basic-keys.el, by 20
+;; S-s-<right> enlarge-window-horizontally   basic-keys.el, by 20
+;; s-<down>    shrink-window                 basic-keys.el
+;; s-<up>      enlarge-window                basic-keys.el
+;;
+;;===================================================================
+
+;;===================================================================
+;; Web browser
+;;
+;; C-c g       web-browse-google             basic-keys.el
+;; C-c C-g     web-browse-google-query       basic-keys.el
+;; C-M-w       web-browse-google-home        basic-keys.el
+;; C-x u       web-browse-url                basic-keys.el
+;;
+;;===================================================================
+
+;; C-SPC       completion-at-point           basic-keys.el
 
 ;;===================================================================
 ;; Function keys
 ;;
-;; <f1>       consult-buffer                minibuffer-conf.el
-;; C-M-n      k/project-find-file           project-conf.el
-;; <f2>       consult-imenu                 minibuffer-conf.el
-;; <f3>       consult-bookmark              minibuffer-conf.el
+;; <f1>        consult-buffer                minibuffer-conf.el
+;; C-M-n       k/project-find-file           project-conf.el
+;; <f2>        consult-imenu                 minibuffer-conf.el
+;; <f3>        consult-bookmark              minibuffer-conf.el
 
-;; <f4>       k/shell                       shell-conf.el
-;; <f5>       dired-open                    dired-conf.el
-;; <f6>       k/toggle-tab-line-breadcrumb  appearance.el
-;; <f7>       k/rg                          rg-conf.el
-;; C-<f7>     k/rg-file                     rg-conf.el
+;; <f4>        k/shell                       shell-conf.el
+;; <f5>        dired-open                    dired-conf.el
+;; <f6>        k/toggle-tab-line-breadcrumb  appearance.el
+;; <f7>        k/rg                          rg-conf.el
+;; C-<f7>      k/rg-file                     rg-conf.el
 
-;; <f8>       recode-buffer-rotate-ring     reencoding-file.el
-;; C-<f8>     eol-buffer-rotate-ring        reencoding-file.el
-;; M-<f8>     describe-coding-system        reencoding-file.el
-;; <f9>       auto-fill-mode                basic-keys.el
-;; <f10>      smerge-mode                   basic-keys.el
-;; <f12>      flyspell-mode                 basic-keys.el
+;; <f8>        recode-buffer-rotate-ring     reencoding-file.el
+;; C-<f8>      eol-buffer-rotate-ring        reencoding-file.el
+;; M-<f8>      describe-coding-system        reencoding-file.el
+;; <f9>        auto-fill-mode                basic-keys.el
+;; <f10>       smerge-mode                   basic-keys.el
+;; <f12>       flyspell-mode                 basic-keys.el
 ;; Russian words typed past the intended key
-;; S-<f12>    k/ru-typo-mode                ru-typo-conf.el
-;; C-<f12>    k/ru-typo-correct-word        ru-typo-conf.el
-;; M-<f12>    k/ru-typo-accept-word         ru-typo-conf.el
+;; S-<f12>     k/ru-typo-mode                ru-typo-conf.el
+;; C-<f12>     k/ru-typo-correct-word        ru-typo-conf.el
+;; M-<f12>     k/ru-typo-accept-word         ru-typo-conf.el
 ;; yasnippet
-;; C-y n      yas-new-snippet               yas-conf.el
-;; C-y f      yas-describe-tables           yas-conf.el
-;; C-y v      yas-visit-snippet-file        yas-conf.el
-;; C-y r      yas-reload-all                yas-conf.el
-;; S-<tab>    open-line-or-yas              yas-conf.el
-;; C-S-<tab>  yas-prev-field                yas-conf.el
+;; C-y n       yas-new-snippet               yas-conf.el
+;; C-y f       yas-describe-tables           yas-conf.el
+;; C-y v       yas-visit-snippet-file        yas-conf.el
+;; C-y r       yas-reload-all                yas-conf.el
+;; S-<tab>     open-line-or-yas              yas-conf.el
+;; C-S-<tab>   yas-prev-field                yas-conf.el
 ;;
 ;;===================================================================
 
