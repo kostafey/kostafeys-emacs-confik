@@ -1,8 +1,7 @@
 ;;; java-conf.el -- Emacs Java configuration  -*- lexical-binding: t -*-
 
-;; Envieronment variables in use are:
-;; - `JAVADOC'
-;; - `CATALINA_HOME'
+(require 'cl-lib)
+(require 's)
 
 ;;--------------------------------------------------------------------
 ;; maven
