@@ -101,4 +101,13 @@
 (put 'lua-goto-forward-select 'CUA 'move)
 (put 'lua-goto-backward-select 'CUA 'move)
 
+(with-eval-after-load 'lua-mode
+  (define-key lua-mode-map (kbd "C-c C-c") 'lua-send-current-line)
+  (define-key lua-mode-map (kbd "M-e") 'lua-send-region)
+  (define-key lua-mode-map (kbd "C-x C-e") 'lua-eval-last-expr)
+  (define-key lua-mode-map (kbd "C-M-<right>") 'lua-goto-forward)
+  (define-key lua-mode-map (kbd "C-M-<left>") 'lua-goto-backward)
+  (define-key lua-mode-map (kbd "C-M-S-<right>") 'lua-goto-forward-select)
+  (define-key lua-mode-map (kbd "C-M-S-<left>") 'lua-goto-backward-select))
+
 (provide 'lua-conf)
