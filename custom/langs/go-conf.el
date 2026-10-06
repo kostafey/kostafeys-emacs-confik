@@ -72,4 +72,9 @@
   (compile
    (format "go run \"%s\""(buffer-file-name))))
 
+(with-eval-after-load 'go-mode
+  (define-key go-mode-map (kbd "C-c C-c") 'go-compile)
+  (define-key go-mode-map (kbd "C-c C-e") 'go-run)
+  (define-key go-mode-map (kbd "C-x C-e") 'go-run))
+
 (provide 'go-conf)

@@ -234,24 +234,11 @@
 ;; C-c <tab>   yas-expand                    scala-conf.el
 
 ;;----------------------------------------------------------------------
-;; Tcl
-;;
-(defun kostafey-tcl-mode-hook ()
-  (define-key tcl-mode-map (kbd "M-e") 'tcl-eval-region)
-  (define-key tcl-mode-map (kbd "C-c C-c")
-    #'(lambda() (interactive)
-       (save-excursion
-         (let ((beg (point))
-               (end (progn
-                      (beginning-of-line)
-                      (point))))
-           (tcl-eval-region end beg))))))
-(add-hook 'tcl-mode-hook 'kostafey-tcl-mode-hook)
-
-;; (require 'go-conf)
-;; (define-key go-mode-map (kbd "C-c C-c") 'go-compile)
-;; (define-key go-mode-map (kbd "C-c C-e") 'go-run)
-;; (define-key go-mode-map (kbd "C-x C-e") 'go-run)
+;; Go
+;; In go-mode
+;; C-c C-c     go-compile                    go-conf.el
+;; C-c C-e     go-run                        go-conf.el
+;; C-x C-e     go-run                        go-conf.el
 
 (require 'rst)
 (define-key rst-mode-map (kbd "C-M-a") nil)
