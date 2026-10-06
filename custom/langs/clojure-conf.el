@@ -147,4 +147,28 @@ deleted buffer\" -- a broken `consult' file preview, for one."
     (k/clojure-send-vterm (format "(in-ns '%s)" ns))
     (message ns)))
 
+;;----------------------------------------------------------------------
+;; Keys
+;;
+;; Not use-package :bind: it would autoload these commands from the
+;; package's own file, while they come from CIDER or this one.
+(with-eval-after-load 'clojure-mode
+  (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
+  (define-key clojure-mode-map (kbd "C-n e b") 'my-cider-eval-buffer)
+  (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
+  (define-key clojure-mode-map (kbd "C-x C-e") 'k/clojure-eval-last-sexp)
+  (define-key clojure-mode-map (kbd "C-c RET") 'newline-and-indent)
+  (define-key clojure-mode-map (kbd "M-n")
+              'k/clojure-switch-to-current-namespace))
+
+;; Once connected, `cider-mode' takes over C-c C-f, C-c C-l and C-c RET;
+;; leave C-c C-f to the global `consult-find' and C-c RET to the
+;; `clojure-mode-map' binding above.
+(with-eval-after-load 'cider-mode
+  (define-key cider-mode-map (kbd "C-c C-f") nil)
+  (define-key cider-mode-map (kbd "C-c C-l") nil)
+  (define-key cider-mode-map (kbd "C-c RET") nil))
+
+(global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+
 (provide 'clojure-conf)

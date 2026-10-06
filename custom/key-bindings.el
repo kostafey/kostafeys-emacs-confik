@@ -206,23 +206,18 @@
 
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
-;;
-(require 'clojure-conf)
-(global-unset-key (kbd "C-n"))
-(defun kostafey-clojure-mode-hook ()
-  (define-key clojure-mode-map (kbd "C-c C-p") 'cider-pprint-eval-last-sexp)
-  (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
-  (define-key clojure-mode-map (kbd "C-n e b") 'my-cider-eval-buffer)
-  (define-key clojure-mode-map (kbd "C-x C-e") 'k/clojure-eval-last-sexp)
-  (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
-  (define-key clojure-mode-map (kbd "C-h j") 'javadoc-lookup)
-  (define-key clojure-mode-map (kbd "C-M-d") 'hop-at-point)
-  (define-key clojure-mode-map (kbd "C-c C-l") nil)
-  (define-key clojure-mode-map (kbd "C-c C-f") nil)
-  (define-key clojure-mode-map (kbd "C-c RET") 'newline-and-indent)
-  (define-key clojure-mode-map (kbd "M-n") 'k/clojure-switch-to-current-namespace))
-(add-hook 'clojure-mode-hook 'kostafey-clojure-mode-hook)
-(global-set-key (kbd "C-<f5>") 'initialize-cljs-repl)
+;; In clojure-mode
+;; C-n j       cider-jack-in                 clojure-conf.el
+;; C-n e b     my-cider-eval-buffer          clojure-conf.el
+;; C-n q       cider-quit                    clojure-conf.el
+;; C-x C-e     k/clojure-eval-last-sexp      clojure-conf.el
+;; C-c RET     newline-and-indent            clojure-conf.el
+;; M-n         k/clojure-switch-to-current-namespace clojure-conf.el
+;; In cider-mode, unbound to leave the global and clojure-mode commands
+;; C-c C-f     nil                           clojure-conf.el
+;; C-c C-l     nil                           clojure-conf.el
+;; C-c RET     nil                           clojure-conf.el
+;; C-<f5>      initialize-cljs-repl          clojure-conf.el
 
 (defun kostafey-lua-mode-hook ()
   (define-key lua-mode-map (kbd "C-c C-c") 'lua-send-current-line)
