@@ -240,12 +240,10 @@
 ;; C-c C-e     go-run                        go-conf.el
 ;; C-x C-e     go-run                        go-conf.el
 
-(require 'rst)
-(define-key rst-mode-map (kbd "C-M-a") nil)
-
-(defun k/LaTeX-mode-hook ()
-  (define-key LaTeX-mode-map  (kbd "C-j") 'join-next-line-space-n))
-(add-hook 'LaTeX-mode-hook 'k/LaTeX-mode-hook)
+;; In rst-mode, unbound to leave the global C-M-a prefix
+;; C-M-a       nil                           text-modes-conf.el
+;; In tex-mode and latex-mode, unbound to leave the global command
+;; C-j         nil                           text-modes-conf.el
 
 ;;----------------------------------------------------------------------
 ;; Version control

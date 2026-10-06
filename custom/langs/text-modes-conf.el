@@ -90,6 +90,17 @@
                 ("\\.rst$" . rst-mode)
                 ("\\.rest$" . rst-mode)) auto-mode-alist))
 
+;; C-M-a is a global prefix, not `rst-backward-section'.
+(with-eval-after-load 'rst
+  (define-key rst-mode-map (kbd "C-M-a") nil))
+
+;;-------------------------------------------------------------------
+;; TeX & LaTeX, the built-in tex-mode
+;;
+;; C-j is the global `join-next-line-space-n', not `tex-handle-newline'.
+(with-eval-after-load 'tex-mode
+  (define-key tex-mode-map (kbd "C-j") nil))
+
 ;;-------------------------------------------------------------------
 ;; Markdown
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
