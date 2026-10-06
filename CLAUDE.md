@@ -20,6 +20,15 @@ deliberate, dependency-ordered sequence**. Order matters:
    `custom-set-faces`).
 4. `custom/langs/*` language modules last.
 
+**Key bindings are layered on purpose.** An earlier module (`basic-keys`,
+`appearance`, …) may bind a key to a basic command, and a later module
+rebinds the same key to a richer one from a third-party package (e.g. `C-w`:
+`kill-buffer` in `basic-keys`, then `eframe-kill-buffer`). The earlier
+binding is **not dead code**: if loading breaks somewhere further down, the
+basic binding is what stays in effect. Do not remove such bindings as
+"overridden"; when moving bindings around, keep the base ones early and the
+package ones after their package.
+
 Source directories (all added to `load-path`):
 
 - `custom/` — personal configuration modules, one concern per file
