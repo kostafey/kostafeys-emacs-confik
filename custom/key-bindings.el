@@ -90,19 +90,6 @@
 ;;===================================================================
 
 ;;===================================================================
-;;                           Intellectual point jumps
-;;
-(require 'hopper)
-;; goto definition
-(global-set-key (kbd "C-M-d") 'hop-at-point)
-(global-set-key (kbd "C-x d") 'hop-at-point-other-window)
-(global-set-key (kbd "M-S-<left>") 'hop-backward)
-(global-set-key (kbd "M-S-<right>") 'hop-forward)
-(global-set-key (kbd "<C-mouse-1>") 'hop-by-mouse)
-;;
-;;===================================================================
-
-;;===================================================================
 ;;                              Command executions
 ;;
 ;; (global-set-key (kbd "M-x") 'execute-extended-command)
