@@ -94,6 +94,13 @@ Encoding changes through rotation of `evm-coding-systems-list'."
       (2 (set-buffer-file-coding-system 'unix))    ; "Mac-style CR"
       (_ (set-buffer-file-coding-system 'unix))))) ; "Undecided"
 
+(global-set-key (kbd "<f8>") 'recode-buffer-rotate-ring)
+(global-set-key (kbd "C-<f8>") 'eol-buffer-rotate-ring)
+(global-set-key (kbd "M-<f8>")
+                (lambda ()
+                  (interactive)
+                  (describe-coding-system buffer-file-coding-system)))
+
 ;;=============================================================================
 
 (defun remove-utf-8-bom ()

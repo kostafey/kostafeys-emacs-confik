@@ -93,6 +93,8 @@ filename.scala:123
               (recenter-top-bottom))))
       (project-find-file))))
 
+(global-set-key (kbd "C-M-n") 'k/project-find-file)
+
 ;; List of additional markers to signal project roots.
 (setq project-vc-extra-root-markers '(".project"))
 

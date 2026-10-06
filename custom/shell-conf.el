@@ -365,6 +365,8 @@ line at a time otherwise."
             ('eshell (eshell-send-input))
             ('shell (comint-send-input))))))))
 
+(global-set-key (kbd "<f4>") 'k/shell)
+
 ;;------------------------------------------------------------
 ;; shell
 

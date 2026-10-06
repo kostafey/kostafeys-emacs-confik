@@ -27,6 +27,9 @@
 ;; Region selection:
 (setq transient-mark-mode t)
 
+;; C-SPC completes; the mark is set with C-@ or by shift-selection.
+(global-set-key (kbd "C-SPC") 'completion-at-point)
+
 (global-set-key (kbd "C-S-v") 'cua-paste-pop)
 (global-set-key (kbd "C-M-v") #'(lambda() (interactive) (cua-paste-pop -1)))
 
@@ -784,6 +787,12 @@ the feature that owns them, so leave them alone."
 ;;-------------------------------------------------------------------
 ;; File variables
 (setq safe-local-variable-values '((scala-indent:step . 2)))
+
+;;-------------------------------------------------------------------
+;; Function keys toggling modes
+(global-set-key (kbd "<f9>") 'auto-fill-mode)  ; enable/disable lines auto-fill
+(global-set-key (kbd "<f10>") 'smerge-mode)
+(global-set-key (kbd "<f12>") 'flyspell-mode)  ; enable/disable spell checking
 
 ;;-------------------------------------------------------------------
 ;; Web browser, see solutions/web-browse.el

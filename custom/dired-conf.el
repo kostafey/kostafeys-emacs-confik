@@ -43,6 +43,8 @@
           (dired current-dir))
       (dired current-dir))))
 
+(global-set-key (kbd "<f5>") 'dired-open)
+
 (defun copy-to-clipboard-dired-current-directory ()
   (interactive)
   "Copy current directory path to the clipboard."

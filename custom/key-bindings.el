@@ -99,43 +99,39 @@
 ;;
 ;;===================================================================
 
-;; to 'set-mark-command use M-s instead
-;; (global-set-key (kbd "C-SPC") 'start-complete)
-(global-set-key (kbd "C-SPC") 'completion-at-point)
+;; C-SPC      completion-at-point           basic-keys.el
 
 ;;===================================================================
 ;; Function keys
 ;;
-(global-set-key [f1] 'consult-buffer)
-(global-set-key (kbd "C-M-n") 'k/project-find-file)
-(global-set-key [f2] 'consult-imenu)
-(global-set-key [f3] 'k/toggle-tab-line-breadcrumb)
+;; <f1>       consult-buffer                minibuffer-conf.el
+;; C-M-n      k/project-find-file           project-conf.el
+;; <f2>       consult-imenu                 minibuffer-conf.el
+;; <f3>       consult-bookmark              minibuffer-conf.el
 
-(global-set-key [f4] 'k/shell)
-(global-set-key [f5] 'dired-open)
-(global-set-key [f6] 'switch-completion-frontend)
+;; <f4>       k/shell                       shell-conf.el
+;; <f5>       dired-open                    dired-conf.el
+;; <f6>       k/toggle-tab-line-breadcrumb  appearance.el
+;; <f7>       k/rg                          rg-conf.el
+;; C-<f7>     k/rg-file                     rg-conf.el
 
-(global-set-key [f8] 'recode-buffer-rotate-ring)
-(global-set-key [C-f8] 'eol-buffer-rotate-ring)
-(global-set-key [M-f8] (lambda () (interactive)
-                         (describe-coding-system buffer-file-coding-system)))
-(global-set-key [f9] 'auto-fill-mode)   ; enable/disable lines auto-fill
-(global-set-key [f10] 'smerge-mode)
-(global-set-key [f12] 'flyspell-mode)   ; enable/disable spell checking
-;; Russian words typed past the intended key, see `ru-typo-conf'
-(global-set-key [S-f12] 'k/ru-typo-mode)         ; correct while typing
-(global-set-key [C-f12] 'k/ru-typo-correct-word) ; correct the word at point
-(global-set-key [M-f12] 'k/ru-typo-accept-word)  ; leave that word alone
+;; <f8>       recode-buffer-rotate-ring     reencoding-file.el
+;; C-<f8>     eol-buffer-rotate-ring        reencoding-file.el
+;; M-<f8>     describe-coding-system        reencoding-file.el
+;; <f9>       auto-fill-mode                basic-keys.el
+;; <f10>      smerge-mode                   basic-keys.el
+;; <f12>      flyspell-mode                 basic-keys.el
+;; Russian words typed past the intended key
+;; S-<f12>    k/ru-typo-mode                ru-typo-conf.el
+;; C-<f12>    k/ru-typo-correct-word        ru-typo-conf.el
+;; M-<f12>    k/ru-typo-accept-word         ru-typo-conf.el
 ;; yasnippet
-(defvar yasnippet-prefix "\C-y")
-(global-unset-key yasnippet-prefix)
-(global-set-key (concat yasnippet-prefix "n") 'yas/new-snippet)
-(global-set-key (concat yasnippet-prefix "f") 'yas-describe-tables)
-(global-set-key (concat yasnippet-prefix "v") 'yas/visit-snippet-file)
-(global-set-key (concat yasnippet-prefix "r") 'yas/reload-all)
-
-(global-set-key (kbd "S-<tab>") 'open-line-or-yas)
-(global-set-key (kbd "C-S-<tab>") 'yas-prev-field)
+;; C-y n      yas-new-snippet               yas-conf.el
+;; C-y f      yas-describe-tables           yas-conf.el
+;; C-y v      yas-visit-snippet-file        yas-conf.el
+;; C-y r      yas-reload-all                yas-conf.el
+;; S-<tab>    open-line-or-yas              yas-conf.el
+;; C-S-<tab>  yas-prev-field                yas-conf.el
 ;;
 ;;===================================================================
 

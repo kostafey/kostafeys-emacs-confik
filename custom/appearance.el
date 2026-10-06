@@ -105,6 +105,8 @@
       (breadcrumb-mode -1)
       (tab-line-mode t))))
 
+(global-set-key (kbd "<f6>") 'k/toggle-tab-line-breadcrumb)
+
 ;;-------------------------------------------------------------------
 (use-package writeroom-mode
   :straight '(writeroom-mode

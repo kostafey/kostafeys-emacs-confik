@@ -554,6 +554,10 @@ for good."
 ;; corrector on from the start there.
 ;; (add-hook 'text-mode-hook #'k/ru-typo-mode)
 
+(global-set-key (kbd "S-<f12>") 'k/ru-typo-mode)         ; correct while typing
+(global-set-key (kbd "C-<f12>") 'k/ru-typo-correct-word) ; correct word at point
+(global-set-key (kbd "M-<f12>") 'k/ru-typo-accept-word)  ; leave that word alone
+
 ;;-------------------------------------------------------------------
 ;; The LLM as a tie-breaker
 ;;
