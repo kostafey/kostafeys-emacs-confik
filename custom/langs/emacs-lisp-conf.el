@@ -87,6 +87,20 @@ Delegate everything else to ORIG-FUN (`lisp-indent-function').
 (defun k/el-insert-eval-last-sexp ()
   (interactive)
   (insert (format " => %s" (eval (elisp--preceding-sexp)))))
+
+(defun k/el-eval-buffer ()
+  "Evaluate the current buffer and say so."
+  (interactive)
+  (eval-buffer)
+  (message "Elisp buffer evaluated."))
+
+(define-key emacs-lisp-mode-map (kbd "C-c p") 'k/el-insert-eval-last-sexp)
+(define-key emacs-lisp-mode-map (kbd "C-c C-p") 'k/el-pprint-eval-last-sexp)
+(define-key emacs-lisp-mode-map (kbd "C-n e b") 'k/el-eval-buffer)
+
+;; Eval Emacs Lisp in any mode
+(global-set-key (kbd "C-c M-e") 'eval-last-sexp)
+(global-set-key (kbd "C-c M-E") 'k/el-insert-eval-last-sexp)
 ;;=============================================================================
 ;; ElDoc
 ;;
