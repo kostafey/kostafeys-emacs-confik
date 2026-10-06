@@ -4,83 +4,10 @@
 ;; - `JAVADOC'
 ;; - `CATALINA_HOME'
 
-;; The server installation will be in `lsp-java-server-install-dir'
-;; Run all tests: `mvn test' (see the `maven-def-task' commands below)
-
-;;-----------------------------------------------------------------------------
-;; lsp-java
-;;
-(when (eq system-type 'gnu/linux)
-
-  (use-package lsp-mode
-    :straight '(lsp-mode :type git :host github
-			                   :repo "emacs-lsp/lsp-mode" :branch "master"))
-
-  (use-package lsp-java
-    :straight '(lsp-java :type git :host github
-			                   :repo "emacs-lsp/lsp-java" :branch "master")
-    :after lsp
-    :config (progn (add-hook 'java-mode-hook 'lsp)
-                   (custom-set-variables '(lsp-ui-sideline-enable nil)
-                                         '(lsp-ui-doc-enable nil))))
-
-  (defun k/java-mode-hook ()
-    (my-coding-hook)
-    (c-set-offset 'arglist-intro '+)
-    (define-key java-mode-map (kbd "C-x C-e") #'jshell-eval-last-expr)
-    (define-key java-mode-map (kbd "M-e") #'jshell-eval-region)
-    (define-key java-mode-map (kbd "C-M-a") nil))
-
-  (add-hook 'java-mode-hook #'k/java-mode-hook)
-  (add-hook 'java-mode-hook #'lsp))
-
-;;-----------------------------------------------------------------------------
-;; jshell
-;;
-(require 'cl-lib)
-(require 'shell-conf)
-(require 'functions)
-
-(defun jshell-get-buffer ()
-  (save-window-excursion
-    (let ((vterm-buffer (or (-find (lambda (b) (equal (buffer-name b)
-                                                 "*eshell*"))
-                                   (buffer-list))
-                            (prog1
-                                (k/shell)
-                              (with-current-buffer "*eshell*"
-                                (eshell-return-to-prompt)
-                                (insert "jshell")
-                                (eshell-send-input))))))
-      vterm-buffer)))
-
-(defun jshell ()
- (interactive)
- (pop-to-buffer (jshell-get-buffer)))
-
-(defun jshell-send (data)
-  (interactive)
-  (with-current-buffer (jshell-get-buffer)
-    (insert data)
-    (eshell-send-input)))
-
-(defun jshell-eval-last-expr ()
-  (interactive)
-  (cl-multiple-value-bind
-      (start end)
-      (k/scala-get-last-scala-expr)
-    (k/flash-region start end)
-    (jshell-send (buffer-substring start end))))
-
-(defun jshell-eval-region (start end)
-  (interactive "r")
-  (let ((data (trim-string
-               (buffer-substring-no-properties start end))))
-    (k/flash-region start end)
-    (jshell-send data)))
-
 ;;--------------------------------------------------------------------
 ;; maven
+;;
+;; "mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-simple"
 ;;
 (defmacro maven-def-task (name command)
   `(defun ,name ()
@@ -88,14 +15,10 @@
      (cd (project-root (project-current t)))
      (compile ,command t)))
 
-(maven-def-task maven-tomcat-deploy "mvn tomcat7:redeploy")
 (maven-def-task maven-compile "mvn compile")
 (maven-def-task maven-install "mvn install")
-(maven-def-task maven-clean "mvn clean")
+(maven-def-task maven-clean   "mvn clean")
 (maven-def-task maven-package "mvn package")
-(maven-def-task maven-all "mvn clean package tomcat7:redeploy")
-
-;; "mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-simple"
 
 ;;--------------------------------------------------------------------
 ;; Inserting getters and setters
@@ -155,26 +78,6 @@
     (c-indent-region oldpoint (point) t)))
 
 (defalias 'java-create-getters-setters 'java-generate-getters-setters)
-
-;;--------------------------------------------------------------------
-;; JBehave: story-mode
-;;
-(define-generic-mode story-mode
-  '("!--")
-  '("Given" "When" "Then" "Narrative" "Meta" "And" "Scenario" "Examples")
-  '(("|.*|" . 'font-lock-constant-face)
-    ("'.*'" . 'font-lock-string-face))
-  '("\\.story$")
-  nil
-  "Story mode is a minor mode for editing JBehave story files")
-(add-to-list 'auto-mode-alist '("\\.story" . story-mode))
-
-;;--------------------------------------------------------------------
-;; jflex-mode
-;;
-(autoload 'jflex-mode "jflex-mode" nil t)
-(setq auto-mode-alist (cons '("\\(\\.flex\\|\\.jflex\\)\\'" . jflex-mode)
-                            auto-mode-alist))
 
 ;;--------------------------------------------------------------------
 ;; java-decompiler
