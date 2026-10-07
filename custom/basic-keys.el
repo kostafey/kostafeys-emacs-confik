@@ -271,10 +271,7 @@
 (global-set-key (kbd "C-c u") 'copy-url)
 
 ;;-------------------------------------------------------------------
-;; Long lines
-;; do not truncate and wrap long lines
-(setq truncate-partial-width-windows nil)
-(setq truncate-lines nil)
+;; Long lines, see `truncate-lines' in basic-look-and-feel
 ;; Toggle whether to fold or truncate long lines for the current buffer.
 (global-set-key (kbd "C-c C-l") 'toggle-truncate-lines)
 
@@ -368,10 +365,6 @@
                 #'(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "C-x m")
                 #'(lambda () (interactive) (switch-to-buffer "*Messages*")))
-
-;;-------------------------------------------------------------------
-;; File variables
-(setq safe-local-variable-values '((scala-indent:step . 2)))
 
 ;;-------------------------------------------------------------------
 ;; Function keys toggling modes
