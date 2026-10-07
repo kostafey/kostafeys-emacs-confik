@@ -9,7 +9,7 @@
 ;;; Code:
 
 (require 's)
-(require 'basic-keys)
+(require 'basic-navigation)
 (require 'clojure-conf)
 
 (defun hop-buffer-mode (buffer-or-string)
