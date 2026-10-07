@@ -33,51 +33,12 @@
 (global-set-key (kbd "C-S-v") 'cua-paste-pop)
 (global-set-key (kbd "C-M-v") #'(lambda() (interactive) (cua-paste-pop -1)))
 
-(defun k/kill-and-copy-whole-line ()
-  "Move a whole line to the kill-ring."
-  (interactive)
-  (kill-region (line-beginning-position) (line-end-position))
-  (delete-char 1))
-
 (global-set-key (kbd "C-S-x") 'k/kill-and-copy-whole-line)
 (global-set-key (kbd "C-M-x") 'k/kill-and-copy-whole-line)
 (define-key emacs-lisp-mode-map (kbd "C-M-x") 'k/kill-and-copy-whole-line)
 
 (global-set-key (kbd "C-e") 'cua-exchange-point-and-mark)
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
-
-(defun region-selection-length ()
-  (if (not mark-active)
-      0
-    (let ((beg (min (region-beginning)
-                    (region-end)))
-          (end (max (region-beginning)
-                    (region-end))))
-      (- end beg))))
-
-(defun region-selection-count-lines ()
-  (if (not mark-active)
-      0
-    (let ((beg (min (region-beginning)
-                    (region-end)))
-          (end (max (region-beginning)
-                    (region-end))))
-      (count-lines beg end))))
-
-;;;###autoload
-(defun hard-rewrite-mode ()
-  "Workaround for the case when selected text not replaced by insertions."
-  (interactive)
-  (defadvice cua-paste (before k/cua-paste activate)
-    (if mark-active
-        (delete-region (point) (mark))))
-  (defadvice self-insert-command (before k/self-insert-command activate)
-    (if mark-active
-        (delete-region (point) (mark))))
-  (message (format
-            "Hard %s mode enabled."
-            (propertize "rewrite"
-			                  'face 'font-lock-keyword-face))))
 
 ;;-------------------------------------------------------------------
 ;; Undo & redo
@@ -276,15 +237,6 @@ block, return (BEG . END) of the block content without the fence lines."
 (global-set-key (kbd "C-<up>") 'scroll-down-line)
 
 (global-set-key (kbd "M-g") 'goto-line)
-
-(defun copy-to-clipboard-buffer-line-number ()
-  (interactive)
-  "Copy current line number to the clipboard."
-  (let ((result (kill-new
-                 (number-to-string
-                  (line-number-at-pos (point))))))
-    (message result)
-    result))
 
 (global-set-key (kbd "C-M-g g") 'copy-to-clipboard-buffer-line-number)
 
@@ -530,17 +482,6 @@ block, return (BEG . END) of the block content without the fence lines."
 (global-set-key (kbd "C-c j") 'join-next-line-n)
 (global-set-key (kbd "C-c d") 'duplicate-line)
 
-(defun k/kill-whole-line ()
-  "Deletes a whole line, but does not put it in the kill-ring."
-  (interactive)
-  (delete-region (line-beginning-position) (line-end-position))
-  (delete-char 1))
-
-(defun k/kill-line ()
-  "Deletes a line, but does not put it in the kill-ring."
-  (interactive)
-  (delete-region (point) (line-end-position)))
-
 (global-set-key (kbd "C-c c") 'center-line)
 (global-set-key (kbd "C-M-k") 'k/kill-whole-line)
 (global-set-key (kbd "C-k") 'k/kill-line)
@@ -551,94 +492,9 @@ block, return (BEG . END) of the block content without the fence lines."
 ;;-------------------------------------------------------------------
 ;; Marks & select a line
 ;;
-(defun mark-line (&optional arg)
-  "Marks a line from start of indentation to end"
-  (interactive "p")
-  (if (not mark-active)
-      (progn
-        (back-to-indentation)
-        (cua-set-mark)
-        (end-of-line arg))
-    (progn
-      (if (not (eq (line-beginning-position) (point)))
-          (progn
-            (setq mark-active nil)
-            (beginning-of-line)
-            (cua-set-mark)
-            (setq mark-active t)))
-      (end-of-line)
-      (forward-line)
-      (beginning-of-line))))
-
 (global-set-key (kbd "C-S-l") 'mark-line)
-
-(defun copy-line (&optional arg)
-  "Kills a line, not including leading indentation"
-  (interactive "p")
-  (save-excursion
-    (mark-line arg)
-    (kill-ring-save (point) (mark))))
-
-(defun copy-simple (beg end)
-  "Save the current region to the kill ring after stripping extra whitespace and new lines"
-  (interactive "r")
-  (if (not mark-active)
-      (copy-line)
-    (copy-region-as-kill beg end)
-    (with-temp-buffer
-      (yank)
-      (goto-char 0)
-      (while (looking-at "[ \t\n]")
-        (delete-char 1))
-      (compact-uncompact-block)
-      (mark-whole-buffer)
-      (kill-region (point-min) (point-max)))))
-
-(defun compact-uncompact-block ()
-  "Remove or add line ending chars on current paragraph.
-This command is similar to a toggle of `fill-paragraph'.
-When there is a text selection, act on the region."
-  (interactive)
-
-  ;; This command symbol has a property “'stateIsCompact-p”.
-  (let (currentStateIsCompact (bigFillColumnVal 4333999) (deactivate-mark nil))
-
-    (save-excursion
-      ;; Determine whether the text is currently compact.
-      (setq currentStateIsCompact
-            (if (eq last-command this-command)
-                (get this-command 'stateIsCompact-p)
-              (if (> (- (line-end-position) (line-beginning-position)) fill-column) t nil) ) )
-
-      (if (region-active-p)
-          (if currentStateIsCompact
-              (fill-region (region-beginning) (region-end))
-            (let ((fill-column bigFillColumnVal))
-              (fill-region (region-beginning) (region-end))) )
-        (if currentStateIsCompact
-            (fill-paragraph nil)
-          (let ((fill-column bigFillColumnVal))
-            (fill-paragraph nil)) ) )
-
-      (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
-
 (global-set-key (kbd "C-S-c") 'copy-line)
 (global-set-key (kbd "C-M-c") 'copy-simple)
-
-(defun copy-url (&optional arg)
-  "Copy a url under the cursor"
-  (interactive "p")
-  (let* ((beg (save-excursion
-                (search-backward " " nil t arg)
-                (right-char)
-                (point)))
-         (end (save-excursion
-                (end-of-line)
-                (point)))
-         (url (buffer-substring beg end)))
-    (kill-new url)
-    (message (concat "Copied to buffer: " url))))
-
 (global-set-key (kbd "C-c u") 'copy-url)
 
 ;;-------------------------------------------------------------------
@@ -671,10 +527,6 @@ When there is a text selection, act on the region."
 (global-set-key (kbd "C-S-<up>") 'toggle-letter-case)
 (global-set-key (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)
 
-;; Enable case changes commands
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-
 (global-set-key (kbd "C-M-a d") 'downcase-region)
 (global-set-key (kbd "C-M-a u") 'upcase-region)
 
@@ -701,15 +553,6 @@ When there is a text selection, act on the region."
 (global-set-key (kbd "M-f") 'copy-to-clipboard-buffer-file-name)
 (global-set-key (kbd "M-o") 'copy-file-name-and-line)
 (global-set-key (kbd "M-O") 'copy-file-path-and-line)
-
-(defun copy-to-clipboard-git-branch ()
-  (interactive)
-  "Copy current branch name to the clipboard."
-  (let* ((branch (car (vc-git-branches)))
-         (result (kill-new branch)))
-    (message result)
-    result))
-
 (global-set-key (kbd "C-p") 'copy-to-clipboard-git-branch)
 
 ;;===================================================================

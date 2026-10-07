@@ -122,6 +122,23 @@ With an active region, copy the range of lines it spans instead, as
         (message "%s" formatted-string))
     (message "This buffer is not visiting a file.")))
 
+(defun copy-to-clipboard-buffer-line-number ()
+  "Copy current line number to the clipboard."
+  (interactive)
+  (let ((result (kill-new
+                 (number-to-string
+                  (line-number-at-pos (point))))))
+    (message result)
+    result))
+
+(defun copy-to-clipboard-git-branch ()
+  "Copy current branch name to the clipboard."
+  (interactive)
+  (let* ((branch (car (vc-git-branches)))
+         (result (kill-new branch)))
+    (message result)
+    result))
+
 (provide 'file-ops)
 
 ;;; file-ops.el ends here
