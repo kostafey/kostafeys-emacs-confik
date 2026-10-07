@@ -282,17 +282,12 @@
 
 ;;----------------------------------------------------------------------
 ;; dired
-;;
-(defun kostafey-dired-mode-hook ()
-  (define-key dired-mode-map [f1] nil)
-  (define-key dired-mode-map (kbd "M-z") nil)
-  (define-key dired-mode-map (kbd "M-p")
-              'copy-to-clipboard-dired-current-directory)
-  (define-key dired-mode-map (kbd "C-<home>") 'dired-home)
-  (define-key dired-mode-map (kbd "C-<end>") 'dired-end)
-  (define-key dired-mode-map (kbd "C-<up>") 'diredp-up-directory-reuse-dir-buffer)
-  (define-key dired-mode-map (kbd "C-<down>") 'diredp-find-file-reuse-dir-buffer))
-(add-hook 'dired-mode-hook 'kostafey-dired-mode-hook)
+;; In dired-mode
+;; C-<down>    dired-find-file               dired-conf.el
+;; C-<up>      dired-up-directory            dired-conf.el
+;; M-p         copy-to-clipboard-dired-current-directory dired-conf.el
+;; C-<home>    dired-home                    dired-conf.el
+;; C-<end>     dired-end                     dired-conf.el
 
 (provide 'key-bindings)
 

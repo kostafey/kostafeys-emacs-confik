@@ -1,15 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 ;;-------------------------------------------------------------------
 
-(use-package dired-single
-  :straight `(dired-single
-              :type git :host nil
-              :repo "https://github.com/emacsattic/dired-single"
-              :branch "master")
-  :config (progn
-            ;; Replace standard dired bindings to use dired-single
-            (define-key dired-mode-map (kbd "RET") 'dired-single-buffer)
-            (define-key dired-mode-map (kbd "^") (lambda () (interactive) (dired-single-buffer "..")))))
+;; Keep a single dired buffer: going into a directory (RET) or up (^)
+;; replaces the current one instead of adding another.
+(setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; dired
 (setq dired-omit-files
@@ -46,11 +40,19 @@
 (global-set-key (kbd "<f5>") 'dired-open)
 
 (defun copy-to-clipboard-dired-current-directory ()
-  (interactive)
   "Copy current directory path to the clipboard."
+  (interactive)
   (let ((result (kill-new (dired-current-directory))))
     (message result)
     result))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "C-<down>") 'dired-find-file)
+  (define-key dired-mode-map (kbd "C-<up>") 'dired-up-directory)
+  (define-key dired-mode-map (kbd "M-p")
+              'copy-to-clipboard-dired-current-directory)
+  (define-key dired-mode-map (kbd "C-<home>") 'dired-home)
+  (define-key dired-mode-map (kbd "C-<end>") 'dired-end))
 
 (provide 'dired-conf)
 
