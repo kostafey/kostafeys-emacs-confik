@@ -2,6 +2,49 @@
 
 (require 'cl-lib)
 (require 's)
+(require 'treesit)
+
+;;--------------------------------------------------------------------
+;; java-ts-mode, turned on in tree-sitter-conf
+;;
+;; The stock Imenu settings miss enums, fields and constructors, and file
+;; records under "Enum".
+(defconst k/java-ts-imenu-categories
+  '(("Class"       . "class_declaration")
+    ("Interface"   . "interface_declaration")
+    ("Enum"        . "enum_declaration")
+    ("Record"      . "record_declaration")
+    ("Annotation"  . "annotation_type_declaration")
+    ("Field"       . "field_declaration")
+    ("Constructor" . "constructor_declaration")
+    ("Method"      . "method_declaration"))
+  "Imenu categories of `java-ts-mode' and the node types they index.")
+
+(defun k/java-ts-node-name (node)
+  "Return the name of NODE for Imenu.
+A field declaration is named after all of its variables: \"a, b\"."
+  (if (equal (treesit-node-type node) "field_declaration")
+      (mapconcat (lambda (declarator)
+                   (treesit-node-text
+                    (treesit-node-child-by-field-name declarator "name") t))
+                 (treesit-filter-child
+                  node (lambda (child)
+                         (equal (treesit-node-type child)
+                                "variable_declarator")))
+                 ", ")
+    (treesit-node-text (treesit-node-child-by-field-name node "name") t)))
+
+(defun k/java-ts-imenu-setup ()
+  "Index the declarations of `k/java-ts-imenu-categories' with Imenu."
+  (setq-local treesit-simple-imenu-settings
+              (mapcar (lambda (category)
+                        (list (car category)
+                              (concat "\\`" (cdr category) "\\'")
+                              nil
+                              #'k/java-ts-node-name))
+                      k/java-ts-imenu-categories)))
+
+(add-hook 'java-ts-mode-hook #'k/java-ts-imenu-setup)
 
 ;;--------------------------------------------------------------------
 ;; maven
@@ -38,7 +81,7 @@
                     "{\n"
                     "    this." field " = " field ";\n"
                     "}\n"))
-    (c-indent-region oldpoint (point) t)))
+    (indent-region oldpoint (point))))
 
 (defun make-class-getter-setter (type var)
   (format
@@ -47,7 +90,7 @@
    ;; getter line
    type (upcase-initials var) var
    ;; setter line
-   type (upcase-initials var) type var var var))
+   (upcase-initials var) type var var var))
 
 (defun extract-class-variables (&rest modifiers)
   (let ((regexp
@@ -74,7 +117,7 @@
      (mapconcat (lambda (var) (apply 'make-class-getter-setter (cdr var)))
                 (apply 'extract-class-variables modifiers)
                 "\n"))
-    (c-indent-region oldpoint (point) t)))
+    (indent-region oldpoint (point))))
 
 (defalias 'java-create-getters-setters 'java-generate-getters-setters)
 

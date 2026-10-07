@@ -159,7 +159,8 @@ Used by `eframe-kill-buffer' to return to the previous position with
              ;; java-mode
              ((or (equal 'scala-mode mode)
                   (equal 'scala-ts-mode mode)
-                  (equal 'java-mode mode))
+                  (equal 'java-mode mode)
+                  (equal 'java-ts-mode mode))
               (cond
                ((and (boundp 'eglot--managed-mode) eglot--managed-mode)
                 (call-interactively 'xref-find-definitions))

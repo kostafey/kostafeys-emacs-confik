@@ -53,7 +53,7 @@
   "Get the programming language name from the mode name."
   (let ((mode-name (symbol-name major-mode)))
     (cond
-     ((string= mode-name "java-mode")
+     ((member mode-name '("java-mode" "java-ts-mode"))
       "Java")
      ((string= mode-name "scala-mode")
       "Scala")

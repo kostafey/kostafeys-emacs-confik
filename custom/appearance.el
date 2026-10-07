@@ -208,6 +208,7 @@
 (add-hook 'fennel-mode-hook     'my-lisp-coding-hook)
 (add-hook 'sbt-mode-hook        'my-coding-hook)
 (add-hook 'java-mode-hook       (lambda () (rainbow-delimiters-mode t)))
+(add-hook 'java-ts-mode-hook    (lambda () (rainbow-delimiters-mode t)))
 (add-hook 'markdown-mode-hook   'my-coding-hook)
 (add-hook 'tex-mode-hook        'my-coding-hook)
 (add-hook 'lua-mode-hook        'my-coding-hook)

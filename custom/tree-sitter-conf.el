@@ -135,6 +135,12 @@
 
   (add-to-list 'auto-mode-alist '("\\.xml$" . html-ts-mode)))
 
+;; Java: `java-ts-mode' brings the grammar recipe pinned by its Emacs and
+;; offers to install it when turned on, so run M-x java-ts-mode in a Java
+;; buffer once.  Until the grammar is there, `java-mode' (cc-mode) stays.
+(when (treesit-language-available-p 'java)
+  (add-to-list 'major-mode-remap-alist '(java-mode . java-ts-mode)))
+
 ;; Decoration level to be used by tree-sitter fontifications.
 (setq treesit-font-lock-level 4)
 
