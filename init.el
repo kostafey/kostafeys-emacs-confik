@@ -60,6 +60,7 @@
 (require 'reencoding-file)
 (require 'advanced-text-editing)
 (require 'advanced-navigation)
+(require 'tags-conf)
 (require 'key-bindings)
 (require 'notes)
 (require 'ide)
