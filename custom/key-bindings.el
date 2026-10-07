@@ -24,9 +24,6 @@
   :custom
   (ace-jump-mode-scope 'window))
 
-(require 'navigation-in-frame)
-(require 'project-conf)
-
 (use-package eframe-jack-in
   :straight (eframe-jack-in :type git :host github
                             :repo "kostafey/eframe-jack-in"
@@ -60,10 +57,6 @@
   (with-eval-after-load 'consult
     (add-to-list 'consult-buffer-sources 'temporary-persistent-consult-source t)
     (add-to-list 'consult-buffer-filter "\\`\\*temp\\(-[0-9]+\\)?\\*\\'")))
-
-(require 'shell-conf)
-(require 'dired-conf)
-(require 'reencoding-file)
 
 (use-package highlight-symbol
   :straight (highlight-symbol :type git :host github
