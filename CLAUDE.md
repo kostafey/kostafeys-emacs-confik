@@ -71,6 +71,20 @@ the source of truth.
 - Some config modules define a `*-highlight-initialize` function that adds
   `font-lock` keywords so custom macros (like `straight-use-package`) are
   highlighted in `emacs-lisp-mode`.
+- **Key bindings live with what provides the command**: built-in commands
+  in `basic-keys.el` (or the own module defining them), third-party ones in
+  the `:bind` of the package's `use-package` form. Mode keymap bindings are
+  set once at load, never from a mode hook: through `:bind (:map ...)`, or
+  `with-eval-after-load` on the feature defining the map when the map binds
+  commands of other packages (`:bind` would autoload those from the
+  package's own file). Keys are written as `kbd` strings, not vectors.
+- **`custom/key-bindings.el` holds no code** — it is a reference of keys,
+  one comment line per binding: `;; KEY  command  file.el`, aligned in
+  columns (`;; %-11s %-29s %s`). Bindings in a mode's keymap go under a
+  subheading naming the mode; an unbinding shows `nil` as the command.
+  Cheat-sheet lines for keys a package binds itself may put a short
+  description in place of the file. Update the reference whenever a
+  binding is added, moved or removed.
 
 ## `.gitignore` — whitelist model
 
