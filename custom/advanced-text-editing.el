@@ -16,38 +16,4 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-M->" . mc/mark-all-like-this)))
 
-;;-------------------------------------------------------------------
-;; highlight-symbol
-;;
-(use-package highlight-symbol
-  :straight (highlight-symbol :type git :host github
-                              :repo "nschum/highlight-symbol.el"
-                              :branch "master")
-  :preface
-  (defun k/highlight-thing-at-point ()
-    "Toggle highlighting of the symbol at point, or of the active region."
-    (interactive)
-    (if (use-region-p)
-        (highlight-symbol
-         (regexp-quote (buffer-substring (region-beginning) (region-end))))
-      (highlight-symbol)))
-
-  (defun k/highlight-isearch-string ()
-    "Toggle highlighting of the current search string."
-    (interactive)
-    (when (string-empty-p isearch-string)
-      (user-error "Empty search string"))
-    ;; `highlight-symbol' takes a regexp.
-    (highlight-symbol (substring-no-properties
-                       (if isearch-regexp
-                           isearch-string
-                         (regexp-quote isearch-string)))))
-  :bind (("C-<f3>" . k/highlight-thing-at-point)
-         ("S-<f3>" . highlight-symbol-prev)
-         ("M-<f3>" . highlight-symbol-remove-all)
-         ("C-M-<up>" . highlight-symbol-prev)
-         ("C-M-<down>" . highlight-symbol-next)
-         :map isearch-mode-map
-         ("C-<f3>" . k/highlight-isearch-string)))
-
 (provide 'advanced-text-editing)

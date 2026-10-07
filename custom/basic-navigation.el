@@ -1,4 +1,6 @@
-;;; navigation-in-frame.el --- Simplify navigation among buffers and windows.  -*- lexical-binding: t -*-
+;;; basic-navigation.el --- Navigation among buffers  -*- lexical-binding: t -*-
+
+;; No third-party dependencies.
 
 ;;-----------------------------------------------------------------------------
 ;; ibuffer
@@ -45,6 +47,6 @@
 			  " " (mode 16 16 :left :elide) " " k/path-and-process)
 		(mark " " (name 16 -1) " " filename)))
 
-(provide 'navigation-in-frame)
+(provide 'basic-navigation)
 
-;;; navigation-in-frame.el ends here
+;;; basic-navigation.el ends here

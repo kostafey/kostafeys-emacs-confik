@@ -1,52 +1,8 @@
-;;; key-bindings.el -- A collection of key bindings (default and custom).  -*- lexical-binding: t -*-
+;;; key-bindings.el --- Key bindings reference  -*- lexical-binding: t -*-
 
-(use-package ace-jump-mode
-  :straight `(ace-jump-mode
-              :type git :host nil
-              :repo ,(pcase system-type
-                       ('windows-nt
-                        "https://github.com/winterTTr/ace-jump-mode.git")
-                       ('gnu/linux
-                        "git@github.com:winterTTr/ace-jump-mode.git"))
-              :branch "master")
-  :bind (("M-a" . ace-jump-mode)
-         ("C-c M-a" . ace-jump-mode-pop-mark))
-  :custom
-  (ace-jump-mode-scope 'window))
-
-(use-package eframe-jack-in
-  :straight (eframe-jack-in :type git :host github
-                            :repo "kostafey/eframe-jack-in"
-                            :branch "master")
-  ;; It sets up hooks and advice on load, so load it right away.
-  :demand t
-  :bind (("C-M-e" . eframe-pop-emacs)
-         ("C-w" . eframe-kill-buffer)
-         ("C-<next>" . eframe-next-buffer)
-         ("C-<prior>" . eframe-previous-buffer))
-  :config
-  (require 'eframe-windmove))
-
-(use-package temporary-persistent
-  :straight `(temporary-persistent
-              :type git :host nil
-              :repo ,(pcase system-type
-                       ('windows-nt
-                        "https://github.com/kostafey/temporary-persistent.git")
-                       ('gnu/linux
-                        "git@github.com:kostafey/temporary-persistent.git"))
-              :branch "master")
-  ;; Desktop restores the temp buffers at startup; loaded right away, it
-  ;; saves them on exit and lists them in its `consult-buffer' source.
-  :demand t
-  :bind (("C-x C-c" . temporary-persistent-switch-buffer))
-  :config
-  (setq temporary-persistent-default-major-mode 'markdown-mode)
-  ;; `temporary-persistent' does not pull in `consult' itself, and `consult'
-  ;; is loaded lazily, so register the source once `consult' is there.
-  (with-eval-after-load 'consult
-    (add-to-list 'consult-buffer-sources 'temporary-persistent-consult-source t)
-    (add-to-list 'consult-buffer-filter "\\`\\*temp\\(-[0-9]+\\)?\\*\\'")))
+;; No code here: each line names a key, its command and the file that
+;; binds it.  Bindings in a mode's keymap go under a subheading saying
+;; so; `nil' there means the key is unbound to leave the global command.
 
 ;;===================================================================
 ;; Advanced text editing
@@ -55,13 +11,26 @@
 ;; C->         mc/mark-next-like-this        advanced-text-editing.el
 ;; C-<         mc/mark-previous-like-this    advanced-text-editing.el
 ;; C-M->       mc/mark-all-like-this         advanced-text-editing.el
-;; C-<f3>      k/highlight-thing-at-point    advanced-text-editing.el
-;; S-<f3>      highlight-symbol-prev         advanced-text-editing.el
-;; M-<f3>      highlight-symbol-remove-all   advanced-text-editing.el
-;; C-M-<up>    highlight-symbol-prev         advanced-text-editing.el
-;; C-M-<down>  highlight-symbol-next         advanced-text-editing.el
+;;
+;;===================================================================
+
+;;===================================================================
+;; Advanced navigation
+;;
+;; C-<f3>      k/highlight-thing-at-point    advanced-navigation.el
+;; S-<f3>      highlight-symbol-prev         advanced-navigation.el
+;; M-<f3>      highlight-symbol-remove-all   advanced-navigation.el
+;; C-M-<up>    highlight-symbol-prev         advanced-navigation.el
+;; C-M-<down>  highlight-symbol-next         advanced-navigation.el
 ;; In isearch
-;; C-<f3>      k/highlight-isearch-string    advanced-text-editing.el
+;; C-<f3>      k/highlight-isearch-string    advanced-navigation.el
+;; M-a         ace-jump-mode                 advanced-navigation.el
+;; C-c M-a     ace-jump-mode-pop-mark        advanced-navigation.el
+;; C-M-e       eframe-pop-emacs              advanced-navigation.el
+;; C-w         eframe-kill-buffer            advanced-navigation.el
+;; C-<next>    eframe-next-buffer            advanced-navigation.el
+;; C-<prior>   eframe-previous-buffer        advanced-navigation.el
+;; C-x C-c     temporary-persistent-switch-buffer advanced-navigation.el
 ;;
 ;;===================================================================
 
@@ -87,11 +56,11 @@
 ;;===================================================================
 ;; Intellectual point jumps
 ;;
-;; C-M-d       hop-at-point                  ide.el
-;; C-x d       hop-at-point-other-window     ide.el
-;; M-S-<left>  hop-backward                  ide.el
-;; M-S-<right> hop-forward                   ide.el
-;; <C-mouse-1> hop-by-mouse                  ide.el
+;; C-M-d       hop-at-point                  advanced-navigation.el
+;; C-x d       hop-at-point-other-window     advanced-navigation.el
+;; M-S-<left>  hop-backward                  advanced-navigation.el
+;; M-S-<right> hop-forward                   advanced-navigation.el
+;; <C-mouse-1> hop-by-mouse                  advanced-navigation.el
 ;;
 ;;===================================================================
 

@@ -33,6 +33,7 @@
 (require 'basic-keys)
 (require 'basic-switch-language)
 (require 'basic-look-and-feel)
+(require 'basic-navigation)
 
 ;; Use third-party dependencies
 (require 'straight-conf)
@@ -53,12 +54,12 @@
 (require 'completition-corfu-conf)
 (require 'dict-conf)
 (require 'ru-typo-conf)
-(require 'navigation-in-frame)
 (require 'project-conf)
 (require 'shell-conf)
 (require 'dired-conf)
 (require 'reencoding-file)
 (require 'advanced-text-editing)
+(require 'advanced-navigation)
 (require 'key-bindings)
 (require 'notes)
 (require 'ide)

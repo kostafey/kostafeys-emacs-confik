@@ -12,17 +12,6 @@
 (setq imenu-max-items 200)
 
 ;;-------------------------------------------------------------------
-;; hopper - jump to definitions, see solutions/hopper.el
-;;
-(use-package hopper
-  :ensure nil
-  :bind (("C-M-d" . hop-at-point)
-         ("C-x d" . hop-at-point-other-window)
-         ("M-S-<left>" . hop-backward)
-         ("M-S-<right>" . hop-forward)
-         ("<C-mouse-1>" . hop-by-mouse)))
-
-;;-------------------------------------------------------------------
 ;; ztree
 ;;
 ;
