@@ -58,6 +58,7 @@
 (require 'shell-conf)
 (require 'dired-conf)
 (require 'reencoding-file)
+(require 'advanced-text-editing)
 (require 'key-bindings)
 (require 'notes)
 (require 'ide)
