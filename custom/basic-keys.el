@@ -662,7 +662,6 @@ When there is a text selection, act on the region."
 ;;-------------------------------------------------------------------
 ;; Rectangle operations
 
-(global-set-key (kbd "C-M-a c") 'copy-rectangle-to-clipboard)
 (global-set-key (kbd "C-M-a n") 'rectangle-number-lines)
 ;(global-set-key (kbd "M-u") 'cua-upcase-rectangle) - default
 
@@ -676,7 +675,6 @@ When there is a text selection, act on the region."
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-(global-set-key (kbd "C-M-a l") 'downcase-region)
 (global-set-key (kbd "C-M-a d") 'downcase-region)
 (global-set-key (kbd "C-M-a u") 'upcase-region)
 

@@ -157,13 +157,46 @@ buffer.  With a prefix argument and several running,
      (t
       (call-interactively #'claude-code-ide)))))
 
+;; `claude-code-ide-send-prompt' already finds the instance of the current
+;; buffer's project, but it types the prompt in with
+;; `claude-code-ide--terminal-send-string': every line break of a multi-line
+;; region would reach the CLI as a keystroke of its own.  A bracketed paste
+;; arrives as one piece of text, and only the return after it submits.
+(defun k/claude-code-ide-send-region (beg end)
+  "Send the region from BEG to END as a prompt to this project's Claude Code.
+The instance is the one `claude-code-ide-send-prompt' would pick for the
+current buffer: with a prefix argument and several running, it asks."
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "No active region"))
+  (require 'claude-code-ide)
+  (claude-code-ide--cleanup-dead-sessions)
+  (let* ((text (buffer-substring-no-properties beg end))
+         (session (claude-code-ide--resolve-session
+                   'auto "Send region to Claude instance: "))
+         (buffer (and session (claude-code-ide-mcp-session-buffer session))))
+    (unless (buffer-live-p buffer)
+      (user-error "No Claude Code session for this project"))
+    (when (string-blank-p text)
+      (user-error "Region is blank"))
+    (deactivate-mark)
+    (with-current-buffer buffer
+      (if (eq claude-code-ide-terminal-backend 'ghostel)
+          (ghostel-paste-string text)
+        (claude-code-ide--terminal-send-string text))
+      ;; Same pause as `claude-code-ide-send-prompt': the return must not
+      ;; overtake the text.
+      (sit-for 0.1)
+      (claude-code-ide--terminal-send-return))))
+
 (use-package claude-code-ide
   :straight `(claude-code-ide
               :type git :host nil
               :repo "https://github.com/manzaltu/claude-code-ide.el"
               :branch "main")
   :bind (("C-c C-'" . claude-code-ide-menu)
-         ("C-M-a j" . k/claude-code-ide))
+         ("C-M-a j" . k/claude-code-ide)
+         ("C-M-a c" . k/claude-code-ide-send-region))
   :config
   ;; Of the three backends (vterm, eat, ghostel) this one renders the Claude
   ;; Code TUI with the fewest artifacts.  It wants the bundled xterm-ghostty

@@ -389,7 +389,6 @@ The suggestion is shown inline; \\[k/llm-suggest-accept] inserts it."
          ("M-C-a s" . gptel-send)
          ("M-C-a m" . gptel-menu)
          ("M-C-a q" . gptel-context-quit)
-         ("M-C-a c" . k/gptel-context-print)
          ("M-C-a l" . k/gptel-context-print)
          ("M-C-a r" . gptel-context-remove-all)
          ("M-C-a x" . k/gptel-minibuffer)
