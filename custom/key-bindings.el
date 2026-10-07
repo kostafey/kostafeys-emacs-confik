@@ -64,7 +64,6 @@
 (require 'shell-conf)
 (require 'dired-conf)
 (require 'reencoding-file)
-(require 'version-control)
 
 (use-package highlight-symbol
   :straight (highlight-symbol :type git :host github
@@ -247,60 +246,39 @@
 
 ;;----------------------------------------------------------------------
 ;; Version control
-;;
-(global-unset-key (kbd "M-w"))
-(defun kostafey-magit-mode-hook ()
-  (define-key magit-mode-map (kbd "C-w") 'kill-buffer)
-  (define-key magit-mode-map (kbd "S-M-w") 'magit-copy-buffer-revision)
-  (define-key magit-mode-map (kbd "M-w") 'diffview-current)
-  (define-key magit-mode-map (kbd "C-s-<down>") 'magit-section-forward)
-  (define-key magit-mode-map (kbd "C-s-<up>") 'magit-section-backward))
-(add-hook 'magit-mode-hook 'kostafey-magit-mode-hook)
-
-(defun k/magit-status-mode-hook ()
-  (define-key magit-status-mode-map (kbd "C-x d")
-              'k/magit-diff-visit-worktree-file-other-window))
-(add-hook 'magit-status-mode-hook 'k/magit-status-mode-hook)
-
-(global-set-key (kbd "M-w") 'get-vc-status)
-
-(eval-after-load "diffview"
-  '(progn
-     (defun do-side-by-side (action)
-       (funcall action)
-       (other-window 1)
-       (funcall action)
-       (other-window 1))
-
-     (defun kostafey-diffview-mode-hook ()
-       (define-key diffview-mode-map [next]
-         #'(lambda nil (interactive)
-             (do-side-by-side #'(lambda nil (pager-page-down)))))
-       (define-key diffview-mode-map [prior]
-         #'(lambda nil (interactive)
-             (do-side-by-side #'(lambda nil (pager-page-up)))))
-       (define-key diffview-mode-map (kbd "C-<up>")
-         #'(lambda nil (interactive)
-             (do-side-by-side #'(lambda nil (scroll-down-line 1)))))
-       (define-key diffview-mode-map (kbd "C-<down>")
-         #'(lambda nil (interactive)
-             (do-side-by-side #'(lambda nil (scroll-up-line 1)))))
-       (define-key diffview-mode-map (kbd "<mouse-4>")
-         #'(lambda nil (interactive)
-             (do-side-by-side #'(lambda nil (scroll-down-line 1)))))
-       (define-key diffview-mode-map (kbd "<mouse-5>")
-         #'(lambda nil (interactive)
-             (do-side-by-side #'(lambda nil (scroll-up-line 1))))))
-     (add-hook 'diffview-mode-hook 'kostafey-diffview-mode-hook)))
-
-(setq smerge-command-prefix (kbd "C-c s"))
-(defun kostafey-smerge-mode-hook ()
-  (define-key smerge-mode-map (kbd "C-c s n") 'smerge-next)
-  (define-key smerge-mode-map (kbd "C-c s p") 'smerge-prev)
-  (define-key smerge-mode-map (kbd "C-c s RET") 'smerge-keep-current)
-  (define-key smerge-mode-map (kbd "C-c s u") 'smerge-keep-upper)
-  (define-key smerge-mode-map (kbd "C-c s l") 'smerge-keep-lower))
-(add-hook 'smerge-mode-hook 'kostafey-smerge-mode-hook)
+;; M-w         get-vc-status                 version-control.el
+;; In magit-mode
+;; C-w         kill-buffer                   version-control.el
+;; S-M-w       magit-copy-buffer-revision    version-control.el
+;; M-w         diffview-current              version-control.el
+;; C-s-<down>  magit-section-forward         version-control.el
+;; C-s-<up>    magit-section-backward        version-control.el
+;; In magit-status-mode
+;; C-x d       k/magit-diff-visit-worktree-file-other-window version-control.el
+;; In diffview-mode, scrolling both sides
+;; <next>      k/diffview-page-down          version-control.el
+;; <prior>     k/diffview-page-up            version-control.el
+;; C-<up>      k/diffview-scroll-down-line   version-control.el
+;; C-<down>    k/diffview-scroll-up-line     version-control.el
+;; <mouse-4>   k/diffview-scroll-down-line   version-control.el
+;; <mouse-5>   k/diffview-scroll-up-line     version-control.el
+;; In smerge-mode, the smerge-command-prefix
+;; C-c s       smerge-basic-map              version-control.el
+;;   cheat sheet, bound by smerge-mode itself under that prefix:
+;; C-c s n     smerge-next                   next conflict
+;; C-c s p     smerge-prev                   previous conflict
+;; C-c s RET   smerge-keep-current           keep the side at point
+;; C-c s u     smerge-keep-upper             keep <<<<<<< side, also C-c s m
+;; C-c s l     smerge-keep-lower             keep >>>>>>> side, also C-c s o
+;; C-c s b     smerge-keep-base              keep the base (diff3 style)
+;; C-c s a     smerge-keep-all               keep all sides
+;; C-c s r     smerge-resolve                resolve automatically
+;; C-c s C     smerge-combine-with-next      join with the next conflict
+;; C-c s E     smerge-ediff                  resolve in ediff
+;; C-c s R     smerge-refine                 highlight changed words
+;; C-c s = <   smerge-diff-base-upper        diff base with upper
+;; C-c s = >   smerge-diff-base-lower        diff base with lower
+;; C-c s = =   smerge-diff-upper-lower       diff upper with lower
 
 ;;----------------------------------------------------------------------
 ;; dired

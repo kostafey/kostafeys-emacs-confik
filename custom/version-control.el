@@ -127,6 +127,10 @@ was a third of the time it took to open a file."
 (add-hook 'find-file-hook #'my-enable-smerge-maybe)
 (add-hook 'after-revert-hook #'my-enable-smerge-maybe)
 
+;; The smerge commands go under C-c s instead of C-c ^; this has to be set
+;; before smerge-mode is loaded.
+(setq smerge-command-prefix (kbd "C-c s"))
+
 (defun k/display-buffer-in-next-window (buffer _alist)
   "Display BUFFER in the window next to the selected one.
 Split the frame when it holds a single window, so there always is a
@@ -155,5 +159,59 @@ the Magit buffer stays visible.  Cf. `hop-at-point-other-window'."
   (interactive (list (read-file-name "Compare with file: ")))
   (let ((old (buffer-file-name)))
     (diff old new)))
+
+;;-----------------------------------------------------------------------------
+;; diffview: scroll both sides at once
+;;
+(defun k/diffview-side-by-side (action)
+  "Call ACTION in the selected window and then in the next one."
+  (funcall action)
+  (other-window 1)
+  (funcall action)
+  (other-window 1))
+
+(defun k/diffview-page-down ()
+  "Page down both sides of the diff."
+  (interactive)
+  (k/diffview-side-by-side #'pager-page-down))
+
+(defun k/diffview-page-up ()
+  "Page up both sides of the diff."
+  (interactive)
+  (k/diffview-side-by-side #'pager-page-up))
+
+(defun k/diffview-scroll-down-line ()
+  "Scroll both sides of the diff down by a line."
+  (interactive)
+  (k/diffview-side-by-side #'scroll-down-line))
+
+(defun k/diffview-scroll-up-line ()
+  "Scroll both sides of the diff up by a line."
+  (interactive)
+  (k/diffview-side-by-side #'scroll-up-line))
+
+;;-----------------------------------------------------------------------------
+;; Keys
+;;
+(global-set-key (kbd "M-w") 'get-vc-status)
+
+(with-eval-after-load 'magit-mode
+  (define-key magit-mode-map (kbd "C-w") 'kill-buffer)
+  (define-key magit-mode-map (kbd "S-M-w") 'magit-copy-buffer-revision)
+  (define-key magit-mode-map (kbd "M-w") 'diffview-current)
+  (define-key magit-mode-map (kbd "C-s-<down>") 'magit-section-forward)
+  (define-key magit-mode-map (kbd "C-s-<up>") 'magit-section-backward))
+
+(with-eval-after-load 'magit-status
+  (define-key magit-status-mode-map (kbd "C-x d")
+              'k/magit-diff-visit-worktree-file-other-window))
+
+(with-eval-after-load 'diffview
+  (define-key diffview-mode-map (kbd "<next>") 'k/diffview-page-down)
+  (define-key diffview-mode-map (kbd "<prior>") 'k/diffview-page-up)
+  (define-key diffview-mode-map (kbd "C-<up>") 'k/diffview-scroll-down-line)
+  (define-key diffview-mode-map (kbd "C-<down>") 'k/diffview-scroll-up-line)
+  (define-key diffview-mode-map (kbd "<mouse-4>") 'k/diffview-scroll-down-line)
+  (define-key diffview-mode-map (kbd "<mouse-5>") 'k/diffview-scroll-up-line))
 
 (provide 'version-control)
