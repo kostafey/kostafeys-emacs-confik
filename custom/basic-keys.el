@@ -125,9 +125,14 @@
     (define-key org-mode-map (kbd "C-x t") 'org-todo)
     (define-key org-mode-map (kbd "C-x d") 'org-open-at-point)
     (define-key org-mode-map (kbd "C-S-<up>") 'toggle-letter-case)
-    (define-key org-mode-map (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)
-    (global-set-key (kbd "C-c l") 'org-store-link)
-    (global-set-key (kbd "C-c a") 'org-agenda)))
+    (define-key org-mode-map (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)))
+
+;; Global org keys, working before org is loaded.  org's own autoloads
+;; (org-loaddefs) come with org itself, and only `org-agenda' is
+;; autoloaded by Emacs.
+(autoload 'org-store-link "ol" nil t)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
 
 ;;===================================================================
 ;; Scrolling
@@ -158,14 +163,10 @@
   (define-key mode-map (kbd "C-M-S-<right>") 'k/sgml-skip-tag-forward-select)
   (define-key mode-map (kbd "C-M-S-<left>") 'k/sgml-skip-tag-backward-select))
 
-(defun kostafey-html-mode-hook ()
+(with-eval-after-load 'sgml-mode
   (k/define-xml-jumps html-mode-map))
-
-(defun kostafey-nxml-mode-hook ()
+(with-eval-after-load 'nxml-mode
   (k/define-xml-jumps nxml-mode-map))
-
-(add-hook 'html-mode-hook 'kostafey-html-mode-hook)
-(add-hook 'nxml-mode-hook 'kostafey-nxml-mode-hook)
 
 ;;===================================================================
 ;;                         Point hyper-jumps
@@ -200,15 +201,13 @@
 (defun k/isearch-down () (interactive) (k/isearch-key "<down>"))
 (defun k/isearch-up () (interactive) (k/isearch-key "<up>"))
 
-(defun k/isearch-mode-hook ()
-  (define-key isearch-mode-map (kbd "C-f")    'isearch-repeat-forward)
-  (define-key isearch-mode-map (kbd "C-r")    'isearch-repeat-backward)
-  (define-key isearch-mode-map (kbd "C-v")    'isearch-yank-kill)
-  (define-key isearch-mode-map (kbd "RET")    'k/isearch-ret)
-  (define-key isearch-mode-map (kbd "<down>") 'k/isearch-down)
-  (define-key isearch-mode-map (kbd "<up>")   'k/isearch-up))
-
-(add-hook 'isearch-mode-hook 'k/isearch-mode-hook)
+;; isearch is preloaded, so is its map.
+(define-key isearch-mode-map (kbd "C-f")    'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd "C-r")    'isearch-repeat-backward)
+(define-key isearch-mode-map (kbd "C-v")    'isearch-yank-kill)
+(define-key isearch-mode-map (kbd "RET")    'k/isearch-ret)
+(define-key isearch-mode-map (kbd "<down>") 'k/isearch-down)
+(define-key isearch-mode-map (kbd "<up>")   'k/isearch-up)
 
 (global-unset-key (kbd "M-r"))
 (global-set-key (kbd "M-r") 'replace-string)
