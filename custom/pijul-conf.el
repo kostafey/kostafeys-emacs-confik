@@ -454,6 +454,51 @@ RET shows the change at point, + shows more history, g refreshes."
 ;; diff is the recorded version (`pijul reset --dry-run FILE') against
 ;; the file, in the `-U0' unified format git-gutter parses, produced by
 ;; `git diff --no-index' (works outside any git repository).
+;; git-gutter runs on every `switch-to-buffer', a `consult' preview
+;; included, and merely starting pijul takes about 0.1s on Windows, so
+;; `pijul reset' runs asynchronously ahead of the diff, and only once the
+;; pristine changed since its last run for the file.  Every pijul command
+;; touches the pristine, `pijul reset' included, so the cache tells its
+;; own touches from those of other commands.
+
+(defvar k/pijul-git-gutter--old nil
+  "File the git-gutter diff under Pijul compares the visited file with.
+Bound by `k/pijul-git-gutter-start-diff-process' around the diff.")
+
+(defvar k/pijul-git-gutter--cache (make-hash-table :test #'equal)
+  "Recorded versions of files, and the pristines they were read from.
+A file maps to (GENERATION . RECORDED): RECORDED is the file its
+recorded version was written to, nil when the file is not recorded.
+A pristine maps to (MTIME . GENERATION): MTIME is its modification
+time right after the last `pijul reset --dry-run' here, which touches
+it itself, as every pijul command does.  A pristine touched by anything
+else since starts a new GENERATION, which invalidates its files.")
+
+(defun k/pijul-git-gutter--pristine-mtime (pristine)
+  "Modification time of the PRISTINE database file, nil if none."
+  (and pristine
+       (file-attribute-modification-time (file-attributes pristine))))
+
+(defun k/pijul-git-gutter--cached (file pristine)
+  "Return the valid `k/pijul-git-gutter--cache' entry of FILE, or nil."
+  (let ((state (gethash pristine k/pijul-git-gutter--cache))
+        (entry (gethash file k/pijul-git-gutter--cache)))
+    (and state entry
+         (equal (car state) (k/pijul-git-gutter--pristine-mtime pristine))
+         (eql (car entry) (cdr state))
+         (or (null (cdr entry)) (file-exists-p (cdr entry)))
+         entry)))
+
+(defun k/pijul-git-gutter--cache-put (file pristine before recorded)
+  "Cache RECORDED for FILE read from PRISTINE, whose mtime was BEFORE."
+  (let* ((state (gethash pristine k/pijul-git-gutter--cache))
+         (generation (if (and state (equal (car state) before))
+                         (cdr state)
+                       (1+ (or (cdr state) 0)))))
+    (puthash pristine
+             (cons (k/pijul-git-gutter--pristine-mtime pristine) generation)
+             k/pijul-git-gutter--cache)
+    (puthash file (cons generation recorded) k/pijul-git-gutter--cache)))
 
 (defun k/pijul-git-gutter--recorded-file (file)
   "Temporary file for FILE's recorded (pristine) version.
@@ -469,21 +514,74 @@ major mode change would wipe, leaking the file."
         (delete-file recorded)))))
 
 (defun k/pijul-git-gutter-start-diff (file proc-buf)
-  "Start the git-gutter diff process for FILE under Pijul."
-  (add-hook 'kill-buffer-hook #'k/pijul-git-gutter--cleanup nil t)
-  (let* ((file (expand-file-name file))
-         (recorded (k/pijul-git-gutter--recorded-file file))
-         ;; Not recorded yet (untracked or only `pijul add'ed): diff the
-         ;; file against itself, i.e. show no marks, as git does.
-         (old (if (zerop (call-process pijul-context-program nil
-                                       (list :file recorded) nil
-                                       "reset" "--dry-run" file))
-                  recorded
-                file)))
+  "Start the git-gutter diff process for FILE under Pijul.
+FILE is compared with `k/pijul-git-gutter--old', or with itself."
+  (let ((file (expand-file-name file)))
     (start-process "git-gutter" proc-buf
                    "git" "--no-pager" "-c" "core.autocrlf=false"
                    "diff" "--no-index" "--no-color" "--no-ext-diff" "-U0"
-                   "--" old file)))
+                   "--" (or k/pijul-git-gutter--old file) file)))
+
+(defun k/pijul-git-gutter--reset (file pristine callback)
+  "Write the recorded version of FILE asynchronously, then call CALLBACK.
+CALLBACK gets the file holding the recorded version, or nil when FILE
+is not recorded yet (untracked or only `pijul add'ed).  The result is
+kept in `k/pijul-git-gutter--cache' along with the state of PRISTINE."
+  (let ((recorded (k/pijul-git-gutter--recorded-file file))
+        (before (k/pijul-git-gutter--pristine-mtime pristine))
+        (out (generate-new-buffer " *pijul-gutter*" t)))
+    (make-process
+     :name "pijul-gutter"
+     :buffer out
+     :command (list pijul-context-program "reset" "--dry-run" file)
+     :coding 'no-conversion
+     :noquery t
+     :stderr (get-buffer-create " *pijul-gutter-stderr*")
+     :sentinel
+     (lambda (proc _event)
+       (when (memq (process-status proc) '(exit signal))
+         (let ((ok (and (eq (process-status proc) 'exit)
+                        (zerop (process-exit-status proc)))))
+           (when ok
+             (with-current-buffer out
+               (let ((coding-system-for-write 'no-conversion))
+                 (write-region nil nil recorded nil 'silent))))
+           (kill-buffer out)
+           (k/pijul-git-gutter--cache-put file pristine before
+                                          (and ok recorded))
+           (funcall callback (and ok recorded))))))))
+
+(defun k/pijul-git-gutter-start-diff-process (orig curfile proc-buf)
+  "Call ORIG with CURFILE and PROC-BUF once the recorded file is written.
+PROC-BUF already exists meanwhile, which keeps `git-gutter' from
+starting another diff of the same file.  The recorded file of the last
+run is reused while `k/pijul-git-gutter--cache' holds it valid."
+  (if (not (eq git-gutter:vcs-type 'pijul))
+      (funcall orig curfile proc-buf)
+    (add-hook 'kill-buffer-hook #'k/pijul-git-gutter--cleanup nil t)
+    (let* ((curbuf (current-buffer))
+           (file (expand-file-name curfile))
+           (pristine (when-let* ((root (pijul-repository-root)))
+                       (expand-file-name ".pijul/pristine/db" root)))
+           (cached (k/pijul-git-gutter--cached file pristine))
+           ;; Not recorded yet: diff the file against itself, i.e. show
+           ;; no marks, as git does.
+           (diff (lambda (recorded)
+                   (if (not (and (buffer-live-p curbuf)
+                                 (buffer-live-p proc-buf)))
+                       (when (buffer-live-p proc-buf)
+                         (kill-buffer proc-buf))
+                     (with-current-buffer curbuf
+                       (let ((k/pijul-git-gutter--old recorded))
+                         (condition-case err
+                             (funcall orig curfile proc-buf)
+                           (error
+                            (kill-buffer proc-buf)
+                            (message "git-gutter: %s"
+                                     (error-message-string err))))))))))
+      (if cached
+          (funcall diff (cdr cached))
+        (k/pijul-git-gutter--reset file pristine diff)))))
 
 (defun k/pijul-git-gutter-check (orig vcs)
   (if (eq vcs 'pijul)
@@ -497,6 +595,9 @@ major mode change would wipe, leaking the file."
 
 (defun k/pijul-git-gutter-refresh (root)
   "Redraw git-gutter marks in buffers visiting files under ROOT."
+  ;; The pristine just changed, though possibly within the same mtime
+  ;; tick as the last `pijul reset' here.
+  (clrhash k/pijul-git-gutter--cache)
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when (and (bound-and-true-p git-gutter-mode)
@@ -512,7 +613,9 @@ major mode change would wipe, leaking the file."
   (advice-add 'git-gutter:vcs-check-function
               :around #'k/pijul-git-gutter-check)
   (advice-add 'git-gutter:start-diff-process1
-              :around #'k/pijul-git-gutter-dispatch))
+              :around #'k/pijul-git-gutter-dispatch)
+  (advice-add 'git-gutter:start-diff-process
+              :around #'k/pijul-git-gutter-start-diff-process))
 ;; ------------------------------------------------------------
 
 (provide 'pijul-conf)
