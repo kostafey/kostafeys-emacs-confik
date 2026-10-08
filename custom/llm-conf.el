@@ -55,7 +55,7 @@
     (cond
      ((member mode-name '("java-mode" "java-ts-mode"))
       "Java")
-     ((string= mode-name "scala-mode")
+     ((member mode-name '("scala-mode" "scala-ts-mode"))
       "Scala")
      ((string= mode-name "clojure-mode")
       "Clojure")
