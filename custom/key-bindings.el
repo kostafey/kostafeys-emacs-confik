@@ -192,8 +192,15 @@
 ;; In magit-status-mode
 ;; C-x d       k/magit-diff-visit-worktree-file-other-window version-control.el
 ;; In pijul-commit-mode, read-only buffers such as *pijul-record-preview*
+;; q           k/pijul-commit-quit           pijul-conf.el
+;; c           k/pijul-record                pijul-conf.el
+;; l           k/pijul-log                   pijul-conf.el
+;; d           k/pijul-commit-show-context   pijul-conf.el
 ;; RET         k/pijul-commit-visit-file     pijul-conf.el
 ;; C-x d       k/pijul-commit-visit-file-other-window pijul-conf.el
+;; In pijul-commit-mode, while pijul record waits on the buffer
+;; C-c C-c     k/pijul-commit-finish         pijul-conf.el
+;; C-c C-k     k/pijul-commit-cancel         pijul-conf.el
 ;; In diffview-mode, scrolling both sides
 ;; <next>      k/diffview-page-down          version-control.el
 ;; <prior>     k/diffview-page-up            version-control.el
