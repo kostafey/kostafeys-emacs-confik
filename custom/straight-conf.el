@@ -18,14 +18,15 @@
 ;;-------------------------------------------------------------------
 ;; GNU ELPA core packages
 ;;
-;; These ship both inside Emacs and on GNU ELPA, so two copies exist side by
-;; side.  A current `eglot' needs the ELPA ones -- it asks for flymake 1.4.2
-;; while Emacs 30.2 bundles 1.3.7 -- and enforces that with
-;; `require-with-check': if the feature was already loaded from the built-in
-;; file, it errors out with "Feature `flymake' is now provided by a different
-;; file", which surfaces as a `File mode specification error' in every LSP
-;; buffer.  Whoever loads the built-in copy first wins, and that used to be
-;; whichever unrelated package happened to `require' it during init.
+;; These ship both inside Emacs and on GNU ELPA, and straight builds the
+;; ELPA ones anyway as dependencies of `eglot', so two copies exist side by
+;; side -- even where the built-in versions would satisfy `eglot', as on
+;; Emacs 31.1.  `eglot' loads them with `require-with-check': if the feature
+;; was already loaded from the built-in file, it errors out with "Feature
+;; `flymake' is now provided by a different file", which surfaces as a
+;; `File mode specification error' in every LSP buffer.  Whoever loads the
+;; built-in copy first wins, and that used to be whichever unrelated package
+;; happened to `require' it during init.
 ;;
 ;; Claiming them here settles the race: straight puts their build directories
 ;; on `load-path' before any other module is loaded, so every later `require'

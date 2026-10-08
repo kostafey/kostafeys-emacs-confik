@@ -47,8 +47,9 @@
 (setq custom-file (concat site-lisp-path "custom/custom.el"))
 (load custom-file)
 ;;-------------------------------------------------------------------
-;; Must precede any module loading a tree-sitter major mode (`text-modes-conf'
-;; pulls in `asciidoc-mode', which initializes the library at load time).
+;; Must precede any module loading a tree-sitter major mode: its `setq' of
+;; `treesit-language-source-alist' would drop the grammar recipes such modes
+;; register on load (`java-ts-mode' does).
 (require 'tree-sitter-conf)
 (require 'yas-conf)
 (require 'completition-corfu-conf)
