@@ -191,6 +191,9 @@
 ;; C-s-<up>    magit-section-backward        version-control.el
 ;; In magit-status-mode
 ;; C-x d       k/magit-diff-visit-worktree-file-other-window version-control.el
+;; In pijul-commit-mode, read-only buffers such as *pijul-record-preview*
+;; RET         k/pijul-commit-visit-file     pijul-conf.el
+;; C-x d       k/pijul-commit-visit-file-other-window pijul-conf.el
 ;; In diffview-mode, scrolling both sides
 ;; <next>      k/diffview-page-down          version-control.el
 ;; <prior>     k/diffview-page-up            version-control.el

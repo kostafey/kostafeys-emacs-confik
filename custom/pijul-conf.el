@@ -423,9 +423,80 @@ RET shows the change at point, + shows more history, g refreshes."
     (pop-to-buffer buf)))
 ;; ------------------------------------------------------------
 
+;; ------------------------------------------------------------
+;; Visit the change at point, as RET and C-x d do in magit-status
+
+(declare-function k/display-buffer-in-next-window "version-control")
+
+(defun k/pijul-commit--hunk-location ()
+  "Return (FILE LINE COLUMN) the hunk line at point changes.
+FILE is absolute.  The `:LINE' of a hunk header counts in the working
+copy, where its `+' lines follow one another; a `-' line or a header
+line stands for the line the hunk starts at."
+  (let ((root (or pijul-commit-repository default-directory))
+        (column (let ((column (current-column)))
+                  (save-excursion
+                    (beginning-of-line)
+                    (if (looking-at-p "[-+] ") (max 0 (- column 2)) 0)))))
+    (save-excursion
+      (let ((here (line-beginning-position)))
+        (end-of-line)
+        (unless (re-search-backward "^[0-9]+\\. " nil t)
+          (user-error "No change at point"))
+        (let* ((header (buffer-substring-no-properties
+                        (point) (line-end-position)))
+               (location
+                (cond
+                 ((string-match " in \"\\(.*?\\)\":\\([0-9]+\\)" header)
+                  (cons (match-string 1 header)
+                        (string-to-number (match-string 2 header))))
+                 ((string-match "File addition: \"\\(.*?\\)\" in \"\\(.*?\\)\""
+                                header)
+                  (cons (if (string-empty-p (match-string 2 header))
+                            (match-string 1 header)
+                          (concat (match-string 2 header) "/"
+                                  (match-string 1 header)))
+                        1))
+                 (t (user-error "No file in this change"))))
+               (added 0))
+          (forward-line 1)
+          (while (< (point) here)
+            (when (looking-at-p "\\+ ") (setq added (1+ added)))
+            (forward-line 1))
+          (list (expand-file-name (car location) root)
+                (+ (cdr location) added)
+                column))))))
+
+(defun k/pijul-commit--visit (other-window)
+  "Visit the file the hunk line at point changes, there.
+In the next window when OTHER-WINDOW, cf. `k/display-buffer-in-next-window'."
+  (pcase-let* ((`(,file ,line ,column) (k/pijul-commit--hunk-location))
+               (buffer (find-file-noselect file)))
+    (if other-window
+        (let ((display-buffer-overriding-action
+               (list #'k/display-buffer-in-next-window)))
+          (pop-to-buffer buffer))
+      (pop-to-buffer-same-window buffer))
+    (unless (file-directory-p file)
+      (widen)
+      (goto-char (point-min))
+      (forward-line (1- line))
+      (move-to-column column))))
+
+(defun k/pijul-commit-visit-file ()
+  "Visit the file of the change at point, at the changed line."
+  (interactive)
+  (k/pijul-commit--visit nil))
+
+(defun k/pijul-commit-visit-file-other-window ()
+  "Visit the file of the change at point, at the changed line, in the
+next window.  Cf. `k/magit-diff-visit-worktree-file-other-window'."
+  (interactive)
+  (k/pijul-commit--visit t))
+
 ;; `pijul-commit-mode' also edits `.pijul-commit' files during `pijul
-;; record', where `q', `c', `l' and `d' must self-insert: bind them only
-;; in read-only buffers such as `*pijul-record-preview*'.
+;; record', where `q', `c', `l', `d' and RET must self-insert: bind them
+;; only in read-only buffers such as `*pijul-record-preview*'.
 (define-key pijul-commit-mode-map (kbd "q")
   '(menu-item "" k/pijul-commit-quit
               :filter (lambda (cmd) (and buffer-read-only cmd))))
@@ -437,6 +508,12 @@ RET shows the change at point, + shows more history, g refreshes."
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "d")
   '(menu-item "" k/pijul-commit-show-context
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "RET")
+  '(menu-item "" k/pijul-commit-visit-file
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "C-x d")
+  '(menu-item "" k/pijul-commit-visit-file-other-window
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 ;; Only while `pijul record' waits on this buffer via emacsclient.
 (dolist (binding '(("C-c C-c" . k/pijul-commit-finish)
