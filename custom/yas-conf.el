@@ -18,7 +18,7 @@
          ("C-y f" . yas-describe-tables)
          ("C-y v" . yas-visit-snippet-file)
          ("C-y r" . yas-reload-all)
-         ("S-<tab>" . open-line-or-yas)
+         ("C-<tab>" . open-line-or-yas)
          ("C-S-<tab>" . yas-prev-field))
   :config
   ;; personal snippets

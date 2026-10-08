@@ -122,7 +122,7 @@
 ;; C-y f       yas-describe-tables           yas-conf.el
 ;; C-y v       yas-visit-snippet-file        yas-conf.el
 ;; C-y r       yas-reload-all                yas-conf.el
-;; S-<tab>     open-line-or-yas              yas-conf.el
+;; C-<tab>     open-line-or-yas              yas-conf.el
 ;; C-S-<tab>   yas-prev-field                yas-conf.el
 ;;
 ;;===================================================================
