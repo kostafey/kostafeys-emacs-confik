@@ -61,6 +61,8 @@
 ;; M-S-<left>  hop-backward                  advanced-navigation.el
 ;; M-S-<right> hop-forward                   advanced-navigation.el
 ;; <C-mouse-1> hop-by-mouse                  advanced-navigation.el
+;; In ibuffer-mode
+;; C-x d       ibuffer-visit-buffer-other-window basic-keys.el
 ;;
 ;;===================================================================
 

@@ -338,6 +338,9 @@
 
 ;; ibuffer - list of all buffers
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(with-eval-after-load 'ibuffer
+  (define-key ibuffer-mode-map (kbd "C-x d")
+              'ibuffer-visit-buffer-other-window))
 ;; (require 'bs) ;; other list of buffers
 ;; (global-set-key (kbd "C-x C-n") 'bs-show)
 
