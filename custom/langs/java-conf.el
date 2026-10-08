@@ -7,44 +7,155 @@
 ;;--------------------------------------------------------------------
 ;; java-ts-mode, turned on in tree-sitter-conf
 ;;
-;; The stock Imenu settings miss enums, fields and constructors, and file
-;; records under "Enum".
-(defconst k/java-ts-imenu-categories
-  '(("Class"       . "class_declaration")
-    ("Interface"   . "interface_declaration")
-    ("Enum"        . "enum_declaration")
-    ("Record"      . "record_declaration")
-    ("Annotation"  . "annotation_type_declaration")
-    ("Field"       . "field_declaration")
-    ("Constructor" . "constructor_declaration")
-    ("Method"      . "method_declaration"))
-  "Imenu categories of `java-ts-mode' and the node types they index.")
+;; Imenu nested the way the declarations are: a type holds its fields,
+;; enum constants, record components, constructors, methods and nested
+;; types.  Constructors and methods are named with their parameter types,
+;; to tell overloads apart.  Every name carries the region of its
+;; declaration, as eglot's do: Imenu then offers ".." to visit a type
+;; itself, and breadcrumb shows the declarations point is inside.  The
+;; stock index is flat lists by kind, missing enums, fields, constructors.
 
-(defun k/java-ts-node-name (node)
-  "Return the name of NODE for Imenu.
-A field declaration is named after all of its variables: \"a, b\"."
-  (if (equal (treesit-node-type node) "field_declaration")
-      (mapconcat (lambda (declarator)
-                   (treesit-node-text
-                    (treesit-node-child-by-field-name declarator "name") t))
-                 (treesit-filter-child
-                  node (lambda (child)
-                         (equal (treesit-node-type child)
-                                "variable_declarator")))
-                 ", ")
-    (treesit-node-text (treesit-node-child-by-field-name node "name") t)))
+(defun k/java-ts-node-text (node)
+  "Return the text of NODE on one line, nil if NODE is nil."
+  (when node
+    (replace-regexp-in-string "[ \t\n\r]+" " " (treesit-node-text node t))))
+
+(defun k/java-ts-child-text (node field)
+  "Return the text of the FIELD child of NODE, nil if there is none."
+  (k/java-ts-node-text (treesit-node-child-by-field-name node field)))
+
+(defun k/java-ts-children (node &rest types)
+  "Return the named children of NODE of one of the node TYPES."
+  (when node
+    (treesit-filter-child
+     node (lambda (child) (member (treesit-node-type child) types)) t)))
+
+(defun k/java-ts-parameters (node)
+  "Return the formal parameters of the method, constructor or record NODE.
+A compact constructor takes the components of its record."
+  (k/java-ts-children
+   (or (treesit-node-child-by-field-name node "parameters")
+       (when (equal (treesit-node-type node) "compact_constructor_declaration")
+         (treesit-node-child-by-field-name
+          (treesit-node-parent (treesit-node-parent node)) "parameters")))
+   "formal_parameter" "spread_parameter"))
+
+(defun k/java-ts-parameter-name (param)
+  "Return the name of the formal parameter PARAM."
+  (k/java-ts-child-text
+   (if (equal (treesit-node-type param) "spread_parameter")
+       (car (k/java-ts-children param "variable_declarator"))
+     param)
+   "name"))
+
+(defun k/java-ts-parameter-type (param)
+  "Return the type of the formal parameter PARAM: \"int[]\", \"String...\".
+Package names are left out: java.util.List<String> is List<String>."
+  (replace-regexp-in-string
+   "\\_<\\(?:[a-z_][[:alnum:]_]*\\.\\)+" ""
+   (if (equal (treesit-node-type param) "spread_parameter")
+       (concat (k/java-ts-node-text
+                (seq-find (lambda (child)
+                            (not (member (treesit-node-type child)
+                                         '("modifiers" "variable_declarator"
+                                           "line_comment" "block_comment"))))
+                          (treesit-node-children param t)))
+               "...")
+     (concat (k/java-ts-child-text param "type")
+             (k/java-ts-child-text param "dimensions")))))
+
+(defun k/java-ts-imenu-entry (name node &optional target)
+  "Return the Imenu entry NAME for the declaration NODE, nil without NAME.
+TARGET is the list of member entries or the position to visit, the start
+of NODE by default.  NAME is marked with the region of NODE."
+  (when name
+    (let ((region (cons (treesit-node-start node) (treesit-node-end node))))
+      (cons (propertize name 'imenu-region region 'breadcrumb-region region)
+            (or target (treesit-node-start node))))))
+
+(defun k/java-ts-imenu-self (node)
+  "Return the Imenu entry visiting the type NODE, to put among its members.
+`consult-imenu' lists no type that has members otherwise.  The entry is
+named by the keyword of the type, its empty region keeps breadcrumb from
+showing it."
+  (let* ((start (treesit-node-start node))
+         (region (cons start (1- start))))
+    (cons (propertize (pcase (treesit-node-type node)
+                        ("interface_declaration" "interface")
+                        ("enum_declaration" "enum")
+                        ("record_declaration" "record")
+                        ("annotation_type_declaration" "@interface")
+                        (_ "class"))
+                      'imenu-region region 'breadcrumb-region region)
+          start)))
+
+(defun k/java-ts-imenu-members (node)
+  "Return the Imenu entries for the declarations directly in NODE."
+  (when node
+    (delq nil (mapcan #'k/java-ts-imenu-entries
+                      (treesit-node-children node t)))))
+
+(defun k/java-ts-imenu-entries (node)
+  "Return the Imenu entries for the declaration NODE, a list."
+  (pcase (treesit-node-type node)
+    ((or "class_declaration" "interface_declaration" "enum_declaration"
+         "record_declaration" "annotation_type_declaration")
+     (let ((members
+            (delq nil
+                  (append
+                   (mapcar (lambda (param)
+                             (k/java-ts-imenu-entry
+                              (k/java-ts-parameter-name param) param))
+                           (and (equal (treesit-node-type node)
+                                       "record_declaration")
+                                (k/java-ts-parameters node)))
+                   (k/java-ts-imenu-members
+                    (treesit-node-child-by-field-name node "body"))))))
+       (list (k/java-ts-imenu-entry
+              (k/java-ts-child-text node "name") node
+              (and members (cons (k/java-ts-imenu-self node) members))))))
+    ((or "field_declaration" "constant_declaration")
+     (mapcar (lambda (declarator)
+               (k/java-ts-imenu-entry (k/java-ts-child-text declarator "name")
+                                      node (treesit-node-start declarator)))
+             (k/java-ts-children node "variable_declarator")))
+    ((or "method_declaration" "constructor_declaration"
+         "compact_constructor_declaration"
+         "annotation_type_element_declaration")
+     (when-let* ((name (k/java-ts-child-text node "name")))
+       (list (k/java-ts-imenu-entry
+              (propertize (format "%s(%s)" name
+                                  (mapconcat #'k/java-ts-parameter-type
+                                             (k/java-ts-parameters node) ", "))
+                          'k/breadcrumb-name name)
+              node))))
+    ("enum_constant"
+     (list (k/java-ts-imenu-entry (k/java-ts-child-text node "name") node)))
+    ("enum_body_declarations"
+     (k/java-ts-imenu-members node))))
+
+(defun k/java-ts-imenu ()
+  "Return the Imenu index of a `java-ts-mode' buffer."
+  (k/java-ts-imenu-members (treesit-buffer-root-node 'java)))
 
 (defun k/java-ts-imenu-setup ()
-  "Index the declarations of `k/java-ts-imenu-categories' with Imenu."
-  (setq-local treesit-simple-imenu-settings
-              (mapcar (lambda (category)
-                        (list (car category)
-                              (concat "\\`" (cdr category) "\\'")
-                              nil
-                              #'k/java-ts-node-name))
-                      k/java-ts-imenu-categories)))
+  "Index the buffer with `k/java-ts-imenu'."
+  (setq-local imenu-create-index-function #'k/java-ts-imenu))
 
 (add-hook 'java-ts-mode-hook #'k/java-ts-imenu-setup)
+
+;; Breadcrumb names methods without their parameters, which take up the
+;; header line; `breadcrumb-jump' still lists them in full, from Imenu.
+(defun k/breadcrumb-short-name (args)
+  "Put the `k/breadcrumb-name' of an Imenu crumb in its place, if it has one.
+ARGS are those of `breadcrumb--format-ipath-node': the crumb, and more."
+  (if-let* ((name (get-text-property 0 'k/breadcrumb-name (car args))))
+      (cons name (cdr args))
+    args))
+
+(with-eval-after-load 'breadcrumb
+  (advice-add 'breadcrumb--format-ipath-node :filter-args
+              #'k/breadcrumb-short-name))
 
 ;;--------------------------------------------------------------------
 ;; maven
