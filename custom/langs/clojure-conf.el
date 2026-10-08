@@ -22,6 +22,9 @@
 (add-hook 'clojurec-mode-hook 'lsp)
 (setq lsp-enable-file-watchers t)
 (setq lsp-file-watch-threshold 10000)
+;; In every lsp-mode language (Clojure, rjsx, Go) the header line is left
+;; to `breadcrumb', toggled with <f6>, as for the eglot and plain modes.
+(setq lsp-headerline-breadcrumb-enable nil)
 
 (add-hook 'cider-mode-hook 'eldoc-mode)
 
