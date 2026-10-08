@@ -494,9 +494,83 @@ next window.  Cf. `k/magit-diff-visit-worktree-file-other-window'."
   (interactive)
   (k/pijul-commit--visit t))
 
+;; ------------------------------------------------------------
+;; Discard the hunk at point, as k does in magit-status
+
+(defun k/pijul-commit--hunk ()
+  "Return the edit hunk at point as (FILE LINE REMOVED ADDED).
+FILE is absolute, LINE the working copy line the hunk starts at,
+REMOVED and ADDED the texts of its `-' and `+' lines."
+  (let ((root (or pijul-commit-repository default-directory)))
+    (save-excursion
+      (end-of-line)
+      (unless (re-search-backward "^[0-9]+\\. " nil t)
+        (user-error "No change at point"))
+      (let ((header (buffer-substring-no-properties
+                     (point) (line-end-position)))
+            file line removed added)
+        (unless (string-match
+                 "\\`[0-9]+\\. \\(?:Edit\\|Replacement\\) in \"\\(.*?\\)\":\\([0-9]+\\)"
+                 header)
+          (user-error "Only an edit or a replacement can be discarded"))
+        (setq file (expand-file-name (match-string 1 header) root)
+              line (string-to-number (match-string 2 header)))
+        (forward-line 1)
+        (while (not (or (eobp) (looking-at-p "[0-9]+\\. ")))
+          (when (looking-at "\\([-+]\\)\\(?: \\(.*\\)\\)?$")
+            (let ((text (or (match-string-no-properties 2) "")))
+              (if (equal (match-string 1) "-")
+                  (push text removed)
+                (push text added))))
+          (forward-line 1))
+        (list file line (nreverse removed) (nreverse added))))))
+
+(defun k/pijul-discard ()
+  "Discard the hunk at point from the working copy, as `magit-discard' does.
+The `+' lines of the hunk go back to its `-' lines in the file, which is
+then saved; `*pijul-record-preview*' is brought up to date."
+  (interactive)
+  (unless (equal (buffer-name) "*pijul-record-preview*")
+    ;; The hunks of a recorded change don't match the working copy.
+    (user-error "Only the hunks of *pijul-record-preview* can be discarded"))
+  (pcase-let* ((`(,file ,line ,removed ,added) (k/pijul-commit--hunk))
+               (root pijul-commit-repository)
+               (preview-line (line-number-at-pos))
+               (visited (get-file-buffer file)))
+    (unless (y-or-n-p (format "Discard hunk of %s at line %d? "
+                              (file-relative-name file root) line))
+      (user-error "Abort"))
+    (with-current-buffer (or visited (find-file-noselect file))
+      (when (buffer-modified-p)
+        (user-error "Save %s first" (buffer-name)))
+      (save-excursion
+        (save-restriction
+          (widen)
+          (goto-char (point-min))
+          (let* ((beg (progn (forward-line (1- line)) (point)))
+                 (end (progn (forward-line (length added)) (point))))
+            (unless (equal (string-remove-suffix
+                            "\n" (buffer-substring-no-properties beg end))
+                           (string-join added "\n"))
+              (user-error "%s changed since the preview, refresh it"
+                          (buffer-name)))
+            (delete-region beg end)
+            (goto-char beg)
+            (insert (mapconcat (lambda (text) (concat text "\n")) removed "")))))
+      (save-buffer)
+      (unless visited
+        (kill-buffer)))
+    (k/pijul-record-preview-refresh root)
+    ;; The refresh starts the preview over from the top.
+    (when-let* ((preview (get-buffer "*pijul-record-preview*")))
+      (dolist (window (get-buffer-window-list preview nil t))
+        (with-selected-window window
+          (goto-char (point-min))
+          (forward-line (1- preview-line)))))))
+
 ;; `pijul-commit-mode' also edits `.pijul-commit' files during `pijul
-;; record', where `q', `c', `l', `d' and RET must self-insert: bind them
-;; only in read-only buffers such as `*pijul-record-preview*'.
+;; record', where `q', `c', `l', `d', `k' and RET must self-insert: bind
+;; them only in read-only buffers such as `*pijul-record-preview*'.
 (define-key pijul-commit-mode-map (kbd "q")
   '(menu-item "" k/pijul-commit-quit
               :filter (lambda (cmd) (and buffer-read-only cmd))))
@@ -508,6 +582,9 @@ next window.  Cf. `k/magit-diff-visit-worktree-file-other-window'."
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "d")
   '(menu-item "" k/pijul-commit-show-context
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "k")
+  '(menu-item "" k/pijul-discard
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "RET")
   '(menu-item "" k/pijul-commit-visit-file
@@ -607,26 +684,42 @@ kept in `k/pijul-git-gutter--cache' along with the state of PRISTINE."
   (let ((recorded (k/pijul-git-gutter--recorded-file file))
         (before (k/pijul-git-gutter--pristine-mtime pristine))
         (out (generate-new-buffer " *pijul-gutter*" t)))
-    (make-process
-     :name "pijul-gutter"
-     :buffer out
-     :command (list pijul-context-program "reset" "--dry-run" file)
-     :coding 'no-conversion
-     :noquery t
-     :stderr (get-buffer-create " *pijul-gutter-stderr*")
-     :sentinel
-     (lambda (proc _event)
-       (when (memq (process-status proc) '(exit signal))
-         (let ((ok (and (eq (process-status proc) 'exit)
-                        (zerop (process-exit-status proc)))))
-           (when ok
-             (with-current-buffer out
-               (let ((coding-system-for-write 'no-conversion))
-                 (write-region nil nil recorded nil 'silent))))
-           (kill-buffer out)
-           (k/pijul-git-gutter--cache-put file pristine before
-                                          (and ok recorded))
-           (funcall callback (and ok recorded))))))))
+    (process-put
+     (make-process
+      :name "pijul-gutter"
+      :buffer out
+      :command (list pijul-context-program "reset" "--dry-run" file)
+      :coding 'no-conversion
+      :noquery t
+      :stderr (get-buffer-create " *pijul-gutter-stderr*")
+      :sentinel
+      (lambda (proc _event)
+        (when (memq (process-status proc) '(exit signal))
+          (let ((ok (and (eq (process-status proc) 'exit)
+                         (zerop (process-exit-status proc)))))
+            (when ok
+              (with-current-buffer out
+                (let ((coding-system-for-write 'no-conversion))
+                  (write-region nil nil recorded nil 'silent))))
+            (kill-buffer out)
+            (k/pijul-git-gutter--cache-put file pristine before
+                                           (and ok recorded))
+            (funcall callback (and ok recorded))))))
+     'k/pijul-git-gutter t)))
+
+(defun k/pijul-git-gutter--wait (program &rest _)
+  "Let the running `pijul reset' of `k/pijul-git-gutter--reset' finish.
+Before PROGRAM, when it is pijul, runs synchronously: blocked in
+`call-process', Emacs reads no process output, so a `pijul reset'
+filling its pipe never exits, keeping the pristine locked, and the
+synchronous pijul waits on that lock forever."
+  (when (and (stringp program)
+             (string= (file-name-base program)
+                      (file-name-base pijul-context-program)))
+    (dolist (proc (process-list))
+      (when (process-get proc 'k/pijul-git-gutter)
+        (while (process-live-p proc)
+          (accept-process-output proc 0.05))))))
 
 (defun k/pijul-git-gutter-start-diff-process (orig curfile proc-buf)
   "Call ORIG with CURFILE and PROC-BUF once the recorded file is written.
@@ -692,7 +785,8 @@ run is reused while `k/pijul-git-gutter--cache' holds it valid."
   (advice-add 'git-gutter:start-diff-process1
               :around #'k/pijul-git-gutter-dispatch)
   (advice-add 'git-gutter:start-diff-process
-              :around #'k/pijul-git-gutter-start-diff-process))
+              :around #'k/pijul-git-gutter-start-diff-process)
+  (advice-add 'call-process :before #'k/pijul-git-gutter--wait))
 ;; ------------------------------------------------------------
 
 (provide 'pijul-conf)
