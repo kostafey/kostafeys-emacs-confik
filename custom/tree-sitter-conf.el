@@ -42,7 +42,6 @@
    (json "https://github.com/tree-sitter/tree-sitter-json")
    (make "https://github.com/alemuller/tree-sitter-make")
    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-   (python "https://github.com/tree-sitter/tree-sitter-python")
    (toml "https://github.com/tree-sitter/tree-sitter-toml")
    (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
@@ -106,11 +105,15 @@
 
   (add-to-list 'auto-mode-alist '("\\.xml$" . html-ts-mode)))
 
-;; Java: `java-ts-mode' brings the grammar recipe pinned by its Emacs and
-;; offers to install it when turned on, so run M-x java-ts-mode in a Java
-;; buffer once.  Until the grammar is there, `java-mode' (cc-mode) stays.
+;; Java and Python: `java-ts-mode' and `python-ts-mode' come with Emacs,
+;; which pins the grammar recipe they are written for (so the list above
+;; leaves these languages out) and offers to install it when the mode is
+;; turned on: run M-x java-ts-mode or M-x python-ts-mode in such a buffer
+;; once.  Until the grammar is there, `java-mode' or `python-mode' stays.
 (when (treesit-language-available-p 'java)
   (add-to-list 'major-mode-remap-alist '(java-mode . java-ts-mode)))
+(when (treesit-language-available-p 'python)
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
 
 ;; Scala: until the grammar is installed (M-x treesit-install-language-grammar
 ;; RET scala, by the recipe above), `scala-mode' stays.

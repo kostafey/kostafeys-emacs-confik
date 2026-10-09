@@ -81,7 +81,7 @@
       "C/C++")
      ((string= mode-name "php-mode")
       "PHP")
-     ((string= mode-name "python-mode")
+     ((member mode-name '("python-mode" "python-ts-mode"))
       "Python")
      ((string= mode-name "ruby-mode")
       "Ruby")

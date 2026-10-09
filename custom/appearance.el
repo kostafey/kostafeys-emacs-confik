@@ -213,6 +213,7 @@
 (add-hook 'tex-mode-hook        'my-coding-hook)
 (add-hook 'lua-mode-hook        'my-coding-hook)
 (add-hook 'python-mode-hook     'my-coding-hook)
+(add-hook 'python-ts-mode-hook  'my-coding-hook)
 (add-hook 'comint-mode-hook     'my-coding-hook)
 (add-hook 'js-mode-hook         'my-coding-hook)
 (add-hook 'js-ts-mode-hook      'my-coding-hook)
