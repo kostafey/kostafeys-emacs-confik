@@ -290,6 +290,20 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (add-hook 'org-mode-hook 'k/org-backtick-code-highlight-initialize)
 
+;; Show the target of the link at point in the echo area: a link with a
+;; description displays only the description, the URL stays hidden.
+(defun k/org-eldoc-link (&rest _)
+  "Return the target of the Org link at point, for ElDoc."
+  (when-let* ((link (org-element-lineage (org-element-context) '(link) t)))
+    (propertize (org-element-property :raw-link link)
+                'face 'font-lock-constant-face)))
+
+(defun k/org-eldoc-link-setup ()
+  (add-hook 'eldoc-documentation-functions #'k/org-eldoc-link nil t)
+  (eldoc-mode 1))
+
+(add-hook 'org-mode-hook 'k/org-eldoc-link-setup)
+
 (require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
 
