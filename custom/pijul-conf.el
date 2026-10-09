@@ -57,7 +57,7 @@ syntax, so a leading `#' has to be escaped.")
   (interactive
    (list (read-directory-name "Pijul init in: " default-directory nil t)))
   (let ((dir (file-name-as-directory (expand-file-name dir))))
-    (when-let ((root (pijul-repository-root dir)))
+    (when-let* ((root (pijul-repository-root dir)))
       (user-error "Already in a Pijul repository: %s" root))
     (with-temp-buffer
       (let ((default-directory dir))

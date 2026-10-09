@@ -37,7 +37,8 @@ buffer) whose own `default-directory' is not inside the repository.")
 (defun pijul-repository-root (&optional dir)
   "Return the Pijul repository root at or above DIR (default `default-directory').
 That is the nearest ancestor directory containing a `.pijul' entry, or nil."
-  (when-let ((root (locate-dominating-file (or dir default-directory) ".pijul")))
+  (when-let* ((root (locate-dominating-file (or dir default-directory)
+                                            ".pijul")))
     (expand-file-name root)))
 
 (defvar pijul-mode-map

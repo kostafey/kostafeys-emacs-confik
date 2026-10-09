@@ -30,9 +30,12 @@
 
 (reverse-input-method "cyrillic-jcuken")
 
-(defadvice read-passwd (around my-read-passwd act)
+(defun k/read-passwd-untranslated (orig-fun &rest args)
+  "Call ORIG-FUN, `read-passwd', with ARGS and no Cyrillic key translation."
   (let ((local-function-key-map nil))
-    ad-do-it))
+    (apply orig-fun args)))
+
+(advice-add 'read-passwd :around #'k/read-passwd-untranslated)
 
 ;;====================================================================
 ;; Это не распространяется на последовательности клавиш, содержащие

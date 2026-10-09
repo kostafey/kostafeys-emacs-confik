@@ -123,7 +123,7 @@ boundaries of the current start and end tag , or nil."
 
 (define-minor-mode hl-tags-mode
   "Toggle hl-tags-mode."
-  nil "" nil
+  :lighter ""
   (if hl-tags-mode
       (progn 
         (add-hook 'post-command-hook 'hl-tags-update nil t)

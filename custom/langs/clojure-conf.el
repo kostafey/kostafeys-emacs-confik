@@ -25,6 +25,10 @@
 ;; In every lsp-mode language (Clojure, rjsx, Go) the header line is left
 ;; to `breadcrumb', toggled with <f6>, as for the eglot and plain modes.
 (setq lsp-headerline-breadcrumb-enable nil)
+;; Completion goes through corfu: `lsp-completion-at-point' still heads the
+;; capfs, only company is left alone (lsp-mode would warn on every buffer
+;; that it is "Unable to autoconfigure company-mode").
+(setq lsp-completion-provider :none)
 
 (add-hook 'cider-mode-hook 'eldoc-mode)
 

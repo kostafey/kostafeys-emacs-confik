@@ -262,8 +262,8 @@ to:
 (defvar u:*en/ru-table*
      '((?q  . ?й) (?w  . ?ц) (?e  . ?у)
        (?r  . ?к) (?t  . ?е) (?y  . ?н) (?u  . ?г)
-       (?i  . ?ш) (?o  . ?щ) (?p  . ?з) (?[  . ?х)
-       (?]  . ?ъ) (?a  . ?ф) (?s  . ?ы) (?d  . ?в)
+       (?i  . ?ш) (?o  . ?щ) (?p  . ?з) (?\[ . ?х)
+       (?\] . ?ъ) (?a  . ?ф) (?s  . ?ы) (?d  . ?в)
        (?f  . ?а) (?g  . ?п) (?h  . ?р) (?j  . ?о)
        (?k  . ?л) (?l  . ?д) (?\; . ?ж) (?\' . ?э)
        (?z  . ?я) (?x  . ?ч) (?c  . ?с) (?v  . ?м)
@@ -403,11 +403,13 @@ buffer is not visiting a file."
                          (read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-(defadvice find-file (after find-file-sudo activate)
-  "Find file as root if necessary."
+(defun k/find-file-sudo (&rest _)
+  "Reopen the file just visited as root if necessary, after `find-file'."
   (unless (and (not (directory-name-p buffer-file-name))
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(advice-add 'find-file :after #'k/find-file-sudo)
 
 (defun json-format ()
   "Pretty print json string."
@@ -654,16 +656,17 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
                     (region-end))))
       (count-lines beg end))))
 
+(defun k/delete-region-before-insert (&rest _)
+  "Delete the active region, before the insertion `hard-rewrite-mode' advises."
+  (if mark-active
+      (delete-region (point) (mark))))
+
 ;;;###autoload
 (defun hard-rewrite-mode ()
   "Workaround for the case when selected text not replaced by insertions."
   (interactive)
-  (defadvice cua-paste (before k/cua-paste activate)
-    (if mark-active
-        (delete-region (point) (mark))))
-  (defadvice self-insert-command (before k/self-insert-command activate)
-    (if mark-active
-        (delete-region (point) (mark))))
+  (advice-add 'cua-paste :before #'k/delete-region-before-insert)
+  (advice-add 'self-insert-command :before #'k/delete-region-before-insert)
   (message (format
             "Hard %s mode enabled."
             (propertize "rewrite"

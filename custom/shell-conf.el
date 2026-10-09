@@ -382,10 +382,13 @@ line at a time otherwise."
 (setq w32-quote-process-args t)
 
 ;; Windows shell (cmd) correct encoding
+(defun k/shell-cp1251 (buffer)
+  "Make the process of the shell BUFFER talk cp1251; return BUFFER."
+  (set-process-coding-system (get-buffer-process buffer) 'cp1251 'cp1251)
+  buffer)
+
 (when (eq system-type 'windows-nt)
-  (defadvice shell (after my-shell-advice)
-    (set-process-coding-system 'cp1251 'cp1251))
-  (ad-activate 'shell))
+  (advice-add 'shell :filter-return #'k/shell-cp1251))
 
 ;;------------------------------------------------------------
 ;; eshell
@@ -404,7 +407,7 @@ line at a time otherwise."
       (lambda ()
         (concat
          (propertize (eshell/pwd) 'face 'font-lock-function-name-face)
-         (if-let ((branch (k/git-branch)))
+         (if-let* ((branch (k/git-branch)))
              (propertize (concat "\n" branch) 'face 'font-lock-builtin-face))
          (propertize "\nλ" 'face `(:foreground "#5544EE" :weight bold))
          (propertize " " 'face 'default))))

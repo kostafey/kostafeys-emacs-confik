@@ -98,7 +98,7 @@ string carrying a `multi-category' property."
   (when (memq (vertico--metadata-get 'category) '(buffer multi-category))
     (let ((cand (and (>= vertico--index 0)
                      (nth vertico--index vertico--candidates))))
-      (when-let ((name (and cand (k/vertico--buffer-name cand))))
+      (when-let* ((name (and cand (k/vertico--buffer-name cand))))
         (get-buffer name)))))
 
 (defun k/vertico--hide-buffer (name pred)
@@ -112,7 +112,7 @@ string carrying a `multi-category' property."
 On anything that is not a buffer fall back to the global binding of the
 key, so C-k still kills a line and C-d still deletes a character."
   (interactive)
-  (if-let ((buf (k/vertico--candidate-buffer)))
+  (if-let* ((buf (k/vertico--candidate-buffer)))
       (let ((cand (nth vertico--index vertico--candidates))
             (name (buffer-name buf)))
         (when (kill-buffer buf)
@@ -131,7 +131,7 @@ key, so C-k still kills a line and C-d still deletes a character."
                 ;; Invalidate the cache; `vertico--exhibit' on
                 ;; `post-command-hook' redraws right after this command.
                 vertico--input nil)))
-    (when-let ((fallback (global-key-binding (this-command-keys-vector))))
+    (when-let* ((fallback (global-key-binding (this-command-keys-vector))))
       (call-interactively fallback))))
 
 (with-eval-after-load 'vertico
