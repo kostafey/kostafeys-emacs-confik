@@ -12,10 +12,10 @@
 (defun web-browse-find-executable ()
   "Return the first browser found among the known ones, or nil."
   (seq-find #'executable-find
-            '("chromium" "chromium-browser" "google-chrome-stable"
-              "palemoon" "firefox"
+            '("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+              "chromium" "chromium-browser" "google-chrome-stable"
               "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"
-              "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")))
+              "palemoon" "firefox")))
 
 (if-let* ((browser (web-browse-find-executable)))
     (setq browse-url-browser-function #'browse-url-generic
