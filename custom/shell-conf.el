@@ -57,6 +57,10 @@
   "Let `k/ghostel-paste-override-map' win over cua-mode here."
   (setq-local k/ghostel-paste-override t))
 
+(defun k/ghostel-ace-jump-words ()
+  "Let AceJump word mode find the words inside paths in ghostel."
+  (setq-local ace-jump-word-mode-syntax-table (standard-syntax-table)))
+
 (defun k/ghostel-clipboard-image-p ()
   "Non-nil when the clipboard holds an image rather than text.
 X11 advertises what it can convert the selection to; a screenshot taken
@@ -183,7 +187,8 @@ forwarding to pick the text up."
          :map project-prefix-map
          ("m" . ghostel-project)
          ("M" . ghostel-project-list-buffers))
-  :hook (ghostel-mode . k/ghostel-enable-paste-override)
+  :hook ((ghostel-mode . k/ghostel-enable-paste-override)
+         (ghostel-mode . k/ghostel-ace-jump-words))
   :config
   ;; Copying several lines out of a full-screen TUI.
   ;;
