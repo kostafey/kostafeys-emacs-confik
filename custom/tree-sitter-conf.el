@@ -101,11 +101,6 @@
 (when (eq system-type 'gnu/linux)
 
   (straight-use-package
-   '(scala-ts-mode :type git :host gitlab
-                   :repo "kostafey/scala-ts-mode" :branch "dev"))
-  (add-to-list 'auto-mode-alist '("\\.scala$" . scala-ts-mode))
-
-  (straight-use-package
    '(html-ts-mode :type git :host github
                   :repo "mickeynp/html-ts-mode" :branch "master"))
 
@@ -116,6 +111,19 @@
 ;; buffer once.  Until the grammar is there, `java-mode' (cc-mode) stays.
 (when (treesit-language-available-p 'java)
   (add-to-list 'major-mode-remap-alist '(java-mode . java-ts-mode)))
+
+;; Scala: until the grammar is installed (M-x treesit-install-language-grammar
+;; RET scala, by the recipe above), `scala-mode' stays.
+(straight-use-package
+ `(scala-ts-mode :type git :host nil
+                 :repo ,(pcase system-type
+                          ('windows-nt
+                           "https://github.com/KaranAhlawat/scala-ts-mode.git")
+                          ('gnu/linux
+                           "git@github.com:KaranAhlawat/scala-ts-mode.git"))
+                 :branch "main"))
+(when (treesit-language-available-p 'scala)
+  (add-to-list 'major-mode-remap-alist '(scala-mode . scala-ts-mode)))
 
 ;; Decoration level to be used by tree-sitter fontifications.
 (setq treesit-font-lock-level 4)

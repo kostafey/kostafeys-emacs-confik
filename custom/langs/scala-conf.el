@@ -74,7 +74,7 @@
   "Indent region or current line in Scala file."
   (interactive)
   (if (not mark-active)
-      (scala-indent:indent-line)
+      (funcall indent-line-function)
     (save-excursion
       (let* ((beg (region-beginning))
              (end (region-end))
@@ -82,7 +82,7 @@
              (end (max beg end)))
         (-map (lambda (line)
                 (goto-line (- (+ (line-number-at-pos beg) line) 1))
-                (scala-indent:indent-line))
+                (funcall indent-line-function))
               (number-sequence 1 (count-lines beg end))))))
   (setq deactivate-mark t))
 
@@ -93,13 +93,32 @@
 
 (defun k/scala-mode-hook ()
   (my-coding-hook)
-  (k/scala-add-font-lock)
-  (when (eglot-managed-p)
-    (define-key scala-mode-map (kbd "C-c i") 'eglot-code-action-quickfix)
-    (define-key scala-mode-map (kbd "C-c h") 'eldoc-doc-buffer)))
+  (k/scala-add-font-lock))
 
 (add-hook 'scala-ts-mode-hook 'k/scala-mode-hook)
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
+
+;; Mutable variables stand out, as with `scala-font-lock:var-face' in
+;; `scala-mode'.  Not k/: a tree-sitter query takes no "/" in a capture name.
+(defface k-scala-ts-var-face '((t (:inherit font-lock-warning-face)))
+  "Face for the names of mutable variables (var) in `scala-ts-mode'.")
+
+(defun k/scala-ts-font-lock-setup ()
+  "Highlight the names of mutable variables with `k-scala-ts-var-face'."
+  (when (treesit-language-available-p 'scala)
+    (setq-local treesit-font-lock-settings
+                (append treesit-font-lock-settings
+                        (treesit-font-lock-rules
+                         :language 'scala
+                         :override t
+                         :feature 'variable
+                         '((var_definition
+                            pattern: (identifier) @k-scala-ts-var-face)
+                           (var_declaration
+                            name: (identifier) @k-scala-ts-var-face)))))
+    (treesit-font-lock-recompute-features)))
+
+(add-hook 'scala-ts-mode-hook #'k/scala-ts-font-lock-setup)
 
 (defun k/scala-skip-sexp (val)
   (ignore-errors
@@ -293,7 +312,9 @@
   (define-key map (kbd "C-n k") 'k/scala-compile)
   (define-key map (kbd "C-c RET") 'newline-and-indent)
   (define-key map (kbd "<tab>") 'k/scala-indent-region)
-  (define-key map (kbd "C-c <tab>") 'yas-expand))
+  (define-key map (kbd "C-c <tab>") 'yas-expand)
+  (define-key map (kbd "C-c i") 'eglot-code-action-quickfix)
+  (define-key map (kbd "C-c h") 'eldoc-doc-buffer))
 
 (with-eval-after-load 'scala-mode
   (k/scala-define-keys scala-mode-map))

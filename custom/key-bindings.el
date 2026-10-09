@@ -169,6 +169,8 @@
 ;; C-c RET     newline-and-indent            scala-conf.el
 ;; <tab>       k/scala-indent-region         scala-conf.el
 ;; C-c <tab>   yas-expand                    scala-conf.el
+;; C-c i       eglot-code-action-quickfix    scala-conf.el
+;; C-c h       eldoc-doc-buffer              scala-conf.el
 
 ;;----------------------------------------------------------------------
 ;; Go
