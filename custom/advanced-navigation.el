@@ -66,20 +66,17 @@
   (ace-jump-mode-scope 'window))
 
 ;;-------------------------------------------------------------------
-;; eframe-jack-in
+;; eframe-nav
 ;;
-(use-package eframe-jack-in
-  :straight (eframe-jack-in :type git :host github
-                            :repo "kostafey/eframe-jack-in"
-                            :branch "master")
-  ;; It sets up hooks and advice on load, so load it right away.
+;; Local module (custom/eframe-nav.el): buffer and multi-frame navigation.
+(use-package eframe-nav
+  :straight nil
+  ;; It installs windmove advice on load, so load it right away.
   :demand t
   :bind (("C-M-e" . eframe-pop-emacs)
          ("C-w" . eframe-kill-buffer)
          ("C-<next>" . eframe-next-buffer)
-         ("C-<prior>" . eframe-previous-buffer))
-  :config
-  (require 'eframe-windmove))
+         ("C-<prior>" . eframe-previous-buffer)))
 
 ;;-------------------------------------------------------------------
 ;; temporary-persistent
