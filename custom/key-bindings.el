@@ -240,5 +240,18 @@
 ;; C-<home>    dired-home                    dired-conf.el
 ;; C-<end>     dired-end                     dired-conf.el
 
+;;----------------------------------------------------------------------
+;; Org tables
+;; In orgtbl-mode, unbound to leave the global commands
+;; M-<left>    nil                           basic-keys.el
+;; M-<right>   nil                           basic-keys.el
+;; M-<down>    nil                           basic-keys.el
+;; M-<up>      nil                           basic-keys.el
+;; In orgtbl-mode
+;; C-M-<left>  org-table-move-column-left    basic-keys.el
+;; C-M-<right> org-table-move-column-right   basic-keys.el
+;; C-M-<up>    org-table-move-row-up         basic-keys.el
+;; C-M-<down>  org-table-move-row-down       basic-keys.el
+
 (provide 'key-bindings)
 

@@ -127,6 +127,19 @@
     (define-key org-mode-map (kbd "C-S-<up>") 'toggle-letter-case)
     (define-key org-mode-map (kbd "C-S-<down>") 'toggle-date-or-camelcase-underscores)))
 
+;; Since `winner-mode' is enabled and M-<arrow> keys are used for
+;; windows navigation, so disable this keys for `orgtbl-mode-map'.
+(with-eval-after-load 'org-table
+  (define-key orgtbl-mode-map (kbd "M-<left>") nil)
+  (define-key orgtbl-mode-map (kbd "M-<right>") nil)
+  (define-key orgtbl-mode-map (kbd "M-<down>") nil)
+  (define-key orgtbl-mode-map (kbd "M-<up>") nil)
+  ;; Use C-M-<arrow> keys instead.
+  (define-key orgtbl-mode-map (kbd "C-M-<left>") 'org-table-move-column-left)
+  (define-key orgtbl-mode-map (kbd "C-M-<right>") 'org-table-move-column-right)
+  (define-key orgtbl-mode-map (kbd "C-M-<up>") 'org-table-move-row-up)
+  (define-key orgtbl-mode-map (kbd "C-M-<down>") 'org-table-move-row-down))
+
 ;; Global org keys, working before org is loaded.  org's own autoloads
 ;; (org-loaddefs) come with org itself, and only `org-agenda' is
 ;; autoloaded by Emacs.

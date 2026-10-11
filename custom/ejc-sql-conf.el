@@ -41,21 +41,6 @@
 (setq ejc-result-table-impl 'ejc-result-mode) ; Set major-mode for results.
 ;; (setq ejc-result-table-impl 'orgtbl-mode)  ; Default major-mode for results.
 
-;; Since `winner-mode' is enabled and M-<arrow> keys are used for
-;; windows navigation, so disable this keys for `orgtbl-mode-map'.
-(define-key orgtbl-mode-map (kbd "<return>") nil)
-(define-key orgtbl-mode-map (kbd "M-<left>") nil)
-(define-key orgtbl-mode-map (kbd "M-<right>") nil)
-(define-key orgtbl-mode-map (kbd "M-<down>") nil)
-(define-key orgtbl-mode-map (kbd "M-<up>") nil)
-;; Use C-M-<arrow> keys instead.
-(define-key orgtbl-mode-map (kbd "C-M-<left>") 'org-table-move-column-left)
-(define-key orgtbl-mode-map (kbd "C-M-<right>") 'org-table-move-column-right)
-(define-key orgtbl-mode-map (kbd "C-M-<up>") 'org-table-move-row-up)
-(define-key orgtbl-mode-map (kbd "C-M-<down>") 'org-table-move-row-down)
-;; Add run SQL key familiar to users of PLSQL Developer.
-(define-key ejc-sql-mode-keymap (kbd "<F8>") 'ejc-eval-user-sql-at-point)
-
 (defun k/ejc-after-emacs-init-hook ()
   ;; Setup `company-mode' completion frontend
   ;; (push 'ejc-company-backend company-backends)
