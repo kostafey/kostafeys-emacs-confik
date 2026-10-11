@@ -9,6 +9,8 @@
 ;; by both.
 ;; Typing a name that matches no note creates it.  `k/notes-search' greps
 ;; the notes with `consult-ripgrep'.
+;;
+;; `k/notes-dir' is taken from the environment variable NOTES_DIR.
 
 ;;; Code:
 
@@ -19,8 +21,14 @@
 (declare-function consult--file-state "consult")
 (declare-function consult-ripgrep "consult")
 
-(defvar k/notes-dir "C:/workspace/notes"
-  "Directory holding the notes `k/notes' switches among.")
+(defvar k/notes-dir (getenv "NOTES_DIR")
+  "Directory holding the notes `k/notes' switches among.
+Taken from the environment variable NOTES_DIR.")
+
+(defun k/notes--check-dir ()
+  "Signal a `user-error' unless `k/notes-dir' is set."
+  (unless k/notes-dir
+    (user-error "No notes directory: set the NOTES_DIR environment variable")))
 
 (defvar k/notes-history nil
   "Completion history of `k/notes'.")
@@ -106,6 +114,7 @@ recently modified first.  Typing narrows them by their file names and
 their `#+title:' alike.  Typing a name that matches no note creates it,
 as an .org file unless the name has an extension of its own."
   (interactive)
+  (k/notes--check-dir)
   (require 'consult)
   ;; The source lists the directory on every call, so it cannot be missing.
   (make-directory k/notes-dir t)
@@ -118,10 +127,8 @@ as an .org file unless the name has an extension of its own."
 (defun k/notes-search ()
   "Search the notes in `k/notes-dir' with `consult-ripgrep'."
   (interactive)
+  (k/notes--check-dir)
   (consult-ripgrep k/notes-dir))
-
-(global-set-key (kbd "M-<f1>") #'k/notes)
-(global-set-key (kbd "C-x M-<f1>") #'k/notes-search)
 
 (provide 'notes)
 

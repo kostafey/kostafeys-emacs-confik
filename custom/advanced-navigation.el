@@ -66,9 +66,8 @@
   (ace-jump-mode-scope 'window))
 
 ;;-------------------------------------------------------------------
-;; eframe-nav
+;; eframe-nav - buffer and multi-frame navigation, see solutions/eframe-nav.el
 ;;
-;; Local module (custom/eframe-nav.el): buffer and multi-frame navigation.
 (use-package eframe-nav
   :straight nil
   ;; It installs windmove advice on load, so load it right away.
@@ -77,6 +76,14 @@
          ("C-w" . eframe-kill-buffer)
          ("C-<next>" . eframe-next-buffer)
          ("C-<prior>" . eframe-previous-buffer)))
+
+;;-------------------------------------------------------------------
+;; notes - switch among the notes in one directory, see solutions/notes.el
+;;
+(use-package notes
+  :ensure nil
+  :bind (("M-<f1>" . k/notes)
+         ("C-x M-<f1>" . k/notes-search)))
 
 ;;-------------------------------------------------------------------
 ;; temporary-persistent

@@ -97,6 +97,8 @@
 ;; Function keys
 ;;
 ;; <f1>        consult-buffer                minibuffer-conf.el
+;; M-<f1>      k/notes                       advanced-navigation.el
+;; C-x M-<f1>  k/notes-search                advanced-navigation.el
 ;; C-M-n       k/project-find-file           project-conf.el
 ;; <f2>        consult-imenu                 minibuffer-conf.el
 ;; <f3>        consult-bookmark              minibuffer-conf.el

@@ -63,7 +63,6 @@
 (require 'advanced-navigation)
 (require 'tags-conf)
 (require 'key-bindings)
-(require 'notes)
 (require 'ide)
 (require 'history-conf)
 (require 'text-modes-conf)
