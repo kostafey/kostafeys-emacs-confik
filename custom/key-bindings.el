@@ -189,6 +189,10 @@
 ;;----------------------------------------------------------------------
 ;; Version control
 ;; M-w         get-vc-status                 version-control.el
+;; C-M-g <down> git-gutter:next-hunk         version-control.el
+;; C-M-g <up>  git-gutter:previous-hunk      version-control.el
+;; C-M-g p     git-gutter:popup-hunk         version-control.el
+;; C-M-g r     git-gutter:revert-hunk        version-control.el
 ;; In magit-mode
 ;; C-w         kill-buffer                   version-control.el
 ;; S-M-w       magit-copy-buffer-revision    version-control.el
