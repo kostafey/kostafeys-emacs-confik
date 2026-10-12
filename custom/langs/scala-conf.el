@@ -99,12 +99,19 @@
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
 ;; Mutable variables stand out, as with `scala-font-lock:var-face' in
-;; `scala-mode'.  Not k/: a tree-sitter query takes no "/" in a capture name.
+;; `scala-mode'.  `scala-ts-mode' paints parameters with the face of a val
+;; declaration; as in `java-ts-mode' (java-conf), parameters of methods and
+;; lambdas get a face of their own, plain by default.  Class parameters
+;; stay declarations: they are fields too, like Java record components.
+;; Not k/: a tree-sitter query takes no "/" in a capture name.
 (defface k-scala-ts-var-face '((t (:inherit font-lock-warning-face)))
   "Face for the names of mutable variables (var) in `scala-ts-mode'.")
 
+(defface k-scala-ts-parameter-face '((t))
+  "Face for the parameters of methods and lambdas in `scala-ts-mode'.")
+
 (defun k/scala-ts-font-lock-setup ()
-  "Highlight the names of mutable variables with `k-scala-ts-var-face'."
+  "Give mutable variables and parameters faces of their own."
   (when (treesit-language-available-p 'scala)
     (setq-local treesit-font-lock-settings
                 (append treesit-font-lock-settings
@@ -115,7 +122,14 @@
                          '((var_definition
                             pattern: (identifier) @k-scala-ts-var-face)
                            (var_declaration
-                            name: (identifier) @k-scala-ts-var-face)))))
+                            name: (identifier) @k-scala-ts-var-face))
+                         :language 'scala
+                         :override t
+                         :feature 'function
+                         '((parameter
+                            name: (identifier) @k-scala-ts-parameter-face)
+                           (binding
+                            name: (identifier) @k-scala-ts-parameter-face)))))
     (treesit-font-lock-recompute-features)))
 
 (add-hook 'scala-ts-mode-hook #'k/scala-ts-font-lock-setup)
