@@ -270,7 +270,7 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (setq org-fontify-quote-and-verse-blocks nil)
 
-;; Fontify markdown-style `code` with `org-code' face, the same as ~code~.
+;; Fontify markdown-style `code` with `org-property-value' face.
 (defun k/org-match-backtick-code (last)
   "Match the next `code' span up to LAST, skipping src/example blocks."
   (let (found)
@@ -285,7 +285,7 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (defun k/org-backtick-code-highlight-initialize ()
   (font-lock-add-keywords
-   nil '((k/org-match-backtick-code . (0 'org-code t)))
+   nil '((k/org-match-backtick-code . (0 'org-property-value t)))
    'append))
 
 (add-hook 'org-mode-hook 'k/org-backtick-code-highlight-initialize)
