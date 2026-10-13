@@ -207,6 +207,8 @@
 ;; l           k/pijul-log                   pijul-conf.el
 ;; d           k/pijul-commit-show-context   pijul-conf.el
 ;; k           k/pijul-discard               pijul-conf.el
+;; TAB         k/pijul-commit-toggle-hunk    pijul-conf.el
+;; <backtab>   k/pijul-commit-toggle-all-hunks pijul-conf.el
 ;; RET         k/pijul-commit-visit-file     pijul-conf.el
 ;; C-x d       k/pijul-commit-visit-file-other-window pijul-conf.el
 ;; In pijul-commit-mode, while pijul record waits on the buffer

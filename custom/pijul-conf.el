@@ -34,17 +34,36 @@ elsewhere."
   '((t :inherit diff-indicator-removed))
   "Face for removed (`-') lines in `pijul-commit-mode'.")
 
+;; As `magit-diff-hunk-heading', which organic-green leaves as is.
+(defface pijul-diff-hunk-heading
+  '((((class color) (background light))
+     :extend t
+     :background "grey90"
+     :foreground "grey20")
+    (((class color) (background dark))
+     :extend t
+     :background "grey25"
+     :foreground "grey95"))
+  "Face for hunk headers, the folding ones, in `pijul-commit-mode'.")
+
 ;; `pijul-commit-font-lock-keywords' names the `+'/`-' faces unquoted, so
 ;; font-lock evaluates them as (void) variables and never colors those
-;; lines.  Swap in quoted faces of our own.
+;; lines.  Swap in quoted faces of our own.  Its hunk header regexp misses
+;; headers such as `File addition', so match them all, with the newline,
+;; for the face to extend to the window edge.
 (require 'diff-mode)                    ; for `diff-indicator-*' faces
 (setq pijul-commit-font-lock-keywords
-      (mapcar (lambda (kw)
-                (pcase (cdr kw)
-                  ('pijul-context-added (cons (car kw) ''k/pijul-commit-added))
-                  ('pijul-context-removed (cons (car kw) ''k/pijul-commit-removed))
-                  (_ kw)))
-              pijul-commit-font-lock-keywords))
+      (cons '("^[0-9]+\\. .*\n?" 0 'pijul-diff-hunk-heading t)
+            (delq nil
+                  (mapcar (lambda (kw)
+                            (pcase (cdr kw)
+                              ('pijul-context-added
+                               (cons (car kw) ''k/pijul-commit-added))
+                              ('pijul-context-removed
+                               (cons (car kw) ''k/pijul-commit-removed))
+                              ('font-lock-keyword-face nil)
+                              (_ kw)))
+                          pijul-commit-font-lock-keywords))))
 
 (defconst k/pijul-ignore-patterns '("*~" "\\#*#" ".#*")
   "Entries `k/pijul-init' appends to a new repository's `.ignore'.
@@ -568,6 +587,87 @@ then saved; `*pijul-record-preview*' is brought up to date."
           (goto-char (point-min))
           (forward-line (1- preview-line)))))))
 
+;; ------------------------------------------------------------
+;; Fold hunks, as TAB and S-TAB do in magit-status
+
+(defun k/pijul-commit--hunk-body ()
+  "Return (HEADER-START . BODY-END) of the hunk at point, or nil.
+The body runs from the end of the header line to BODY-END, the end of
+the hunk's last line."
+  (save-excursion
+    (end-of-line)
+    (when (re-search-backward "^[0-9]+\\. " nil t)
+      (let ((start (point))
+            (header-end (line-end-position)))
+        (goto-char header-end)
+        (cons start
+              (cond
+               ((re-search-forward "^[0-9]+\\. " nil t)
+                (max header-end (1- (match-beginning 0))))
+               ;; Keep the final newline visible, to end the header line.
+               ((eq (char-before (point-max)) ?\n)
+                (max header-end (1- (point-max))))
+               (t (point-max))))))))
+
+(defun k/pijul-commit--fold-overlay (pos)
+  "Return the hunk fold overlay starting at POS, if any."
+  (seq-find (lambda (ov) (overlay-get ov 'k/pijul-hunk-fold))
+            (overlays-at pos)))
+
+(defun k/pijul-commit--fold (start end)
+  "Hide the hunk body between START and END, leaving an ellipsis.
+The newline at END now ends the header line: give it the header face."
+  (unless (>= start end)
+    (let ((ov (make-overlay start end nil t nil))
+          (eol (when (< end (point-max))
+                 (make-overlay end (1+ end)))))
+      (overlay-put ov 'k/pijul-hunk-fold t)
+      (overlay-put ov 'invisible 'k/pijul-hunk)
+      (overlay-put ov 'evaporate t)
+      (when eol
+        (overlay-put eol 'face 'pijul-diff-hunk-heading)
+        (overlay-put eol 'evaporate t)
+        (overlay-put ov 'k/pijul-hunk-eol eol)))))
+
+(defun k/pijul-commit--unfold (ov)
+  "Delete the hunk fold overlay OV along with its header newline one."
+  (when-let* ((eol (overlay-get ov 'k/pijul-hunk-eol)))
+    (delete-overlay eol))
+  (delete-overlay ov))
+
+(defun k/pijul-commit-toggle-hunk ()
+  "Fold or unfold the hunk at point, as `magit-section-toggle' does."
+  (interactive)
+  (pcase-let ((`(,start . ,end) (or (k/pijul-commit--hunk-body)
+                                    (user-error "No hunk at point"))))
+    (goto-char start)
+    (let ((body (line-end-position)))
+      (if-let* ((ov (k/pijul-commit--fold-overlay body)))
+          (k/pijul-commit--unfold ov)
+        (k/pijul-commit--fold body end)))))
+
+(defun k/pijul-commit-toggle-all-hunks ()
+  "Fold all hunks, or unfold them all when some is folded already.
+Cf. `magit-section-cycle-global'."
+  (interactive)
+  (let ((folds (seq-filter (lambda (ov) (overlay-get ov 'k/pijul-hunk-fold))
+                           (overlays-in (point-min) (point-max)))))
+    (if folds
+        (mapc #'k/pijul-commit--unfold folds)
+      (save-excursion
+        (goto-char (point-max))
+        (while (re-search-backward "^[0-9]+\\. " nil t)
+          (pcase-let ((`(,start . ,end) (k/pijul-commit--hunk-body)))
+            (save-excursion
+              (goto-char start)
+              (k/pijul-commit--fold (line-end-position) end)))))
+      ;; Off a hidden line, onto its hunk's header.
+      (when-let* ((hunk (k/pijul-commit--hunk-body)))
+        (goto-char (car hunk))))))
+
+(add-hook 'pijul-commit-mode-hook
+          (lambda () (add-to-invisibility-spec '(k/pijul-hunk . t))))
+
 ;; `pijul-commit-mode' also edits `.pijul-commit' files during `pijul
 ;; record', where `q', `c', `l', `d', `k' and RET must self-insert: bind
 ;; them only in read-only buffers such as `*pijul-record-preview*'.
@@ -585,6 +685,12 @@ then saved; `*pijul-record-preview*' is brought up to date."
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "k")
   '(menu-item "" k/pijul-discard
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "TAB")
+  '(menu-item "" k/pijul-commit-toggle-hunk
+              :filter (lambda (cmd) (and buffer-read-only cmd))))
+(define-key pijul-commit-mode-map (kbd "<backtab>")
+  '(menu-item "" k/pijul-commit-toggle-all-hunks
               :filter (lambda (cmd) (and buffer-read-only cmd))))
 (define-key pijul-commit-mode-map (kbd "RET")
   '(menu-item "" k/pijul-commit-visit-file
