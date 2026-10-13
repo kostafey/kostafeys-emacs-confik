@@ -99,30 +99,26 @@
 (add-hook 'scala-mode-hook 'k/scala-mode-hook)
 
 ;; Mutable variables stand out, as with `scala-font-lock:var-face' in
-;; `scala-mode'.  `scala-ts-mode' paints parameters with the face of a val
-;; declaration; as in `java-ts-mode' (java-conf), parameters of methods and
-;; lambdas get a face of their own, plain by default.  Class parameters
-;; stay declarations: they are fields too, like Java record components.
-;; Not k/: a tree-sitter query takes no "/" in a capture name.
-(defface k-scala-ts-var-face '((t (:inherit font-lock-warning-face)))
-  "Face for the names of mutable variables (var) in `scala-ts-mode'.")
+;; `scala-mode'.  Set as the default spec, as use-package's :custom-face
+;; does, so that the `defface' in `scala-ts-mode' keeps it.
+(face-spec-set 'scala-ts-mutable-variable
+               '((t :inherit font-lock-warning-face))
+               'face-defface-spec)
 
+;; `scala-ts-mode' paints parameters with the face of a val declaration;
+;; as in `java-ts-mode' (java-conf), parameters of methods and lambdas get
+;; a face of their own, plain by default.  Class parameters stay
+;; declarations: they are fields too, like Java record components.
+;; Not k/: a tree-sitter query takes no "/" in a capture name.
 (defface k-scala-ts-parameter-face '((t))
   "Face for the parameters of methods and lambdas in `scala-ts-mode'.")
 
 (defun k/scala-ts-font-lock-setup ()
-  "Give mutable variables and parameters faces of their own."
+  "Highlight the parameters with `k-scala-ts-parameter-face'."
   (when (treesit-language-available-p 'scala)
     (setq-local treesit-font-lock-settings
                 (append treesit-font-lock-settings
                         (treesit-font-lock-rules
-                         :language 'scala
-                         :override t
-                         :feature 'variable
-                         '((var_definition
-                            pattern: (identifier) @k-scala-ts-var-face)
-                           (var_declaration
-                            name: (identifier) @k-scala-ts-var-face))
                          :language 'scala
                          :override t
                          :feature 'function
