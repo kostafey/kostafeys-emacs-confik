@@ -259,5 +259,41 @@
 ;; C-M-<up>    org-table-move-row-up         basic-keys.el
 ;; C-M-<down>  org-table-move-row-down       basic-keys.el
 
+;;----------------------------------------------------------------------
+;; ejc-sql
+;; Global
+;; C-x <up>    ejc-show-last-result          ejc-sql-conf.el
+;; C-x C-s     ejc-get-temp-editor-buffer    ejc-sql-conf.el
+;; Global, acting only in the ejc-sql results buffer
+;; C-M-<next>  ejc-show-next-result          ejc-sql-conf.el
+;; C-M-<prior> ejc-show-prev-result          ejc-sql-conf.el
+;; In ejc-sql-mode, enabled in sql-mode and org-mode
+;; C-s-<up>    ejc-previous-sql              ejc-sql-conf.el
+;; C-s-<down>  ejc-next-sql                  ejc-sql-conf.el
+;; C-S-s-<up>  (ejc-previous-sql t)          ejc-sql-conf.el
+;; C-S-s-<down> (ejc-next-sql t)              ejc-sql-conf.el
+;;   cheat sheet, bound by ejc-sql-mode itself:
+;; C-c C-c     ejc-eval-user-sql-at-point    eval the SQL at point
+;; C-c C-r     ejc-eval-user-sql-region      eval the SQL in region
+;; C-g         ejc-cancel-query              cancel the running query
+;; C-h t       ejc-describe-table            describe the table
+;; C-h d       ejc-describe-entity           describe the entity, also M-.
+;; M-,         ejc-show-prev-result          previous result
+;; C-M-b       ejc-previous-sql              previous SQL statement
+;; C-M-f       ejc-next-sql                  next SQL statement
+;; C-M-S-b     (ejc-previous-sql t)          previous SQL, marking it
+;; C-M-S-f     (ejc-next-sql t)              next SQL, marking it
+;; .           ejc-dot-pressed               insert a dot and complete
+;; C-c e c     ejc-connect                   connect to a database
+;; C-c e i     ejc-connect-interactive       create a connection and connect
+;; C-c e <up>  ejc-show-last-result          last result
+;; C-c e t     ejc-show-tables-list          tables list
+;; C-c e v     ejc-show-views-list           views list
+;; C-c e p     ejc-show-procedures-list      procedures list
+;; C-c e T     ejc-show-user-types-list      user types list
+;; C-c e s     ejc-strinp-sql-at-point       unwrap the SQL from a string literal
+;; C-c e S     ejc-dress-sql-at-point        wrap the SQL into a string literal
+;; C-c e f     ejc-format-sql-at-point       format the SQL at point
+
 (provide 'key-bindings)
 

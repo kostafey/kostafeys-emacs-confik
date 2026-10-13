@@ -55,6 +55,13 @@
 
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
 
+;; Enable in `org-mode' too, so `ejc-keymap-prefix' commands
+;; (e.g. `C-c e c' - `ejc-connect') are at hand for SQL snippets.
+(defun k/ejc-org-mode-hook ()
+  (ejc-sql-mode t))
+
+(add-hook 'org-mode-hook 'k/ejc-org-mode-hook)
+
 (defun k/ejc-result-mode-hook ()
   (display-line-numbers-mode))
 
