@@ -304,6 +304,19 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 
 (add-hook 'org-mode-hook 'k/org-eldoc-link-setup)
 
+;; Global cycling (`org-shifttab') reaches SHOW ALL with
+;; `(org-fold-show-all '(headings blocks))', leaving drawers like
+;; :PROPERTIES: folded.  Unfold them too in that state.
+(defun k/org-cycle-show-drawers (state)
+  "Unfold all drawers when global cycling reaches STATE `all'."
+  (when (eq state 'all)
+    (org-fold-show-all '(drawers))))
+
+;; Add after load: `add-hook' on a still unbound `org-cycle-hook' would
+;; keep the defcustom from installing its default functions.
+(with-eval-after-load 'org-cycle
+  (add-hook 'org-cycle-hook 'k/org-cycle-show-drawers))
+
 (require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
 
