@@ -2,7 +2,8 @@
 ;; emacswiki.org - GnuEmacsRussification
 
 ;; Write in UNIX format regardless of the platform on which Emacs is running
-(setq default-buffer-file-coding-system 'utf-8-unix)
+(setq-default buffer-file-coding-system 'utf-8-unix)
+(prefer-coding-system 'utf-8-unix)
 
 ;; Следующий фрагмент позволяет переключать кодировки в буфере по
 ;; нажатию одной и той же комбинации клавиш.
@@ -33,17 +34,17 @@ If current buffer is write-protected (`buffer-read-only'), temporarily toggle
 read-only flag, recode, then turn it back."
   (interactive "zEnter target coding system: ")
   (cl-labels ((do-recode nil
-		                 (encode-coding-region (point-min)
-					                           (point-max)
-					                           buffer-file-coding-system)
-		                 (decode-coding-region (point-min)
-					                           (point-max)
-					                           target-coding-system)
-		                 (set-buffer-file-coding-system target-coding-system)))
+                (encode-coding-region (point-min)
+                                      (point-max)
+                                      buffer-file-coding-system)
+                (decode-coding-region (point-min)
+                                      (point-max)
+                                      target-coding-system)
+                (set-buffer-file-coding-system target-coding-system)))
     (if buffer-read-only
-	    (let ((buffer-read-only nil))
-	      (do-recode)
-	      (set-buffer-modified-p nil))
+        (let ((buffer-read-only nil))
+          (do-recode)
+          (set-buffer-modified-p nil))
       (do-recode))))
 
 (defun recode-buffer-safe (target-coding-system)
@@ -52,11 +53,11 @@ If current buffer is write-protected (`buffer-read-only'), do nothing."
   (interactive "zEnter target coding system: ")
   (unless buffer-read-only
     (encode-coding-region (point-min)
-			  (point-max)
-			  buffer-file-coding-system)
+                          (point-max)
+                          buffer-file-coding-system)
     (decode-coding-region (point-min)
-			  (point-max)
-			  target-coding-system)
+                          (point-max)
+                          target-coding-system)
     (set-buffer-file-coding-system target-coding-system)))
 
 (setq evm-coding-systems-list (make-ring 10))
