@@ -119,6 +119,30 @@ second round would eat backslashes that belong to the JSON."
   (advice-add 'claude-code-ide--parse-command-string
               :filter-return #'k/claude-code-ide--unescape-mcp-config))
 
+;; The package announces its WebSocket server with a lockfile in
+;; "~/.claude/ide/", and the CLI looks for it there to connect -- selection
+;; tracking, diagnostics and the rest of the IDE side ride on that connection.
+;; On Windows the two disagree on what "~" is: Emacs takes it from HOME,
+;; which here is %APPDATA%, while the CLI reads %USERPROFILE%\.claude.  The
+;; lockfile lands in a directory nobody reads, and the session runs without
+;; ever hearing from the editor: no "N lines selected", no error either.  The
+;; emacs-tools MCP server is unaffected -- it reaches the CLI through
+;; `--mcp-config', not through a lockfile.
+(defun k/claude-code-ide-mcp--lockfile-directory (directory)
+  "Return the lockfile directory the CLI reads, in place of DIRECTORY.
+Windows only: elsewhere Emacs and the CLI agree on the home directory.
+Honours CLAUDE_CONFIG_DIR, which moves the CLI's configuration directory."
+  (if (not (eq system-type 'windows-nt))
+      directory
+    (file-name-as-directory
+     (expand-file-name "ide"
+                       (or (getenv "CLAUDE_CONFIG_DIR")
+                           (expand-file-name ".claude" (getenv "USERPROFILE")))))))
+
+(with-eval-after-load 'claude-code-ide-mcp
+  (advice-add 'claude-code-ide-mcp--lockfile-directory
+              :filter-return #'k/claude-code-ide-mcp--lockfile-directory))
+
 (defun k/claude-code-ide ()
   "Bring up this project's Claude Code, whatever state it is in.
 
