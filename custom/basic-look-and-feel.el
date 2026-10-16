@@ -14,6 +14,14 @@
     ('gnu/linux
      (set-face-font 'default "FiraMonoMedium-12.0:antialias=subpixel:rgba=rgb"))))
 
+;; On Windows nothing in the fontset covers symbols the default font lacks,
+;; so they show up as hex boxes -- the Claude Code prompt's "⧉ N lines
+;; selected" and "⏵⏵ auto mode on" among them.  Appended, Segoe UI Symbol
+;; only fills the gaps: whatever the default font has is still drawn by it.
+(when (and (eq system-type 'windows-nt)
+           (find-font (font-spec :family "Segoe UI Symbol")))
+  (set-fontset-font t 'symbol "Segoe UI Symbol" nil 'append))
+
 ;; Lookup fonts:
 ;; (font-family-list)
 ;; (find-font (font-spec :name "FiraMono"))
