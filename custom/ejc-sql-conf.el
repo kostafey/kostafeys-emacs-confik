@@ -76,7 +76,11 @@
             #'ejc-capf nil 'local)
   (ejc-eldoc-setup)      ; Setup ElDoc.
   (font-lock-warn-todo)       ; See custom/look-and-feel.el
-  (rainbow-delimiters-mode t) ; https://github.com/Fanael/rainbow-delimiters
+  ;; Not in `org-mode': its syntax table makes `<', `>' parens and `"' a
+  ;; string delimiter, so a stray `=>' or `"' anywhere above (e.g. in a SQL
+  ;; comment) shifts the depth and paints balanced parens as unmatched.
+  (unless (derived-mode-p 'org-mode)
+    (rainbow-delimiters-mode t)) ; https://github.com/Fanael/rainbow-delimiters
   (idle-highlight-mode t)     ; https://github.com/nonsequitur/idle-highlight-mode
   (paredit-everywhere-mode)   ; https://github.com/purcell/paredit-everywhere
   (electric-pair-mode))
