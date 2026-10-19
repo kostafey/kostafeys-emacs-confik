@@ -138,6 +138,7 @@
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ftl$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(x?html?\\|xml\\)\\'" . web-mode))
 (setq web-mode-enable-current-element-highlight t)
 (setq-default web-mode-markup-indent-offset 4)
 
