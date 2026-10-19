@@ -341,11 +341,6 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
 			                          :repo "yoshiki/yaml-mode"
                                 :branch "master"))
 
-(use-package dockerfile-mode
-  :straight '(dockerfile-mode :type git :host github
-			                        :repo "spotify/dockerfile-mode"
-                              :branch "master"))
-
 (use-package nginx-mode
   :straight '(nginx-mode :type git :host github
 			                   :repo "ajc/nginx-mode"
