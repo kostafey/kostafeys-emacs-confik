@@ -179,6 +179,15 @@
     (kill-local-variable 'idle-highlight-exceptions-face)))
 
 (add-hook 'eglot-managed-mode-hook #'k/eglot-idle-highlight-setup)
+
+;; Changing the major mode kills `idle-highlight--overlays' but not the
+;; overlays themselves, which then stay highlighted for good; turn the
+;; mode off first, while it still knows its overlays.
+(defun k/idle-highlight-cleanup ()
+  (when (bound-and-true-p idle-highlight-mode)
+    (idle-highlight-mode -1)))
+
+(add-hook 'change-major-mode-hook #'k/idle-highlight-cleanup)
 ;; -------------------------------------------------------------------
 
 (defun my-coding-hook ()
