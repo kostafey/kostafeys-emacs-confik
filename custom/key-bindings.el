@@ -207,6 +207,13 @@
 ;; JavaScript
 ;; In js-mode, js2-mode, js-jsx-mode, web-mode, js-json-mode and json-ts-mode
 ;; C-c C-c     k/npm-mode-build              js-conf.el
+;; In skewer-mode
+;; C-c C-p     k/skewer-pprint-eval-last-expression js-conf.el
+;; In rjsx-mode
+;; C-M-<right> k/rjsx-forward                js-conf.el
+;; C-M-<left>  k/rjsx-backward               js-conf.el
+;; C-S-M-<right> (k/rjsx-forward t)            js-conf.el
+;; C-S-M-<left> (k/rjsx-backward t)           js-conf.el
 
 ;; In rst-mode, unbound to leave the global C-M-a prefix
 ;; C-M-a       nil                           text-modes-conf.el
