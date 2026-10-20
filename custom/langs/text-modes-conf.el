@@ -76,9 +76,15 @@
 (add-hook 'log4j-mode-hook (lambda () (toggle-truncate-lines nil)))
 
 ;;-------------------------------------------------------------------
-;; PL/SQL
+;; SQL, PL/SQL
 (add-to-list 'auto-mode-alist '("\\.pkh\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.pkb\\'" . sql-mode))
+
+;; `#' starts a single-line comment (MySQL style) for any SQL product.
+;; Products with their own `#' entry in `:syntax-alist' (e.g. Oracle,
+;; where it is an identifier char) still override it.
+(with-eval-after-load 'sql
+  (modify-syntax-entry ?# "< b" sql-mode-syntax-table))
 
 ;;-------------------------------------------------------------------
 ;; reStructuredText settings
