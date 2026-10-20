@@ -82,7 +82,11 @@
      (lambda (mm)
        (define-key mm
          (kbd "C-c C-c") 'k/npm-mode-build))
-     mode-maps)))
+     mode-maps))
+
+  ;; `json-ts-mode' stands in for `js-json-mode', see tree-sitter-conf.el.
+  (with-eval-after-load 'json-ts-mode
+    (define-key json-ts-mode-map (kbd "C-c C-c") 'k/npm-mode-build)))
 
 ;;------------------------------------------------------------
 ;; Customize js-comint.el for `rhino' and `node.js'
