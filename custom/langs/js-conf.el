@@ -57,9 +57,33 @@
   (skewer-eval (buffer-substring-no-properties start end)
                #'skewer-post-minibuffer))
 
+(defvar k/skewer-result-buffer "*skewer-result*"
+  "Buffer name for `k/skewer-pprint-eval-last-expression' result output.")
+
+(defun k/skewer-post-pprint (result)
+  "Pretty print the value of RESULT in `k/skewer-result-buffer'."
+  (if (not (skewer-success-p result))
+      (skewer-post-minibuffer result)
+    (with-current-buffer (get-buffer-create k/skewer-result-buffer)
+      (erase-buffer)
+      (insert (cdr (assoc 'value result)) "\n")
+      (json-format))))
+
+(defun k/skewer-pprint-eval-last-expression ()
+  "Evaluate the JavaScript expression before the point in the
+waiting browser and pretty print the result in a separate buffer."
+  (interactive)
+  (if js2-mode-buffer-dirty-p
+      (js2-mode-wait-for-parse
+       (skewer--save-point #'k/skewer-pprint-eval-last-expression))
+    (cl-destructuring-bind (string start end) (skewer-get-last-expression)
+      (skewer-flash-region start end)
+      (skewer-eval string #'k/skewer-post-pprint :verbose t)
+      (display-buffer (get-buffer-create k/skewer-result-buffer)))))
+
 (when (require 'skewer-mode nil 'noerror)
   (define-key skewer-mode-map
-    (kbd "C-c C-p") 'skewer-pprint-eval-last-expression))
+    (kbd "C-c C-p") 'k/skewer-pprint-eval-last-expression))
 
 ;;------------------------------------------------------------
 ;; npm-mode
