@@ -143,6 +143,41 @@ Honours CLAUDE_CONFIG_DIR, which moves the CLI's configuration directory."
   (advice-add 'claude-code-ide-mcp--lockfile-directory
               :filter-return #'k/claude-code-ide-mcp--lockfile-directory))
 
+;; The package ties a buffer to its instances by exact project root: the
+;; buffer's `project-current' has to be the very directory the session was
+;; started in.  A session opened over a tree of repositories -- one in
+;; "c:/workspace/", which a `.project' marker makes a project of its own --
+;; never hears of the files inside them: "invoiceportal/" has its own `.git',
+;; so its buffers report "c:/workspace/invoiceportal/" as their root, no
+;; session matches it, and selection tracking quietly skips them.  No
+;; "N lines selected", while a buffer of the repository the session sits in
+;; reports fine.
+(defun k/claude-code-ide-mcp--enclosing-session-project (project-dir)
+  "Return PROJECT-DIR, or the session root enclosing the buffer.
+PROJECT-DIR is what the package resolved for the current buffer.  When
+no instance runs there, the deepest session root above the buffer's
+file -- or its `default-directory' -- is returned instead, so a file of
+a nested repository still reaches a Claude Code started higher up."
+  (if (or (null claude-code-ide-mcp--sessions)
+          (claude-code-ide-mcp--sessions-for-project project-dir))
+      project-dir
+    (let ((file (expand-file-name (or (buffer-file-name) default-directory)))
+          (ignore-case (memq system-type '(windows-nt ms-dos cygwin)))
+          (best nil))
+      (maphash (lambda (_id session)
+                 (let ((root (claude-code-ide-mcp-session-project-dir session)))
+                   (when (and (string-prefix-p (file-name-as-directory
+                                                (expand-file-name root))
+                                               file ignore-case)
+                              (> (length root) (length best)))
+                     (setq best root))))
+               claude-code-ide-mcp--sessions)
+      (or best project-dir))))
+
+(with-eval-after-load 'claude-code-ide-mcp
+  (advice-add 'claude-code-ide-mcp--get-buffer-project
+              :filter-return #'k/claude-code-ide-mcp--enclosing-session-project))
+
 (defun k/claude-code-ide ()
   "Bring up this project's Claude Code, whatever state it is in.
 
