@@ -203,6 +203,11 @@
 ;; C-c C-e     go-run                        go-conf.el
 ;; C-x C-e     go-run                        go-conf.el
 
+;;----------------------------------------------------------------------
+;; JavaScript
+;; In js-mode, js2-mode, js-jsx-mode, web-mode, js-json-mode and json-ts-mode
+;; C-c C-c     k/npm-mode-build              js-conf.el
+
 ;; In rst-mode, unbound to leave the global C-M-a prefix
 ;; C-M-a       nil                           text-modes-conf.el
 ;; In tex-mode and latex-mode, unbound to leave the global command

@@ -115,6 +115,11 @@
 (when (treesit-language-available-p 'python)
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
 
+;; JSON: until the grammar is installed (M-x treesit-install-language-grammar
+;; RET json, by the recipe above), `js-json-mode' stays.
+(when (treesit-language-available-p 'json)
+  (add-to-list 'major-mode-remap-alist '(js-json-mode . json-ts-mode)))
+
 ;; Scala: until the grammar is installed (M-x treesit-install-language-grammar
 ;; RET scala, by the recipe above), `scala-mode' stays.
 (straight-use-package
