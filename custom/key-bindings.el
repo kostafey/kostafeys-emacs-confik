@@ -109,7 +109,7 @@
 ;; Translation
 ;;
 ;; C-c t       google-translate-at-point     translate-conf.el
-;; C-S-c t     google-translate-smooth-translate translate-conf.el
+;; C-c T       google-translate-smooth-translate translate-conf.el
 ;;
 ;;===================================================================
 
