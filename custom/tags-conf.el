@@ -11,9 +11,10 @@
 ;;   Windows:    scoop install global
 ;;               (or the MSYS2 package mingw-w64-ucrt-x86_64-global)
 ;;
-;; The database is created once per project with `k/gtags-create'.  Files
-;; saved in Emacs are reindexed on save; `gtags-mode-update' catches up
-;; with changes made outside Emacs (git pull, branch switch).
+;; `k/gtags-create' creates the database at the project root, or updates
+;; it when it exists.  Files saved in Emacs are reindexed on save; the
+;; update catches up with changes made outside Emacs (git pull, branch
+;; switch).
 
 (require 'project)
 
@@ -46,8 +47,32 @@
   (gtags-mode 1))
 
 (defun k/gtags-create ()
-  "Create the GNU Global database at the root of the current project."
+  "Create or update the GNU Global database at the root of the current project.
+When the database exists, `global --update' reindexes only the files
+changed, added or removed since, judging by modification times."
   (interactive)
-  (gtags-mode-create (expand-file-name (project-root (project-current t)))))
+  (let* ((root (expand-file-name (project-root (project-current t))))
+         (update (file-exists-p (expand-file-name "GTAGS" root)))
+         (action (if update "update" "creation")))
+    ;; Run in ROOT directly: `gtags-mode-update' takes the root from the
+    ;; buffer's cached database lookup, which stays empty in buffers
+    ;; visited before the database was created.
+    (when-let* ((default-directory root)
+                (pr (if update
+                        (gtags-mode--exec-async 'gtags-mode--global "--update")
+                      (gtags-mode--exec-async 'gtags-mode--gtags))))
+      (process-put pr :extra-sentinel #'gtags-mode--update-buffers-plist)
+      (message "GTAGS %s in %s..." action root)
+      ;; `gtags-mode' reports the outcome only at a verbose message level.
+      (add-function :after (process-sentinel pr)
+                    (lambda (process _event)
+                      (when (memq (process-status process) '(exit signal))
+                        (if (eql (process-exit-status process) 0)
+                            (message "GTAGS %s in %s done" action root)
+                          (message "GTAGS %s in %s failed: exit %s"
+                                   action root
+                                   (process-exit-status process)))))))))
+
+(global-set-key (kbd "C-c G") #'k/gtags-create)
 
 (provide 'tags-conf)
