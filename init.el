@@ -74,6 +74,7 @@
 (require 'translate-conf)
 (require 'llm-conf)
 (require 'claude-conf)
+(require 'codex-conf)
 
 ;;-------------------------------------------------------------------
 ;; Programming languages configs
