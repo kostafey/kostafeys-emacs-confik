@@ -79,16 +79,15 @@ for any picture, plus `PNG' from the Snipping Tool."
 (defun k/ghostel-paste-dwim ()
   "Paste the clipboard into the terminal, screenshots included.
 
-A screenshot reaches Claude Code as a keystroke rather than as data: the
-CLI answers C-v by reading the clipboard itself -- `xclip' under X11,
-`wl-paste' under Wayland, `Get-Clipboard' on Windows -- and puts an
-`[Image #N]' chip in its prompt.  Nothing has to travel through Emacs,
-which has no way to hand a picture to a PTY anyway.  On Windows the CLI
-listens for M-v instead, C-v being the console's own text paste there.
+A screenshot reaches Claude Code or Codex as a keystroke rather than as
+data: the CLI answers C-v by reading the clipboard itself and attaches
+the image to its prompt.  Nothing has to travel through Emacs, which has
+no way to hand a picture to a PTY anyway.  On Windows Claude Code listens
+for M-v instead; Codex uses C-v on every platform.
 
-The image branch is limited to Claude Code buffers on purpose: to a
-shell C-v means `quoted-insert', so sending it there would only arm the
-next keystroke to be taken literally.
+The image branch is limited to Claude Code and Codex buffers: to a shell
+C-v means `quoted-insert', so sending it there would only arm the next
+keystroke to be taken literally.
 
 Everything else is a text paste through `ghostel-yank', which wraps it
 in bracketed paste -- a multi-line paste then arrives as one block
@@ -97,8 +96,10 @@ produced by inserting into the buffer and leaving ghostel's foreign-edit
 forwarding to pick the text up."
   (interactive)
   (if (and (k/ghostel-clipboard-image-p)
-           (bound-and-true-p claude-code-ide--session))
-      (if (eq system-type 'windows-nt)
+           (or (bound-and-true-p k/codex-project-root)
+               (bound-and-true-p claude-code-ide--session)))
+      (if (and (eq system-type 'windows-nt)
+               (not (bound-and-true-p k/codex-project-root)))
           (ghostel-send-key "v" "meta")
         (ghostel-send-key "v" "ctrl"))
     (ghostel-yank)))
