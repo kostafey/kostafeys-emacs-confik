@@ -123,7 +123,11 @@ forwarding to pick the text up."
   ;; barely holds together on a light background -- and it is what the Claude
   ;; Code TUI paints the option digits of its prompts with: those come as
   ;; plain SGR 36, not as a theme colour, so only the palette can reach them.
+  ;; Use the Organic Green palette for ANSI diff counts and tool markers.
   :custom-face (ghostel-color-cyan ((t (:foreground "#0065CC"))))
+               (ghostel-color-red ((t (:foreground "#EF2929"))))
+               (ghostel-color-green ((t (:foreground "#119011"))))
+               (ghostel-color-bright-black ((t (:foreground "#119011"))))
   :bind (("C-x g" . ghostel)
          :map ghostel-semi-char-mode-map
          ("C-f"  . isearch-forward)
