@@ -70,6 +70,7 @@
 ;; Frames & windows
 ;;
 ;; M-k f       make-frame                    basic-keys.el
+;; M-m         mirror-window                 basic-keys.el
 ;; M-<left>    meta-left                     basic-keys.el
 ;; M-<right>   meta-right                    basic-keys.el
 ;; s-<left>    shrink-window-horizontally    basic-keys.el
@@ -78,6 +79,8 @@
 ;; S-s-<right> enlarge-window-horizontally   basic-keys.el, by 20
 ;; s-<down>    shrink-window                 basic-keys.el
 ;; s-<up>      enlarge-window                basic-keys.el
+;; In ghostel-semi-char-mode, unbound to leave the global command
+;; M-m         nil                           shell-conf.el
 ;;
 ;;===================================================================
 
