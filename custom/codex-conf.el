@@ -18,9 +18,8 @@
 
 (defun k/codex--buffer-name (root)
   "Return the Codex buffer name for project ROOT."
-  (format "*codex:%s-%s*"
-          (file-name-nondirectory (directory-file-name root))
-          (substring (secure-hash 'sha1 root) 0 8)))
+  (format "*codex[%s]*"
+          (file-name-nondirectory (directory-file-name root))))
 
 (defun k/codex--buffer-root ()
   "Return the project root of the current Codex buffer, or nil.
@@ -47,6 +46,19 @@ the switch to `ghostel-mode'."
               buffer))))
    (buffer-list)))
 
+(defun k/codex-insert-newline ()
+  "Insert a newline in the current Codex prompt without submitting it."
+  (interactive)
+  (ghostel-paste-string "\n"))
+
+(define-minor-mode k/codex-input-mode
+  "Keep Codex input bindings separate from other Ghostel sessions."
+  :lighter nil
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "S-<return>") #'k/codex-insert-newline)
+            (define-key map (kbd "S-RET") #'k/codex-insert-newline)
+            map))
+
 (defun k/codex ()
   "Open or switch to a Codex CLI session in the current project using Ghostel."
   (interactive)
@@ -59,7 +71,10 @@ the switch to `ghostel-mode'."
                (and (equal (k/codex--buffer-root) root)
                     (bound-and-true-p ghostel--process)
                     (process-live-p ghostel--process))))
-        (pop-to-buffer buffer)
+        (progn
+          (with-current-buffer buffer
+            (k/codex-input-mode 1))
+          (pop-to-buffer buffer))
       (unless (executable-find k/codex-cli)
         (user-error "Codex CLI not found: %s (check PATH or k/codex-cli)"
                     k/codex-cli))
@@ -77,7 +92,8 @@ the switch to `ghostel-mode'."
         ;; Set after `ghostel-exec': switching to `ghostel-mode' runs
         ;; `kill-all-local-variables'.
         (with-current-buffer buffer
-          (setq-local k/codex-project-root root))
+          (setq-local k/codex-project-root root)
+          (k/codex-input-mode 1))
         (pop-to-buffer buffer)))))
 
 (defun k/codex-send-region (beg end)
@@ -99,7 +115,7 @@ the switch to `ghostel-mode'."
       (sit-for 0.1)
       (ghostel-send-key "return"))))
 
-(global-set-key (kbd "C-M-a X") #'k/codex)
+(global-set-key (kbd "C-M-a J") #'k/codex)
 (global-set-key (kbd "C-M-a C") #'k/codex-send-region)
 
 (provide 'codex-conf)

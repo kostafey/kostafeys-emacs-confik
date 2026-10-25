@@ -156,6 +156,22 @@
 ;;
 
 ;;----------------------------------------------------------------------
+;; Claude Code
+;; C-c C-'     claude-code-ide-menu          claude-conf.el
+;; C-M-a j     k/claude-code-ide             claude-conf.el
+;; C-M-a c     k/claude-code-ide-send-region claude-conf.el
+;; In Claude Code terminal buffers
+;; S-<return>  claude-code-ide-insert-newline claude-code-ide.el
+
+;;----------------------------------------------------------------------
+;; Codex
+;; C-M-a J     k/codex                       codex-conf.el
+;; C-M-a C     k/codex-send-region           codex-conf.el
+;; In k/codex-input-mode
+;; S-<return>  k/codex-insert-newline         codex-conf.el
+;; S-RET       k/codex-insert-newline         codex-conf.el
+
+;;----------------------------------------------------------------------
 ;; emacs lisp
 ;; In emacs-lisp-mode
 ;; C-c p       k/el-insert-eval-last-sexp    emacs-lisp-conf.el
