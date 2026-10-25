@@ -151,6 +151,8 @@ forwarding to pick the text up."
          ("M-<right>"  . meta-right)
          ("M-<up>"     . windmove-up)
          ("M-<down>"   . windmove-down)
+         ;; Use the global `mirror-window' binding instead of typing M-m.
+         ("M-m"        . nil)
          ("C-<prior>"  . eframe-previous-buffer)
          ("C-<next>"   . eframe-next-buffer)
          ;; Scrolling with the keys `basic-keys' gives it everywhere else:
