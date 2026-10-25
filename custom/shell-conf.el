@@ -301,11 +301,17 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   (defun k/ghostel-scroll (button count)
     "Scroll COUNT wheel notches: BUTTON 4 back, 5 forward.
 Sent to the program while it tracks the mouse, applied to the buffer a
-line at a time otherwise."
+line at a time otherwise.  In Codex, target the transcript even when
+point is in the prompt editor."
     (let ((event (list (if (eq button 4) 'wheel-up 'wheel-down)
-                       ;; Aimed at the cursor, or at the window corner when
-                       ;; the cursor is out of sight.
-                       (or (posn-at-point) (posn-at-x-y 0 0))))
+                       ;; Codex routes wheel events by screen position.  Aim
+                       ;; inside the transcript, below its sticky prompt header,
+                       ;; rather than at the composer containing the cursor.
+                       (or (and (bound-and-true-p k/codex-project-root)
+                                (posn-at-x-y (* 2 (default-font-width))
+                                             (* 2 (default-line-height))))
+                           (posn-at-point)
+                           (posn-at-x-y 0 0))))
           (scroll (if (eq button 4) #'scroll-down-line #'scroll-up-line)))
       (condition-case err
           (dotimes (_ (or count 1))
