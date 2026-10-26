@@ -59,6 +59,17 @@ UserPromptSubmit hook to be trusted in Codex's `/hooks' menu."
   "Face for the active Working label above the Codex composer."
   :group 'codex-ide)
 
+(defface codex-ide-selection
+  '((t :inherit link :underline nil))
+  "Face for the selected-lines indicator above a Codex terminal."
+  :group 'codex-ide)
+
+(defvar-local codex-ide--selection-state nil
+  "Editor buffer, region bounds and modification tick last shown in the header.")
+
+(defvar-local codex-ide--saved-header-line nil
+  "Saved (LOCAL-P . FORMAT) while the selection indicator is displayed.")
+
 (defvar-local codex-ide--working-overlay nil
   "Overlay keeping the active Working label legible during CLI shimmer.")
 
@@ -155,12 +166,55 @@ the switch to `ghostel-mode'."
   "Remember the active editor buffer for matching Codex projects."
   (let ((buffer (current-buffer)))
     (maphash
-     (lambda (id _terminal)
+     (lambda (id terminal)
        (let ((context (claude-code-ide-mcp-server-get-session-context id)))
          (when (and context (codex-ide--editor-buffer-p
                              buffer (plist-get context :project-dir)))
-           (claude-code-ide-mcp-server-update-last-active-buffer id buffer))))
+           (claude-code-ide-mcp-server-update-last-active-buffer id buffer))
+         (when (and context (buffer-live-p terminal))
+           (with-current-buffer terminal
+             (codex-ide--update-selection-header
+              (claude-code-ide-mcp-server-get-session-context id))))))
      codex-ide--sessions)))
+
+(defun codex-ide--set-selection-header (text)
+  "Show TEXT in this terminal's header, or restore its header when nil."
+  (if text
+      (progn
+        (unless codex-ide--saved-header-line
+          (setq codex-ide--saved-header-line
+                (cons (local-variable-p 'header-line-format) header-line-format)))
+        (setq-local header-line-format
+                    (list (propertize text 'face 'codex-ide-selection)
+                          (when (cdr codex-ide--saved-header-line) "  ")
+                          (cdr codex-ide--saved-header-line))))
+    (when codex-ide--saved-header-line
+      (if (car codex-ide--saved-header-line)
+          (setq-local header-line-format (cdr codex-ide--saved-header-line))
+        (kill-local-variable 'header-line-format))
+      (setq codex-ide--saved-header-line nil)))
+  (force-mode-line-update))
+
+(defun codex-ide--update-selection-header (context)
+  "Update this terminal's indicator from CONTEXT's explicit selection.
+Reuse the count until the region or buffer text changes.  This runs from
+editor commands, independently of terminal redraws, with no timer."
+  (let* ((source (and codex-ide-input-mode codex-ide-include-selection context
+                      (codex-ide--editor-buffer context)))
+         (state (and source
+                     (with-current-buffer source
+                       (when (use-region-p)
+                         (list source (region-beginning) (region-end)
+                               (buffer-chars-modified-tick)))))))
+    (unless (equal state codex-ide--selection-state)
+      (setq codex-ide--selection-state state)
+      (codex-ide--set-selection-header
+       (when state
+         (let ((lines (with-current-buffer source
+                        (save-restriction
+                          (widen)
+                          (count-lines (nth 1 state) (nth 2 state))))))
+           (format "  [%d %s selected]" lines (if (= lines 1) "line" "lines"))))))))
 
 (defun codex-ide--buffer-info (buffer)
   "Return BUFFER metadata without changing point or narrowing."
@@ -444,7 +498,9 @@ body arrives.  Do not dispatch a partial request or close its connection."
     (when (buffer-live-p buffer)
       (with-current-buffer buffer
         (when (equal codex-ide--session-id id)
-          (setq codex-ide--session-id nil))))
+          (setq codex-ide--session-id nil
+                codex-ide--selection-state nil)
+          (codex-ide--set-selection-header nil))))
     (claude-code-ide-mcp-server-session-ended id)
     (when (zerop (hash-table-count codex-ide--sessions))
       (remove-hook 'post-command-hook #'codex-ide--track-editor-context))))
@@ -561,7 +617,13 @@ native PID can leave the actual Codex binary behind its npm launcher."
             (define-key map (kbd "S-<return>") #'codex-ide-insert-newline)
             (define-key map (kbd "S-RET") #'codex-ide-insert-newline)
             map)
-  (codex-ide--highlight-working))
+  (codex-ide--highlight-working)
+  (if codex-ide-input-mode
+      (codex-ide--update-selection-header
+       (and codex-ide--session-id
+            (claude-code-ide-mcp-server-get-session-context codex-ide--session-id)))
+    (setq codex-ide--selection-state nil)
+    (codex-ide--set-selection-header nil)))
 
 (defun codex-ide ()
   "Open or switch to this project's Codex CLI with Emacs MCP tools."
