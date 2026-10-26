@@ -170,9 +170,9 @@
 ;; Codex
 ;; C-M-a J     k/codex                       codex-conf.el
 ;; C-M-a C     k/codex-send-region           codex-conf.el
-;; In k/codex-input-mode
-;; S-<return>  k/codex-insert-newline         codex-conf.el
-;; S-RET       k/codex-insert-newline         codex-conf.el
+;; In codex-ide-input-mode
+;; S-<return>  codex-ide-insert-newline       codex-ide.el
+;; S-RET       codex-ide-insert-newline       codex-ide.el
 
 ;;----------------------------------------------------------------------
 ;; emacs lisp
