@@ -96,10 +96,12 @@ produced by inserting into the buffer and leaving ghostel's foreign-edit
 forwarding to pick the text up."
   (interactive)
   (if (and (k/ghostel-clipboard-image-p)
-           (or (bound-and-true-p k/codex-project-root)
+           (or (bound-and-true-p codex-ide-project-root)
+               (bound-and-true-p k/codex-project-root)
                (bound-and-true-p claude-code-ide--session)))
       (if (and (eq system-type 'windows-nt)
-               (not (bound-and-true-p k/codex-project-root)))
+               (not (or (bound-and-true-p codex-ide-project-root)
+                        (bound-and-true-p k/codex-project-root))))
           (ghostel-send-key "v" "meta")
         (ghostel-send-key "v" "ctrl"))
     (ghostel-yank)))
@@ -309,7 +311,8 @@ point is in the prompt editor."
                        ;; Codex routes wheel events by screen position.  Aim
                        ;; inside the transcript, below its sticky prompt header,
                        ;; rather than at the composer containing the cursor.
-                       (or (and (bound-and-true-p k/codex-project-root)
+                       (or (and (or (bound-and-true-p codex-ide-project-root)
+                                    (bound-and-true-p k/codex-project-root))
                                 (posn-at-x-y (* 2 (default-font-width))
                                              (* 2 (default-line-height))))
                            (posn-at-point)
