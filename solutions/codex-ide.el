@@ -11,7 +11,8 @@
 ;; The HTTP transport, session registry, navigation tools and diagnostics
 ;; are reused from claude-code-ide.  Codex has its own tool list and MCP
 ;; initialization; Claude clients retain their existing behavior.
-;; Editor context and unsaved text are fetched on request, not pushed.
+;; Explicit editor selections accompany prompts through UserPromptSubmit.
+;; Other editor context and unsaved text are fetched only on request.
 ;; This package does not implement IDE WebSocket notifications or ediff.
 
 ;;; Code:
@@ -40,6 +41,13 @@
 
 (defcustom codex-ide-enable-mcp t
   "Whether new Codex terminals connect to the Emacs MCP tools server."
+  :type 'boolean)
+
+(defcustom codex-ide-include-selection t
+  "Attach the last editor buffer's active region to new Codex prompts.
+Only the explicitly selected text and its location are included.  Without
+an active region, no editor context is attached.  Requires MCP and the
+UserPromptSubmit hook to be trusted in Codex's `/hooks' menu."
   :type 'boolean)
 
 (defcustom codex-ide-buffer-read-max-lines 500
@@ -185,23 +193,46 @@ Without either argument, use the session's last editor buffer."
     (goto-char position)
     `((line . ,(line-number-at-pos)) (column . ,(current-column)))))
 
+(defun codex-ide--selection (buffer)
+  "Return BUFFER's active selection and its location, or nil."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (when (use-region-p)
+        (let ((beg (region-beginning)) (end (region-end)))
+          (save-restriction
+            (widen)
+            `((text . ,(buffer-substring-no-properties beg end))
+              (start . ,(codex-ide--position beg))
+              (end . ,(codex-ide--position end)))))))))
+
 (defun codex-ide--get-editor-context ()
   "Return the project's last editor buffer, cursor and active selection."
   (let* ((context (codex-ide--context))
          (buffer (codex-ide--editor-buffer context))
-         (selection
-          (and buffer
-               (with-current-buffer buffer
-                 (when (use-region-p)
-                   (let ((beg (region-beginning)) (end (region-end)))
-                     (save-restriction
-                       (widen)
-                       `((text . ,(buffer-substring-no-properties beg end))
-                         (start . ,(codex-ide--position beg))
-                         (end . ,(codex-ide--position end))))))))))
+         (selection (codex-ide--selection buffer)))
     (json-encode `((project_root . ,(plist-get context :project-dir))
                    (active_buffer . ,(and buffer (codex-ide--buffer-info buffer)))
                    (selection . ,selection)))))
+
+(defun codex-ide--get-prompt-context ()
+  "Return UserPromptSubmit context for an explicit editor selection only."
+  (let* ((buffer (codex-ide--editor-buffer (codex-ide--context)))
+         (selection (and codex-ide-include-selection
+                         (codex-ide--selection buffer))))
+    (json-encode
+     (if (not selection)
+         (make-hash-table :test 'equal)
+       `((hookSpecificOutput
+          . ((hookEventName . "UserPromptSubmit")
+             (additionalContext
+              . ,(concat
+                  "The user explicitly selected this text in Emacs for the current prompt. "
+                  "Treat it as source context. Lines are 1-based and columns 0-based.\n"
+                  (json-encode
+                   (append (with-current-buffer buffer
+                             `((file_path . ,buffer-file-name)
+                               (buffer_name . ,(buffer-name))))
+                           selection)))))))))))
 
 (defun codex-ide--read-buffer (&optional file-path buffer-name start-line end-line)
   "Read unsaved buffer text between START-LINE and END-LINE.
@@ -279,7 +310,10 @@ Line numbers are one-based; results are paginated without changing the buffer."
 
 (defun codex-ide--prepare-tools ()
   "Build Codex's tool list with claude-code-ide's registration API."
-  (unless codex-ide--tools
+  ;; Rebuild an older cache when this package is reloaded in a running Emacs.
+  (unless (seq-find (lambda (spec)
+                      (equal (plist-get spec :name) "emacs_get_prompt_context"))
+                    codex-ide--tools)
     (let ((claude-code-ide-mcp-server-tools nil)
           (claude-code-ide-enable-mcp-server t))
       (claude-code-ide-emacs-tools-setup)
@@ -292,7 +326,10 @@ Line numbers are one-based; results are paginated without changing the buffer."
       (dolist (spec
                '((:name "emacs_get_editor_context"
                   :function codex-ide--get-editor-context
-                  :description "Get this project's last editor buffer, cursor and active selection. Lines are 1-based and columns 0-based. File contents are not sent automatically.")
+                  :description "Get this project's last editor buffer, cursor and active selection. Lines are 1-based and columns 0-based. Unselected file contents are not sent automatically.")
+                 (:name "emacs_get_prompt_context"
+                  :function codex-ide--get-prompt-context
+                  :description "UserPromptSubmit hook: attach only the explicit editor selection and its location. Returns an empty object when there is no selection; never attaches a bare file or cursor.")
                  (:name "emacs_list_buffers" :function codex-ide--list-buffers
                   :description "List open editor buffers in this project, including unsaved-change flags.")
                  (:name "emacs_read_buffer" :function codex-ide--read-buffer
@@ -328,7 +365,7 @@ Line numbers are one-based; results are paginated without changing the buffer."
                                       version "2025-03-26")))
              (capabilities . ((tools . ((listChanged . :json-false)))))
              (serverInfo . ((name . "codex-ide") (version . "0.1.0")))
-             (instructions . "Emacs tools operate in this Codex session's project. Use emacs_get_editor_context when the user refers to their selection or current buffer. Use emacs_read_buffer for unsaved edits; filesystem tools see only saved files. Context is fetched on request, not pushed automatically.")))
+             (instructions . "Emacs tools operate in this Codex session's project. Explicit editor selections are attached by the UserPromptSubmit hook when enabled and trusted. Use emacs_get_editor_context for editor context on request. Use emacs_read_buffer for unsaved edits; filesystem tools see only saved files. Unselected files are never attached automatically.")))
           ((or "resources/list" "resources/templates/list" "prompts/list")
            (list (cons (pcase method
                          ("resources/list" 'resources)
@@ -467,9 +504,16 @@ native PID can leave the actual Codex binary behind its npm launcher."
   (when id
     (let ((url (format "http://127.0.0.1:%d/mcp/%s"
                        (claude-code-ide-mcp-server-get-port) id)))
-      (list "-c" (concat "mcp_servers.emacs_ide.url=" (json-encode-string url))
-            "-c" "mcp_servers.emacs_ide.enabled=true"
-            "-c" "mcp_servers.emacs_ide.required=true"))))
+      (append
+       (list "-c" (concat "mcp_servers.emacs_ide.url=" (json-encode-string url))
+             "-c" "mcp_servers.emacs_ide.enabled=true"
+             "-c" "mcp_servers.emacs_ide.required=true")
+       ;; A stable definition needs trust review only once, even for new sessions.
+       (when codex-ide-include-selection
+         (list "-c"
+               (concat "hooks.UserPromptSubmit=[{hooks=[{type=\"mcp_tool\","
+                       "server=\"emacs_ide\",tool=\"emacs_get_prompt_context\","
+                       "timeout=5}]}]")))))))
 
 ;;; Terminal commands
 
