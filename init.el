@@ -76,6 +76,7 @@
 (require 'claude-conf)
 (require 'codex-conf)
 (require 'pi-conf)
+(require 'agent-review-conf)
 
 ;;-------------------------------------------------------------------
 ;; Programming languages configs

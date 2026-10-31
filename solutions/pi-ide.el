@@ -254,6 +254,14 @@ Sends C-j, Pi's newline key in every keyboard protocol."
   (interactive "r")
   (agent-ide-send-region pi-ide--client beg end))
 
+(defun pi-ide-session-buffer ()
+  "Return the live Pi terminal of the current buffer's project, or nil."
+  (agent-ide-session-buffer pi-ide--client))
+
+(defun pi-ide-send-string (text)
+  "Submit TEXT as a prompt to this project's Pi session."
+  (agent-ide-send-string pi-ide--client text))
+
 (provide 'pi-ide)
 
 ;;; pi-ide.el ends here

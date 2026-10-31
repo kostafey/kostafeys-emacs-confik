@@ -221,24 +221,19 @@ buffer.  With a prefix argument and several running,
 ;; `claude-code-ide--terminal-send-string': every line break of a multi-line
 ;; region would reach the CLI as a keystroke of its own.  A bracketed paste
 ;; arrives as one piece of text, and only the return after it submits.
-(defun k/claude-code-ide-send-region (beg end)
-  "Send the region from BEG to END as a prompt to this project's Claude Code.
+(defun k/claude-code-ide-send-string (text)
+  "Submit TEXT as a prompt to this project's Claude Code.
 The instance is the one `claude-code-ide-send-prompt' would pick for the
 current buffer: with a prefix argument and several running, it asks."
-  (interactive "r")
-  (unless (use-region-p)
-    (user-error "No active region"))
   (require 'claude-code-ide)
   (claude-code-ide--cleanup-dead-sessions)
-  (let* ((text (buffer-substring-no-properties beg end))
-         (session (claude-code-ide--resolve-session
-                   'auto "Send region to Claude instance: "))
+  (let* ((session (claude-code-ide--resolve-session
+                   'auto "Send to Claude instance: "))
          (buffer (and session (claude-code-ide-mcp-session-buffer session))))
     (unless (buffer-live-p buffer)
       (user-error "No Claude Code session for this project"))
     (when (string-blank-p text)
-      (user-error "Region is blank"))
-    (deactivate-mark)
+      (user-error "Nothing to send"))
     (with-current-buffer buffer
       (if (eq claude-code-ide-terminal-backend 'ghostel)
           (ghostel-paste-string text)
@@ -247,6 +242,26 @@ current buffer: with a prefix argument and several running, it asks."
       ;; overtake the text.
       (sit-for 0.1)
       (claude-code-ide--terminal-send-return))))
+
+(defun k/claude-code-ide-send-region (beg end)
+  "Send the region from BEG to END as a prompt to this project's Claude Code.
+The instance is the one `claude-code-ide-send-prompt' would pick for the
+current buffer: with a prefix argument and several running, it asks."
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "No active region"))
+  (let ((text (buffer-substring-no-properties beg end)))
+    (when (string-blank-p text)
+      (user-error "Region is blank"))
+    (k/claude-code-ide-send-string text)
+    (deactivate-mark)))
+
+(defun k/claude-code-ide-running-p ()
+  "Non-nil when the current buffer's project has a live Claude Code instance.
+Never loads claude-code-ide: without it, no instance can be running."
+  (and (featurep 'claude-code-ide)
+       (k/claude-code-ide--live-session-p
+        (claude-code-ide--get-working-directory))))
 
 (use-package claude-code-ide
   :straight `(claude-code-ide

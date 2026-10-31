@@ -733,25 +733,37 @@ Codex binary behind npm or Pi's Node process behind its shell script."
            (when (and (not reuse) (buffer-live-p buffer)) (kill-buffer buffer))
            (signal (car err) (cdr err))))))))
 
-(defun agent-ide-send-region (client beg end)
-  "Paste the region between BEG and END into this project's CLIENT session."
-  (unless (use-region-p)
-    (user-error "No active region"))
-  (let* ((root (file-name-as-directory
-                (expand-file-name (agent-ide--project-root (current-buffer)))))
-         (buffer (agent-ide--session-buffer client root))
-         (text (buffer-substring-no-properties beg end)))
-    (unless buffer
-      (user-error "No running %s session for this project; run `%s' first"
-                  (agent-ide-client-name client)
-                  (agent-ide-client-command client)))
+(defun agent-ide-session-buffer (client)
+  "Return CLIENT's live terminal for the current buffer's project, or nil."
+  (agent-ide--session-buffer
+   client (file-name-as-directory
+           (expand-file-name (agent-ide--project-root (current-buffer))))))
+
+(defun agent-ide-send-string (client text)
+  "Submit TEXT as a prompt to this project's CLIENT session.
+A bracketed paste delivers TEXT as one piece; only the return after it
+submits."
+  (let ((buffer (or (agent-ide-session-buffer client)
+                    (user-error
+                     "No running %s session for this project; run `%s' first"
+                     (agent-ide-client-name client)
+                     (agent-ide-client-command client)))))
     (when (string-blank-p text)
-      (user-error "Region is blank"))
-    (deactivate-mark)
+      (user-error "Nothing to send"))
     (with-current-buffer buffer
       (ghostel-paste-string text)
       (sit-for 0.1)
       (ghostel-send-key "return"))))
+
+(defun agent-ide-send-region (client beg end)
+  "Paste the region between BEG and END into this project's CLIENT session."
+  (unless (use-region-p)
+    (user-error "No active region"))
+  (let ((text (buffer-substring-no-properties beg end)))
+    (when (string-blank-p text)
+      (user-error "Region is blank"))
+    (agent-ide-send-string client text)
+    (deactivate-mark)))
 
 (provide 'agent-ide)
 

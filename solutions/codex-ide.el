@@ -183,6 +183,14 @@ UserPromptSubmit hook to be trusted in Codex's `/hooks' menu."
   (interactive "r")
   (agent-ide-send-region codex-ide--client beg end))
 
+(defun codex-ide-session-buffer ()
+  "Return the live Codex terminal of the current buffer's project, or nil."
+  (agent-ide-session-buffer codex-ide--client))
+
+(defun codex-ide-send-string (text)
+  "Submit TEXT as a prompt to this project's Codex session."
+  (agent-ide-send-string codex-ide--client text))
+
 (provide 'codex-ide)
 
 ;;; codex-ide.el ends here
