@@ -23,6 +23,12 @@
 ;; CUDA:
 ;; llama serve -hf Qwen/Qwen3-4B-GGUF:Q4_K_M --reasoning off -c 40960 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 --port 8012
 ;;
+;; `Qwen3.5-4B'
+;; Vulkan:
+;; llama serve -hf unsloth/Qwen3.5-4B-GGUF:Q4_K_M --no-mmproj --reasoning off -c 16384 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --port 8012
+;; CUDA:
+;; llama serve -hf unsloth/Qwen3.5-4B-GGUF:Q4_K_M --no-mmproj --reasoning off -c 131072 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 --port 8012
+;;
 ;; `Gemma-3-4B'
 ;; Vulkan:
 ;; llama serve -hf unsloth/gemma-3-4b-it-GGUF:Q4_K_M --no-mmproj -c 8192 -ngl 99 --device Vulkan1 -fa on -ctk q8_0 -ctv q8_0 --port 8012

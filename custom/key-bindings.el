@@ -175,6 +175,14 @@
 ;; S-RET       codex-ide-insert-newline       codex-ide.el
 
 ;;----------------------------------------------------------------------
+;; Pi
+;; C-M-a p     pi-ide                        pi-conf.el
+;; C-M-a P     pi-ide-send-region            pi-conf.el
+;; In pi-ide-input-mode
+;; S-<return>  pi-ide-insert-newline         pi-ide.el
+;; S-RET       pi-ide-insert-newline         pi-ide.el
+
+;;----------------------------------------------------------------------
 ;; emacs lisp
 ;; In emacs-lisp-mode
 ;; C-c p       k/el-insert-eval-last-sexp    emacs-lisp-conf.el

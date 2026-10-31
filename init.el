@@ -75,6 +75,7 @@
 (require 'llm-conf)
 (require 'claude-conf)
 (require 'codex-conf)
+(require 'pi-conf)
 
 ;;-------------------------------------------------------------------
 ;; Programming languages configs

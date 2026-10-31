@@ -79,13 +79,13 @@ for any picture, plus `PNG' from the Snipping Tool."
 (defun k/ghostel-paste-dwim ()
   "Paste the clipboard into the terminal, screenshots included.
 
-A screenshot reaches Claude Code or Codex as a keystroke rather than as
-data: the CLI answers C-v by reading the clipboard itself and attaches
-the image to its prompt.  Nothing has to travel through Emacs, which has
-no way to hand a picture to a PTY anyway.  On Windows Claude Code listens
-for M-v instead; Codex uses C-v on every platform.
+A screenshot reaches Claude Code, Codex or Pi as a keystroke rather than
+as data: the CLI answers C-v by reading the clipboard itself and
+attaches the image to its prompt.  Nothing has to travel through Emacs,
+which has no way to hand a picture to a PTY anyway.  On Windows Claude
+Code and Pi listen for M-v instead; Codex uses C-v on every platform.
 
-The image branch is limited to Claude Code and Codex buffers: to a shell
+The image branch is limited to Claude Code, Codex and Pi buffers: to a shell
 C-v means `quoted-insert', so sending it there would only arm the next
 keystroke to be taken literally.
 
@@ -98,6 +98,7 @@ forwarding to pick the text up."
   (if (and (k/ghostel-clipboard-image-p)
            (or (bound-and-true-p codex-ide-project-root)
                (bound-and-true-p k/codex-project-root)
+               (bound-and-true-p pi-ide-project-root)
                (bound-and-true-p claude-code-ide--session)))
       (if (and (eq system-type 'windows-nt)
                (not (or (bound-and-true-p codex-ide-project-root)
