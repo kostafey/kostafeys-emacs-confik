@@ -425,7 +425,7 @@ buffer is not visiting a file."
   (interactive)
   (beginning-of-buffer)
   (replace-string "," ",\n")
-  (clojure-mode)
+  (clojure-ts-mode)
   (mark-whole-buffer)
   (indent-for-tab-command))
 
