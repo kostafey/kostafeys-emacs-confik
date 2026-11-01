@@ -130,6 +130,18 @@
 
 (add-hook 'scala-ts-mode-hook #'k/scala-ts-font-lock-setup)
 
+;; `scala-ts-mode' puts its correction of `treesit-beginning-of-defun' in a
+;; global advice, which then runs in every tree-sitter mode and fails where
+;; `treesit-defun-type-regexp' is no string -- in `clojure-ts-mode',
+;; `paredit-RET' signals `wrong-type-argument'.  Keep it to Scala buffers.
+(defun k/scala-ts-buffer-p (&rest _)
+  "Return non-nil in a `scala-ts-mode' buffer."
+  (derived-mode-p 'scala-ts-mode))
+
+(with-eval-after-load 'scala-ts-mode
+  (advice-add 'scala-ts--move-out-of-indented-block :before-while
+              #'k/scala-ts-buffer-p))
+
 (defun k/scala-skip-sexp (val)
   (ignore-errors
     (while (or
