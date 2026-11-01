@@ -160,19 +160,19 @@
 
 ;;----------------------------------------------------------------------
 ;; Claude Code
-;; C-c C-'     claude-code-ide-menu          claude-conf.el
-;; C-M-a j     k/claude-code-ide             claude-conf.el
-;; C-M-a c     k/claude-code-ide-send-region claude-conf.el
+;; C-c C-'     claude-code-ide-menu           claude-conf.el
+;; C-M-a c     k/claude-code-ide              claude-conf.el
+;; C-M-a C     k/claude-code-ide-send-region  claude-conf.el
 ;; In Claude Code terminal buffers
 ;; S-<return>  claude-code-ide-insert-newline claude-code-ide.el
 
 ;;----------------------------------------------------------------------
 ;; Codex
-;; C-M-a J     k/codex                       codex-conf.el
-;; C-M-a C     k/codex-send-region           codex-conf.el
+;; C-M-a j     k/codex                       codex-conf.el
+;; C-M-a J     k/codex-send-region           codex-conf.el
 ;; In codex-ide-input-mode
-;; S-<return>  codex-ide-insert-newline       codex-ide.el
-;; S-RET       codex-ide-insert-newline       codex-ide.el
+;; S-<return>  codex-ide-insert-newline      codex-ide.el
+;; S-RET       codex-ide-insert-newline      codex-ide.el
 
 ;;----------------------------------------------------------------------
 ;; Pi
@@ -181,6 +181,18 @@
 ;; In pi-ide-input-mode
 ;; S-<return>  pi-ide-insert-newline         pi-ide.el
 ;; S-RET       pi-ide-insert-newline         pi-ide.el
+
+;;----------------------------------------------------------------------
+;; gptel
+;; C-M-a b     k/gptel-add-file              llm-conf.el
+;; C-M-a s     gptel-send                    llm-conf.el
+;; C-M-a m     gptel-menu                    llm-conf.el
+;; C-M-a q     gptel-context-quit            llm-conf.el
+;; C-M-a l     k/gptel-context-print         llm-conf.el
+;; C-M-a r     gptel-context-remove-all      llm-conf.el
+;; C-M-a x     k/gptel-minibuffer            llm-conf.el
+;; C-M-a w     k/gptel-rewrite               llm-conf.el
+;; C-M-a i     k/llm-suggest                 llm-conf.el
 
 ;;----------------------------------------------------------------------
 ;; emacs lisp

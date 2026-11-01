@@ -13,8 +13,8 @@
 (defalias 'k/codex-send-region #'codex-ide-send-region)
 (defalias 'k/codex-insert-newline #'codex-ide-insert-newline)
 
-(global-set-key (kbd "C-M-a J") #'k/codex)
-(global-set-key (kbd "C-M-a C") #'k/codex-send-region)
+(global-set-key (kbd "C-M-a j") #'k/codex)
+(global-set-key (kbd "C-M-a J") #'k/codex-send-region)
 
 (provide 'codex-conf)
 ;;; codex-conf.el ends here

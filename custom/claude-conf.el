@@ -242,8 +242,8 @@ Never loads claude-code-ide: without it, no instance can be running."
               :repo "https://github.com/manzaltu/claude-code-ide.el"
               :branch "main")
   :bind (("C-c C-'" . claude-code-ide-menu)
-         ("C-M-a j" . k/claude-code-ide)
-         ("C-M-a c" . k/claude-code-ide-send-region))
+         ("C-M-a c" . k/claude-code-ide)
+         ("C-M-a C" . k/claude-code-ide-send-region))
   :config
   ;; Of the three backends (vterm, eat, ghostel) this one renders the Claude
   ;; Code TUI with the fewest artifacts.  It wants the bundled xterm-ghostty
