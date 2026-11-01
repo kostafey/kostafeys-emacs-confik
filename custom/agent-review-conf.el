@@ -13,7 +13,7 @@
 
 (add-to-list 'agent-review-agents
              '("Claude" k/claude-code-ide-running-p
-               k/claude-code-ide-send-string))
+               claude-code-ide-send-prompt))
 
 ;;; Pijul changes, as `pijul-conf' parses them
 
