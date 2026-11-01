@@ -4,9 +4,6 @@
  '(cider :type git :host github
          :repo "clojure-emacs/cider" :branch "master"))
 (straight-use-package
- '(lsp-mode :type git :host github
-            :repo "emacs-lsp/lsp-mode" :branch "master"))
-(straight-use-package
  '(dash :type git :host github
 				:repo "magnars/dash.el" :branch "master"))
 (straight-use-package
@@ -16,19 +13,10 @@
 ;;----------------------------------------------------------------------
 ;; clojure
 ;;
-;; lsp
-(add-hook 'clojure-mode-hook 'lsp)
-(add-hook 'clojurescript-mode-hook 'lsp)
-(add-hook 'clojurec-mode-hook 'lsp)
-(setq lsp-enable-file-watchers t)
-(setq lsp-file-watch-threshold 10000)
-;; In every lsp-mode language (Clojure, rjsx, Go) the header line is left
-;; to `breadcrumb', toggled with <f6>, as for the eglot and plain modes.
-(setq lsp-headerline-breadcrumb-enable nil)
-;; Completion goes through corfu: `lsp-completion-at-point' still heads the
-;; capfs, only company is left alone (lsp-mode would warn on every buffer
-;; that it is "Unable to autoconfigure company-mode").
-(setq lsp-completion-provider :none)
+;; eglot runs clojure-lsp, its default entry in `eglot-server-programs'.
+;; `clojurescript-mode' and `clojurec-mode' derive from `clojure-mode'
+;; and run its hook too.
+(add-hook 'clojure-mode-hook #'eglot-ensure)
 
 (add-hook 'cider-mode-hook 'eldoc-mode)
 
@@ -84,6 +72,67 @@ deleted buffer\" -- a broken `consult' file preview, for one."
 (setq cider-default-repl-command "lein")
 
 ;;----------------------------------------------------------------------
+;; clojure-lsp
+;;
+;; eglot runs the clojure-lsp it finds on `exec-path' and never installs
+;; it: `k/clojure-lsp-install' downloads the latest release there.
+
+(defvar k/clojure-lsp-install-dir
+  (file-name-as-directory (expand-file-name "~/.local/bin"))
+  "Directory `k/clojure-lsp-install' unpacks clojure-lsp into.")
+
+;; On PATH on Linux, seldom on Windows.
+(add-to-list 'exec-path k/clojure-lsp-install-dir t)
+
+(defun k/clojure-lsp-asset ()
+  "Return the name of the clojure-lsp release archive for this machine."
+  (let ((arch (car (split-string system-configuration "-"))))
+    (format "clojure-lsp-native-%s-%s.zip"
+            (pcase system-type
+              ('windows-nt "windows")
+              ('darwin "macos")
+              (_ "linux"))
+            (if (equal arch "x86_64") "amd64" arch))))
+
+(defun k/clojure-lsp-install ()
+  "Download the latest clojure-lsp into `k/clojure-lsp-install-dir'.
+curl runs in the background, then the archive is unpacked.  On Windows
+shut eglot down before updating: a running clojure-lsp.exe cannot be
+overwritten."
+  (interactive)
+  (let* ((asset (k/clojure-lsp-asset))
+         (url (concat "https://github.com/clojure-lsp/clojure-lsp"
+                      "/releases/latest/download/" asset))
+         (zip (make-temp-file "clojure-lsp-" nil ".zip"))
+         (dir k/clojure-lsp-install-dir)
+         (unzip (if (eq system-type 'windows-nt)
+                    ;; The bsdtar shipped with Windows: a GNU tar of Git
+                    ;; or MSYS2 found first on PATH does not read zip.
+                    (list (expand-file-name "System32/tar.exe"
+                                            (getenv "SystemRoot"))
+                          "-xf" zip "-C" dir)
+                  (list "unzip" "-oq" zip "-d" dir)))
+         (log (get-buffer-create "*clojure-lsp-install*")))
+    (make-directory dir t)
+    (message "Downloading %s..." url)
+    (make-process
+     :name "clojure-lsp-install"
+     :buffer log
+     :command (list "curl" "-fsSL" "-o" zip url)
+     :sentinel
+     (lambda (process _event)
+       (unless (process-live-p process)
+         (let ((default-directory dir))
+           (if (and (zerop (process-exit-status process))
+                    (zerop (apply #'call-process (car unzip) nil log nil
+                                  (cdr unzip))))
+               (message "Installed %s"
+                        (car (process-lines "clojure-lsp" "--version")))
+             (message "clojure-lsp install failed, see %s"
+                      (buffer-name log))))
+         (delete-file zip))))))
+
+;;----------------------------------------------------------------------
 ;; clojure-script
 ;;
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojurescript-mode))
@@ -119,19 +168,15 @@ deleted buffer\" -- a broken `consult' file preview, for one."
   (interactive)
   (k/clojure-send-vterm (prin1-to-string (sexp-at-point))))
 
-(defun k/nrepl-current-session ()
-  "Return the current nrepl session or nil."
-  (let* ((buff (or nrepl-connection-buffer
-                   (cider-current-repl)))
-         (sess (if buff
-                   (with-current-buffer buff
-                     nrepl-session))))
-    sess))
+(defun k/cider-connected-p ()
+  "Return non-nil if CIDER has a live REPL for the current buffer."
+  (and (fboundp 'cider-connected-p)
+       (cider-connected-p)))
 
 (defun k/clojure-eval-last-sexp ()
   "Evaluate the expression preceding point in CIDER (if exists) or vterm."
   (interactive)
-  (if (k/nrepl-current-session)
+  (if (k/cider-connected-p)
       (cider-eval-last-sexp)
     (k/clojure-eval-last-sexp-in-vterm)))
 

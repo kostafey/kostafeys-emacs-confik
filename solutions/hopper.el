@@ -148,13 +148,15 @@ Used by `eframe-kill-buffer' to return to the previous position with
               (let ((symb string-at-point))
                 (slime-edit-definition symb)))
              ;; clojure-mode
-             ((member mode (list 'clojure-mode 'clojurescript-mode))
-              (if (k/nrepl-current-session)
+             ((member mode (list 'clojure-mode 'clojurescript-mode
+                                 'clojurec-mode))
+              ;; While connected, CIDER's xref backend runs ahead of
+              ;; eglot's (`cider-xref-fn-depth').
+              (if (or (k/cider-connected-p)
+                      (and (boundp 'eglot--managed-mode) eglot--managed-mode))
                   (let ((xref-prompt-for-identifier nil))
                     (call-interactively 'xref-find-definitions))
-                (if (member 'lsp-mode minor-mode-list)
-                    (lsp-find-definition)
-                  (message "Launch LSP or nREPL."))))
+                (message "Launch eglot or nREPL.")))
              ;; scala-mode
              ;; java-mode
              ((or (equal 'scala-mode mode)
