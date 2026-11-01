@@ -176,8 +176,8 @@ Used by `eframe-kill-buffer' to return to the previous position with
                ))
              ;; go-mode
              ((equal 'go-mode mode)
-              (if (member 'lsp-mode minor-mode-list)
-                  (lsp-find-definition)
+              (if (and (boundp 'eglot--managed-mode) eglot--managed-mode)
+                  (call-interactively 'xref-find-definitions)
                 (when (functionp 'godef-jump)
                   (godef-jump point))))
              ;; rust-mode

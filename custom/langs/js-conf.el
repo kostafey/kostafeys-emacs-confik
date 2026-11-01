@@ -155,11 +155,49 @@ waiting browser and pretty print the result in a separate buffer."
 ;; (wrap-region-add-wrapper "{/*" "*/}" "/" 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.less$" . css-mode))
 
-;; `lsp-server'
-(add-hook 'rjsx-mode-hook 'lsp)
-
 ;; npm install -g eslint
 (setq flycheck-checker-error-threshold 10000)
+
+;;------------------------------------------------------------
+;; Language servers
+;;
+;; eglot runs the servers it finds on `exec-path' and never installs
+;; them: `k/npm-language-servers-install' installs those of rjsx-mode
+;; here and php-mode in php-conf.
+;; typescript-language-server drives tsserver, which TypeScript 7 no
+;; longer ships.
+(defvar k/npm-language-servers
+  '("typescript-language-server" "typescript@6" "intelephense")
+  "npm packages `k/npm-language-servers-install' installs.")
+
+(defun k/npm-language-servers-install ()
+  "Install or update `k/npm-language-servers' in the background.
+On Windows into npm's per-user global prefix, elsewhere into ~/.local,
+whose bin directory is on PATH."
+  (interactive)
+  (let ((log (get-buffer-create "*npm-language-servers-install*")))
+    (message "Installing %s..." (string-join k/npm-language-servers " "))
+    (make-process
+     :name "npm-language-servers-install"
+     :buffer log
+     :command `("npm" "install" "--global"
+                ,@(unless (eq system-type 'windows-nt)
+                    (list "--prefix" (expand-file-name "~/.local")))
+                ,@k/npm-language-servers)
+     :sentinel
+     (lambda (process _event)
+       (unless (process-live-p process)
+         (if (zerop (process-exit-status process))
+             (message "Installed %s" (string-join k/npm-language-servers " "))
+           (message "npm install failed, see %s" (buffer-name log))))))))
+
+;; rjsx-mode derives from js-mode, whose entry in `eglot-server-programs'
+;; would announce JSX files as plain JavaScript.
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '((rjsx-mode :language-id "javascriptreact")
+                 . ("typescript-language-server" "--stdio"))))
+(add-hook 'rjsx-mode-hook #'eglot-ensure)
 
 ;;------------------------------------------------------------
 ;; web-mode

@@ -33,7 +33,7 @@
             (font-lock-mode)
             (setq indent-tabs-mode nil)
             (setq tab-width 4)))
-;; eldoc comes from gopls, via `lsp-mode' below (`lsp-eldoc-enable-hover').
+;; eldoc comes from gopls, via eglot below.
 ;; The `go-eldoc' hook that used to sit here was dead weight: the package was
 ;; never declared, so every .go buffer opened with `File mode specification
 ;; error: (void-function go-eldoc-setup)', and upstream is orphaned anyway --
@@ -42,11 +42,9 @@
 ;; --------
 ;; LSP
 ;; go install golang.org/x/tools/gopls@latest
-(use-package lsp-mode
-  :straight '(lsp-mode :type git :host github
-			                 :repo "emacs-lsp/lsp-mode" :branch "master")
-  :hook ((go-mode . lsp-deferred)
-         (go-mode . my-common-coding-hook)))
+;; eglot runs gopls, its default entry in `eglot-server-programs'.
+(add-hook 'go-mode-hook #'eglot-ensure)
+(add-hook 'go-mode-hook #'my-common-coding-hook)
 
 ;; -----------
 ;; Compilation

@@ -9,10 +9,10 @@
  '(package-selected-packages
    '(scala-ts-mode go-mode company-fuzzy session consult vertico-posframe
                    mini-popup mini-popup.el dockerfile-mode npm-mode jdecomp
-                   lsp-java fennel-mode company-quickhelp project-explorer
-                   restclient vterm marginalia vertico-directory lsp-ui
-                   lsp-metals flycheck sbt-mode scala-mode use-package
-                   lsp-mode yaml-mode rainbow-mode csv-mode
+                   fennel-mode company-quickhelp project-explorer
+                   restclient vterm marginalia vertico-directory
+                   flycheck sbt-mode scala-mode use-package
+                   yaml-mode rainbow-mode csv-mode
                    markdown-toc graphviz-dot-mode lorem-ipsum web-mode
                    rjsx-mode skewer-mode ac-cider circe tabbar
                    temporary-persistent idle-highlight-mode simple-httpd cider
