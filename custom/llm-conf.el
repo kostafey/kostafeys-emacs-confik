@@ -37,7 +37,7 @@
       "Java")
      ((member mode-name '("scala-mode" "scala-ts-mode"))
       "Scala")
-     ((string= mode-name "clojure-mode")
+     ((member mode-name '("clojure-mode" "clojure-ts-mode"))
       "Clojure")
      ((string= mode-name "sql-mode")
       "SQL")

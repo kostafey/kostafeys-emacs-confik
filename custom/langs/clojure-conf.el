@@ -14,9 +14,10 @@
 ;; clojure
 ;;
 ;; eglot runs clojure-lsp, its default entry in `eglot-server-programs'.
-;; `clojurescript-mode' and `clojurec-mode' derive from `clojure-mode'
-;; and run its hook too.
+;; `clojurescript-mode' and `clojurec-mode' run the hook of `clojure-mode',
+;; the `clojure-ts-*' modes that of `clojure-ts-mode' (tree-sitter-conf).
 (add-hook 'clojure-mode-hook #'eglot-ensure)
+(add-hook 'clojure-ts-mode-hook #'eglot-ensure)
 
 (add-hook 'cider-mode-hook 'eldoc-mode)
 
@@ -204,14 +205,19 @@ overwritten."
 ;;
 ;; Not use-package :bind: it would autoload these commands from the
 ;; package's own file, while they come from CIDER or this one.
+(defun k/clojure-define-keys (map)
+  "Bind the Clojure commands in MAP of `clojure-mode' or `clojure-ts-mode'."
+  (define-key map (kbd "C-n j") 'cider-jack-in)
+  (define-key map (kbd "C-n e b") 'my-cider-eval-buffer)
+  (define-key map (kbd "C-n q") 'cider-quit)
+  (define-key map (kbd "C-x C-e") 'k/clojure-eval-last-sexp)
+  (define-key map (kbd "C-c RET") 'newline-and-indent)
+  (define-key map (kbd "M-n") 'k/clojure-switch-to-current-namespace))
+
 (with-eval-after-load 'clojure-mode
-  (define-key clojure-mode-map (kbd "C-n j") 'cider-jack-in)
-  (define-key clojure-mode-map (kbd "C-n e b") 'my-cider-eval-buffer)
-  (define-key clojure-mode-map (kbd "C-n q") 'cider-quit)
-  (define-key clojure-mode-map (kbd "C-x C-e") 'k/clojure-eval-last-sexp)
-  (define-key clojure-mode-map (kbd "C-c RET") 'newline-and-indent)
-  (define-key clojure-mode-map (kbd "M-n")
-              'k/clojure-switch-to-current-namespace))
+  (k/clojure-define-keys clojure-mode-map))
+(with-eval-after-load 'clojure-ts-mode
+  (k/clojure-define-keys clojure-ts-mode-map))
 
 ;; Once connected, `cider-mode' takes over C-c C-f, C-c C-l and C-c RET;
 ;; leave C-c C-f to the global `consult-find' and C-c RET to the

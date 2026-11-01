@@ -213,6 +213,7 @@
 (add-hook 'lisp-mode-hook       'my-lisp-coding-hook)
 (add-hook 'scheme-mode-hook     'my-lisp-coding-hook)
 (add-hook 'clojure-mode-hook    'my-lisp-coding-hook)
+(add-hook 'clojure-ts-mode-hook 'my-lisp-coding-hook)
 (add-hook 'cider-mode-hook      'my-lisp-coding-hook)
 (add-hook 'fennel-mode-hook     'my-lisp-coding-hook)
 (add-hook 'sbt-mode-hook        'my-coding-hook)

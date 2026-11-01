@@ -206,7 +206,7 @@
 
 ;;----------------------------------------------------------------------
 ;; CIDER - Nrepl.el
-;; In clojure-mode
+;; In clojure-mode and clojure-ts-mode
 ;; C-n j       cider-jack-in                 clojure-conf.el
 ;; C-n e b     my-cider-eval-buffer          clojure-conf.el
 ;; C-n q       cider-quit                    clojure-conf.el

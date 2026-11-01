@@ -133,6 +133,24 @@
 (when (treesit-language-available-p 'scala)
   (add-to-list 'major-mode-remap-alist '(scala-mode . scala-ts-mode)))
 
+;; Clojure: `clojure-ts-mode' pins its own grammar recipes (clojure, plus
+;; markdown-inline and regex for docstrings and regexps) and installs them
+;; when turned on: run M-x clojure-ts-mode in a Clojure buffer once.  Until
+;; the clojure grammar is there, `clojure-mode' stays.
+(straight-use-package
+ `(clojure-ts-mode
+   :type git :host nil :branch "main"
+   :repo ,(pcase system-type
+            ('windows-nt
+             "https://github.com/clojure-emacs/clojure-ts-mode.git")
+            ('gnu/linux
+             "git@github.com:clojure-emacs/clojure-ts-mode.git"))))
+(when (treesit-language-available-p 'clojure)
+  (dolist (remap '((clojure-mode . clojure-ts-mode)
+                   (clojurescript-mode . clojure-ts-clojurescript-mode)
+                   (clojurec-mode . clojure-ts-clojurec-mode)))
+    (add-to-list 'major-mode-remap-alist remap)))
+
 ;; Decoration level to be used by tree-sitter fontifications.
 (setq treesit-font-lock-level 4)
 

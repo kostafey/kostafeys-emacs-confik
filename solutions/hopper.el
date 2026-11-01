@@ -147,9 +147,8 @@ Used by `eframe-kill-buffer' to return to the previous position with
                    (functionp 'slime-edit-definition))
               (let ((symb string-at-point))
                 (slime-edit-definition symb)))
-             ;; clojure-mode
-             ((member mode (list 'clojure-mode 'clojurescript-mode
-                                 'clojurec-mode))
+             ;; clojure-mode, clojure-ts-mode and the modes derived from them
+             ((provided-mode-derived-p mode 'clojure-mode 'clojure-ts-mode)
               ;; While connected, CIDER's xref backend runs ahead of
               ;; eglot's (`cider-xref-fn-depth').
               (if (or (k/cider-connected-p)
