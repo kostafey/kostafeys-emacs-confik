@@ -27,4 +27,21 @@
 			                 :repo "flycheck/flycheck" :branch "master")
   :defer t)
 
+;;-------------------------------------------------------------------
+;; eglot
+;;
+(defun k/eglot-server-name (orig server)
+  "Name SERVER by its program when it reports no `serverInfo' name.
+Eglot falls back to the connection name, which already holds the
+project and the major modes, so its buffer names repeat them twice."
+  (or (plist-get (eglot--server-info server) :name)
+      (when-let* ((proc (jsonrpc--process server))
+                  (cmd (process-command proc))
+                  ((consp cmd)))
+        (file-name-nondirectory (car cmd)))
+      (funcall orig server)))
+
+(with-eval-after-load 'eglot
+  (advice-add 'eglot--server-name :around #'k/eglot-server-name))
+
 (provide 'ide)
