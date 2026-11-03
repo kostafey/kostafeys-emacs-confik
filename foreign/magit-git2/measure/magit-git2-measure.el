@@ -10,9 +10,11 @@
 ;;; Commentary:
 
 ;; Measures what a Magit status refresh costs in git subprocesses, and
-;; writes the result to measure/report-<host>-<date>.org next to this
-;; file.  Load it into a running, fully configured Emacs and call it
-;; from a buffer inside the repository to measure:
+;; writes the result to measure/report-<host>-<date>-<setup>.org next
+;; to this file, <setup> being `git' when the magit-git2 module is not
+;; loaded and `magit-git2-mode' otherwise.  Load it into a running,
+;; fully configured Emacs and call it from a buffer inside the
+;; repository to measure:
 ;;
 ;;   emacs -l .../measure/magit-git2-measure.el
 ;;   M-x magit-git2-measure
@@ -42,6 +44,7 @@
 (declare-function magit-git-version "magit-git")
 (declare-function magit-toplevel "magit-git")
 (declare-function magit-git2-stats-alist "magit-git2")
+(declare-function magit-git2-core-available-p "magit-git2-core")
 (defvar magit-process-record-invocations)
 (defvar magit-process-record-buffer-name)
 (defvar magit-process-record-entry-format)
@@ -192,14 +195,21 @@ Return a plist describing phase NAME."
             (plist-get phase :verbose)
             "#+end_example\n\n")))
 
+(defun magit-git2-measure--setup ()
+  "Name what answered Magit: \"git\" without the module, else the mode."
+  (if (and (featurep 'magit-git2) (magit-git2-core-available-p))
+      (symbol-name magit-git2-mode)
+    "git"))
+
 (defun magit-git2-measure--write-report (directory environment phases bench)
   "Write the report for DIRECTORY and return its file name.
 ENVIRONMENT is from `magit-git2-measure--environment', PHASES from
 `magit-git2-measure--run-phase' and BENCH from `benchmark-run'."
   (let ((file (expand-file-name
-               (format "report-%s-%s.org"
+               (format "report-%s-%s-%s.org"
                        (car (split-string (system-name) "\\."))
-                       (format-time-string "%Y-%m-%d"))
+                       (format-time-string "%Y-%m-%d")
+                       (magit-git2-measure--setup))
                magit-git2-measure-directory)))
     (with-temp-file file
       (insert (format "#+title: Magit refresh cost: %s\n"

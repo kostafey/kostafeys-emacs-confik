@@ -215,8 +215,9 @@ M-x magit-git2-measure
 
 This records `magit-status` and two refreshes
 (`magit-process-record-invocations`, `magit-refresh-verbose`) and times
-three more. It writes `measure/report-<host>-<date>.org`: invocations
-per command and per argument list, the calls through
+three more. It writes `measure/report-<host>-<date>-<setup>.org`, where
+`<setup>` is `git` when the module is not loaded and `magit-git2-mode`
+otherwise: invocations per command and per argument list, the calls through
 `magit-process-git`, section timings, wall time per refresh and, when
 magit-git2 is loaded, its mode and statistics. Emacs has no
 `dynamic-modules` feature to test. Module support shows as `module-load`
