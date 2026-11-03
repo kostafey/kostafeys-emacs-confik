@@ -41,7 +41,13 @@
    (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
    (json "https://github.com/tree-sitter/tree-sitter-json")
    (make "https://github.com/alemuller/tree-sitter-make")
-   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+   ;; Block structure and inline markup are two parsers of one grammar;
+   ;; zig-ts-mode highlights Markdown in doc comments with both.
+   (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown"
+             "split_parser" "tree-sitter-markdown/src")
+   (markdown-inline
+    "https://github.com/tree-sitter-grammars/tree-sitter-markdown"
+    "split_parser" "tree-sitter-markdown-inline/src")
    (toml "https://github.com/tree-sitter/tree-sitter-toml")
    (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
