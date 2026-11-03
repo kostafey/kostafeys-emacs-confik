@@ -25,6 +25,13 @@
 (require 'magit-git2)
 (require 'fixture)
 
+(declare-function magit-git2--release "magit-git2-core")
+
+;; Without the module every call falls through to git, and the tests
+;; would compare git with itself.
+(unless (magit-git2-core-available-p)
+  (error "magit-git2: %s" magit-git2-core-error))
+
 (setq ert-batch-print-length 3
       ert-batch-print-level 3
       ert-batch-backtrace-right-margin 60)
