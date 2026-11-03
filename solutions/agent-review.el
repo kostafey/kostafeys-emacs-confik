@@ -56,7 +56,7 @@ name functions called in that buffer:
   :type '(alist :key-type symbol :value-type plist))
 
 (defface agent-review-comment
-  '((t :inherit font-lock-comment-face :slant italic))
+  '((t :inherit font-lock-constant-face :slant normal))
   "Face for review comments shown under the diff lines they refer to.")
 
 (defvar agent-review--comments nil
