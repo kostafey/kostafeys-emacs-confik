@@ -47,6 +47,10 @@
       (remove-hook 'magit-status-sections-hook section))
     (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)))
 
+;; magit-git2 answers Magit's cheap git queries in-process; on Windows, with
+;; its module built, it puts the sections dropped above back.
+(require 'magit-git2-conf)
+
 ;; `vc-backend' probes every backend in `vc-handled-backends' in order,
 ;; spawning a subprocess per backend — painfully slow on Windows.  We only
 ;; drive Git (darcs goes through darcsum, not vc), so probe nothing else.

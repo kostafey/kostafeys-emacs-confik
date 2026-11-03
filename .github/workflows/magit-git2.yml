@@ -1,0 +1,83 @@
+name: magit-git2
+
+on:
+  push:
+    paths:
+      - "foreign/magit-git2/**"
+      - ".github/workflows/magit-git2.yml"
+  pull_request:
+    paths:
+      - "foreign/magit-git2/**"
+      - ".github/workflows/magit-git2.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: foreign/magit-git2
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The differential tests also run against this repository.
+          fetch-depth: 0
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.17.0
+
+      - uses: purcell/setup-emacs@master
+        with:
+          version: "30.1"
+
+      - name: Install git and libgit2
+        run: sudo apt-get update && sudo apt-get install -y git libgit2-dev pkg-config
+
+      - name: Fetch Magit and its dependencies
+        run: |
+          mkdir -p "$RUNNER_TEMP/elisp" && cd "$RUNNER_TEMP/elisp"
+          for repo in magit/magit magit/transient magit/with-editor \
+                      emacs-compat/compat tarsius/cond-let tarsius/llama; do
+            git clone -q --depth 1 "https://github.com/$repo.git"
+          done
+          echo "MAGIT_LOAD_PATH=$PWD/magit/lisp:$PWD/transient/lisp:$PWD/with-editor/lisp:$PWD/compat:$PWD/cond-let:$PWD/llama" >> "$GITHUB_ENV"
+
+      - name: Check formatting
+        run: zig fmt --check build.zig build src
+
+      - name: Zig unit tests
+        run: zig build test --summary all
+
+      - name: Build against the system libgit2
+        run: zig build -Dsystem-libgit2=true --summary all
+
+      - name: ERT, system libgit2
+        run: test/run-tests.sh
+
+      - name: Build with the vendored libgit2
+        run: zig build --summary all
+
+      - name: ERT, vendored libgit2
+        run: test/run-tests.sh
+
+  # Apart from the tests: a failing test still leaves the .dll.
+  windows-module:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.17.0
+
+      - name: Cross-compile the Windows module
+        run: |
+          zig build -Dtarget=x86_64-windows-gnu --summary all
+          objdump -p zig-out/lib/magit-git2-core.dll | grep "DLL Name"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: magit-git2-core-windows-x86_64
+          path: foreign/magit-git2/zig-out/lib/magit-git2-core.dll

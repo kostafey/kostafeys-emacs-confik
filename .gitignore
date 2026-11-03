@@ -19,6 +19,23 @@
 !solutions
 !foreign
 
+# foreign/magit-git2, a Zig project; its build output stays ignored
+!/foreign/magit-git2/
+!/foreign/magit-git2/*/
+!/foreign/magit-git2/**/*.zig
+!/foreign/magit-git2/**/*.zon
+!/foreign/magit-git2/vendor/emacs-module.h
+!/foreign/magit-git2/test/run-tests.sh
+!/foreign/magit-git2/.gitattributes
+/foreign/magit-git2/.zig-cache/
+/foreign/magit-git2/zig-out*/
+/foreign/magit-git2/zig-pkg/
+
+# CI
+!/.github/
+!/.github/workflows/
+!/.github/workflows/*.yml
+
 communications.el
 ejc-databases.el
 .mc-lists.el
