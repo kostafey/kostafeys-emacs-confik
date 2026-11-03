@@ -243,6 +243,18 @@
 ;; C-x C-e     go-run                        go-conf.el
 
 ;;----------------------------------------------------------------------
+;; Zig
+;; In zig-ts-mode
+;; C-c C-c     zig-ts-build                  zig-conf.el
+;; C-c <tab>   eglot-format-buffer           zig-conf.el
+;; C-c C-r     zig-ts-run                    zig run the buffer
+;; C-c C-t     zig-ts-test                   zig test the buffer
+;; C-c C-b C-b zig-ts-build                  zig build
+;; C-c C-b C-e zig-ts-build-exe              zig build-exe the buffer
+;; C-c C-b C-l zig-ts-build-lib              zig build-lib the buffer
+;; C-c C-b C-o zig-ts-build-obj              zig build-obj the buffer
+
+;;----------------------------------------------------------------------
 ;; JavaScript
 ;; In js-mode, js2-mode, js-jsx-mode, web-mode, js-json-mode and json-ts-mode
 ;; C-c C-c     k/npm-mode-build              js-conf.el

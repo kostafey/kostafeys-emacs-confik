@@ -94,6 +94,7 @@
 ;; (require 'sphinx-frontend)
 ;; (require 'lua-conf)
 (require 'rust-conf)
+(require 'zig-conf)
 (require 'ejc-sql-conf nil 'noerror)
 
 ;;-------------------------------------------------------------------
