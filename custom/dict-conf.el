@@ -317,4 +317,10 @@ Answers in every buffer but a `prog-mode' one, where it waits for
   ;; completion still wins.
   (add-hook 'completion-at-point-functions #'k/dict-dabbrev-capf 90))
 
+;; Since Emacs 30 `text-mode' puts `ispell-completion-at-point' first in its
+;; buffer-local capf list.  It looks words up in a system word list that
+;; Windows lacks, so every attempt signals "No plain word-list found" (corfu
+;; logs a backtrace for it) before the dictionaries above get their turn.
+(setq text-mode-ispell-word-completion nil)
+
 (provide 'dict-conf)
