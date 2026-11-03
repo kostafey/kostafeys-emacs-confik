@@ -99,6 +99,14 @@ eglot down before updating: a running zls.exe cannot be overwritten."
            (message "zls install failed, see %s" (buffer-name log)))
          (delete-file archive))))))
 
+;; Semantic tokens only for what takes semantic analysis: comments,
+;; keywords, strings and the like stay with tree-sitter, whose Markdown
+;; in doc comments the tokens of a whole comment would paint over.
+(with-eval-after-load 'eglot
+  (setq-default eglot-workspace-configuration
+                (plist-put (default-value 'eglot-workspace-configuration)
+                           :zls '(:semantic_tokens "partial"))))
+
 (add-hook 'zig-ts-mode-hook #'eglot-ensure)
 
 (provide 'zig-conf)
