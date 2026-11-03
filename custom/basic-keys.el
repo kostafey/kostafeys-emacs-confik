@@ -24,6 +24,12 @@
 (require 'cua-base)
 (cua-mode t)
 (setq cua-prefix-override-inhibit-delay 0.1)
+;; `cua-delete-copy-to-register-0' sets `delete-selection-save-to-register',
+;; so delsel marks the text typed over a selection with an overlay in the
+;; `delete-selection-replacement' face (`highlight').  The overlay grows with
+;; typing and stays until point leaves it; keep register 0, drop the colour.
+(with-eval-after-load 'delsel
+  (set-face-attribute 'delete-selection-replacement nil :inherit 'unspecified))
 
 ;; Region selection:
 (setq transient-mark-mode t)
