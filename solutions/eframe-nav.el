@@ -76,16 +76,28 @@ switching to the previous buffer."
 ;; Multi-monitor windmove: when there is no window in the requested
 ;; direction but another frame exists, hop to the neighbouring frame.
 ;;
+(defun eframe-window-on-other-frame (direction)
+  "Return the nearest window on another top-level frame, or nil.
+DIRECTION `right' looks in `next-window' order, `left' in the reverse one.
+Only frames `next-window' visits count: hidden ones, like the child frame
+corfu keeps for its popup, are in `frame-list' but no window leads to them."
+  (let ((windows (cdr (window-list-1 nil nil 0))))
+    (seq-find (lambda (window)
+                (let ((frame (window-frame window)))
+                  (not (or (eq frame (selected-frame))
+                           (frame-parent frame)))))
+              (if (eq direction 'right) windows (reverse windows)))))
+
 (defun eframe-windmove-do-window-select (orig-fun &rest args)
-  (let ((other-window (apply 'windmove-find-other-window (seq-take args 3))))
-    (if (and (null other-window)
-             (> (length (frame-list)) 1))
-        (let ((direction (car args))
-              (f (selected-frame)))
-          (if (member direction '(right left))
-              (while (eq f (selected-frame))
-                (cond ((equal direction 'right) (next-multiframe-window))
-                      ((equal direction 'left) (previous-multiframe-window))))))
+  (let* ((direction (car args))
+         (target (and (memq direction '(right left))
+                      (null (apply 'windmove-find-other-window
+                                   (seq-take args 3)))
+                      (eframe-window-on-other-frame direction))))
+    (if target
+        (progn
+          (select-window target)
+          (select-frame-set-input-focus (window-frame target)))
       (apply orig-fun args))))
 
 (advice-add 'windmove-do-window-select

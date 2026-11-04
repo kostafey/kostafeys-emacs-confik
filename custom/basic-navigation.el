@@ -227,18 +227,20 @@ block, return (BEG . END) of the block content without the fence lines."
     (set-window-start w2 s1)))
 
 (defun swap-windows ()
-  "If you have 2 windows or 2 frames, it swaps them."
+  "If you have 2 windows or 2 frames, it swaps them.
+Hidden frames and child frames, such as corfu's popup, do not count."
   (interactive)
-  (cond ((= (count-windows) 2)
-         (let* ((w1 (car (window-list)))
-                (w2 (cadr (window-list))))
-           (swap-buffers w1 w2)))
-        ((= (length (frame-list)) 2)
-         (let* ((w1 (car (window-list (car (frame-list)))))
-                (w2 (car (window-list (cadr (frame-list))))))
-           (swap-buffers w1 w2)))
-        (t
-         (message "You need exactly 2 windows or frames to do this."))))
+  (let ((frames (seq-remove #'frame-parent (visible-frame-list))))
+    (cond ((= (count-windows) 2)
+           (let* ((w1 (car (window-list)))
+                  (w2 (cadr (window-list))))
+             (swap-buffers w1 w2)))
+          ((= (length frames) 2)
+           (let* ((w1 (car (window-list (car frames))))
+                  (w2 (car (window-list (cadr frames)))))
+             (swap-buffers w1 w2)))
+          (t
+           (message "You need exactly 2 windows or frames to do this.")))))
 
 (defun mirror-window ()
   "Show the same buffer in the second window as in the active window."
