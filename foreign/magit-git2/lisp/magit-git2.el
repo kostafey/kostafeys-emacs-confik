@@ -8,7 +8,7 @@
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
+;; the Free Software Foundation, either version 2 of the License, or
 ;; (at your option) any later version.
 
 ;;; Commentary:
@@ -413,7 +413,7 @@ look by default.  Return the directory used, or nil."
 (defconst magit-git2--rev-parse-rules
   '("%s" "refs/%s" "refs/tags/%s" "refs/heads/%s" "refs/remotes/%s"
     "refs/remotes/%s/HEAD")
-  "Git's ref_rev_parse_rules.")
+  "Where git looks a ref name up, in order (gitrevisions(7)).")
 
 (defun magit-git2--match-rule (refname rule)
   "The part of REFNAME that matches the %s of RULE, or nil."
@@ -427,18 +427,26 @@ look by default.  Return the directory used, or nil."
                     (- (length refname) (length suffix))))))
 
 (defun magit-git2--shorten-ref (refname strict)
-  "Git's shorten_unambiguous_ref of REFNAME."
+  "REFNAME as git's --abbrev-ref and %(refname:short) shorten it.
+The most specific lookup rule that matches REFNAME, the bare one aside,
+gives the short name, unless another ref answers to that name under a
+rule looked up before it, or under any other rule when STRICT; then
+the next matching rule is tried, and REFNAME stays whole when none is
+left."
   (let ((rules magit-git2--rev-parse-rules))
-    (or (cl-loop for i from (1- (length rules)) downto 1
-                 for short = (magit-git2--match-rule refname (nth i rules))
-                 when (and short
-                           (cl-loop for j from 0
-                                    below (if strict (length rules) i)
-                                    never (and (/= i j)
-                                               (magit-git2--ref-exists-p
-                                                (format (nth j rules)
-                                                        short)))))
-                 return short)
+    (or (seq-some
+         (lambda (rule)
+           (when-let* ((short (magit-git2--match-rule refname rule)))
+             (and (not (seq-some
+                        (lambda (other)
+                          (and (not (equal other rule))
+                               (magit-git2--ref-exists-p
+                                (format other short))))
+                        (if strict
+                            rules
+                          (seq-take rules (seq-position rules rule)))))
+                  short)))
+         (reverse (cdr rules)))
         refname)))
 
 (defun magit-git2--dwim-count (name)
@@ -1473,6 +1481,7 @@ OLD NAME EMAIL TIME OFFSET MESSAGE SELECTOR SHORT-SELECTOR)."
      ("log" "--format=%h %D" "--decorate=short" "--all-match" "--")
      ("log" "--format=%h%d" "--decorate=short" "main" "feature" "--")
      ("log" "--format=%h%d" "--decorate=full" "feature" "^v1.0" "--")
+     ("log" "--format=%h %s" "-n3" "cp1251" "--")
      ("log" "--format=%an %aN" "--no-use-mailmap" "-n3" "--")
      ("log" "--format=%an %aN" "-n3" "--")
      ("log" "--no-walk" "--format=%h %s" "HEAD^{commit}" "--")

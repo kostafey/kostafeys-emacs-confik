@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Run the magit-git2 ERT suite against a fresh fixture.
 #
 #   test/run-tests.sh [ERT-SELECTOR]

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 //! Static libgit2 without network support: no HTTPS, no SSH, no NTLM,
 //! bundled zlib, builtin PCRE2 regex, builtin SHA-256.
 //!

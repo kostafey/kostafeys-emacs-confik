@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Kostafey <kostafey@gmail.com>
+
 //! libgit2 wrappers: the repository cache, error capture, object ids.
 
 const std = @import("std");

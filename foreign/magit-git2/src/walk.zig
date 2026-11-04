@@ -1,14 +1,36 @@
-//! The commit order of `git log' without --topo-order/--date-order: a port
-//! of revision.c (git 2.55) for start commits, negative (^) commits,
-//! --no-walk and -n, nothing else.
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Kostafey <kostafey@gmail.com>
+
+//! The order `git log' lists commits in when no ordering option is
+//! given, for start commits, negative (^) commits, --no-walk and -n.
 //!
-//! libgit2's own revwalk is not used because its time-ordered queue does
-//! not keep commits with equal dates in insertion order, which git's does.
+//! What git does, as its output shows:
 //!
-//! The walker is generic over a commit source: `Source.parse(gpa, oid,
+//! - A queue holds commits newest committer date first; commits with
+//!   equal dates leave it in the order they entered it.  It starts with
+//!   the start commits, and a commit leaving it brings in its parents.
+//!   No commit enters twice.
+//! - Without negative commits the walk streams: commits are listed as
+//!   they leave the queue.  --no-walk lists the start commits alone, in
+//!   queue order.
+//! - Negative commits exclude what they reach, as far as the walk has
+//!   read the history: from a negative start commit, and from every
+//!   excluded commit that leaves the queue, the exclusion runs down the
+//!   parent links already read.  The walk collects the included commits
+//!   that leave the queue and lists, at the end, those still included.
+//!   It stops when, five times in a row, an excluded commit leaves a
+//!   queue that then holds only excluded commits, none of them dated at
+//!   or after the last included one.  So with clock skew it lists
+//!   commits a negative one reaches, as git does.  A negative commit
+//!   cancels --no-walk.
+//!
+//! libgit2's revwalk is not used because its date-ordered queue does not
+//! keep equal dates in the order they were queued.
+//!
+//! The walker reads commits through a `Source': `parse(gpa, oid,
 //! parents)' appends the parent ids of commit OID to PARENTS and returns
 //! its committer date, or null when the object is missing.  The libgit2
-//! source lives in main.zig; the tests below use an in-memory graph.
+//! source is in git.zig; the tests below use an in-memory graph.
 
 const std = @import("std");
 
@@ -21,20 +43,30 @@ pub const Start = struct {
 
 pub const Error = error{ OutOfMemory, MissingCommit, SourceFailed };
 
-/// SLOP from revision.c: how many uninteresting commits limit_list looks
-/// at past the last interesting one before it gives up.
-const slop_initial = 5;
+/// How many excluded commits in a row may leave a queue with nothing left
+/// to find before a walk with negative commits ends.
+const patience = 5;
 
-const Node = struct {
-    oid: Oid,
+const Commit = struct {
+    id: Oid,
     date: i64 = 0,
-    parents_start: u32 = 0,
-    parents_len: u32 = 0,
-    parsed: bool = false,
-    seen: bool = false,
-    added: bool = false,
-    uninteresting: bool = false,
-    shown: bool = false,
+    /// Indices of the parents; null until the commit is read.
+    parents: ?[]const u32 = null,
+    excluded: bool = false,
+    entered: bool = false,
+    queued: bool = false,
+};
+
+/// A queue entry; `seq' keeps equal dates in arrival order.
+const Entry = struct {
+    date: i64,
+    seq: u64,
+    commit: u32,
+
+    fn first(_: void, a: Entry, b: Entry) std.math.Order {
+        if (a.date != b.date) return std.math.order(b.date, a.date);
+        return std.math.order(a.seq, b.seq);
+    }
 };
 
 pub fn Walker(comptime Source: type) type {
@@ -42,153 +74,114 @@ pub fn Walker(comptime Source: type) type {
         const Self = @This();
 
         gpa: std.mem.Allocator,
+        arena: std.heap.ArenaAllocator,
         source: Source,
-        nodes: std.ArrayList(Node) = .empty,
-        edges: std.ArrayList(u32) = .empty,
-        index: std.AutoHashMapUnmanaged(Oid, u32) = .empty,
-        scratch: std.ArrayList(Oid) = .empty,
+        commits: std.ArrayList(Commit) = .empty,
+        by_id: std.AutoHashMapUnmanaged(Oid, u32) = .empty,
+        queue: std.PriorityQueue(Entry, void, Entry.first) = .empty,
+        arrivals: u64 = 0,
+        /// How many queued commits are not excluded.
+        included_queued: usize = 0,
+        ids: std.ArrayList(Oid) = .empty,
 
         pub fn init(gpa: std.mem.Allocator, source: Source) Self {
-            return .{ .gpa = gpa, .source = source };
+            return .{ .gpa = gpa, .arena = .init(gpa), .source = source };
         }
 
         pub fn deinit(self: *Self) void {
-            self.nodes.deinit(self.gpa);
-            self.edges.deinit(self.gpa);
-            self.index.deinit(self.gpa);
-            self.scratch.deinit(self.gpa);
+            self.commits.deinit(self.gpa);
+            self.by_id.deinit(self.gpa);
+            self.queue.deinit(self.gpa);
+            self.ids.deinit(self.gpa);
+            self.arena.deinit();
         }
 
-        fn node(self: *Self, oid: Oid) Error!u32 {
-            const gop = try self.index.getOrPut(self.gpa, oid);
-            if (!gop.found_existing) {
-                gop.value_ptr.* = @intCast(self.nodes.items.len);
-                try self.nodes.append(self.gpa, .{ .oid = oid });
+        /// The index of commit ID, added unread if new.
+        fn at(self: *Self, id: Oid) Error!u32 {
+            const slot = try self.by_id.getOrPut(self.gpa, id);
+            if (!slot.found_existing) {
+                slot.value_ptr.* = @intCast(self.commits.items.len);
+                try self.commits.append(self.gpa, .{ .id = id });
             }
-            return gop.value_ptr.*;
+            return slot.value_ptr.*;
         }
 
-        /// Parse node N; false if its object is missing.
-        fn parse(self: *Self, n: u32) Error!bool {
-            if (self.nodes.items[n].parsed) return true;
-            self.scratch.clearRetainingCapacity();
-            const date = (try self.source.parse(self.gpa, self.nodes.items[n].oid, &self.scratch)) orelse
+        /// Read the date and parents of commit I unless known; false when
+        /// its object is missing.
+        fn read(self: *Self, i: u32) Error!bool {
+            if (self.commits.items[i].parents != null) return true;
+            self.ids.clearRetainingCapacity();
+            const date = (try self.source.parse(self.gpa, self.commits.items[i].id, &self.ids)) orelse
                 return false;
-            const start: u32 = @intCast(self.edges.items.len);
-            // `node' may grow `nodes', so look the node up again after.
-            for (self.scratch.items) |p| {
-                const pn = try self.node(p);
-                try self.edges.append(self.gpa, pn);
-            }
-            const nd = &self.nodes.items[n];
-            nd.date = date;
-            nd.parents_start = start;
-            nd.parents_len = @intCast(self.scratch.items.len);
-            nd.parsed = true;
+            const parents = try self.arena.allocator().alloc(u32, self.ids.items.len);
+            for (self.ids.items, parents) |id, *p| p.* = try self.at(id);
+            self.commits.items[i].date = date;
+            self.commits.items[i].parents = parents;
             return true;
         }
 
-        fn parents(self: *Self, n: u32) []const u32 {
-            const nd = self.nodes.items[n];
-            if (!nd.parsed) return &.{};
-            return self.edges.items[nd.parents_start..][0..nd.parents_len];
+        fn parentsOf(self: *Self, i: u32) []const u32 {
+            return self.commits.items[i].parents orelse &.{};
         }
 
-        // mark_parents_uninteresting(): only parsed commits pass the mark
-        // on to their own parents.
-        fn markParentsUninteresting(self: *Self, n: u32) Error!void {
-            var stack: std.ArrayList(u32) = .empty;
-            defer stack.deinit(self.gpa);
-            for (self.parents(n)) |p| try self.markOne(p, &stack);
-            while (stack.pop()) |p| try self.markOne(p, &stack);
+        fn exclude(self: *Self, i: u32) void {
+            const c = &self.commits.items[i];
+            if (c.excluded) return;
+            c.excluded = true;
+            if (c.queued) self.included_queued -= 1;
         }
 
-        fn markOne(self: *Self, n: u32, stack: *std.ArrayList(u32)) Error!void {
-            if (self.nodes.items[n].uninteresting) return;
-            self.nodes.items[n].uninteresting = true;
-            for (self.parents(n)) |p| try stack.append(self.gpa, p);
-        }
-
-        // process_parents()
-        fn processParents(self: *Self, n: u32, queue: *Queue) Error!void {
-            if (self.nodes.items[n].added) return;
-            self.nodes.items[n].added = true;
-            if (self.nodes.items[n].uninteresting) {
-                const ps = self.nodes.items[n];
-                var i: u32 = 0;
-                while (i < ps.parents_len) : (i += 1) {
-                    const p = self.edges.items[ps.parents_start + i];
-                    self.nodes.items[p].uninteresting = true;
-                    if (!try self.parse(p)) continue;
-                    if (self.nodes.items[p].parents_len > 0)
-                        try self.markParentsUninteresting(p);
-                    if (self.nodes.items[p].seen) continue;
-                    self.nodes.items[p].seen = true;
-                    try queue.put(self, p);
-                }
-                return;
-            }
-            const ps = self.nodes.items[n];
-            var i: u32 = 0;
-            while (i < ps.parents_len) : (i += 1) {
-                const p = self.edges.items[ps.parents_start + i];
-                if (!try self.parse(p)) return error.MissingCommit;
-                if (!self.nodes.items[p].seen) {
-                    self.nodes.items[p].seen = true;
-                    try queue.put(self, p);
-                }
+        /// Exclude what lies below commit I through the parent links read
+        /// so far, stopping at commits already excluded.
+        fn excludeBelow(self: *Self, i: u32) Error!void {
+            var todo: std.ArrayList(u32) = .empty;
+            defer todo.deinit(self.gpa);
+            try todo.appendSlice(self.gpa, self.parentsOf(i));
+            while (todo.pop()) |j| {
+                if (self.commits.items[j].excluded) continue;
+                self.exclude(j);
+                try todo.appendSlice(self.gpa, self.parentsOf(j));
             }
         }
 
-        // everybody_uninteresting()
-        fn everybodyUninteresting(self: *Self, queue: *const Queue, cache: *?u32) bool {
-            if (cache.*) |n| {
-                if (!self.nodes.items[n].uninteresting) return false;
-            }
-            for (queue.items.items) |item| {
-                if (self.nodes.items[item.node].uninteresting) continue;
-                cache.* = item.node;
-                return false;
-            }
-            return true;
+        fn enter(self: *Self, i: u32) Error!void {
+            const c = &self.commits.items[i];
+            if (c.entered) return;
+            c.entered = true;
+            c.queued = true;
+            if (!c.excluded) self.included_queued += 1;
+            try self.queue.push(self.gpa, .{ .date = c.date, .seq = self.arrivals, .commit = i });
+            self.arrivals += 1;
         }
 
-        // still_interesting()
-        fn stillInteresting(self: *Self, queue: *const Queue, date: i64, slop: u32, cache: *?u32) u32 {
-            const head = queue.peek() orelse return 0;
-            if (date <= self.nodes.items[head].date) return slop_initial;
-            if (!self.everybodyUninteresting(queue, cache)) return slop_initial;
-            return slop - 1;
+        fn leave(self: *Self) ?u32 {
+            const e = self.queue.pop() orelse return null;
+            const c = &self.commits.items[e.commit];
+            c.queued = false;
+            if (!c.excluded) self.included_queued -= 1;
+            return e.commit;
         }
 
-        // limit_list()
-        fn limitList(self: *Self, list: []const u32, out: *std.ArrayList(u32)) Error!void {
-            var queue: Queue = .{};
-            defer queue.deinit(self.gpa);
-            for (list) |n| try queue.put(self, n);
-            var slop: u32 = slop_initial;
-            var date: i64 = std.math.maxInt(i64);
-            var cache: ?u32 = null;
-            while (queue.get(self)) |n| {
-                if (cache == n) cache = null;
-                try self.processParents(n, &queue);
-                if (self.nodes.items[n].uninteresting) {
-                    try self.markParentsUninteresting(n);
-                    slop = self.stillInteresting(&queue, date, slop, &cache);
-                    if (slop != 0) continue;
-                    break;
-                }
-                date = self.nodes.items[n].date;
-                try out.append(self.gpa, n);
+        /// Bring in the parents of commit I, which has just left the
+        /// queue.  An excluded commit passes its exclusion on, and a
+        /// missing parent of it is no error.
+        fn follow(self: *Self, i: u32) Error!void {
+            const excluded = self.commits.items[i].excluded;
+            for (self.parentsOf(i)) |p| {
+                if (excluded) {
+                    self.exclude(p);
+                    if (!try self.read(p)) continue;
+                    try self.excludeBelow(p);
+                } else if (!try self.read(p)) return error.MissingCommit;
+                try self.enter(p);
             }
         }
 
-        /// Whether get_commit_action() would show N; marks it shown if so.
-        fn show(self: *Self, n: u32) bool {
-            const nd = &self.nodes.items[n];
-            if (nd.shown or nd.uninteresting) return false;
-            nd.shown = true;
-            return true;
+        /// Append commit I to OUT; false once that used up LEFT.
+        fn list(self: *Self, i: u32, out: *std.ArrayList(Oid), left: *usize) Error!bool {
+            try out.append(self.gpa, self.commits.items[i].id);
+            left.* -= 1;
+            return left.* > 0;
         }
 
         /// Walk from STARTS like `git log' and append up to MAX_COUNT
@@ -197,135 +190,59 @@ pub fn Walker(comptime Source: type) type {
             self: *Self,
             starts: []const Start,
             max_count: ?usize,
-            no_walk_requested: bool,
+            no_walk: bool,
             out: *std.ArrayList(Oid),
         ) Error!void {
-            var remaining = max_count orelse std.math.maxInt(usize);
-            if (remaining == 0) return;
+            var left = max_count orelse std.math.maxInt(usize);
+            if (left == 0) return;
 
-            // setup_revisions(): flags go on the objects first, and a
-            // negative revision turns --no-walk off.
-            var no_walk = no_walk_requested;
+            // A commit given both ways is excluded.
+            var ranged = false;
             for (starts) |s| {
-                const n = try self.node(s.oid);
-                if (s.uninteresting) {
-                    self.nodes.items[n].uninteresting = true;
-                    no_walk = false;
-                }
+                const i = try self.at(s.oid);
+                if (!s.uninteresting) continue;
+                self.commits.items[i].excluded = true;
+                ranged = true;
+            }
+            for (starts) |s| {
+                const i = try self.at(s.oid);
+                if (!try self.read(i)) return error.MissingCommit;
+                if (self.commits.items[i].excluded) try self.excludeBelow(i);
+                try self.enter(i);
             }
 
-            // prepare_revision_walk() and handle_commit()
-            var list: std.ArrayList(u32) = .empty;
-            defer list.deinit(self.gpa);
-            var limited = false;
-            for (starts) |s| {
-                const n = try self.node(s.oid);
-                if (!try self.parse(n)) return error.MissingCommit;
-                if (self.nodes.items[n].uninteresting) {
-                    try self.markParentsUninteresting(n);
-                    limited = true;
-                }
-                if (!self.nodes.items[n].seen) {
-                    self.nodes.items[n].seen = true;
-                    try list.append(self.gpa, n);
-                }
-            }
-            // commit_list_sort_by_date(): a stable sort, newest first.
-            std.sort.insertion(u32, list.items, self, newerThan);
-
-            if (no_walk or limited) {
-                var commits: std.ArrayList(u32) = .empty;
-                defer commits.deinit(self.gpa);
-                if (no_walk)
-                    try commits.appendSlice(self.gpa, list.items)
-                else
-                    try self.limitList(list.items, &commits);
-                for (commits.items) |n| {
-                    if (!self.show(n)) continue;
-                    try out.append(self.gpa, self.nodes.items[n].oid);
-                    remaining -= 1;
-                    if (remaining == 0) return;
+            if (!ranged) {
+                while (self.leave()) |i| {
+                    if (!no_walk) try self.follow(i);
+                    if (!try self.list(i, out, &left)) return;
                 }
                 return;
             }
 
-            // The streaming walk: a date-ordered queue, ties in insertion
-            // order.
-            var queue: Queue = .{};
-            defer queue.deinit(self.gpa);
-            for (list.items) |n| try queue.put(self, n);
-            while (queue.get(self)) |n| {
-                try self.processParents(n, &queue);
-                if (!self.show(n)) continue;
-                try out.append(self.gpa, self.nodes.items[n].oid);
-                remaining -= 1;
-                if (remaining == 0) return;
+            var picked: std.ArrayList(u32) = .empty;
+            defer picked.deinit(self.gpa);
+            var last_included: i64 = std.math.maxInt(i64);
+            var streak: u32 = 0;
+            while (self.leave()) |i| {
+                try self.follow(i);
+                if (!self.commits.items[i].excluded) {
+                    last_included = self.commits.items[i].date;
+                    try picked.append(self.gpa, i);
+                    continue;
+                }
+                const newest = self.queue.peek() orelse break;
+                if (self.included_queued > 0 or newest.date >= last_included) {
+                    streak = 0;
+                    continue;
+                }
+                streak += 1;
+                if (streak == patience) break;
+            }
+            for (picked.items) |i| {
+                if (self.commits.items[i].excluded) continue;
+                if (!try self.list(i, out, &left)) return;
             }
         }
-
-        fn newerThan(self: *Self, a: u32, b: u32) bool {
-            return self.nodes.items[a].date > self.nodes.items[b].date;
-        }
-
-        /// git's prio_queue ordered by compare_commits_by_commit_date:
-        /// newest first, equal dates in insertion order.
-        const Queue = struct {
-            items: std.ArrayList(Item) = .empty,
-            counter: u64 = 0,
-
-            const Item = struct { node: u32, ctr: u64 };
-
-            fn before(w: *Self, a: Item, b: Item) bool {
-                const da = w.nodes.items[a.node].date;
-                const db = w.nodes.items[b.node].date;
-                if (da != db) return da > db;
-                return a.ctr < b.ctr;
-            }
-
-            fn put(q: *Queue, w: *Self, n: u32) Error!void {
-                try q.items.append(w.gpa, .{ .node = n, .ctr = q.counter });
-                q.counter += 1;
-                var i = q.items.items.len - 1;
-                const a = q.items.items;
-                while (i > 0) {
-                    const parent = (i - 1) / 2;
-                    if (!before(w, a[i], a[parent])) break;
-                    std.mem.swap(Item, &a[i], &a[parent]);
-                    i = parent;
-                }
-            }
-
-            fn peek(q: *const Queue) ?u32 {
-                if (q.items.items.len == 0) return null;
-                return q.items.items[0].node;
-            }
-
-            fn get(q: *Queue, w: *Self) ?u32 {
-                const a = q.items.items;
-                if (a.len == 0) return null;
-                const top = a[0].node;
-                const last = q.items.pop().?;
-                if (q.items.items.len == 0) return top;
-                const b = q.items.items;
-                b[0] = last;
-                var i: usize = 0;
-                while (true) {
-                    const l = 2 * i + 1;
-                    const r = l + 1;
-                    var best = i;
-                    if (l < b.len and before(w, b[l], b[best])) best = l;
-                    if (r < b.len and before(w, b[r], b[best])) best = r;
-                    if (best == i) break;
-                    std.mem.swap(Item, &b[i], &b[best]);
-                    i = best;
-                }
-                return top;
-            }
-
-            fn deinit(q: *Queue, gpa: std.mem.Allocator) void {
-                q.items.deinit(gpa);
-            }
-        };
     };
 }
 
@@ -412,6 +329,37 @@ test "clock skew: a commit older than its parent" {
         .{ 'p', 10, "q" },
     } };
     try expectWalk(g, &.{.{ 'p', false }}, null, false, "pq");
+}
+
+test "clock skew: a commit collected early is excluded later" {
+    // d ^y: z leaves the queue before the walk down y, through the
+    // skewed m and k, reaches it, so z is collected, then dropped.
+    const g: TestGraph = .{ .commits = &.{
+        .{ 'z', 5, "" },
+        .{ 'd', 10, "z" },
+        .{ 'k', 1, "z" },
+        .{ 'm', 1, "k" },
+        .{ 'y', 8, "m" },
+    } };
+    try expectWalk(g, &.{ .{ 'd', false }, .{ 'y', true } }, null, false, "d");
+}
+
+test "clock skew: the walk gives up before reaching a commit" {
+    // d ^y: q lies below y, but six old excluded commits lie between,
+    // and the walk ends after five of them: git lists q too.
+    const g: TestGraph = .{ .commits = &.{
+        .{ 'q', 10, "" },
+        .{ 'd', 20, "q" },
+        .{ '7', 5, "q" },
+        .{ '6', 5, "7" },
+        .{ '5', 5, "6" },
+        .{ '4', 5, "5" },
+        .{ '3', 5, "4" },
+        .{ '2', 5, "3" },
+        .{ '1', 5, "2" },
+        .{ 'y', 19, "1" },
+    } };
+    try expectWalk(g, &.{ .{ 'd', false }, .{ 'y', true } }, null, false, "dq");
 }
 
 test "missing start commit" {

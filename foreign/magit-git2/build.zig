@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Kostafey <kostafey@gmail.com>
+
 //! Builds magit-git2-core, the Emacs dynamic module.
 //!
 //!   zig build                               vendored libgit2, host target

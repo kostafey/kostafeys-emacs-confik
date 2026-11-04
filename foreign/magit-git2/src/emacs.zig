@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Kostafey <kostafey@gmail.com>
+
 //! Thin helpers over `emacs_env`: interning, strings, lists, signals.
 //!
 //! Every helper either returns a value or leaves a non-local exit pending
@@ -175,8 +178,11 @@ pub const ListBuilder = struct {
         return env.list(self.items.items);
     }
 
+    /// Free the items.  The builder is left empty, so an `errdefer
+    /// deinit' after `finish' frees nothing twice.
     pub fn deinit(self: *ListBuilder) void {
         self.items.deinit(allocator);
+        self.items = .empty;
     }
 };
 
@@ -211,4 +217,12 @@ test "ListBuilder grows and frees" {
     defer b.deinit();
     for (0..100) |_| try b.append(null);
     try std.testing.expectEqual(@as(usize, 100), b.items.items.len);
+}
+
+test "ListBuilder survives a second deinit" {
+    var b: ListBuilder = .{};
+    try b.append(null);
+    b.deinit();
+    b.deinit();
+    try std.testing.expectEqual(@as(usize, 0), b.items.items.len);
 }

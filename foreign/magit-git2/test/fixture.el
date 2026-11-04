@@ -4,7 +4,7 @@
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
+;; the Free Software Foundation, either version 2 of the License, or
 ;; (at your option) any later version.
 
 ;;; Commentary:
@@ -22,7 +22,8 @@
 ;;   origin.git        bare repository
 ;;   main              branch main, upstream origin/main ahead 2 behind 1,
 ;;                     tags, two stashes, staged/unstaged/untracked/
-;;                     renamed/ignored files, UTF-8 names and messages
+;;                     renamed/ignored files, UTF-8 names and messages;
+;;                     branch cp1251, a commit message in windows-1251
 ;;   wt                linked worktree of main on branch feature
 ;;   detached          clone of main, HEAD detached at tag v1.0
 ;;   unborn            fresh repository, no commits
@@ -151,6 +152,16 @@
     (magit-git2-fixture--commit
      dir (concat "Second change on main\n\nA body paragraph\n"
                  "spanning two lines.\n\nAnd a second paragraph."))
+    ;; C1 on branch cp1251: a windows-1251 message, stored as such under
+    ;; i18n.commitEncoding.  The module cannot read it, so the log goes
+    ;; to git, which re-encodes it.
+    (setq magit-git2-fixture--clock (1+ magit-git2-fixture--clock))
+    (let ((file (expand-file-name "cp1251-message" root)))
+      (let ((coding-system-for-write 'windows-1251-unix))
+        (write-region "Сообщение в cp1251\n" nil file nil 'silent))
+      (funcall git "update-ref" "refs/heads/cp1251"
+               (funcall git "-c" "i18n.commitEncoding=windows-1251"
+                        "commit-tree" "HEAD^{tree}" "-p" "HEAD" "-F" file)))
     ;; Two stashes.
     (funcall write "README" "Fixture, stashed once\n")
     (setq magit-git2-fixture--clock (1+ magit-git2-fixture--clock))

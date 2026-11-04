@@ -4,7 +4,7 @@
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
+;; the Free Software Foundation, either version 2 of the License, or
 ;; (at your option) any later version.
 
 ;;; Commentary:
@@ -87,7 +87,10 @@ WHAT names the test in the file."
 (defun magit-git2-test--compare (args)
   "Compare the emulation with git for ARGS in `default-directory'.
 Return nil when they agree or the emulation refused, else a report."
-  (let ((mine (magit-git2--dispatch args))
+  (let ((mine (condition-case nil
+                  (magit-git2--dispatch args)
+                ;; In use such a call goes to git, as on a refusal.
+                (magit-git2-error nil)))
         (shape magit-git2--shape))
     (magit-git2--release)
     (when mine

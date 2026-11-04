@@ -21,13 +21,14 @@ build/libgit2.zig            static libgit2 without network support
 build/libgit2-sources.zon    its source list
 src/main.zig                 module functions (data in, data out)
 src/git.zig                  repository cache, libgit2 errors, object ids
-src/walk.zig                 git log's commit order (port of revision.c)
+src/walk.zig                 git log's commit order
 src/emacs.zig                helpers over emacs_env
 vendor/emacs-module.h        from Emacs 31.1, unchanged
 lisp/magit-git2-core.el      loads the module
 lisp/magit-git2.el           advice, dispatcher, formatters, modes
 test/                        fixture builder, differential ERT suite
 measure/                     the refresh cost measurement
+LICENSE                      GNU General Public License, version 2
 ```
 
 ## Build
@@ -148,10 +149,12 @@ approximates. Cases it refuses:
 
 ### Where git's behaviour is replicated, not taken from libgit2
 
-- **Commit order of `log`.** git 2.55's date-ordered walk (prio queue, ties
-  in insertion order, `limit_list` with SLOP for ranges) is ported to
-  `src/walk.zig`. libgit2's `GIT_SORT_TIME` queue does not keep equal dates
-  in insertion order.
+- **Commit order of `log`.** `src/walk.zig` lists commits in git's default
+  order: a queue newest committer date first, equal dates in the order
+  they were queued, and for ranges git's way of telling that the walk is
+  done (five excluded commits in a row with nothing newer queued), clock
+  skew included. libgit2's `GIT_SORT_TIME` queue does not keep equal dates
+  in queue order.
 - **Abbreviation length.** git 2.55 sizes `%h`, `--short` and `describe`
   hashes from the objects in packs only (`.idx` headers and the
   multi-pack-index, loose objects excluded): `max(7, ceil((msb(n)+1)/2))`.
@@ -191,6 +194,8 @@ MAGIT_GIT2_TEST_REPOS=~/src/a:~/src/b test/run-tests.sh
 - lightweight and annotated tags, two stashes;
 - staged, unstaged, renamed, untracked and ignored files, with UTF-8 names
   and messages;
+- a commit message in windows-1251 (`i18n.commitEncoding`), which the
+  module cannot read, so that the error path is exercised;
 - a mailmap, an included config file, a key without a value, and system,
   global and local config;
 - a linked worktree, a detached clone, an unborn repository and a bare one.
@@ -222,3 +227,20 @@ otherwise: invocations per command and per argument list, the calls through
 magit-git2 is loaded, its mode and statistics. Emacs has no
 `dynamic-modules` feature to test. Module support shows as `module-load`
 together with a non-nil `module-file-suffix`.
+
+## License
+
+magit-git2 is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 2 of the License, or (at your
+option) any later version. See `LICENSE`.
+
+The module also contains code under other licenses:
+
+- libgit2 and the libraries it bundles, under the terms in libgit2's
+  `COPYING`: GPL version 2 with a linking exception for libgit2 itself,
+  permissive licenses for the rest;
+- `vendor/emacs-module.h`, part of GNU Emacs: GPL version 3 or later.
+
+`build/libgit2.zig` is adapted from allyourcodebase/libgit2 and stays
+under its MIT license, quoted in the file.

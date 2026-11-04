@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Kostafey <kostafey@gmail.com>
+
 //! magit-git2-core: libgit2 queries for magit-git2.el.
 //!
 //! Every function takes the directory Magit runs git in as its first
