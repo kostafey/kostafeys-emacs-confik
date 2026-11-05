@@ -309,6 +309,12 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
            (lambda (b) (string-prefix-p " *magit-git2 " (buffer-name b)))
            (buffer-list))))
 
+(defun magit-git2-test--settle ()
+  "Wait until the commands started ahead have been freed."
+  (with-timeout (10 (ert-fail "commands started ahead were not freed"))
+    (while (magit-git2-test--leftovers)
+      (accept-process-output nil 0.01))))
+
 (ert-deftest magit-git2-test-ahead ()
   "Commands started ahead give what they give one after the other."
   :tags '(git2)
@@ -328,10 +334,20 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
     (let* ((serial (let ((magit-git2-mode 'off)) (funcall refresh)))
            (magit-git2-mode 'on)
            (before (magit-git2-test--ahead-count))
-           (ahead (funcall refresh)))
+           ;; It redisplays, showing the half built buffer.
+           (deleted nil)
+           (note (lambda (&rest _)
+                   (when magit--refreshing-buffer-p
+                     (setq deleted t))))
+           (ahead (unwind-protect
+                      (progn
+                        (advice-add 'delete-process :before note)
+                        (funcall refresh))
+                    (advice-remove 'delete-process note))))
       (should (> (magit-git2-test--ahead-count) before))
       (should (equal ahead serial))
-      (should-not (magit-git2-test--leftovers)))))
+      (should-not deleted)
+      (magit-git2-test--settle))))
 
 (ert-deftest magit-git2-test-ahead-output ()
   "A command started ahead keeps its exit code, stdout and stderr apart."
@@ -352,7 +368,7 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
       (sleep-for 0.2)
       (should (equal (magit-git2--finish-process process)
                      '(0 "false\n" ""))))
-    (should-not (magit-git2-test--leftovers))))
+    (magit-git2-test--settle)))
 
 (ert-deftest magit-git2-test-ahead-unused ()
   "A command nothing asks for ends by itself and is not started again."
@@ -373,9 +389,7 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
     (magit-git2--drop-ahead)
     (should-not magit-git2--ahead-processes)
     (should-not magit-git2--ahead-commands)
-    (with-timeout (10 (ert-fail "the command never ended"))
-      (while (magit-git2-test--leftovers)
-        (accept-process-output nil 0.01)))
+    (magit-git2-test--settle)
     (should-not (file-exists-p ".git/index.lock"))))
 
 (provide 'magit-git2-test)

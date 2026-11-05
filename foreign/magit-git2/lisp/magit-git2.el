@@ -1745,6 +1745,9 @@ KEY is (DIRECTORY GLOBAL-ARGS . LOCAL-ARGS).")
 (defvar magit-git2--status-refresh nil
   "The `magit--refresh-start-time' of the latest status refresh.")
 
+(defvar magit-git2--finished-processes nil
+  "The processes `magit-git2--free-finished' is to free.")
+
 (defun magit-git2--start-process (command)
   "Start COMMAND, a (GLOBAL-ARGS . LOCAL-ARGS); return the process."
   (let* ((magit-git-global-arguments (car command))
@@ -1777,8 +1780,21 @@ KEY is (DIRECTORY GLOBAL-ARGS . LOCAL-ARGS).")
     (delete-process process)
     (mapc #'kill-buffer buffers)))
 
+(defun magit-git2--free-finished ()
+  "Free the finished processes."
+  (mapc #'magit-git2--free-process
+        (prog1 magit-git2--finished-processes
+          (setq magit-git2--finished-processes nil))))
+
+(defun magit-git2--free-later (process)
+  "Free the finished PROCESS once the refresh is over.
+`delete-process' redisplays, which would show the half built buffer."
+  (unless magit-git2--finished-processes
+    (run-with-timer 0 nil #'magit-git2--free-finished))
+  (push process magit-git2--finished-processes))
+
 (defun magit-git2--finish-process (process)
-  "Wait for PROCESS and free it; return (EXIT STDOUT STDERR).
+  "Wait for PROCESS and free it later; return (EXIT STDOUT STDERR).
 Nil when it did not end by itself."
   (let ((errors (process-get process 'magit-git2-errors)))
     ;; Neither pipe may fill up, and no timer or other process runs
@@ -1794,12 +1810,12 @@ Nil when it did not end by itself."
                         (buffer-string))
                       (with-current-buffer (process-buffer errors)
                         (buffer-string))))
-      (magit-git2--free-process process))))
+      (magit-git2--free-later process))))
 
 (defun magit-git2--reap (process _event)
-  "Free PROCESS once it has finished."
+  "Have PROCESS freed once it has finished."
   (unless (process-live-p process)
-    (magit-git2--free-process process)))
+    (magit-git2--free-later process)))
 
 (defun magit-git2--drop-ahead ()
   "Forget the commands started ahead that nothing asked for.
@@ -1807,7 +1823,7 @@ They run to their end: killed, git could leave `index.lock' behind."
   (pcase-dolist (`(,_ . ,process) magit-git2--ahead-processes)
     (if (process-live-p process)
         (set-process-sentinel process #'magit-git2--reap)
-      (magit-git2--free-process process)))
+      (magit-git2--free-later process)))
   (setq magit-git2--ahead-processes nil))
 
 (defun magit-git2--start-ahead ()
