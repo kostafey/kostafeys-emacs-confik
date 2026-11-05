@@ -1663,9 +1663,9 @@ stale stat data and writes the index back.  It does not with
       ('t (insert out (if (stringp err) err "")))
       (`(t nil) (insert out))
       (`(t ,(and (pred stringp) file))
-       (insert out)
        (let ((coding-system-for-write 'utf-8-unix))
-         (write-region (if (stringp err) err "") nil file nil 'silent))))
+         (write-region (if (stringp err) err "") nil file nil 'silent))
+       (insert out)))
     exit))
 
 (defun magit-git2--record-mismatch (args expected actual)
@@ -1694,8 +1694,10 @@ stale stat data and writes the index back.  It does not with
 (defun magit-git2--shadow (orig destination args)
   "Call ORIG with DESTINATION and ARGS; compare with the emulation."
   (let* ((flat (flatten-tree args))
-         (emulated (and (magit-git2--usable-p destination)
-                        (magit-git2--emulate flat destination)))
+         (emulated (condition-case err
+                       (and (magit-git2--usable-p destination)
+                            (magit-git2--emulate flat destination))
+                     (error (magit-git2--log-error flat err) nil)))
          (start (and (not (null destination)) (point)))
          (file (and (consp destination) (stringp (cadr destination))
                     (cadr destination)))
@@ -1703,28 +1705,32 @@ stale stat data and writes the index back.  It does not with
     (unless emulated
       (magit-git2--count (or (car flat) "") 'fell-through))
     (when emulated
-      (let* ((stdout (if start (buffer-substring-no-properties start (point))
-                       ""))
-             (stderr (and file (file-exists-p file)
-                          (with-temp-buffer
-                            (let ((coding-system-for-read 'utf-8-unix))
-                              (insert-file-contents file))
-                            (buffer-string))))
-             (mine (pcase destination
-                     ('nil (list (nth 0 emulated) "" nil))
-                     ('t (list (nth 0 emulated)
-                               (concat (nth 1 emulated)
-                                       (if (stringp (nth 2 emulated))
-                                           (nth 2 emulated) ""))
-                               nil))
-                     (`(t nil) (list (nth 0 emulated) (nth 1 emulated) nil))
-                     (_ (list (nth 0 emulated) (nth 1 emulated)
-                              (nth 2 emulated)))))
-             (theirs (list exit stdout stderr)))
-        (if (equal mine theirs)
-            (magit-git2--count (car flat) 'emulated)
-          (magit-git2--count (car flat) 'mismatched)
-          (magit-git2--record-mismatch flat theirs mine))))
+      (condition-case err
+          (let* ((stdout (if start
+                             (buffer-substring-no-properties start (point))
+                           ""))
+                 (stderr (and file (file-exists-p file)
+                              (with-temp-buffer
+                                (let ((coding-system-for-read 'utf-8-unix))
+                                  (insert-file-contents file))
+                                (buffer-string))))
+                 (mine (pcase destination
+                         ('nil (list (nth 0 emulated) "" nil))
+                         ('t (list (nth 0 emulated)
+                                   (concat (nth 1 emulated)
+                                           (if (stringp (nth 2 emulated))
+                                               (nth 2 emulated) ""))
+                                   nil))
+                         (`(t nil)
+                          (list (nth 0 emulated) (nth 1 emulated) nil))
+                         (_ (list (nth 0 emulated) (nth 1 emulated)
+                                  (nth 2 emulated)))))
+                 (theirs (list exit stdout stderr)))
+            (if (equal mine theirs)
+                (magit-git2--count (car flat) 'emulated)
+              (magit-git2--count (car flat) 'mismatched)
+              (magit-git2--record-mismatch flat theirs mine)))
+        (error (magit-git2--log-error flat err))))
     exit))
 
 ;;; Commands started ahead
@@ -1853,32 +1859,32 @@ In a status refresh, also remember ARGS for the next one."
               (delq entry magit-git2--ahead-processes))
         (magit-git2--finish-process (cdr entry))))))
 
+(defun magit-git2--answer (args destination)
+  "Answer the local git ARGS for DESTINATION; return the exit code.
+Nil when git has to run."
+  (when (magit-git2--usable-p destination)
+    (cond ((magit-git2--redundant-p args destination)
+           (magit-git2--count (car args) 'skipped)
+           (magit-git2--start-ahead)
+           0)
+          ((when-let* ((result (magit-git2--emulate args destination)))
+             (magit-git2--count (car args) 'emulated)
+             (magit-git2--deliver result destination)))
+          ((when-let* ((result (magit-git2--take-ahead args)))
+             (magit-git2--count (car args) 'ahead)
+             (magit-git2--deliver result destination))))))
+
 (defun magit-git2--around (orig destination &rest args)
   "Answer `magit-process-git' (ORIG) with DESTINATION and ARGS."
   (pcase magit-git2-mode
     ('on
-     (let* ((flat (flatten-tree args))
-            (usable (magit-git2--usable-p destination))
-            (skip (and usable (magit-git2--redundant-p flat destination)))
-            (result (and usable (not skip)
-                         (magit-git2--emulate flat destination))))
-       (cond (skip
-              (magit-git2--count (car flat) 'skipped)
-              (condition-case err
-                  (magit-git2--start-ahead)
-                (error (magit-git2--log-error flat err)))
-              0)
-             (result
-              (magit-git2--count (car flat) 'emulated)
-              (magit-git2--deliver result destination))
-             (t
-              (magit-git2--count (or (car flat) "") 'fell-through)
-              (if-let* ((ahead (and usable
-                                    (magit-git2--take-ahead flat))))
-                  (progn
-                    (magit-git2--count (car flat) 'ahead)
-                    (magit-git2--deliver ahead destination))
-                (apply orig destination args))))))
+     (let ((flat (flatten-tree args)))
+       (or (condition-case err
+               (magit-git2--answer flat destination)
+             (error (magit-git2--log-error flat err) nil))
+           (progn
+             (magit-git2--count (or (car flat) "") 'fell-through)
+             (apply orig destination args)))))
     ('shadow (magit-git2--shadow orig destination args))
     (_ (apply orig destination args))))
 

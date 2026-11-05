@@ -392,6 +392,34 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
     (magit-git2-test--settle)
     (should-not (file-exists-p ".git/index.lock"))))
 
+(ert-deftest magit-git2-test-lisp-error ()
+  "A Lisp error turns the emulation off and git answers."
+  :tags '(git2)
+  (let* ((default-directory (magit-git2-test--clean-repo))
+         (check
+          (lambda (mode function args)
+            (let* ((magit-git2-mode mode)
+                   (magit-git2--auto-disables 0)
+                   (magit--refreshing-buffer-p t)
+                   (magit--refresh-start-time (current-time))
+                   (magit-git2--status-refresh magit--refresh-start-time)
+                   (theirs (magit-git2-test--git args))
+                   (mine (cl-letf (((symbol-function function)
+                                    (lambda (&rest _) (error "Failure"))))
+                           (with-temp-buffer
+                             (let ((exit (magit-process-git '(t nil) args)))
+                               (list exit (buffer-string)))))))
+              (should (equal mine (list (car theirs) (cadr theirs))))
+              (should (eq magit-git2-mode 'off))
+              (should (= magit-git2--auto-disables 1))))))
+    (dolist (function '(magit-git2--usable-p magit-git2--redundant-p
+                        magit-git2--emulate))
+      (funcall check 'on function '("rev-parse" "--show-cdup")))
+    (funcall check 'on 'magit-git2--deliver '("rev-parse" "--show-cdup"))
+    (funcall check 'on 'magit-git2--take-ahead '("status" "--porcelain"))
+    (funcall check 'shadow 'magit-git2--usable-p '("rev-parse" "--show-cdup"))
+    (funcall check 'shadow 'magit-git2--count '("rev-parse" "--show-cdup"))))
+
 (provide 'magit-git2-test)
 
 ;;; magit-git2-test.el ends here
