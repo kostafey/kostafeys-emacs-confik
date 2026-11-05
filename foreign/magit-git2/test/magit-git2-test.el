@@ -250,6 +250,8 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
   (let* ((default-directory (magit-git2-test--clean-repo))
          (dir default-directory)
          (magit-git2-mode 'on)
+         ;; Started ahead, they would refresh the index themselves.
+         (magit-git2--ahead-commands nil)
          ;; git compares whole seconds of the modification time.
          (shift 0)
          (touch (lambda ()
@@ -292,6 +294,89 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
     (with-current-buffer (magit-status-setup-buffer dir)
       (should-not (magit-get-section '((unstaged) (status))))
       (should-not (funcall stale-p)))))
+
+(defun magit-git2-test--ahead-count ()
+  "How many calls git commands started ahead have answered."
+  (cl-loop for (_ . counters) in (alist-get 'commands (magit-git2-stats-alist))
+           sum (alist-get 'ahead counters)))
+
+(defun magit-git2-test--leftovers ()
+  "The processes and buffers of commands started ahead that remain."
+  (append (cl-remove-if-not
+           (lambda (p) (string-prefix-p "magit-git2" (process-name p)))
+           (process-list))
+          (cl-remove-if-not
+           (lambda (b) (string-prefix-p " *magit-git2 " (buffer-name b)))
+           (buffer-list))))
+
+(ert-deftest magit-git2-test-ahead ()
+  "Commands started ahead give what they give one after the other."
+  :tags '(git2)
+  (let* ((dir (magit-git2-test--clean-repo))
+         (default-directory dir)
+         (refresh (lambda ()
+                    (with-current-buffer (magit-status-setup-buffer dir)
+                      (magit-refresh)
+                      (buffer-substring-no-properties
+                       (point-min) (point-max)))))
+         (coding-system-for-write 'latin-1-unix))
+    ;; Staged, unstaged, not valid UTF-8, untracked.
+    (write-region "staged\n" nil "staged" nil 'silent)
+    (magit-git2-fixture--git dir "add" "staged")
+    (write-region "caf\xe9\n" nil "file" nil 'silent)
+    (write-region "new\n" nil "untracked" nil 'silent)
+    (let* ((serial (let ((magit-git2-mode 'off)) (funcall refresh)))
+           (magit-git2-mode 'on)
+           (before (magit-git2-test--ahead-count))
+           (ahead (funcall refresh)))
+      (should (> (magit-git2-test--ahead-count) before))
+      (should (equal ahead serial))
+      (should-not (magit-git2-test--leftovers)))))
+
+(ert-deftest magit-git2-test-ahead-output ()
+  "A command started ahead keeps its exit code, stdout and stderr apart."
+  :tags '(git2)
+  (let ((default-directory (magit-git2-test--clean-repo))
+        (finish (lambda (&rest args)
+                  (magit-git2--finish-process
+                   (magit-git2--start-process
+                    (cons magit-git-global-arguments args))))))
+    (should (equal (funcall finish "rev-parse" "--is-bare-repository")
+                   '(0 "false\n" "")))
+    (should (equal (funcall finish "rev-parse" "--verify" "no-such-ref")
+                   '(128 "" "fatal: Needed a single revision\n")))
+    ;; Long over by the time Magit asks.
+    (let ((process (magit-git2--start-process
+                    (cons magit-git-global-arguments
+                          '("rev-parse" "--is-bare-repository")))))
+      (sleep-for 0.2)
+      (should (equal (magit-git2--finish-process process)
+                     '(0 "false\n" ""))))
+    (should-not (magit-git2-test--leftovers))))
+
+(ert-deftest magit-git2-test-ahead-unused ()
+  "A command nothing asks for ends by itself and is not started again."
+  :tags '(git2)
+  (let* ((dir (magit-git2-test--clean-repo))
+         (default-directory dir)
+         (magit-git2-mode 'on)
+         (command (cons magit-git-global-arguments '("diff" "--stat")))
+         (magit-git2--ahead-commands (list command))
+         (magit-git2--ahead-processes nil)
+         (magit--refreshing-buffer-p t)
+         (magit--refresh-start-time (current-time)))
+    (should (equal (magit-process-git nil '("update-index" "--refresh")) 0))
+    (should (= (length magit-git2--ahead-processes) 1))
+    ;; Its output belongs to this refresh and no other.
+    (let ((magit--refresh-start-time (current-time)))
+      (should-not (magit-git2--take-ahead '("diff" "--stat"))))
+    (magit-git2--drop-ahead)
+    (should-not magit-git2--ahead-processes)
+    (should-not magit-git2--ahead-commands)
+    (with-timeout (10 (ert-fail "the command never ended"))
+      (while (magit-git2-test--leftovers)
+        (accept-process-output nil 0.01)))
+    (should-not (file-exists-p ".git/index.lock"))))
 
 (provide 'magit-git2-test)
 

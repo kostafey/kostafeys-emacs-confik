@@ -88,7 +88,8 @@ Commands:
 - `magit-git2-mode` cycles the mode.
 - `magit-git2-show-mismatches` shows what shadow mode found.
 - `magit-git2-stats` shows per-command counters (emulated, fell through,
-  mismatched, libgit2 errors, skipped) and the number of auto-disables.
+  mismatched, libgit2 errors, skipped, started ahead) and the number of
+  auto-disables.
 - `magit-git2-reload-module` loads a rebuilt module, from a temporary copy,
   since Emacs never unloads a module.
 
@@ -117,6 +118,14 @@ In mode `on` a status refresh also does without its first command,
 `update-index --refresh`. Magit ignores the exit code, and the `git diff` of
 the same refresh looks past stale stat data and writes the index back. Git
 does run it with `--no-optional-locks` or with `diff.autoRefreshIndex` off.
+
+What such a refresh still needs of git is `status` and two `diff` commands,
+nearly all of it process start-up, and Magit waits for one after the other.
+So the refresh starts the `status` and `diff` commands of the previous one
+all at once, with the same arguments, and takes their output when Magit asks
+for it. A command Magit does not ask for runs to its end, since killed git
+could leave `index.lock` behind. One that was not started runs as usual and
+starts ahead next time.
 
 ## What is emulated
 
@@ -237,10 +246,9 @@ three more. It writes `measure/report-<host>-<date>-<setup>.org`, where
 otherwise: invocations per command and per argument list, the calls through
 `magit-process-git` with the time of each and whether it started git,
 section timings, wall time per refresh and, when magit-git2 is loaded, its
-mode and statistics. Last it times the git commands a status refresh cannot
-do without, one at a time and all at once. Emacs has no `dynamic-modules`
-feature to test. Module support shows as `module-load` together with a
-non-nil `module-file-suffix`.
+mode and statistics. Emacs has no `dynamic-modules` feature to test. Module
+support shows as `module-load` together with a non-nil
+`module-file-suffix`.
 
 A report names the measured repository, its branches and local paths, so
 git ignores `measure/report-*.org` and the directories under `measure/`.

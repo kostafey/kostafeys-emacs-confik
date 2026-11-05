@@ -55,6 +55,10 @@
 (declare-function magit-git2--commits "magit-git2-core")
 (declare-function magit-git2--reflog "magit-git2-core")
 (declare-function magit-add-section-hook "magit-section")
+(declare-function magit-git-executable "magit-git")
+(declare-function magit-process-git-arguments "magit-git")
+(declare-function magit-process-environment "magit-process")
+(declare-function magit--process-coding-system "magit-process")
 (defvar magit-git-global-arguments)
 (defvar magit-git-environment)
 (defvar magit-git-executable)
@@ -92,7 +96,7 @@ the emulation turns it off for the session."
 
 (defvar magit-git2--stats (make-hash-table :test #'equal)
   "Per-command counters: COMMAND -> [EMULATED FELL-THROUGH MISMATCHED
-LIBGIT2-ERRORS SKIPPED].")
+LIBGIT2-ERRORS SKIPPED AHEAD].")
 
 (defvar magit-git2--auto-disables 0
   "How often an unexpected error turned the emulation off.")
@@ -102,12 +106,12 @@ LIBGIT2-ERRORS SKIPPED].")
 
 (defconst magit-git2--stat-slots
   '((emulated . 0) (fell-through . 1) (mismatched . 2) (libgit2-error . 3)
-    (skipped . 4)))
+    (skipped . 4) (ahead . 5)))
 
 (defun magit-git2--count (command what)
   "Count one WHAT (a key of `magit-git2--stat-slots') for COMMAND."
   (let ((v (or (gethash command magit-git2--stats)
-               (puthash command (make-vector 5 0) magit-git2--stats)))
+               (puthash command (make-vector 6 0) magit-git2--stats)))
         (i (alist-get what magit-git2--stat-slots)))
     (aset v i (1+ (aref v i)))))
 
@@ -1723,6 +1727,116 @@ stale stat data and writes the index back.  It does not with
           (magit-git2--record-mismatch flat theirs mine))))
     exit))
 
+;;; Commands started ahead
+
+;; What a status refresh still needs of git takes three processes, nearly
+;; all of it their start-up, and Magit waits for one after the other.
+;; The commands rarely change, so a refresh starts those of the last one
+;; all at once and takes their output when Magit asks for it.
+
+(defvar magit-git2--ahead-commands nil
+  "The `status' and `diff' commands of the last status refresh.
+A list of (GLOBAL-ARGS . LOCAL-ARGS).")
+
+(defvar magit-git2--ahead-processes nil
+  "The commands running ahead of Magit: ((KEY . PROCESS) ...).
+KEY is (DIRECTORY GLOBAL-ARGS . LOCAL-ARGS).")
+
+(defvar magit-git2--status-refresh nil
+  "The `magit--refresh-start-time' of the latest status refresh.")
+
+(defun magit-git2--start-process (command)
+  "Start COMMAND, a (GLOBAL-ARGS . LOCAL-ARGS); return the process."
+  (let* ((magit-git-global-arguments (car command))
+         (process-environment (magit-process-environment))
+         (coding (magit--process-coding-system))
+         (errors (make-pipe-process
+                  :name "magit-git2 stderr"
+                  :buffer (generate-new-buffer " *magit-git2 stderr*" t)
+                  :coding coding
+                  :noquery t
+                  :sentinel #'ignore))
+         (process (make-process
+                   :name "magit-git2"
+                   :buffer (generate-new-buffer " *magit-git2 stdout*" t)
+                   :stderr errors
+                   :command (cons (magit-git-executable)
+                                  (magit-process-git-arguments (cdr command)))
+                   :coding coding
+                   :connection-type 'pipe
+                   :noquery t
+                   :sentinel #'ignore)))
+    (process-put process 'magit-git2-errors errors)
+    process))
+
+(defun magit-git2--free-process (process)
+  "Free what the finished PROCESS leaves behind."
+  (let* ((errors (process-get process 'magit-git2-errors))
+         (buffers (list (process-buffer process) (process-buffer errors))))
+    (delete-process errors)
+    (delete-process process)
+    (mapc #'kill-buffer buffers)))
+
+(defun magit-git2--finish-process (process)
+  "Wait for PROCESS and free it; return (EXIT STDOUT STDERR).
+Nil when it did not end by itself."
+  (let ((errors (process-get process 'magit-git2-errors)))
+    ;; Neither pipe may fill up, and no timer or other process runs
+    ;; here, as none does while `call-process' waits.  A process that
+    ;; ended long ago still has its output to read.
+    (while (or (accept-process-output process 0.005 nil 0)
+               (process-live-p process))
+      (accept-process-output errors 0 nil 0))
+    (while (accept-process-output errors 0 nil 0))
+    (prog1 (and (eq (process-status process) 'exit)
+                (list (process-exit-status process)
+                      (with-current-buffer (process-buffer process)
+                        (buffer-string))
+                      (with-current-buffer (process-buffer errors)
+                        (buffer-string))))
+      (magit-git2--free-process process))))
+
+(defun magit-git2--reap (process _event)
+  "Free PROCESS once it has finished."
+  (unless (process-live-p process)
+    (magit-git2--free-process process)))
+
+(defun magit-git2--drop-ahead ()
+  "Forget the commands started ahead that nothing asked for.
+They run to their end: killed, git could leave `index.lock' behind."
+  (pcase-dolist (`(,_ . ,process) magit-git2--ahead-processes)
+    (if (process-live-p process)
+        (set-process-sentinel process #'magit-git2--reap)
+      (magit-git2--free-process process)))
+  (setq magit-git2--ahead-processes nil))
+
+(defun magit-git2--start-ahead ()
+  "Start the commands of the last status refresh."
+  (magit-git2--drop-ahead)
+  (setq magit-git2--status-refresh
+        (bound-and-true-p magit--refresh-start-time))
+  (let ((cwd (magit-git2--cwd)))
+    (dolist (command (prog1 magit-git2--ahead-commands
+                       (setq magit-git2--ahead-commands nil)))
+      (push (cons (cons cwd command) (magit-git2--start-process command))
+            magit-git2--ahead-processes))))
+
+(defun magit-git2--take-ahead (args)
+  "The (EXIT STDOUT STDERR) of the local ARGS started ahead, or nil.
+In a status refresh, also remember ARGS for the next one."
+  (when (and magit-git2--status-refresh
+             (eq magit-git2--status-refresh
+                 (bound-and-true-p magit--refresh-start-time))
+             (member (car args) '("status" "diff")))
+    (let* ((command (cons magit-git-global-arguments args))
+           (entry (assoc (cons (magit-git2--cwd) command)
+                         magit-git2--ahead-processes)))
+      (cl-pushnew command magit-git2--ahead-commands :test #'equal)
+      (when entry
+        (setq magit-git2--ahead-processes
+              (delq entry magit-git2--ahead-processes))
+        (magit-git2--finish-process (cdr entry))))))
+
 (defun magit-git2--around (orig destination &rest args)
   "Answer `magit-process-git' (ORIG) with DESTINATION and ARGS."
   (pcase magit-git2-mode
@@ -1734,13 +1848,21 @@ stale stat data and writes the index back.  It does not with
                          (magit-git2--emulate flat destination))))
        (cond (skip
               (magit-git2--count (car flat) 'skipped)
+              (condition-case err
+                  (magit-git2--start-ahead)
+                (error (magit-git2--log-error flat err)))
               0)
              (result
               (magit-git2--count (car flat) 'emulated)
               (magit-git2--deliver result destination))
              (t
               (magit-git2--count (or (car flat) "") 'fell-through)
-              (apply orig destination args)))))
+              (if-let* ((ahead (and usable
+                                    (magit-git2--take-ahead flat))))
+                  (progn
+                    (magit-git2--count (car flat) 'ahead)
+                    (magit-git2--deliver ahead destination))
+                (apply orig destination args))))))
     ('shadow (magit-git2--shadow orig destination args))
     (_ (apply orig destination args))))
 
@@ -1748,7 +1870,8 @@ stale stat data and writes the index back.  It does not with
             '((name . magit-git2)))
 
 (with-eval-after-load 'magit-mode
-  (add-hook 'magit-unwind-refresh-hook #'magit-git2--release-if-loaded))
+  (add-hook 'magit-unwind-refresh-hook #'magit-git2--release-if-loaded)
+  (add-hook 'magit-unwind-refresh-hook #'magit-git2--drop-ahead))
 
 (defun magit-git2--release-if-loaded ()
   "Free the module's repository handles, if the module is loaded."
@@ -1791,14 +1914,16 @@ stale stat data and writes the index back.  It does not with
         (insert (format "mode: %s   auto-disables: %d\n\n"
                         (alist-get 'mode alist)
                         (alist-get 'auto-disables alist))
-                (format "%-16s %9s %12s %10s %8s %8s\n" "command" "emulated"
-                        "fell-through" "mismatched" "libgit2" "skipped"))
+                (format "%-16s %9s %12s %10s %8s %8s %6s\n" "command" "emulated"
+                        "fell-through" "mismatched" "libgit2" "skipped"
+                        "ahead"))
         (pcase-dolist (`(,command . ,c) (alist-get 'commands alist))
-          (insert (format "%-16s %9d %12d %10d %8d %8d\n" command
+          (insert (format "%-16s %9d %12d %10d %8d %8d %6d\n" command
                           (alist-get 'emulated c) (alist-get 'fell-through c)
                           (alist-get 'mismatched c)
                           (alist-get 'libgit2-error c)
-                          (alist-get 'skipped c)))))
+                          (alist-get 'skipped c)
+                          (alist-get 'ahead c)))))
       (display-buffer (current-buffer)))
     (message "magit-git2: %d emulated, %d fell through, %d mismatched"
              (funcall total 'emulated) (funcall total 'fell-through)
