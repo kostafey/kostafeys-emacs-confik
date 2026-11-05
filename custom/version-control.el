@@ -35,20 +35,20 @@
 ;;-----------------------------------------------------------------------------
 ;; Magit performance on Windows
 ;;
-(when (eq system-type 'windows-nt)
-  ;; Drop the status sections that each cost extra git round-trips: the
-  ;; ahead/behind counts against upstream and pushremote, plus the tags header
-  ;; (`git describe').  Re-add any you miss.
-  (with-eval-after-load 'magit-status
-    (dolist (section '(magit-insert-unpushed-to-pushremote
-                       magit-insert-unpushed-to-upstream-or-recent
-                       magit-insert-unpulled-from-pushremote
-                       magit-insert-unpulled-from-upstream))
-      (remove-hook 'magit-status-sections-hook section))
-    (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)))
+;; Without magit-git2's module, uncomment this to drop the status sections
+;; that each cost extra git round-trips: the ahead/behind counts against
+;; upstream and pushremote, plus the tags header (`git describe').
+;;
+;; (when (eq system-type 'windows-nt)
+;;   (with-eval-after-load 'magit-status
+;;     (dolist (section '(magit-insert-unpushed-to-pushremote
+;;                        magit-insert-unpushed-to-upstream-or-recent
+;;                        magit-insert-unpulled-from-pushremote
+;;                        magit-insert-unpulled-from-upstream))
+;;       (remove-hook 'magit-status-sections-hook section))
+;;     (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)))
 
-;; magit-git2 answers Magit's cheap git queries in-process; on Windows, with
-;; its module built, it puts the sections dropped above back.
+;; magit-git2 answers Magit's cheap git queries in-process.
 (require 'magit-git2-conf)
 
 ;; `vc-backend' probes every backend in `vc-handled-backends' in order,
