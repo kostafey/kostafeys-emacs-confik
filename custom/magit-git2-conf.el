@@ -13,6 +13,11 @@
 
 (add-to-list 'load-path (concat site-lisp-path "foreign/magit-git2/lisp/"))
 
+;; Its commands load Magit, which brings magit-git2 in and sets it up.
+(dolist (command '(magit-git2-mode magit-git2-show-mismatches
+                   magit-git2-stats magit-git2-reload-module))
+  (autoload command "magit" nil t))
+
 (with-eval-after-load 'magit
   (require 'magit-git2)
   (cond
