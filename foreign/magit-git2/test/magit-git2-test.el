@@ -429,9 +429,18 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
     (unwind-protect
         (progn
           (cl-letf (((symbol-function 'magit-git2--final-path)
-                     (lambda (path) (concat "C:/Real/" path))))
+                     (lambda (path) (concat "C:/Real/" path)))
+                    ;; On Windows it lowers the drive letter.
+                    ((symbol-function 'directory-file-name) #'downcase))
             (dolist (option '("--show-toplevel" "--git-dir"))
               (should (string-prefix-p "C:/Real/" (funcall ask option)))))
+          (pcase-dolist (`(,path . ,printed) '(("/repo/" . "/repo")
+                                               ("/" . "/")
+                                               ("C:/repo" . "C:/repo")
+                                               ("C:/" . "C:/")))
+            (cl-letf (((symbol-function 'magit-git2--final-path)
+                       (lambda (_) path)))
+              (should (equal (magit-git2--printed-path "any") printed))))
           ;; A module that cannot tell, or is too old to, leaves it to git.
           (cl-letf (((symbol-function 'magit-git2--final-path) #'ignore))
             (should-not (funcall ask "--show-toplevel")))

@@ -263,12 +263,15 @@ recursive edit."
                    (memq system-type '(windows-nt ms-dos))))
 
 (defun magit-git2--printed-path (directory)
-  "DIRECTORY the way git prints it, without a final slash.
+  "DIRECTORY the way git prints it: no final slash, unless it is a root.
 Refuse when that cannot be told, or the module is too old to tell."
-  (directory-file-name
-   (or (and (fboundp 'magit-git2--final-path)
-            (magit-git2--final-path directory))
-       (magit-git2--refuse))))
+  (let ((path (or (and (fboundp 'magit-git2--final-path)
+                       (magit-git2--final-path directory))
+                  (magit-git2--refuse))))
+    ;; Not `directory-file-name': on Windows it lowers the drive letter.
+    (if (string-match-p "\\`\\(?:[[:alpha:]]:\\)?/\\'" path)
+        path
+      (string-remove-suffix "/" path))))
 
 (defun magit-git2--location ()
   "Where the current directory is: one of `outside', `gitdir' (inside
