@@ -497,6 +497,32 @@ fn describe(env: Env, args: []const Value) Error!Value {
     return text(env, buf.ptr[0..buf.size]);
 }
 
+/// (magit-git2--status DIR): the paths `git status --untracked-files=normal'
+/// lists, as ((PATH . FLAGS) ...), FLAGS being libgit2's `git_status_t'.
+fn status(env: Env, args: []const Value) Error!Value {
+    const repo = try repoArg(env, args[0]) orelse return env.nil();
+    var opts: c.git_status_options = .{};
+    _ = try check(env, c.git_status_options_init(&opts, c.GIT_STATUS_OPTIONS_VERSION));
+    opts.show = c.GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
+    opts.flags = c.GIT_STATUS_OPT_INCLUDE_UNTRACKED | c.GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX;
+    var entries: ?*c.git_status_list = null;
+    _ = try check(env, c.git_status_list_new(&entries, repo, &opts));
+    defer c.git_status_list_free(entries);
+    var out: ListBuilder = .{};
+    errdefer out.deinit();
+    const n = c.git_status_list_entrycount(entries);
+    var i: usize = 0;
+    while (i < n) : (i += 1) {
+        const entry = c.git_status_byindex(entries, i);
+        const delta = entry.*.index_to_workdir orelse entry.*.head_to_index;
+        try out.append(try env.cons(
+            try ctext(env, delta.*.new_file.path),
+            try env.int(entry.*.status),
+        ));
+    }
+    return out.finish(env);
+}
+
 fn signature(
     env: Env,
     b: *ListBuilder,
@@ -692,6 +718,7 @@ const defs = [_]Def{
     .{ .name = "magit-git2--reachable-from-any", .arity = 3, .f = reachableFromAny, .doc = "Whether COMMIT is reachable from any of HASHES.\n\n(fn DIR COMMIT HASHES)" },
     .{ .name = "magit-git2--tips-reaching", .arity = 4, .f = tipsReaching, .doc = "Return the TIPS that reach COMMIT through commits dated CUTOFF or later.\n\n(fn DIR COMMIT TIPS CUTOFF)" },
     .{ .name = "magit-git2--describe", .arity = 3, .f = describe, .doc = "Describe HASH by tags in the long format, or nil.\n\n(fn DIR HASH ABBREV)" },
+    .{ .name = "magit-git2--status", .arity = 1, .f = status, .doc = "Return ((PATH . FLAGS) ...) for the paths git status lists.\n\n(fn DIR)" },
     .{ .name = "magit-git2--log", .arity = 6, .f = log, .doc = "Return the commits git log shows for STARTS.\n\n(fn DIR STARTS MAX NO-WALK ABBREV MAILMAP)" },
     .{ .name = "magit-git2--commits", .arity = 4, .f = commits, .doc = "Return commit plists for HASHES.\n\n(fn DIR HASHES ABBREV MAILMAP)" },
     .{ .name = "magit-git2--reflog", .arity = 2, .f = reflog, .doc = "Return the reflog of REFNAME, newest first.\n\n(fn DIR REFNAME)" },

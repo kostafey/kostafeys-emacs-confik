@@ -107,6 +107,12 @@ and freed when it ends (`magit-unwind-refresh-hook`), or right after a
 call made outside a refresh. On Windows no pack file stays open to block
 `git gc`.
 
+While Magit refreshes a buffer the emulation also keeps what it has read
+(refs, config, resolved revisions) from one call to the next, per directory
+and global arguments, since only reading happens there. Magit's own refresh
+cache has a wider scope: `magit-run-git` binds it around a command that
+writes.
+
 ## What is emulated
 
 `M-x describe-variable magit-git2--shapes` lists the shapes. In short:
@@ -225,9 +231,10 @@ three more. It writes `measure/report-<host>-<date>-<setup>.org`, where
 otherwise: invocations per command and per argument list, the calls through
 `magit-process-git` with the time of each and whether it started git,
 section timings, wall time per refresh and, when magit-git2 is loaded, its
-mode and statistics. Emacs has no `dynamic-modules` feature to test. Module
-support shows as `module-load` together with a non-nil
-`module-file-suffix`.
+mode and statistics. With the module it also times `status` through git and
+through libgit2 (`magit-git2--status`, not used by the emulation yet). Emacs
+has no `dynamic-modules` feature to test. Module support shows as
+`module-load` together with a non-nil `module-file-suffix`.
 
 A report names the measured repository, its branches and local paths, so
 git ignores `measure/report-*.org` and the directories under `measure/`.

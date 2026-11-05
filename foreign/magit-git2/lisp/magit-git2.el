@@ -159,10 +159,29 @@ state, returns the argument lists the differential test compares."
   "The shape that answered the last dispatch.")
 
 (defvar magit-git2--memo nil
-  "Values computed during the current dispatch: ((KEY . VALUE) ...).")
+  "Values computed for the current answer: ((KEY . VALUE) ...).")
+
+(defvar magit-git2--refresh-memos nil
+  "The memos of one buffer refresh: (START (SCOPE . MEMO) ...).
+START is its `magit--refresh-start-time', a list made anew for each
+refresh.  SCOPE is a directory and the global arguments.")
+
+(defun magit-git2--current-memos ()
+  "The memos of the buffer refresh under way, or nil outside one.
+A buffer refresh only reads.  Magit's own cache is no measure of that:
+`magit-run-git' also binds it around a command that writes.  Like that
+cache these memos do not apply where Magit binds it to nil, or in a
+recursive edit."
+  (when-let* ((start (bound-and-true-p magit--refresh-start-time))
+              ((bound-and-true-p magit--refreshing-buffer-p))
+              ((bound-and-true-p magit--refresh-cache))
+              ((zerop (recursion-depth))))
+    (unless (eq (car magit-git2--refresh-memos) start)
+      (setq magit-git2--refresh-memos (list start)))
+    magit-git2--refresh-memos))
 
 (defmacro magit-git2--memoize (key &rest body)
-  "Return the value of BODY, computed once per dispatch for KEY."
+  "Return the value of BODY, computed once per memo for KEY."
   (declare (indent 1))
   (let ((k (make-symbol "key"))
         (cell (make-symbol "cell")))
@@ -189,17 +208,23 @@ state, returns the argument lists the differential test compares."
 (defun magit-git2--dispatch (args)
   "Return (EXIT STDOUT STDERR) for the local git ARGS, or nil."
   ;; libgit2 knows nothing of "~".
-  (let ((magit-git2--memo nil)
-        (default-directory (file-name-as-directory
-                            (expand-file-name default-directory))))
+  (let* ((default-directory (file-name-as-directory
+                             (expand-file-name default-directory)))
+         (memos (magit-git2--current-memos))
+         (scope (cons default-directory magit-git-global-arguments))
+         (magit-git2--memo (cdr (assoc scope (cdr memos)))))
     (setq magit-git2--shape nil)
-    (catch 'magit-git2--refuse
-      ;; Global arguments other than -c would change any answer.
-      (magit-git2--global-config)
-      (cl-loop for (name _doc matcher _examples) in magit-git2--shapes
-               for result = (funcall matcher args)
-               when result
-               return (progn (setq magit-git2--shape name) result)))))
+    (unwind-protect
+        (catch 'magit-git2--refuse
+          ;; Global arguments other than -c would change any answer.
+          (magit-git2--global-config)
+          (cl-loop for (name _doc matcher _examples) in magit-git2--shapes
+                   for result = (funcall matcher args)
+                   when result
+                   return (progn (setq magit-git2--shape name) result)))
+      (when memos
+        (setf (alist-get scope (cdr memos) nil nil #'equal)
+              magit-git2--memo)))))
 
 ;;; Repository
 
@@ -1374,12 +1399,14 @@ OLD NAME EMAIL TIME OFFSET MESSAGE SELECTOR SHORT-SELECTOR)."
 
 (defun magit-git2--history-ok ()
   "Refuse when libgit2 would see another history than git."
-  (let ((info (magit-git2--repo)))
-    (when (or (plist-get info :shallow)
-              (file-exists-p (expand-file-name
-                              "info/grafts" (plist-get info :commondir)))
-              (magit-git2--replace-refs-p))
-      (magit-git2--refuse))))
+  (magit-git2--memoize 'history-ok
+    (let ((info (magit-git2--repo)))
+      (when (or (plist-get info :shallow)
+                (file-exists-p (expand-file-name
+                                "info/grafts" (plist-get info :commondir)))
+                (magit-git2--replace-refs-p))
+        (magit-git2--refuse)))
+    t))
 
 ;;; log
 

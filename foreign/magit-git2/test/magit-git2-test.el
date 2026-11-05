@@ -26,6 +26,7 @@
 (require 'fixture)
 
 (declare-function magit-git2--release "magit-git2-core")
+(declare-function magit-git2--status "magit-git2-core")
 
 ;; Without the module every call falls through to git, and the tests
 ;; would compare git with itself.
@@ -188,6 +189,78 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
    "status-shadow"
    (when-let* ((b (get-buffer magit-git2-mismatches-buffer)))
      (with-current-buffer b (split-string (buffer-string) "^\\* " t)))))
+
+(defmacro magit-git2-test--in-refresh (&rest body)
+  "Run BODY the way a section runs in a buffer refresh."
+  (declare (indent 0))
+  `(let ((magit--refreshing-buffer-p t)
+         (magit--refresh-start-time (current-time))
+         (magit--refresh-cache (list (cons 0 0))))
+     ,@body))
+
+(ert-deftest magit-git2-test-refresh-memo ()
+  "What a buffer refresh has read lasts for that refresh alone."
+  :tags '(git2)
+  (let* ((dirs (magit-git2-test--dirs))
+         (main (cdr (assoc "main" dirs)))
+         (sub (cdr (assoc "main/sub" dirs)))
+         (ref "refs/heads/memo-test")
+         (args (list "rev-parse" "--verify" "--quiet" ref))
+         (default-directory main)
+         (exit (lambda ()
+                 (prog1 (car (magit-git2--dispatch args))
+                   (magit-git2--release))))
+         (cdup (lambda (dir)
+                 (let ((default-directory dir))
+                   (cadr (magit-git2--dispatch
+                          '("rev-parse" "--show-cdup")))))))
+    (unwind-protect
+        (progn
+          (magit-git2-test--in-refresh
+            (should (equal (funcall exit) 1))
+            (magit-git2-fixture--git main "update-ref" ref "HEAD")
+            (should (equal (funcall exit) 1))
+            ;; The memos are per directory.
+            (should (equal (funcall cdup main) "\n"))
+            (should (equal (funcall cdup sub) "../\n")))
+          (magit-git2-test--in-refresh
+            (should (equal (funcall exit) 0)))
+          ;; `magit-run-git' binds the cache around a command that writes.
+          (let ((magit--refresh-cache (list (cons 0 0))))
+            (should (equal (funcall exit) 0))
+            (magit-git2-fixture--git main "update-ref" "-d" ref)
+            (should (equal (funcall exit) 1))))
+      (magit-git2-fixture--git main "update-ref" "-d" ref))))
+
+(defun magit-git2-test--git-status-paths ()
+  "The paths `git status' lists here, sorted, renames by their new name."
+  (let ((items (split-string
+                (nth 1 (magit-git2-test--git
+                        '("status" "-z" "--porcelain"
+                          "--untracked-files=normal" "--")))
+                "\0" t))
+        paths)
+    (while items
+      (let ((item (pop items)))
+        (push (substring item 3) paths)
+        (when (memq (aref item 0) '(?R ?C))
+          (pop items))))
+    (sort paths #'string<)))
+
+(ert-deftest magit-git2-test-status-paths ()
+  "`magit-git2--status' lists the paths git lists."
+  :tags '(git2)
+  (let (reports)
+    (pcase-dolist (`(,state . ,dir) (magit-git2-test--dirs))
+      (unless (equal state "origin.git")
+        (let* ((default-directory dir)
+               (mine (sort (mapcar #'car (magit-git2--status dir)) #'string<))
+               (theirs (magit-git2-test--git-status-paths)))
+          (magit-git2--release)
+          (unless (equal mine theirs)
+            (push (format "%s\n  git:     %S\n  libgit2: %S" state theirs mine)
+                  reports)))))
+    (magit-git2-test--check "status-paths" (nreverse reports))))
 
 (provide 'magit-git2-test)
 
