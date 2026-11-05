@@ -223,10 +223,14 @@ This records `magit-status` and two refreshes
 three more. It writes `measure/report-<host>-<date>-<setup>.org`, where
 `<setup>` is `git` when the module is not loaded and `magit-git2-mode`
 otherwise: invocations per command and per argument list, the calls through
-`magit-process-git`, section timings, wall time per refresh and, when
-magit-git2 is loaded, its mode and statistics. Emacs has no
-`dynamic-modules` feature to test. Module support shows as `module-load`
-together with a non-nil `module-file-suffix`.
+`magit-process-git` with the time of each and whether it started git,
+section timings, wall time per refresh and, when magit-git2 is loaded, its
+mode and statistics. Emacs has no `dynamic-modules` feature to test. Module
+support shows as `module-load` together with a non-nil
+`module-file-suffix`.
+
+A report names the measured repository, its branches and local paths, so
+git ignores `measure/report-*.org` and the directories under `measure/`.
 
 ## License
 

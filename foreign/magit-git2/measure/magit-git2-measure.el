@@ -29,9 +29,10 @@
 ;; `magit-refresh-verbose' on, then times three more refreshes with
 ;; both off.  Every invocation recorded is a subprocess; the calls that
 ;; went through `magit-process-git' are counted separately, being the
-;; ones `magit-git2' can answer in-process.  When `magit-git2' is
-;; loaded the report also states its mode and statistics, so the same
-;; script measures before and after.
+;; ones `magit-git2' can answer in-process, and each is timed, as a
+;; call that started git or one answered in-process.  When `magit-git2'
+;; is loaded the report also states its mode and statistics, so the
+;; same script measures before and after.
 
 ;;; Code:
 
@@ -64,12 +65,25 @@ instead of on lines.")
 
 (defvar magit-git2-measure--funnel-calls nil
   "Calls of `magit-process-git' seen during the current phase.
-Each element is (DESTINATION . LOCAL-ARGS), newest first.")
+Each element is (SECONDS GIT-P DESTINATION . LOCAL-ARGS), newest
+first; GIT-P says that the call started git.")
+
+(defvar magit-git2-measure--git-started nil
+  "Whether the call of `magit-process-git' under way started git.")
+
+(defun magit-git2-measure--note-git (&rest _)
+  "Note that the call of `magit-process-git' under way started git."
+  (setq magit-git2-measure--git-started t))
 
 (defun magit-git2-measure--capture (orig destination &rest args)
-  "Record DESTINATION and ARGS, then call ORIG with them."
-  (push (cons destination (flatten-tree args)) magit-git2-measure--funnel-calls)
-  (apply orig destination args))
+  "Call ORIG with DESTINATION and ARGS, recording the call and its time."
+  (setq magit-git2-measure--git-started nil)
+  (let ((start (current-time)))
+    (unwind-protect (apply orig destination args)
+      (push `(,(float-time (time-since start))
+              ,magit-git2-measure--git-started
+              ,destination . ,(flatten-tree args))
+            magit-git2-measure--funnel-calls))))
 
 (defun magit-git2-measure--parse-record (text)
   "Parse the invocation record TEXT into a list of argument lists.
@@ -170,15 +184,40 @@ Return a plist describing phase NAME."
     (insert (format "%5d  %s\n" (car entry) (cdr entry))))
   (insert "#+end_example\n\n"))
 
+(defun magit-git2-measure--split-time (funnel)
+  "Return (GIT . IN-PROCESS), the seconds the calls in FUNNEL took."
+  (let ((git 0.0)
+        (in-process 0.0))
+    (dolist (call funnel)
+      (if (nth 1 call)
+          (setq git (+ git (car call)))
+        (setq in-process (+ in-process (car call)))))
+    (cons git in-process)))
+
+(defun magit-git2-measure--insert-call-times (funnel)
+  "Insert an org section with the time of each call in FUNNEL, longest first."
+  (insert "*** Time per call through magit-process-git\n\n#+begin_example\n")
+  (dolist (call (sort (copy-sequence funnel)
+                      (lambda (a b) (> (car a) (car b)))))
+    (insert (format "%9.3f ms  %-10s %s\n"
+                    (* 1000 (car call))
+                    (if (nth 1 call) "git" "in-process")
+                    (magit-git2-measure--argv-string (cdddr call)))))
+  (insert "#+end_example\n\n"))
+
 (defun magit-git2-measure--insert-phase (phase)
   "Insert the report section for PHASE."
-  (let ((recorded (plist-get phase :recorded))
-        (funnel (plist-get phase :funnel)))
+  (let* ((recorded (plist-get phase :recorded))
+         (funnel (plist-get phase :funnel))
+         (time (magit-git2-measure--split-time funnel)))
     (insert (format "** %s\n\n" (plist-get phase :name)))
     (insert (format "- wall time: %.3f s\n" (plist-get phase :seconds)))
     (insert (format "- subprocesses recorded: %d\n" (length recorded)))
-    (insert (format "- calls through =magit-process-git=: %d\n\n"
+    (insert (format "- calls through =magit-process-git=: %d\n"
                     (length funnel)))
+    (insert (format "- their time: %.3f s in git, %.3f s in-process\n\n"
+                    (car time) (cdr time)))
+    (magit-git2-measure--insert-call-times funnel)
     (magit-git2-measure--insert-histogram
      "Recorded invocations per command"
      (mapcar #'magit-git2-measure--command recorded))
@@ -188,8 +227,8 @@ Return a plist describing phase NAME."
     (magit-git2-measure--insert-histogram
      "Calls through magit-process-git (destination, local arguments)"
      (mapcar (lambda (call)
-               (format "%-10S %s" (car call)
-                       (magit-git2-measure--argv-string (cdr call))))
+               (format "%-10S %s" (nth 2 call)
+                       (magit-git2-measure--argv-string (cdddr call))))
              funnel))
     (insert "*** Verbose refresh\n\n#+begin_example\n"
             (plist-get phase :verbose)
@@ -220,14 +259,20 @@ ENVIRONMENT is from `magit-git2-measure--environment', PHASES from
       (dolist (entry environment)
         (insert (format "- %s :: %s\n" (car entry) (cdr entry))))
       (insert "\n* Summary\n\n")
-      (insert "| phase | wall s | subprocesses | magit-process-git |\n")
-      (insert "|-------+--------+--------------+-------------------|\n")
+      (insert "| phase | wall s | subprocesses | magit-process-git "
+              "| git s | in-process s |\n")
+      (insert "|-------+--------+--------------+-------------------"
+              "+-------+--------------|\n")
       (dolist (phase phases)
-        (insert (format "| %s | %.3f | %d | %d |\n"
-                        (plist-get phase :name)
-                        (plist-get phase :seconds)
-                        (length (plist-get phase :recorded))
-                        (length (plist-get phase :funnel)))))
+        (let ((time (magit-git2-measure--split-time
+                     (plist-get phase :funnel))))
+          (insert (format "| %s | %.3f | %d | %d | %.3f | %.3f |\n"
+                          (plist-get phase :name)
+                          (plist-get phase :seconds)
+                          (length (plist-get phase :recorded))
+                          (length (plist-get phase :funnel))
+                          (car time)
+                          (cdr time)))))
       (insert (format "\n=(benchmark-run 3 (magit-refresh))= => =%S=\n"
                       bench))
       (insert (format "- wall time per refresh: %.3f s\n" (/ (car bench) 3)))
@@ -257,6 +302,7 @@ file name."
          phases bench file)
     (advice-add 'magit-process-git :around #'magit-git2-measure--capture
                 '((depth . -100)))
+    (advice-add 'magit-process-file :before #'magit-git2-measure--note-git)
     (unwind-protect
         (let (status-buffer)
           (push (magit-git2-measure--run-phase
@@ -274,6 +320,7 @@ file name."
           (setq bench (with-current-buffer status-buffer
                         (let ((magit-refresh-verbose nil))
                           (benchmark-run 3 (magit-refresh))))))
+      (advice-remove 'magit-process-file #'magit-git2-measure--note-git)
       (advice-remove 'magit-process-git #'magit-git2-measure--capture))
     (setq file (magit-git2-measure--write-report
                 default-directory environment (nreverse phases) bench))

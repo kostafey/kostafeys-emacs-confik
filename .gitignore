@@ -19,7 +19,8 @@
 !solutions
 !foreign
 
-# foreign/magit-git2, a Zig project; its build output stays ignored
+# foreign/magit-git2, a Zig project; its build output and measurement
+# reports stay ignored
 !/foreign/magit-git2/
 !/foreign/magit-git2/*/
 !/foreign/magit-git2/**/*.zig
@@ -31,6 +32,8 @@
 /foreign/magit-git2/.zig-cache/
 /foreign/magit-git2/zig-out*/
 /foreign/magit-git2/zig-pkg/
+/foreign/magit-git2/measure/report-*.org
+/foreign/magit-git2/measure/*/
 
 # CI
 !/.github/
