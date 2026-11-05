@@ -32,9 +32,9 @@
 ;; ones `magit-git2' can answer in-process, and each is timed, as a
 ;; call that started git or one answered in-process.  When `magit-git2'
 ;; is loaded the report also states its mode and statistics, so the
-;; same script measures before and after.  With the module it also
-;; times `status' through git and through libgit2, the question being
-;; whether in-process would be faster.
+;; same script measures before and after.  Last it times the git
+;; commands a status refresh cannot do without, one at a time and all
+;; at once.
 
 ;;; Code:
 
@@ -47,11 +47,9 @@
 (declare-function magit-git-version "magit-git")
 (declare-function magit-toplevel "magit-git")
 (declare-function magit-git2-stats-alist "magit-git2")
-(declare-function magit-git-lines "magit-git")
+(declare-function magit-git-executable "magit-git")
+(declare-function magit-process-environment "magit-process")
 (declare-function magit-git2-core-available-p "magit-git2-core")
-(declare-function magit-git2--release "magit-git2-core")
-(declare-function magit-git2--repo-info "magit-git2-core")
-(declare-function magit-git2--status "magit-git2-core")
 (defvar magit-process-record-invocations)
 (defvar magit-process-record-buffer-name)
 (defvar magit-process-record-entry-format)
@@ -240,42 +238,57 @@ Return a plist describing phase NAME."
             (plist-get phase :verbose)
             "#+end_example\n\n")))
 
-(defconst magit-git2-measure--status-count 5
-  "How many times `status' is timed each way.")
+(defconst magit-git2-measure--refresh-commands
+  '(("status" "-z" "--porcelain" "--untracked-files=normal" "--")
+    ("diff" "--ita-visible-in-index" "--no-ext-diff"
+     "--ignore-submodules=none" "--no-prefix" "--")
+    ("diff" "--ita-visible-in-index" "--cached" "--no-ext-diff"
+     "--ignore-submodules=none" "--no-prefix" "--"))
+  "The git commands a status refresh cannot do without.")
 
-(defun magit-git2-measure--timed-length (thunk)
-  "Call THUNK, which returns a list: (MILLISECONDS . LENGTH)."
-  (let* ((start (current-time))
-         (result (funcall thunk)))
-    (cons (* 1000 (float-time (time-since start))) (length result))))
+(defconst magit-git2-measure--rounds 5
+  "How many times those commands are timed each way.")
 
-(defun magit-git2-measure--status-runs ()
-  "Time `status' here: ((GIT . LIBGIT2) ...), each (MILLISECONDS . PATHS).
-Each libgit2 run starts from a repository just opened, as a refresh does."
-  (let ((directory default-directory)
-        runs)
-    (dotimes (_ magit-git2-measure--status-count)
-      (magit-git2--release)
-      (magit-git2--repo-info directory)
-      (let ((libgit2 (magit-git2-measure--timed-length
-                      (lambda () (magit-git2--status directory))))
-            (git (magit-git2-measure--timed-length
-                  (lambda ()
-                    (magit-git-lines "status" "--porcelain"
-                                     "--untracked-files=normal" "--")))))
-        (push (cons git libgit2) runs)))
-    (magit-git2--release)
-    (nreverse runs)))
+(defun magit-git2-measure--run-git (commands)
+  "Start git with each of COMMANDS at once; return the milliseconds taken."
+  (let* ((process-environment (magit-process-environment))
+         (start (current-time))
+         (processes
+          (mapcar (lambda (args)
+                    (make-process
+                     :name "magit-git2-measure"
+                     :command `(,(magit-git-executable)
+                                ,@magit-git-global-arguments ,@args)
+                     :connection-type 'pipe
+                     :noquery t
+                     :filter #'ignore
+                     :sentinel #'ignore))
+                  commands)))
+    (dolist (process processes)
+      (while (process-live-p process)
+        (accept-process-output process 0.01)))
+    (* 1000 (float-time (time-since start)))))
 
-(defun magit-git2-measure--insert-status (runs)
-  "Insert the report section for RUNS, as from the function above."
-  (insert "* status: git and libgit2\n\n")
-  (insert "| git ms | git paths | libgit2 ms | libgit2 paths |\n")
-  (insert "|--------+-----------+------------+---------------|\n")
-  (pcase-dolist (`((,git-ms . ,git-paths) . (,libgit2-ms . ,libgit2-paths))
-                 runs)
-    (insert (format "| %.1f | %d | %.1f | %d |\n"
-                    git-ms git-paths libgit2-ms libgit2-paths)))
+(defun magit-git2-measure--command-rounds ()
+  "Time the refresh commands here: ((ONE-AT-A-TIME . AT-ONCE) ...), in ms."
+  (let (rounds)
+    (dotimes (_ magit-git2-measure--rounds)
+      (push (cons (apply #'+ (mapcar (lambda (command)
+                                       (magit-git2-measure--run-git
+                                        (list command)))
+                                     magit-git2-measure--refresh-commands))
+                  (magit-git2-measure--run-git
+                   magit-git2-measure--refresh-commands))
+            rounds))
+    (nreverse rounds)))
+
+(defun magit-git2-measure--insert-command-rounds (rounds)
+  "Insert the report section for ROUNDS."
+  (insert "* git commands: one at a time and at once\n\n")
+  (insert "| one at a time ms | at once ms |\n")
+  (insert "|------------------+------------|\n")
+  (pcase-dolist (`(,one-at-a-time . ,at-once) rounds)
+    (insert (format "| %.1f | %.1f |\n" one-at-a-time at-once)))
   (insert "\n"))
 
 (defun magit-git2-measure--setup ()
@@ -285,11 +298,11 @@ Each libgit2 run starts from a repository just opened, as a refresh does."
     "git"))
 
 (defun magit-git2-measure--write-report
-    (directory environment phases bench status)
+    (directory environment phases bench rounds)
   "Write the report for DIRECTORY and return its file name.
 ENVIRONMENT is from `magit-git2-measure--environment', PHASES from
-`magit-git2-measure--run-phase', BENCH from `benchmark-run' and STATUS,
-nil without the module, from `magit-git2-measure--status-runs'."
+`magit-git2-measure--run-phase', BENCH from `benchmark-run' and ROUNDS
+from `magit-git2-measure--command-rounds'."
   (let ((file (expand-file-name
                (format "report-%s-%s-%s.org"
                        (car (split-string (system-name) "\\."))
@@ -324,8 +337,7 @@ nil without the module, from `magit-git2-measure--status-runs'."
       (insert (format "- wall time per refresh: %.3f s\n" (/ (car bench) 3)))
       (insert (format "- garbage collections: %d (%.3f s)\n\n"
                       (nth 1 bench) (nth 2 bench)))
-      (when status
-        (magit-git2-measure--insert-status status))
+      (magit-git2-measure--insert-command-rounds rounds)
       (when (fboundp 'magit-git2-stats-alist)
         (insert "* magit-git2 statistics (whole session)\n\n#+begin_example\n"
                 (pp-to-string (magit-git2-stats-alist))
@@ -347,7 +359,7 @@ file name."
                              (expand-file-name directory)))
          (default-directory (or (magit-toplevel) default-directory))
          (environment (magit-git2-measure--environment))
-         phases bench status file)
+         phases bench file)
     (advice-add 'magit-process-git :around #'magit-git2-measure--capture
                 '((depth . -100)))
     (advice-add 'magit-process-file :before #'magit-git2-measure--note-git)
@@ -370,11 +382,9 @@ file name."
                           (benchmark-run 3 (magit-refresh))))))
       (advice-remove 'magit-process-file #'magit-git2-measure--note-git)
       (advice-remove 'magit-process-git #'magit-git2-measure--capture))
-    (when (fboundp 'magit-git2--status)
-      (setq status (magit-git2-measure--status-runs)))
     (setq file (magit-git2-measure--write-report
                 default-directory environment (nreverse phases) bench
-                status))
+                (magit-git2-measure--command-rounds)))
     (message "magit-git2-measure: %.3f s per refresh, report in %s"
              (/ (car bench) 3) file)
     file))

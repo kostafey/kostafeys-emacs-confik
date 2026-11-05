@@ -92,7 +92,7 @@ the emulation turns it off for the session."
 
 (defvar magit-git2--stats (make-hash-table :test #'equal)
   "Per-command counters: COMMAND -> [EMULATED FELL-THROUGH MISMATCHED
-LIBGIT2-ERRORS].")
+LIBGIT2-ERRORS SKIPPED].")
 
 (defvar magit-git2--auto-disables 0
   "How often an unexpected error turned the emulation off.")
@@ -101,12 +101,13 @@ LIBGIT2-ERRORS].")
   "Whether this session already announced a mismatch.")
 
 (defconst magit-git2--stat-slots
-  '((emulated . 0) (fell-through . 1) (mismatched . 2) (libgit2-error . 3)))
+  '((emulated . 0) (fell-through . 1) (mismatched . 2) (libgit2-error . 3)
+    (skipped . 4)))
 
 (defun magit-git2--count (command what)
   "Count one WHAT (a key of `magit-git2--stat-slots') for COMMAND."
   (let ((v (or (gethash command magit-git2--stats)
-               (puthash command (make-vector 4 0) magit-git2--stats)))
+               (puthash command (make-vector 5 0) magit-git2--stats)))
         (i (alist-get what magit-git2--stat-slots)))
     (aset v i (1+ (aref v i)))))
 
@@ -205,26 +206,31 @@ recursive edit."
   "A failed result: EXIT, nothing on stdout, STDERR (default unknown)."
   (list exit "" (or stderr 'unknown)))
 
-(defun magit-git2--dispatch (args)
-  "Return (EXIT STDOUT STDERR) for the local git ARGS, or nil."
+(defun magit-git2--with-memo (function)
+  "Call FUNCTION in `default-directory', made absolute, with its memo."
   ;; libgit2 knows nothing of "~".
   (let* ((default-directory (file-name-as-directory
                              (expand-file-name default-directory)))
          (memos (magit-git2--current-memos))
          (scope (cons default-directory magit-git-global-arguments))
          (magit-git2--memo (cdr (assoc scope (cdr memos)))))
-    (setq magit-git2--shape nil)
-    (unwind-protect
-        (catch 'magit-git2--refuse
-          ;; Global arguments other than -c would change any answer.
-          (magit-git2--global-config)
-          (cl-loop for (name _doc matcher _examples) in magit-git2--shapes
-                   for result = (funcall matcher args)
-                   when result
-                   return (progn (setq magit-git2--shape name) result)))
+    (unwind-protect (funcall function)
       (when memos
         (setf (alist-get scope (cdr memos) nil nil #'equal)
               magit-git2--memo)))))
+
+(defun magit-git2--dispatch (args)
+  "Return (EXIT STDOUT STDERR) for the local git ARGS, or nil."
+  (magit-git2--with-memo
+   (lambda ()
+     (setq magit-git2--shape nil)
+     (catch 'magit-git2--refuse
+       ;; Global arguments other than -c would change any answer.
+       (magit-git2--global-config)
+       (cl-loop for (name _doc matcher _examples) in magit-git2--shapes
+                for result = (funcall matcher args)
+                when result
+                return (progn (setq magit-git2--shape name) result))))))
 
 ;;; Repository
 
@@ -1628,6 +1634,24 @@ Nil also when DESTINATION needs a stderr the emulation cannot give."
       (setq result nil))
     result))
 
+(defun magit-git2--redundant-p (args destination)
+  "Whether git need not run for the local ARGS and DESTINATION at all.
+That is the `update-index --refresh' a status refresh starts with: Magit
+ignores its exit code, and the `git diff' of that refresh looks past
+stale stat data and writes the index back.  It does not with
+`--no-optional-locks' or with `diff.autoRefreshIndex' off."
+  (and (null destination)
+       (equal args '("update-index" "--refresh"))
+       (bound-and-true-p magit--refreshing-buffer-p)
+       (not (member "--no-optional-locks" magit-git-global-arguments))
+       (condition-case nil
+           (magit-git2--with-memo
+            (lambda ()
+              (catch 'magit-git2--refuse
+                (magit-git2--repo)
+                (magit-git2--config-bool "diff.autoRefreshIndex" t))))
+         (magit-git2-error nil))))
+
 (defun magit-git2--deliver (result destination)
   "Put RESULT where `call-process' DESTINATION says; return the exit code."
   (pcase-let ((`(,exit ,out ,err) result))
@@ -1704,9 +1728,14 @@ Nil also when DESTINATION needs a stderr the emulation cannot give."
   (pcase magit-git2-mode
     ('on
      (let* ((flat (flatten-tree args))
-            (result (and (magit-git2--usable-p destination)
+            (usable (magit-git2--usable-p destination))
+            (skip (and usable (magit-git2--redundant-p flat destination)))
+            (result (and usable (not skip)
                          (magit-git2--emulate flat destination))))
-       (cond (result
+       (cond (skip
+              (magit-git2--count (car flat) 'skipped)
+              0)
+             (result
               (magit-git2--count (car flat) 'emulated)
               (magit-git2--deliver result destination))
              (t
@@ -1762,13 +1791,14 @@ Nil also when DESTINATION needs a stderr the emulation cannot give."
         (insert (format "mode: %s   auto-disables: %d\n\n"
                         (alist-get 'mode alist)
                         (alist-get 'auto-disables alist))
-                (format "%-16s %9s %12s %10s %8s\n" "command" "emulated"
-                        "fell-through" "mismatched" "libgit2"))
+                (format "%-16s %9s %12s %10s %8s %8s\n" "command" "emulated"
+                        "fell-through" "mismatched" "libgit2" "skipped"))
         (pcase-dolist (`(,command . ,c) (alist-get 'commands alist))
-          (insert (format "%-16s %9d %12d %10d %8d\n" command
+          (insert (format "%-16s %9d %12d %10d %8d %8d\n" command
                           (alist-get 'emulated c) (alist-get 'fell-through c)
                           (alist-get 'mismatched c)
-                          (alist-get 'libgit2-error c)))))
+                          (alist-get 'libgit2-error c)
+                          (alist-get 'skipped c)))))
       (display-buffer (current-buffer)))
     (message "magit-git2: %d emulated, %d fell through, %d mismatched"
              (funcall total 'emulated) (funcall total 'fell-through)

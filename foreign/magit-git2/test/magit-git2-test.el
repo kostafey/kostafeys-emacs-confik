@@ -26,7 +26,6 @@
 (require 'fixture)
 
 (declare-function magit-git2--release "magit-git2-core")
-(declare-function magit-git2--status "magit-git2-core")
 
 ;; Without the module every call falls through to git, and the tests
 ;; would compare git with itself.
@@ -232,35 +231,67 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
             (should (equal (funcall exit) 1))))
       (magit-git2-fixture--git main "update-ref" "-d" ref))))
 
-(defun magit-git2-test--git-status-paths ()
-  "The paths `git status' lists here, sorted, renames by their new name."
-  (let ((items (split-string
-                (nth 1 (magit-git2-test--git
-                        '("status" "-z" "--porcelain"
-                          "--untracked-files=normal" "--")))
-                "\0" t))
-        paths)
-    (while items
-      (let ((item (pop items)))
-        (push (substring item 3) paths)
-        (when (memq (aref item 0) '(?R ?C))
-          (pop items))))
-    (sort paths #'string<)))
+(defun magit-git2-test--clean-repo ()
+  "A new repository with one committed file and no changes."
+  (magit-git2-test--dirs)               ; the global config names the author
+  (let ((dir (file-name-as-directory
+              (make-temp-file (expand-file-name
+                               "clean-" (magit-git2-fixture-root))
+                              t))))
+    (magit-git2-fixture--git dir "init" "-q")
+    (magit-git2-fixture--write (expand-file-name "file" dir) "text\n")
+    (magit-git2-fixture--git dir "add" "file")
+    (magit-git2-fixture--commit dir "first")
+    dir))
 
-(ert-deftest magit-git2-test-status-paths ()
-  "`magit-git2--status' lists the paths git lists."
+(ert-deftest magit-git2-test-update-index ()
+  "A status refresh does without `update-index --refresh' where it can."
   :tags '(git2)
-  (let (reports)
-    (pcase-dolist (`(,state . ,dir) (magit-git2-test--dirs))
-      (unless (equal state "origin.git")
-        (let* ((default-directory dir)
-               (mine (sort (mapcar #'car (magit-git2--status dir)) #'string<))
-               (theirs (magit-git2-test--git-status-paths)))
-          (magit-git2--release)
-          (unless (equal mine theirs)
-            (push (format "%s\n  git:     %S\n  libgit2: %S" state theirs mine)
-                  reports)))))
-    (magit-git2-test--check "status-paths" (nreverse reports))))
+  (let* ((default-directory (magit-git2-test--clean-repo))
+         (dir default-directory)
+         (magit-git2-mode 'on)
+         ;; git compares whole seconds of the modification time.
+         (shift 0)
+         (touch (lambda ()
+                  (setq shift (+ shift 10))
+                  (set-file-times "file" (time-add (current-time) shift))))
+         (stale-p (lambda ()
+                    (/= 0 (call-process "git" nil nil nil
+                                        "diff-files" "--quiet"))))
+         (run (lambda ()
+                (magit-process-git nil '("update-index" "--refresh"))))
+         (run-in-refresh (lambda ()
+                           (let ((magit--refreshing-buffer-p t))
+                             (funcall run)))))
+    ;; Outside a refresh, git runs.
+    (funcall touch)
+    (should (funcall stale-p))
+    (funcall run)
+    (should-not (funcall stale-p))
+    ;; In one it does not, and Magit gets a success.
+    (funcall touch)
+    (should (equal (funcall run-in-refresh) 0))
+    (should (funcall stale-p))
+    ;; Without a `git diff' that writes the index back, git runs.
+    (let ((magit-git-global-arguments
+           (cons "--no-optional-locks" magit-git-global-arguments)))
+      (funcall run-in-refresh))
+    (should-not (funcall stale-p))
+    (funcall touch)
+    (magit-git2-fixture--git dir "config" "diff.autoRefreshIndex" "false")
+    (funcall run-in-refresh)
+    (magit-git2-fixture--git dir "config" "--unset" "diff.autoRefreshIndex")
+    (should-not (funcall stale-p))
+    ;; Shadow mode leaves all to git.
+    (funcall touch)
+    (let ((magit-git2-mode 'shadow))
+      (funcall run-in-refresh))
+    (should-not (funcall stale-p))
+    ;; A real refresh shows nothing false and leaves the index fresh.
+    (funcall touch)
+    (with-current-buffer (magit-status-setup-buffer dir)
+      (should-not (magit-get-section '((unstaged) (status))))
+      (should-not (funcall stale-p)))))
 
 (provide 'magit-git2-test)
 
