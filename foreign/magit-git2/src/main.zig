@@ -14,6 +14,7 @@ const std = @import("std");
 const ec = @import("emacs_c");
 const emacs = @import("emacs.zig");
 const git = @import("git.zig");
+const paths = @import("path.zig");
 const walk = @import("walk.zig");
 const c = git.c;
 
@@ -174,6 +175,16 @@ fn repoInfo(env: Env, args: []const Value) Error!Value {
     try kw(env, &b, ":worktree", try env.boolean(c.git_repository_is_worktree(repo) == 1));
     try kw(env, &b, ":shallow", try env.boolean(c.git_repository_is_shallow(repo) == 1));
     return b.finish(env);
+}
+
+/// (magit-git2--final-path PATH): the directory PATH as git prints it,
+/// or nil when that cannot be told.
+fn finalPath(env: Env, args: []const Value) Error!Value {
+    const input = try env.getString(args[0]);
+    defer env.free(input);
+    const output = paths.final(allocator, input) orelse return env.nil();
+    defer allocator.free(output);
+    return text(env, output);
 }
 
 /// (magit-git2--revparse DIR SPEC): nil or (HASH TYPE REFNAME).
@@ -679,6 +690,7 @@ const defs = [_]Def{
     .{ .name = "magit-git2--set-search-path", .arity = 2, .f = setSearchPath, .doc = "Set the config search path of LEVEL to PATH (nil: default).\n\n(fn LEVEL PATH)" },
     .{ .name = "magit-git2--set-system-config-path", .arity = 1, .f = setSystemConfigPath, .doc = "Read the system config from DIR/gitconfig (nil: default).\n\n(fn DIR)" },
     .{ .name = "magit-git2--repo-info", .arity = 1, .f = repoInfo, .doc = "Return a plist describing the repository of DIR, or nil.\n\n(fn DIR)" },
+    .{ .name = "magit-git2--final-path", .arity = 1, .f = finalPath, .doc = "Return the directory PATH as git prints it, or nil.\n\n(fn PATH)" },
     .{ .name = "magit-git2--revparse", .arity = 2, .f = revparse, .doc = "Resolve SPEC to (HASH TYPE REFNAME), or nil.\n\n(fn DIR SPEC)" },
     .{ .name = "magit-git2--short-id", .arity = 3, .f = shortId, .doc = "Abbreviate HASH uniquely to at least MINLEN digits.\n\n(fn DIR HASH MINLEN)" },
     .{ .name = "magit-git2--ref", .arity = 2, .f = refLookup, .doc = "Look up ref NAME: nil, (symbolic TARGET) or (direct HASH).\n\n(fn DIR NAME)" },
@@ -724,4 +736,5 @@ fn init(env: Env) Error!void {
 
 test {
     _ = git;
+    _ = paths;
 }

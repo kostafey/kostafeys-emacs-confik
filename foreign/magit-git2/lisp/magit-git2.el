@@ -41,6 +41,7 @@
 (declare-function magit-git2--revparse "magit-git2-core")
 (declare-function magit-git2--short-id "magit-git2-core")
 (declare-function magit-git2--ref "magit-git2-core")
+(declare-function magit-git2--final-path "magit-git2-core")
 (declare-function magit-git2--refs "magit-git2-core")
 (declare-function magit-git2--head "magit-git2-core")
 (declare-function magit-git2--config "magit-git2-core")
@@ -260,6 +261,14 @@ recursive edit."
   "Whether FILE is DIR (with a final slash) or below it."
   (string-prefix-p dir (file-name-as-directory file)
                    (memq system-type '(windows-nt ms-dos))))
+
+(defun magit-git2--printed-path (directory)
+  "DIRECTORY the way git prints it, without a final slash.
+Refuse when that cannot be told, or the module is too old to tell."
+  (directory-file-name
+   (or (and (fboundp 'magit-git2--final-path)
+            (magit-git2--final-path directory))
+       (magit-git2--refuse))))
 
 (defun magit-git2--location ()
   "Where the current directory is: one of `outside', `gitdir' (inside
@@ -682,7 +691,7 @@ is not a single version 1 or 2 SHA-1 index."
     ('outside (magit-git2--die 128))
     ((or 'gitdir 'bare) (magit-git2--die 128 magit-git2--worktree-only))
     (`(worktree ,top ,_)
-     (magit-git2--out (concat (directory-file-name top) "\n")))))
+     (magit-git2--out (concat (magit-git2--printed-path top) "\n")))))
 
 (magit-git2-define-shape rev-parse-show-cdup
     `("rev-parse" "--show-cdup")
@@ -709,7 +718,7 @@ is not a single version 1 or 2 SHA-1 index."
                        ((eq loc 'gitdir) (magit-git2--refuse))
                        ((magit-git2--same-file-p gitdir (concat cwd ".git/"))
                         ".git")
-                       (t (directory-file-name gitdir)))
+                       (t (magit-git2--printed-path gitdir)))
                  "\n"))))))
 
 (magit-git2-define-shape rev-parse-is-bare-repository

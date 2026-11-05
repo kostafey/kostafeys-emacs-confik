@@ -420,6 +420,25 @@ Return (MISMATCHES . ANSWERED), ANSWERED the shapes that answered."
     (funcall check 'shadow 'magit-git2--usable-p '("rev-parse" "--show-cdup"))
     (funcall check 'shadow 'magit-git2--count '("rev-parse" "--show-cdup"))))
 
+(ert-deftest magit-git2-test-printed-paths ()
+  "Paths are printed as the module spells them, and only then."
+  :tags '(git2)
+  (let* ((default-directory (cdr (assoc "main/sub" (magit-git2-test--dirs))))
+         (ask (lambda (option)
+                (cadr (magit-git2--dispatch (list "rev-parse" option))))))
+    (unwind-protect
+        (progn
+          (cl-letf (((symbol-function 'magit-git2--final-path)
+                     (lambda (path) (concat "C:/Real/" path))))
+            (dolist (option '("--show-toplevel" "--git-dir"))
+              (should (string-prefix-p "C:/Real/" (funcall ask option)))))
+          ;; A module that cannot tell, or is too old to, leaves it to git.
+          (cl-letf (((symbol-function 'magit-git2--final-path) #'ignore))
+            (should-not (funcall ask "--show-toplevel")))
+          (cl-letf (((symbol-function 'magit-git2--final-path) nil))
+            (should-not (funcall ask "--git-dir"))))
+      (magit-git2--release))))
+
 (provide 'magit-git2-test)
 
 ;;; magit-git2-test.el ends here

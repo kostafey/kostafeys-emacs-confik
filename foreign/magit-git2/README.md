@@ -21,6 +21,7 @@ build/libgit2.zig            static libgit2 without network support
 build/libgit2-sources.zon    its source list
 src/main.zig                 module functions (data in, data out)
 src/git.zig                  repository cache, libgit2 errors, object ids
+src/path.zig                 directory paths as git prints them
 src/walk.zig                 git log's commit order
 src/emacs.zig                helpers over emacs_env
 vendor/emacs-module.h        from Emacs 31.1, unchanged
@@ -193,6 +194,10 @@ git. A formatter refuses rather than approximates. Cases it refuses:
   into commits more than a day older than the commit described. The module
   walks the same way: libgit2's exact reachability check walks the whole
   history below the tags.
+- **Paths.** `--show-toplevel` and an absolute `--git-dir` print the real
+  name of the directory. On Windows that takes `GetFinalPathNameByHandle`:
+  a capital drive letter and the case on disk, where libgit2 repeats the
+  path it was given. Without a module that can tell, git answers.
 - **Config.** The `-c` pairs of `magit-git-global-arguments` come last in
   `config --list` and take precedence in lookups. `config --bool` reports
   the first invalid value in file order, as git does.
