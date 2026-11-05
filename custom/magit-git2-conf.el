@@ -2,8 +2,8 @@
 
 ;; magit-git2 answers Magit's cheap, read-only git queries without
 ;; starting git -- a git process costs ~190 ms on Windows.  It comes with
-;; Magit and downloads its module, unless `zig build' made one in
-;; straight/repos/magit-git2; see the README.md there.
+;; Magit and downloads its module to magit-git2/ here, unless that holds a
+;; magit-git2-core.so; see straight/repos/magit-git2/README.md.
 ;;
 ;; The emulation answers (`on').  Uncomment the line below now and then to
 ;; run it beside git (`verify'), the check after updates of git and Magit:
