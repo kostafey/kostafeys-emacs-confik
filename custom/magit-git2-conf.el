@@ -5,9 +5,9 @@
 ;; Magit and downloads its module, unless `zig build' made one in
 ;; straight/repos/magit-git2; see the README.md there.
 ;;
-;; On Windows the emulation answers (`on').  Elsewhere it runs beside git
-;; (`shadow'), the early warning for updates of git and Magit, and records
-;; every difference in *magit-git2-mismatches*
+;; The emulation answers (`on').  Uncomment the line below now and then to
+;; run it beside git (`verify'), the check after updates of git and Magit:
+;; differences show as warnings and in *magit-git2-mismatches*
 ;; (M-x magit-git2-show-mismatches).
 
 (straight-use-package
@@ -19,7 +19,6 @@
                         "git@github.com:kostafey/magit-git2.git"))
               :branch "master"))
 
-(unless (eq system-type 'windows-nt)
-  (setq magit-git2-mode 'shadow))
+;; (setq magit-git2-mode 'verify)
 
 (provide 'magit-git2-conf)
