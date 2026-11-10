@@ -254,6 +254,17 @@
 (global-set-key (kbd "M-<up>") 'windmove-up)
 (global-set-key (kbd "M-<down>") 'windmove-down)
 
+;; Tabulated lists (*docker-containers*, *Packages*, ...) take
+;; M-<left>/M-<right> for column navigation; leave them to windmove and
+;; move by columns with C-<left>/C-<right> instead, in place of words.
+(with-eval-after-load 'tabulated-list
+  (define-key tabulated-list-mode-map (kbd "M-<left>") nil)
+  (define-key tabulated-list-mode-map (kbd "M-<right>") nil)
+  (define-key tabulated-list-mode-map (kbd "C-<left>")
+              'tabulated-list-previous-column)
+  (define-key tabulated-list-mode-map (kbd "C-<right>")
+              'tabulated-list-next-column))
+
 ;; Resize windows
 (global-set-key (kbd "s-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "s-<right>") 'enlarge-window-horizontally)

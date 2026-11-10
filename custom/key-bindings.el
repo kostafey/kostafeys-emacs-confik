@@ -351,6 +351,16 @@
 ;; C-M-<down>  org-table-move-row-down       basic-keys.el
 
 ;;----------------------------------------------------------------------
+;; Tabulated lists
+;; In tabulated-list-mode and derived modes (docker.el, *Packages*, ...),
+;; unbound to leave the global commands
+;; M-<left>    nil                           basic-keys.el
+;; M-<right>   nil                           basic-keys.el
+;; In tabulated-list-mode and derived modes
+;; C-<left>    tabulated-list-previous-column basic-keys.el
+;; C-<right>   tabulated-list-next-column    basic-keys.el
+
+;;----------------------------------------------------------------------
 ;; ejc-sql
 ;; Global
 ;; C-x <up>    ejc-show-last-result          ejc-sql-conf.el
