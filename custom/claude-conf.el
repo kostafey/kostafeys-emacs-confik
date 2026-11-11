@@ -243,6 +243,7 @@ Never loads claude-code-ide: without it, no instance can be running."
               :branch "main")
   :bind (("C-c C-'" . claude-code-ide-menu)
          ("C-M-a c" . k/claude-code-ide)
+         ("C-M-a M-c" . claude-code-ide)
          ("C-M-a C" . k/claude-code-ide-send-region))
   :config
   ;; Of the three backends (vterm, eat, ghostel) this one renders the Claude

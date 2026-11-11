@@ -162,6 +162,7 @@
 ;; Claude Code
 ;; C-c C-'     claude-code-ide-menu           claude-conf.el
 ;; C-M-a c     k/claude-code-ide              claude-conf.el
+;; C-M-a M-c   claude-code-ide                claude-conf.el
 ;; C-M-a C     k/claude-code-ide-send-region  claude-conf.el
 ;; In Claude Code terminal buffers
 ;; S-<return>  claude-code-ide-insert-newline claude-code-ide.el
