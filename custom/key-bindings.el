@@ -79,8 +79,6 @@
 ;; S-s-<right> enlarge-window-horizontally   basic-keys.el, by 20
 ;; s-<down>    shrink-window                 basic-keys.el
 ;; s-<up>      enlarge-window                basic-keys.el
-;; In ghostel-semi-char-mode, unbound to leave the global command
-;; M-m         nil                           shell-conf.el
 ;;
 ;;===================================================================
 
@@ -157,6 +155,19 @@
 ;;=============================================================================
 ;; Mode keys & programming language specific keys.
 ;;
+
+;;----------------------------------------------------------------------
+;; Ghostel
+;; C-x g       ghostel                       shell-conf.el
+;; C-x p m     ghostel-project               shell-conf.el
+;; C-x p M     ghostel-project-list-buffers  shell-conf.el
+;;   cheat sheet, input modes bound by ghostel itself:
+;; C-c C-e     ghostel-emacs-mode            read-only, terminal live
+;; C-c C-t     ghostel-copy-mode             read-only, terminal frozen
+;; C-c C-j     ghostel-semi-char-mode        back to the terminal
+;; C-c M-d     ghostel-char-mode             every key to the program
+;; M-RET       ghostel-semi-char-mode        leave char mode
+;; q           ghostel-readonly-exit         leave copy or Emacs mode
 
 ;;----------------------------------------------------------------------
 ;; Claude Code
