@@ -112,6 +112,16 @@ forwarding to pick the text up."
               :type git :host nil
               :repo "https://github.com/dakra/ghostel"
               :branch "main"
+              ;; Remotes named the GitHub way, not straight's: `origin' is
+              ;; the fork, `upstream' the original.
+              :remote "upstream"
+              :fork (:repo ,(pcase system-type
+                              ('windows-nt
+                               "https://github.com/kostafey/ghostel.git")
+                              ('gnu/linux
+                               "git@github.com:kostafey/ghostel.git"))
+                     :branch "draw-block-elements"
+                     :remote "origin")
               ;; Same file set as the upstream MELPA recipe: without it
               ;; straight links only `lisp/*.el' into the build directory,
               ;; ghostel finds no bundled `etc/terminfo/' and falls back to
