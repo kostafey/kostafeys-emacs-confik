@@ -100,6 +100,15 @@ keep the `pager-temporary-goal-column'")
 
 ;; ------------------------------
 
+(defun pager-remember-column ()
+  "Set `pager-temporary-goal-column' unless the last command was a pager one.
+The column is counted from the start of the screen line, as
+`vertical-motion' expects it."
+  (if (not (memq last-command pager-keep-column-commands))
+      (setq pager-temporary-goal-column
+            (- (current-column)
+               (save-excursion (vertical-motion 0) (current-column))))))
+
 (defun pager-scroll-screen (lines)
   "Scroll screen LINES, but keep the cursors position on screen.
 LINES are screen lines: `vertical-motion' skips invisible text (folded
@@ -108,10 +117,7 @@ line, so the window start and point move by the same visual distance.
 Moving by buffer lines instead could put point inside hidden text,
 where the command loop moves it back above the new window start, and
 redisplay would then undo the scroll."
-  (if (not (memq last-command pager-keep-column-commands))
-      (setq pager-temporary-goal-column
-            (- (current-column)
-               (save-excursion (vertical-motion 0) (current-column)))))
+  (pager-remember-column)
   (save-excursion
     (goto-char (window-start))
     (vertical-motion lines)
@@ -123,28 +129,27 @@ redisplay would then undo the scroll."
 
 (defun pager-row-up ()
   "Move point to previous line while scrolling screen down one line.
-The effect is that the cursor stays in the same position on the screen."
+The effect is that the cursor stays in the same position on the screen.
+Moves by screen lines, like `pager-scroll-screen'.  Point moves before
+the window scrolls, so on the window's last line `scroll-down' does
+not push it up an extra line."
   (interactive)
-  (if (not (memq last-command pager-keep-column-commands))
-      (setq pager-temporary-goal-column (current-column)))
+  (pager-remember-column)
+  (vertical-motion (cons pager-temporary-goal-column -1))
   (if (not (pos-visible-in-window-p (point-min)))
-      (scroll-down 1))
-  (forward-line -1)
-  (move-to-column pager-temporary-goal-column)
-  )
+      (scroll-down 1)))
 
 (defun pager-row-down ()
   "Move point to next line while scrolling screen up one line.
-The effect is that the cursor stays in the same position on the screen."
+The effect is that the cursor stays in the same position on the screen.
+Moves by screen lines, like `pager-scroll-screen'.  Point moves before
+the window scrolls, so on the window's first line `scroll-up' does
+not push it down an extra line."
   (interactive)
-  (if (not (memq last-command pager-keep-column-commands))
-      (setq pager-temporary-goal-column (current-column)))
+  (pager-remember-column)
+  (vertical-motion (cons pager-temporary-goal-column 1))
   (if (not (pos-visible-in-window-p (point-max)))
-      (scroll-up 1))
-  (if (<= (point) (point-max))
-      (forward-line 1))
-  (move-to-column pager-temporary-goal-column)
-  )
+      (scroll-up 1)))
 
 ;; ----------------------------------------------------------------------
 
