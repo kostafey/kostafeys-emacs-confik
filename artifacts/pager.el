@@ -3,6 +3,7 @@
 ;;; Copyright (C) 1992-1997 Mikael Sjödin (mic@docs.uu.se)
 ;;;
 ;;; Author: Mikael Sjödin  --  mic@docs.uu.se
+;;; Patched by Kostafey <kostafey@gmail.com>
 ;;;
 ;;; This file is NOT part of GNU Emacs.
 ;;; You may however redistribute it and/or modify it under the terms of the GNU
@@ -100,15 +101,22 @@ keep the `pager-temporary-goal-column'")
 ;; ------------------------------
 
 (defun pager-scroll-screen (lines)
-  "Scroll screen LINES, but keep the cursors position on screen."
+  "Scroll screen LINES, but keep the cursors position on screen.
+LINES are screen lines: `vertical-motion' skips invisible text (folded
+sections, e.g. in Magit) and counts each continuation line of a wrapped
+line, so the window start and point move by the same visual distance.
+Moving by buffer lines instead could put point inside hidden text,
+where the command loop moves it back above the new window start, and
+redisplay would then undo the scroll."
   (if (not (memq last-command pager-keep-column-commands))
-      (setq pager-temporary-goal-column (current-column)))
+      (setq pager-temporary-goal-column
+            (- (current-column)
+               (save-excursion (vertical-motion 0) (current-column)))))
   (save-excursion
     (goto-char (window-start))
-    (forward-line lines)
+    (vertical-motion lines)
     (set-window-start (selected-window) (point)))
-  (forward-line lines)
-  (move-to-column pager-temporary-goal-column))
+  (vertical-motion (cons pager-temporary-goal-column lines)))
 
 
 ;; ----------------------------------------------------------------------
