@@ -194,6 +194,11 @@ forwarding to pick the text up."
          ("C-M-S-<left>"  . (lambda () (interactive) (k/sexp-backward t)))
          ("C-S-<home>"    . (lambda () (interactive) (k/buffer-beginning t)))
          ("C-S-<end>"     . (lambda () (interactive) (k/buffer-end t)))
+         ;; The same scrolling in copy and Emacs modes, which share this map;
+         ;; `k/ghostel-scroll' tells the two apart.
+         :map ghostel-readonly-mode-map
+         ("C-<up>"        . k/ghostel-scroll-backward)
+         ("C-<down>"      . k/ghostel-scroll-forward)
          :map project-prefix-map
          ("m" . ghostel-project)
          ("M" . ghostel-project-list-buffers))
@@ -296,32 +301,43 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   ;; `scroll-down-line' scrolls nothing: ghostel hands a wheel notch to the
   ;; program whenever it has asked to track the mouse.
   ;;
-  ;; So these keys build the event the wheel would have sent and give it to
-  ;; the function ghostel's own wheel intercept uses, which encodes whichever
-  ;; mouse protocol is in force.  It declines for a program that ignores the
-  ;; mouse -- a shell, whose scrollback ghostel does materialize into the
-  ;; buffer -- and in copy and Emacs modes, where the buffer is the thing to
-  ;; scroll; the line scroll below then runs, exactly as the wheel falls back
-  ;; to it.
+  ;; So these keys send the program the press a wheel notch would have sent,
+  ;; through the call ghostel's own wheel intercept ends in, which encodes
+  ;; whichever mouse protocol is in force.  That is for a program tracking the
+  ;; mouse, in semi-char mode and in Emacs mode alike: Emacs mode keeps the
+  ;; terminal live, so the program redraws the buffer under the scroll.  For a
+  ;; program that ignores the mouse -- a shell, whose scrollback ghostel does
+  ;; materialize into the buffer -- and in copy mode, which freezes the
+  ;; terminal and leaves the buffer the only thing to scroll, the line scroll
+  ;; runs instead, the one the wheel falls back to there.
+  ;;
+  ;; The wheel itself does not follow into Emacs mode: ghostel's intercept
+  ;; forwards it in semi-char and char modes only.
   (defun k/ghostel-scroll (button count)
     "Scroll COUNT wheel notches: BUTTON 4 back, 5 forward.
-Sent to the program while it tracks the mouse, applied to the buffer a
-line at a time otherwise.  In Codex, target the transcript even when
-point is in the prompt editor."
-    (let ((event (list (if (eq button 4) 'wheel-up 'wheel-down)
-                       ;; Codex routes wheel events by screen position.  Aim
-                       ;; inside the transcript, below its sticky prompt header,
-                       ;; rather than at the composer containing the cursor.
-                       (or (and (or (bound-and-true-p codex-ide-project-root)
-                                    (bound-and-true-p k/codex-project-root))
-                                (posn-at-x-y (* 2 (default-font-width))
-                                             (* 2 (default-line-height))))
-                           (posn-at-point)
-                           (posn-at-x-y 0 0))))
+Sent to the program while it tracks the mouse and the terminal is live
+-- semi-char or Emacs mode -- applied to the buffer a line at a time
+otherwise.  In Codex, target the transcript even when point is in the
+prompt editor."
+    (let ((posn (or (and (or (bound-and-true-p codex-ide-project-root)
+                             (bound-and-true-p k/codex-project-root))
+                         ;; Codex routes wheel events by screen position.  Aim
+                         ;; inside the transcript, below its sticky prompt
+                         ;; header, rather than at the composer containing the
+                         ;; cursor.
+                         (posn-at-x-y (* 2 (default-font-width))
+                                      (* 2 (default-line-height))))
+                    (posn-at-point)
+                    (posn-at-x-y 0 0)))
           (scroll (if (eq button 4) #'scroll-down-line #'scroll-up-line)))
       (condition-case err
           (dotimes (_ (or count 1))
-            (unless (ghostel--forward-scroll-event event button)
+            (if (and ghostel--term
+                     (memq ghostel--input-mode '(semi-char emacs))
+                     (ghostel--mouse-tracking-p ghostel--term))
+                (let ((cell (ghostel--posn-cell posn)))
+                  (ghostel--mouse-event ghostel--term 0 button ; press
+                                        (cdr cell) (car cell) 0))
               (funcall scroll 1)))
         ;; Say so rather than ding, the way `mwheel-scroll' does.
         ((beginning-of-buffer end-of-buffer)
