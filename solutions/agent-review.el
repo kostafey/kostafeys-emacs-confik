@@ -18,9 +18,9 @@
 ;; removes.  `agent-review-send' sends the repository's comments to its
 ;; running agent, asking which one when several run.
 ;;
-;; Diff buffers come from `agent-review-backends', which knows magit;
-;; agents from `agent-review-agents', which knows `codex-ide' and
-;; `pi-ide'.  Both lists take more entries.
+;; Diff buffers come from `agent-review-backends', which knows magit and
+;; multi-magit; agents from `agent-review-agents', which knows
+;; `codex-ide' and `pi-ide'.  Both lists take more entries.
 
 ;;; Code:
 
@@ -36,19 +36,24 @@
   '(("Codex" codex-ide-session-buffer codex-ide-send-string)
     ("Pi" pi-ide-session-buffer pi-ide-send-string))
   "Agents that review comments go to, as (NAME RUNNING-P SEND).
-RUNNING-P is called in the diff buffer and returns non-nil when its
+Both are called in the diff buffer with `default-directory' bound to
+the repository of the comments.  RUNNING-P returns non-nil when its
 project has a live session of the agent; SEND submits a prompt string
 to that session.  Agents whose RUNNING-P is not defined are skipped."
   :type '(repeat (list string function function)))
 
 (defcustom agent-review-backends
-  '((magit-mode :root agent-review--magit-root
+  '((multi-magit-status-mode :root agent-review--multi-magit-root
+                             :hunk agent-review--magit-hunk
+                             :location agent-review--magit-location)
+    (magit-mode :root agent-review--magit-root
                 :hunk agent-review--magit-hunk
                 :location agent-review--magit-location))
   "Diff buffers to review, as (MODE . PROPERTIES).
-A buffer whose major mode derives from MODE uses the PROPERTIES, which
-name functions called in that buffer:
- :root      () returns the repository root;
+A buffer uses the PROPERTIES of the first entry whose MODE its major
+mode derives from.  They name functions called in that buffer:
+ :root      (POS) returns the root of the repository the diff text at
+            POS belongs to;
  :hunk      (POS) returns (START . END) of the whole lines of the hunk
             at POS, END without the last newline, or nil off a hunk;
  :location  (POS) returns (FILE LINE) of the diff line at POS: FILE
@@ -88,10 +93,11 @@ the :comment itself.")
   "Call the current backend's PROPERTY function with ARGS."
   (apply (plist-get (agent-review--backend) property) args))
 
-(defun agent-review--root ()
-  "Return the repository root of the current diff buffer, or nil."
+(defun agent-review--root (&optional pos)
+  "Return the repository root of the diff text at POS, or nil.
+POS defaults to point; nil also off a diff buffer."
   (when (agent-review--backend)
-    (when-let* ((root (agent-review--call :root)))
+    (when-let* ((root (agent-review--call :root (or pos (point)))))
       (file-name-as-directory (expand-file-name root)))))
 
 (defun agent-review-lines (beg end)
@@ -105,9 +111,19 @@ at a line start does not cover that line."
                    (backward-char))
                  (line-end-position)))))
 
-(defun agent-review--magit-root ()
+(defun agent-review--magit-root (_pos)
   "Return the repository of a magit buffer, its `default-directory'."
   default-directory)
+
+(defun agent-review--multi-magit-root (pos)
+  "Return the repository of the multi-magit section at POS.
+Off the section of any repository, return `default-directory', which
+multi-magit sets to the repository at point."
+  (let ((section (magit-section-at pos)))
+    (while (and section
+                (not (eq (slot-value section 'type) 'multi-magit-status)))
+      (setq section (slot-value section 'parent)))
+    (if section (slot-value section 'value) default-directory)))
 
 (defun agent-review--magit-section (pos)
   "Return the magit hunk section at POS, or nil."
@@ -125,7 +141,7 @@ LINE counts in the new file: removed lines are not counted, and the
 header line stands for the line the hunk starts at."
   (when-let* ((hunk (agent-review--magit-section pos)))
     (list (expand-file-name (magit-section-parent-value hunk)
-                            default-directory)
+                            (agent-review--root pos))
           (let ((line (car (slot-value hunk 'to-range))))
             (if (or (null line) (slot-value hunk 'combined))
                 line
@@ -174,29 +190,30 @@ inside one hunk."
 A comment whose text the buffer no longer holds stays queued unseen."
   (mapc #'delete-overlay agent-review--overlays)
   (setq agent-review--overlays nil)
-  (when-let* ((root (and agent-review--comments (agent-review--root))))
+  (when (and agent-review--comments (agent-review--backend))
     (save-excursion
       (save-restriction
         (widen)
         (dolist (comment agent-review--comments)
-          (when (equal (plist-get comment :root) root)
-            (goto-char (point-min))
-            (let ((text (plist-get comment :text))
-                  found)
-              (while (and (not found) (search-forward text nil t))
-                (when (equal (car (agent-review--call
-                                   :location (match-beginning 0)))
-                             (plist-get comment :file))
-                  (setq found (point))))
-              (when found
-                (let ((overlay (make-overlay found found nil t)))
-                  (overlay-put overlay 'after-string
-                               (concat "\n" (propertize
-                                             (concat "  » "
-                                                     (plist-get comment
-                                                                :comment))
-                                             'face 'agent-review-comment)))
-                  (push overlay agent-review--overlays))))))))))
+          (goto-char (point-min))
+          (let ((text (plist-get comment :text))
+                found)
+            (while (and (not found) (search-forward text nil t))
+              (let ((start (match-beginning 0)))
+                (when (and (equal (agent-review--root start)
+                                  (plist-get comment :root))
+                           (equal (car (agent-review--call :location start))
+                                  (plist-get comment :file)))
+                  (setq found (point)))))
+            (when found
+              (let ((overlay (make-overlay found found nil t)))
+                (overlay-put overlay 'after-string
+                             (concat "\n" (propertize
+                                           (concat "  » "
+                                                   (plist-get comment
+                                                              :comment))
+                                           'face 'agent-review-comment)))
+                (push overlay agent-review--overlays)))))))))
 
 (defun agent-review-show-comments-later ()
   "Show the review comments once the current diff buffer is filled in.
@@ -208,13 +225,13 @@ For a mode hook of a diff mode that starts before its buffer is ready."
                      (with-current-buffer buffer
                        (agent-review-show-comments)))))))
 
-(defun agent-review--show-everywhere (root)
-  "Show the review comments again in every diff buffer of ROOT."
+(defun agent-review--show-everywhere ()
+  "Show the review comments again in every diff buffer.
+Not only in those of one repository: a multi-magit buffer shows
+several."
   (dolist (buffer (buffer-list))
     (with-current-buffer buffer
-      (when (and (agent-review--backend)
-                 (or agent-review--overlays
-                     (equal (agent-review--root) root)))
+      (when (agent-review--backend)
         (agent-review-show-comments)))))
 
 (add-hook 'magit-refresh-buffer-hook #'agent-review-show-comments)
@@ -252,7 +269,7 @@ removes it.  \\[agent-review-send] sends the comments."
                  (append agent-review--comments
                          (list (append target (list :comment comment)))))))
     (deactivate-mark)
-    (agent-review--show-everywhere (plist-get target :root))
+    (agent-review--show-everywhere)
     (let ((count (agent-review--count (plist-get target :root))))
       (message "%d review comment%s queued%s"
                count (if (= count 1) "" "s")
@@ -299,6 +316,8 @@ comments leave the queue."
   (interactive "P")
   (let* ((root (or (agent-review--root)
                    (user-error "Not in a diff buffer of agent-review")))
+         ;; The agent of this repository, whatever the buffer's own.
+         (default-directory root)
          (comments (seq-filter (lambda (comment)
                                  (equal (plist-get comment :root) root))
                                agent-review--comments))
@@ -329,7 +348,7 @@ comments leave the queue."
           agent-review--comments (seq-remove (lambda (comment)
                                                (memq comment comments))
                                              agent-review--comments))
-    (agent-review--show-everywhere root)
+    (agent-review--show-everywhere)
     (message "Sent %d review comment%s to %s"
              (length comments) (if (cdr comments) "s" "") (car agent))))
 
@@ -350,10 +369,7 @@ comments leave the queue."
       (setq agent-review--comments (seq-remove (lambda (comment)
                                                  (memq comment comments))
                                                agent-review--comments))
-      (dolist (root (delete-dups (mapcar (lambda (comment)
-                                           (plist-get comment :root))
-                                         comments)))
-        (agent-review--show-everywhere root)))))
+      (agent-review--show-everywhere))))
 
 (provide 'agent-review)
 

@@ -17,7 +17,7 @@
 
 ;;; Pijul changes, as `pijul-conf' parses them
 
-(defun k/agent-review-pijul-root ()
+(defun k/agent-review-pijul-root (_pos)
   "Return the repository of a `pijul-commit-mode' buffer."
   (or pijul-commit-repository default-directory))
 
