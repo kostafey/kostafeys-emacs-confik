@@ -95,21 +95,70 @@
 ;; drive Git (darcs goes through darcsum, not vc), so probe nothing else.
 (setq vc-handled-backends '(Git))
 
+(defvar multi-magit-selected-repositories)
+(declare-function magit-toplevel "magit-git" (&optional directory))
+
+(defun k/subdirectories (entries directory)
+  "Return the subdirectories of DIRECTORY among its ENTRIES.
+ENTRIES are names as `file-name-all-completions' returns them, which
+marks a directory with a trailing slash; `.git' is left out."
+  (seq-keep (lambda (name)
+              (and (string-suffix-p "/" name)
+                   (not (member name '("./" "../" ".git/")))
+                   (concat directory name)))
+            entries))
+
+(defun k/git-repositories-under (directory)
+  "Return the git repositories below DIRECTORY, as sorted directory names.
+Subdirectories count down to two levels, as a/ and b/c/, each by a
+`.git' of its own -- a directory, or the file of a linked worktree or a
+submodule.  No git process runs: one listing of DIRECTORY and of each
+of its subdirectories, and a file check per second level directory.
+Nil for a remote DIRECTORY, where each of these is a network round trip.
+
+The listings and checks run without file name handlers: matching every
+name against them took nine tenths of the time, and an archive entry
+such as x.tar would be opened by `tramp-archive' to look for x.tar/.git."
+  (when (and (not (file-remote-p directory))
+             (file-accessible-directory-p directory))
+    (let ((file-name-handler-alist nil)
+          (directory (file-name-as-directory (expand-file-name directory)))
+          repositories)
+      (dolist (child (k/subdirectories (file-name-all-completions "" directory)
+                                       directory))
+        (let ((entries (file-name-all-completions "" child)))
+          (when (or (member ".git/" entries) (member ".git" entries))
+            (push child repositories))
+          (dolist (grandchild (k/subdirectories entries child))
+            (when (file-exists-p (concat grandchild ".git"))
+              (push grandchild repositories)))))
+      (sort repositories #'string<))))
+
 (defun get-vc-status ()
   "Open the VCS status buffer for the current buffer's repository.
-Use darcsum for a darcs working tree, `pijul-record-preview' for a
-Pijul one (when `pijul-conf' is loaded) and Magit for everything else.
+Use darcsum for a darcs working tree and `pijul-record-preview' for a
+Pijul one (when `pijul-conf' is loaded).  A directory with git
+repositories up to two levels below it, see `k/git-repositories-under',
+gets `multi-magit-status' over them, and over the repository it belongs
+to itself, if any.  Magit covers everything else.
 
 Backend detection via `vc-backend' is deliberately avoided: the only
 other case also opens Magit, so the probe was pure overhead (a
 subprocess per handled backend, slow on Windows)."
   (interactive)
-  (let ((darcs-root (and (fboundp 'darcsum-repository-root)
-                         (ignore-errors (darcsum-repository-root))))
-        (pijul-root (and (fboundp 'pijul-repository-root)
-                         (pijul-repository-root))))
+  (let* ((darcs-root (and (fboundp 'darcsum-repository-root)
+                          (ignore-errors (darcsum-repository-root))))
+         (pijul-root (and (fboundp 'pijul-repository-root)
+                          (pijul-repository-root)))
+         (nested (unless (or darcs-root pijul-root)
+                   (k/git-repositories-under default-directory))))
     (cond (darcs-root (darcsum-whatsnew darcs-root))
           (pijul-root (pijul-record-preview))
+          (nested
+           (require 'multi-magit)
+           (setq multi-magit-selected-repositories
+                 (append (ensure-list (magit-toplevel)) nested))
+           (multi-magit-status))
           (t (magit-status)))))
 
 ;; `git-gutter:in-git-repository-p' shells out to `git rev-parse
