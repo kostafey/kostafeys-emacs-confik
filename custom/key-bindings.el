@@ -350,6 +350,12 @@
 ;; C-<end>     dired-end                     dired-conf.el
 
 ;;----------------------------------------------------------------------
+;; Org
+;; In org-mode
+;; C-c C-c     k/org-send-at-point           text-modes-conf.el
+;; C-c C-r     verb-command-map              text-modes-conf.el
+
+;;----------------------------------------------------------------------
 ;; Org tables
 ;; In orgtbl-mode, unbound to leave the global commands
 ;; M-<left>    nil                           basic-keys.el

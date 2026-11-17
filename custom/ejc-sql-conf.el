@@ -55,10 +55,22 @@
 
 (add-hook 'sql-mode-hook 'k/sql-mode-hook)
 
+(defvar k/ejc-org-mode-keymap nil
+  "`ejc-sql-mode-keymap' for `org-mode' buffers, built on loading ejc-sql.
+Lacks `C-c C-c' and `C-c C-r', leaving them to `org-mode-map'.")
+
 ;; Enable in `org-mode' too, so `ejc-keymap-prefix' commands
 ;; (e.g. `C-c e c' - `ejc-connect') are at hand for SQL snippets.
+;; Minor mode maps take precedence over `org-mode-map', so there
+;; `ejc-sql-mode' gets `k/ejc-org-mode-keymap' instead: `C-c C-c' stays
+;; `k/org-send-at-point' (evaluating SQL blocks with ejc-sql through org-babel)
+;; and `C-c C-r' stays `verb-command-map'.
 (defun k/ejc-org-mode-hook ()
-  (ejc-sql-mode t))
+  (ejc-sql-mode t)
+  (when k/ejc-org-mode-keymap
+    (setq-local minor-mode-overriding-map-alist
+                (cons (cons 'ejc-sql-mode k/ejc-org-mode-keymap)
+                      minor-mode-overriding-map-alist))))
 
 (add-hook 'org-mode-hook 'k/ejc-org-mode-hook)
 
@@ -104,6 +116,9 @@
        (define-key ejc-sql-mode-keymap (kbd "C-S-s-<down>") #'(lambda() (interactive) (ejc-next-sql t)))
        (define-key ejc-sql-mode-keymap (kbd "C-s-<up>") 'ejc-previous-sql)
        (define-key ejc-sql-mode-keymap (kbd "C-s-<down>") 'ejc-next-sql)
+       (setq k/ejc-org-mode-keymap (copy-keymap ejc-sql-mode-keymap))
+       (keymap-unset k/ejc-org-mode-keymap "C-c C-c" t)
+       (keymap-unset k/ejc-org-mode-keymap "C-c C-r" t)
        (global-set-key (kbd "C-x <up>") 'ejc-show-last-result)
        (global-set-key (kbd "C-x C-s") 'ejc-get-temp-editor-buffer)
        (global-set-key (kbd "C-M-<next>") (lambda ()

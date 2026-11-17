@@ -229,7 +229,7 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
   :config (progn
             (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
 
-            (defun k/verb-send ()
+            (defun k/org-send-at-point ()
               (interactive)
               (if (org-in-src-block-p)
                   ;; Inside a source block evaluate it (SQL goes to ejc-sql
@@ -242,7 +242,10 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
                         (goto-char (org-element-property :end element))
                         (skip-chars-backward " \t\n")
                         (k/flash-region beg (line-beginning-position))))
-                    (org-ctrl-c-ctrl-c))
+                    (if (member (org-element-property :language element)
+                                k/org-babel-side-buffer-languages)
+                        (k/org-babel-execute-to-side-buffer)
+                      (org-ctrl-c-ctrl-c)))
                 ;; Flash the request being sent: the heading at point up
                 ;; to the next heading (child headings are separate requests).
                 (ignore-errors
@@ -257,7 +260,7 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
                 (verb-kill-all-response-buffers 1)
                 (verb-send-request-on-point-other-window-stay)))
 
-            (define-key org-mode-map (kbd "C-c C-c") 'k/verb-send)
+            (define-key org-mode-map (kbd "C-c C-c") 'k/org-send-at-point)
             (setq org-hide-leading-stars t)
             (setq org-log-done 'nil) ; Don't show datetime on switching to done.
             (org-babel-do-load-languages
@@ -268,11 +271,50 @@ Trades,Data,USD,AAPL,\"2000-01-01, 09:00:00\",10
                (python . t)
                (emacs-lisp . t)))))
 
-;; Inhibit confirmation before interactively evaluating SQL code
-;; blocks in Org buffers.
+;; Inhibit confirmation before interactively evaluating SQL and Python
+;; code blocks in Org buffers.
 (defun my-org-confirm-babel-evaluate (lang body)
-  (not (member lang '("sql"))))
+  (not (member lang '("sql" "python"))))
 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+;; ob-python writes the results file of `:results value' in the locale
+;; encoding, which on Windows (cp1252) fails on Cyrillic.  Run Python in
+;; its UTF-8 mode for code blocks.
+(defun k/org-babel-python-utf-8 (orig &rest args)
+  "Call ORIG with ARGS with Python in UTF-8 mode."
+  (let ((process-environment (cons "PYTHONUTF8=1" process-environment)))
+    (apply orig args)))
+
+(with-eval-after-load 'ob-python
+  (advice-add 'org-babel-python-evaluate-external-process :around
+              #'k/org-babel-python-utf-8))
+
+;; Results of source blocks in these languages go to a side window
+;; instead of #+RESULTS:, the way ejc-sql and verb show theirs.
+(defvar k/org-babel-side-buffer-languages '("python")
+  "Languages whose source block results `k/org-send-at-point' shows aside.")
+
+(defun k/org-babel-execute-to-side-buffer ()
+  "Evaluate the source block at point, show its result in a side window."
+  (interactive)
+  ;; `silent' replaces only the insertion type: the block's own
+  ;; `output'/`value' stays.
+  (let ((result (org-babel-execute-src-block
+                 nil nil '((:results . "silent"))))
+        (buffer (get-buffer-create "*Org Babel Result*")))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (if (and (consp result) (cl-every #'listp result))
+            (progn
+              (org-mode)
+              (insert (orgtbl-to-orgtbl result nil))
+              (org-table-align))
+          (fundamental-mode)
+          (insert (if (stringp result) result (format "%S" result))))
+        (goto-char (point-min))
+        (view-mode 1)))
+    (display-buffer buffer '(nil (inhibit-same-window . t)))))
 
 (setq org-fontify-quote-and-verse-blocks nil)
 
