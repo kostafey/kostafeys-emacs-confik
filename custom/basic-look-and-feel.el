@@ -22,6 +22,13 @@
            (find-font (font-spec :family "Segoe UI Symbol")))
   (set-fontset-font t 'symbol "Segoe UI Symbol" nil 'append))
 
+;; Emoji such as "✅" (U+2705) belong to the `emoji' script, not `symbol',
+;; so the line above does not reach them; Segoe UI Emoji covers them.
+(when (and (eq system-type 'windows-nt)
+           (assq 'emoji script-representative-chars)
+           (find-font (font-spec :family "Segoe UI Emoji")))
+  (set-fontset-font t 'emoji "Segoe UI Emoji" nil 'append))
+
 ;; Lookup fonts:
 ;; (font-family-list)
 ;; (find-font (font-spec :name "FiraMono"))
