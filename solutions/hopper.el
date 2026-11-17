@@ -187,6 +187,12 @@ Used by `eframe-kill-buffer' to return to the previous position with
              ((equal 'shell-mode mode) (hop-goto-file-location point))
              ;; markdown-mode
              ((equal 'markdown-mode mode) (hop-url-in-markdown point))
+             ;; org-mode: follow [[file:...]] and other links; elsewhere
+             ;; fall back to tags like any other mode
+             ((provided-mode-derived-p mode 'org-mode)
+              (if (eq (org-element-type (org-element-context)) 'link)
+                  (org-open-at-point)
+                (hop-default-tag)))
              ;; ejc-sql-mode
              ((equal 'ejc-sql-mode mode)
               (apply 'ejc-describe-entity
