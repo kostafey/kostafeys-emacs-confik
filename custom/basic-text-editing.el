@@ -623,18 +623,28 @@ URL `http://ergoemacs.org/emacs/elisp_generate_uuid.html'
   (let ((sort-fold-case t))
     (call-interactively 'sort-lines)))
 
-(defun normalize-region-to-snake-case ()
-  "Replace region: spaces, colons, hyphens, slashes → \"_\"; collapse consecutive underscores."
-  (interactive)
+(defun normalize-region-separators (separator)
+  "Replace spaces, colons, slashes, hyphens and underscores in region with SEPARATOR.
+Collapse consecutive SEPARATORs into one."
   (when (use-region-p)
     (let* ((start (region-beginning))
            (end   (region-end))
            (text  (buffer-substring-no-properties start end))
            (result (replace-regexp-in-string
-                    "_\\{2,\\}" "_"
-                    (replace-regexp-in-string "[ :/ -]" "_" text))))
+                    (concat (regexp-quote separator) "\\{2,\\}") separator
+                    (replace-regexp-in-string "[ :/_-]" separator text))))
       (delete-region start end)
       (insert result))))
+
+(defun normalize-region-to-snake-case ()
+  "Replace region: spaces, colons, hyphens, slashes → \"_\"; collapse consecutive underscores."
+  (interactive)
+  (normalize-region-separators "_"))
+
+(defun normalize-region-to-dash-case ()
+  "Replace region: spaces, colons, underscores, slashes → \"-\"; collapse consecutive hyphens."
+  (interactive)
+  (normalize-region-separators "-"))
 
 ;;-------------------------------------------------------------------
 ;; Region
