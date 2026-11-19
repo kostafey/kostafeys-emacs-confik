@@ -376,6 +376,8 @@
 
 (global-set-key (kbd "C-x w") 'kill-buffer)
 (global-set-key (kbd "C-w") 'kill-buffer)
+;; Drop the buffer from the window's tab line, keeping it alive.
+(global-set-key (kbd "C-S-w") 'bury-buffer)
 
 ;;-------------------------------------------------------------------
 ;; Kill or create buffer(s)

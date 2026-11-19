@@ -28,6 +28,7 @@
 ;; C-c M-a     ace-jump-mode-pop-mark        advanced-navigation.el
 ;; C-M-e       eframe-pop-emacs              advanced-navigation.el
 ;; C-w         eframe-kill-buffer            advanced-navigation.el
+;; C-S-w       bury-buffer                   basic-keys.el
 ;; C-<next>    eframe-next-buffer            advanced-navigation.el
 ;; C-<prior>   eframe-previous-buffer        advanced-navigation.el
 ;; C-x C-c     temporary-persistent-switch-buffer advanced-navigation.el
