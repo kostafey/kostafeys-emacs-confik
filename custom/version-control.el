@@ -4,9 +4,7 @@
 (straight-use-package
  '(magit :type git :host github
          :repo "magit/magit" :branch "main"))
-;; The fork's develop branch merges those of luismbo/multi-magit#16
-;; (faces and layout of the repository headings) and #17 (refresh
-;; through `magit-refresh-buffer', so TAB folds sections as in Magit).
+
 (straight-use-package
  `(multi-magit :type git :host nil
                :repo "https://github.com/luismbo/multi-magit.git"
@@ -35,14 +33,6 @@
 
 (custom-set-variables
  '(magit-save-some-buffers (quote dontask)))
-
-;; In `multi-magit-status' a repository heading sits flush left, right
-;; above its sections, and a blank line that folding keeps separates
-;; repositories.  No padding: the organic-green theme draws no box
-;; around the repository name.
-(setq multi-magit-status-heading-padding nil
-      multi-magit-status-heading-blank-line nil
-      multi-magit-status-repository-separator t)
 
 (defun k/magit-status-mode ()
   (cl-loop for m in (list magit-diff-mode-map
