@@ -127,10 +127,12 @@ such as x.tar would be opened by `tramp-archive' to look for x.tar/.git."
 (defun get-vc-status ()
   "Open the VCS status buffer for the current buffer's repository.
 Use darcsum for a darcs working tree and `pijul-record-preview' for a
-Pijul one (when `pijul-conf' is loaded).  A directory with git
-repositories up to two levels below it, see `k/git-repositories-under',
-gets `multi-magit-status' over them, and over the repository it belongs
-to itself, if any.  Magit covers everything else.
+Pijul one (when `pijul-conf' is loaded).  A buffer visiting no file
+(for an indirect buffer, its base buffer), such as Dired or a terminal,
+in a directory with git repositories up to two levels below it, see
+`k/git-repositories-under', gets `multi-magit-status' over them, and
+over the repository it belongs to itself, if any.  Magit covers
+everything else, files included.
 
 Backend detection via `vc-backend' is deliberately avoided: the only
 other case also opens Magit, so the probe was pure overhead (a
@@ -140,7 +142,8 @@ subprocess per handled backend, slow on Windows)."
                           (ignore-errors (darcsum-repository-root))))
          (pijul-root (and (fboundp 'pijul-repository-root)
                           (pijul-repository-root)))
-         (nested (unless (or darcs-root pijul-root)
+         (nested (unless (or darcs-root pijul-root
+                             (buffer-file-name (buffer-base-buffer)))
                    (k/git-repositories-under default-directory))))
     (cond (darcs-root (darcsum-whatsnew darcs-root))
           (pijul-root (pijul-record-preview))
