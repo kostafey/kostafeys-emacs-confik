@@ -37,7 +37,7 @@
 ;;
 ;; `Nemotron-3.5-Bolt-E4B'
 ;; CUDA:
-;; llama serve -hf unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF:UD-Q4_K_XL --no-mmproj --reasoning off -c 32768 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 -lm dio --port 8012
+;; llama serve -hf unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF:UD-Q4_K_XL --no-mmproj --reasoning off -c 32768 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 -lzm on --port 8012
 
 (defun get-language-from-mode ()
   "Get the programming language name from the mode name."
