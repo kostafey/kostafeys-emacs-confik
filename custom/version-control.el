@@ -154,6 +154,48 @@ subprocess per handled backend, slow on Windows)."
            (multi-magit-status))
           (t (magit-status)))))
 
+(defun k/outer-git-repository (root)
+  "Return the git repository up to two levels above ROOT, or ROOT itself.
+ROOT is the absolute directory name of a git repository.  Of its parent
+and its grandparent, the higher one with a `.git' of its own wins, so
+ROOT is among the repositories `k/git-repositories-under' finds below
+it.  Nothing higher is looked at."
+  (let* ((parent (file-name-directory (directory-file-name root)))
+         (grandparent (file-name-directory (directory-file-name parent))))
+    (cond ((and (not (equal grandparent parent))
+                (file-exists-p (concat grandparent ".git")))
+           grandparent)
+          ((and (not (equal parent root))
+                (file-exists-p (concat parent ".git")))
+           parent)
+          (t root))))
+
+(defun k/multi-magit-project-status ()
+  "Open `multi-magit-status' at the root of the current git project.
+The project starts from the git repository holding the buffer's file
+\(for an indirect buffer, its base buffer's file), or
+`default-directory' for a buffer visiting no file, found by its
+`.git' without running git.  A repository up to two levels above it,
+see `k/outer-git-repository', is the root instead.  The status covers
+the root and the git repositories up to two levels below it, see
+`k/git-repositories-under'.  Outside a repository the directory itself
+stands for the root, and the status covers the repositories below it."
+  (interactive)
+  (let* ((file (buffer-file-name (buffer-base-buffer)))
+         (directory (if file (file-name-directory file) default-directory))
+         (top (locate-dominating-file directory ".git"))
+         (root (if top
+                   (k/outer-git-repository
+                    (file-name-as-directory (expand-file-name top)))
+                 (file-name-as-directory (expand-file-name directory))))
+         (repositories (append (and top (list root))
+                               (k/git-repositories-under root))))
+    (unless repositories
+      (user-error "No git repository at or below %s" root))
+    (require 'multi-magit)
+    (setq multi-magit-selected-repositories repositories)
+    (multi-magit-status)))
+
 ;; `git-gutter:in-git-repository-p' shells out to `git rev-parse
 ;; --is-inside-work-tree', and `global-git-gutter-mode' asks it twice for
 ;; every file opened: `after-change-major-mode-hook' runs once for the
@@ -279,6 +321,7 @@ the Magit buffer stays visible.  Cf. `hop-at-point-other-window'."
 ;; Keys
 ;;
 (global-set-key (kbd "M-w") 'get-vc-status)
+(global-set-key (kbd "M-W") 'k/multi-magit-project-status)
 
 (with-eval-after-load 'magit-mode
   (define-key magit-mode-map (kbd "C-w") 'kill-buffer)

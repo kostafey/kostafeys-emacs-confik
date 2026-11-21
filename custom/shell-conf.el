@@ -150,6 +150,7 @@ forwarding to pick the text up."
          ;; Only in semi-char mode: copy mode keeps M-w for
          ;; `ghostel-readonly-copy', which is what it is there for.
          ("M-w"  . get-vc-status)
+         ("M-W"  . k/multi-magit-project-status)
          ("C-k"  . k/ghostel-send-C-k-and-kill)
          ;; `ghostel-mode-map' sends C-g on to the program, and Claude Code
          ;; answers ^G by opening the prompt in $EDITOR -- a window outside

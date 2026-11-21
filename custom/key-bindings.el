@@ -287,6 +287,7 @@
 ;;----------------------------------------------------------------------
 ;; Version control
 ;; M-w         get-vc-status                 version-control.el
+;; M-W         k/multi-magit-project-status  version-control.el
 ;; C-M-g <down> git-gutter:next-hunk         version-control.el
 ;; C-M-g <up>  git-gutter:previous-hunk      version-control.el
 ;; C-M-g p     git-gutter:popup-hunk         version-control.el
