@@ -314,17 +314,18 @@ METHOD and PARAMS are passed through untouched."
 ;; `k/claude-code-ide' attaches to it again; only `claude stop ID' ends it.
 ;;
 ;; Swallow the key where it can do nothing else: with the terminal cursor
-;; right after the prompt mark, ">" and a no-break space, there is no text to
-;; its left to move over.
+;; right after the prompt mark and a no-break space, there is no text to its
+;; left to move over.  The mark is "❯", or ">" where the CLI takes the
+;; terminal for one without Unicode -- which is how it sees Windows.
 (defun k/ghostel-claude-left ()
   "Send <left> to the terminal, unless at the start of a Claude Code prompt."
   (interactive)
   (if (and ghostel--cursor-char-pos
-           (equal (save-excursion
-                    (goto-char ghostel--cursor-char-pos)
-                    (buffer-substring-no-properties (line-beginning-position)
-                                                    (point)))
-                  "> "))
+           (member (save-excursion
+                     (goto-char ghostel--cursor-char-pos)
+                     (buffer-substring-no-properties (line-beginning-position)
+                                                     (point)))
+                   '("❯ " "> ")))
       (message "Left arrow ignored: it opens the agents view here")
     (ghostel--send-event)))
 
