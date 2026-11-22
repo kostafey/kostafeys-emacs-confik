@@ -120,7 +120,7 @@ forwarding to pick the text up."
                                "https://github.com/kostafey/ghostel.git")
                               ('gnu/linux
                                "git@github.com:kostafey/ghostel.git"))
-                     :branch "draw-block-elements"
+                     :branch "develop"
                      :remote "origin")
               ;; Same file set as the upstream MELPA recipe: without it
               ;; straight links only `lisp/*.el' into the build directory,
