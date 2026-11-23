@@ -6,19 +6,10 @@
          :repo "magit/magit" :branch "main"))
 
 (straight-use-package
- `(multi-magit :type git :host nil
+ '(multi-magit :type git :host nil
                :repo "https://github.com/luismbo/multi-magit.git"
                :branch "master"
-               ;; Remotes named the GitHub way, not straight's: `origin' is
-               ;; the fork, `upstream' the original.
-               :remote "upstream"
-               :fork (:repo ,(pcase system-type
-                               ('windows-nt
-                                "https://github.com/kostafey/multi-magit.git")
-                               ('gnu/linux
-                                "git@github.com:kostafey/multi-magit.git"))
-                      :branch "develop"
-                      :remote "origin")))
+               :remote "upstream"))
 (straight-use-package
  '(darcsum :type git :host github
            :repo "emacsmirror/darcsum" :branch "master"))
