@@ -132,6 +132,16 @@ forwarding to pick the text up."
   ;; wiped on every rebuild/update of the package.
   :custom (ghostel-module-directory
            (expand-file-name "ghostel/" user-emacs-directory))
+          ;; On Windows zig's native target is MSVC-flavoured and wants a
+          ;; Windows SDK (WindowsSdkNotFound without one).  Build against
+          ;; MinGW instead, as upstream's Makefile and release DLLs do.
+          (ghostel-module-compile-command
+           (if (eq system-type 'windows-nt)
+               (format "zig build --prefix %%s -Doptimize=ReleaseFast -Dcpu=baseline -Dtarget=%s-windows-gnu"
+                       (if (string-match-p "\\`\\(aarch64\\|arm64\\)"
+                                           system-configuration)
+                           "aarch64" "x86_64"))
+             "zig build --prefix %s -Doptimize=ReleaseFast -Dcpu=baseline"))
   ;; Terminal palette slot 6.  `ansi-color-cyan' is cyan3 (#00CDCD), which
   ;; barely holds together on a light background -- and it is what the Claude
   ;; Code TUI paints the option digits of its prompts with: those come as
@@ -141,6 +151,10 @@ forwarding to pick the text up."
                (ghostel-color-red ((t (:foreground "#EF2929"))))
                (ghostel-color-green ((t (:foreground "#119011"))))
                (ghostel-color-bright-black ((t (:foreground "#119011"))))
+  ;; The module commands carry no autoload cookies upstream, so M-x knows
+  ;; them only once `ghostel' is loaded -- yet they are what to reach for
+  ;; when the module is missing or broken, i.e. before ghostel ever ran.
+  :commands (ghostel-module-compile ghostel-download-module)
   :bind (("C-x g" . ghostel)
          :map ghostel-semi-char-mode-map
          ("C-f"  . isearch-forward)
