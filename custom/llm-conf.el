@@ -36,6 +36,8 @@
 ;; llama serve -hf unsloth/NVIDIA-Nemotron-3-Nano-4B-GGUF:Q4_K_M --reasoning off -c 131072 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 --port 8012
 ;;
 ;; `Nemotron-3.5-Bolt-E4B'
+;; Vulkan:
+;; llama serve -hf unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF:UD-Q4_K_XL --no-mmproj --reasoning off -c 8192 -ngl 99 --device Vulkan0 -fa on -lzm off --port 8012
 ;; CUDA:
 ;; llama serve -hf unsloth/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF:UD-Q4_K_XL --no-mmproj --reasoning off -c 32768 -ngl 99 -fa on -ctk q8_0 -ctv q8_0 -lzm on --port 8012
 
