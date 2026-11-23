@@ -161,12 +161,14 @@
 ;; Eshell
 ;; In eshell-mode
 ;; <home>      eshell-maybe-bol              shell-conf.el
-;; C-c C-e     k/eshell-emacs-mode           shell-conf.el
+;; C-c C-e     k/eshell-emacs-mode           shell-conf.el, toggles on
 ;; In k/eshell-emacs-mode, arrows by lines instead of the input history
 ;; <up>        k/line-previous               shell-conf.el
 ;; <down>      k/line-next                   shell-conf.el
-;; q           k/eshell-emacs-mode           shell-conf.el, back to the prompt
-;; C-c C-e     k/eshell-emacs-mode           shell-conf.el, back to the prompt
+;; <escape>    k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
+;; C-g         k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
+;; q           k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
+;; C-c C-e     k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
 
 ;;----------------------------------------------------------------------
 ;; Ghostel

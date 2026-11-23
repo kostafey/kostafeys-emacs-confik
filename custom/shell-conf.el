@@ -551,10 +551,12 @@ Handle space before backslash ( \\) for multiline commands case."
         (put-text-property (point) (1+ (point)) 'face (k/eshell-lambda-face))))))
 
 (defvar-keymap k/eshell-emacs-mode-map
-  "<up>"    #'k/line-previous
-  "<down>"  #'k/line-next
-  "q"       #'k/eshell-emacs-mode
-  "C-c C-e" #'k/eshell-emacs-mode)
+  "<up>"     #'k/line-previous
+  "<down>"   #'k/line-next
+  "<escape>" #'k/eshell-emacs-mode
+  "C-g"      #'k/eshell-emacs-mode
+  "q"        #'k/eshell-emacs-mode
+  "C-c C-e"  #'k/eshell-emacs-mode)
 
 (define-minor-mode k/eshell-emacs-mode
   "Move through an eshell buffer by lines instead of the input history.
