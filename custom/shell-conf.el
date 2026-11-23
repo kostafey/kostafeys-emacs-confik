@@ -524,6 +524,69 @@ Handle space before backslash ( \\) for multiline commands case."
 
 (add-hook 'eshell-mode-hook 'k/eshell-mode-hook)
 
+;;------------------------------------------------------------
+;; git options completion without the browser
+;;
+;; `pcomplete/git' (pcmpl-git.el) reads the options of a subcommand from
+;; `git help SUBCMD'.  Git for Windows has no man pages, so that opens
+;; git-SUBCMD.html in the browser and blocks typing until git returns -
+;; corfu triggers it on its own as soon as `git log --' is typed.  Here the
+;; options are read from that HTML file instead: each <dt> of it is an
+;; option (or an option value), and those matching the ARGUMENT regexp of
+;; `pcomplete-from-help' are the candidates.  The page is parsed here and
+;; not fed to the original function, which reads its text through
+;; `call-process': pcomplete.el is natively compiled, so a temporary
+;; redefinition of `call-process' would never reach it.  A subcommand
+;; without a page (an alias, say) falls back to the short `git SUBCMD -h'
+;; usage.
+
+(defvar k/git-html-path nil
+  "Directory of the git HTML pages, as told by `git --html-path'.")
+
+(defun k/git-help-html-options (file argument)
+  "Return the options of the git HTML page FILE matching ARGUMENT.
+Each <dt> term of the page is matched at its start; the first match
+group of ARGUMENT, failing that the entire match, is the option."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (let (options)
+      (while (re-search-forward "<dt class=\"hdlist1\">\\(.*\\)</dt>" nil t)
+        (let ((term (string-replace
+                     "&lt;" "<"
+                     (string-replace
+                      "&gt;" ">"
+                      (string-replace
+                       "&amp;" "&"
+                       (replace-regexp-in-string
+                        "<[^>]*>" "" (match-string 1)))))))
+          (when (string-match (concat "\\`\\(?:" argument "\\)") term)
+            (push (or (match-string 1 term) (match-string 0 term)) options))))
+      (delete-dups (nreverse options)))))
+
+(defun k/pcomplete-from-help-no-browser (orig command &rest args)
+  "Call ORIG with COMMAND and ARGS, never letting `git help' open a browser."
+  (if-let* (((eq system-type 'windows-nt))
+            ((consp command))
+            ((equal (cdr command) (list "help" (nth 2 command))))
+            (subcmd (nth 2 command))
+            ((not (string-prefix-p "-" subcmd))))
+      ;; Cached under the key of the `git help' call it replaces.
+      (with-memoization (gethash (cons command args) pcomplete-from-help)
+        (let ((html (expand-file-name
+                     (format "git-%s.html" subcmd)
+                     (with-memoization k/git-html-path
+                       (or (ignore-errors
+                             (car (process-lines (car command) "--html-path")))
+                           "")))))
+          (if (file-readable-p html)
+              (k/git-help-html-options
+               html (or (plist-get args :argument)
+                        (rx "-" (+ (any "-" alnum)) (? "="))))
+            (apply orig (list (car command) subcmd "-h") args))))
+    (apply orig command args)))
+
+(advice-add 'pcomplete-from-help :around #'k/pcomplete-from-help-no-browser)
+
 (provide 'shell-conf)
 
 ;;; shell-conf.el ends here
