@@ -39,7 +39,17 @@
    ("<prior>" . corfu-scroll-down)
    ("<next>" . corfu-scroll-up)
    ("<left>" . (lambda () (interactive) (corfu-quit) (backward-char)))
-   ("<right>" . (lambda () (interactive) (corfu-quit) (forward-char)))))
+   ("<right>" . (lambda () (interactive) (corfu-quit) (forward-char))))
+
+  :config
+  ;; In `eshell-mode' RET runs the command as typed, ignoring the popup;
+  ;; a candidate is taken with TAB.  The filter returns nil there, so the
+  ;; key falls through `corfu-map' to `eshell-send-input', and the popup
+  ;; closes once point leaves the completed region.
+  (defun k/corfu-ret-filter (cmd)
+    (unless (derived-mode-p 'eshell-mode) cmd))
+  (define-key corfu-map (kbd "RET")
+              `(menu-item "" corfu-insert :filter k/corfu-ret-filter)))
 
 ;;-------------------------------------------------------------------
 ;; No tags completion
