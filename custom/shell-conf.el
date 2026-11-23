@@ -460,6 +460,19 @@ prompt editor."
       (concat epe-git-detached-HEAD-char (match-string 1 branch)))
      (t branch))))
 
+(defvar k/eshell-lambda-color "#5544EE"
+  "Color of the λ prompt mark in eshell.")
+
+(defvar k/eshell-emacs-lambda-color "#ADC6FF"
+  "Color of the λ prompt mark while `k/eshell-emacs-mode' is on.")
+
+(defun k/eshell-lambda-face ()
+  "Return the face of the λ prompt mark for the mode of the buffer."
+  `(:foreground ,(if (bound-and-true-p k/eshell-emacs-mode)
+                     k/eshell-emacs-lambda-color
+                   k/eshell-lambda-color)
+    :weight bold))
+
 (setq eshell-prompt-regexp "^λ "
       eshell-prompt-function
       (lambda ()
@@ -467,7 +480,7 @@ prompt editor."
          (propertize (eshell/pwd) 'face 'font-lock-function-name-face)
          (if-let* ((branch (k/git-branch)))
              (propertize (concat "\n" branch) 'face 'font-lock-builtin-face))
-         (propertize "\nλ" 'face `(:foreground "#5544EE" :weight bold))
+         (propertize "\nλ" 'face (k/eshell-lambda-face))
          (propertize " " 'face 'default))))
 
 (defun eshell-maybe-bol ()
@@ -517,12 +530,49 @@ Handle space before backslash ( \\) for multiline commands case."
 
 (add-hook 'eshell-prompt-load-hook 'k/eshell-load-hook)
 
-(defun k/eshell-mode-hook ()
-  (define-key eshell-mode-map (kbd "<up>") 'k/line-previous)
-  (define-key eshell-mode-map (kbd "<down>") 'k/line-next)
-  (define-key eshell-mode-map (kbd "<home>") 'eshell-maybe-bol))
+;;------------------------------------------------------------
+;; Emacs mode: arrows move by lines, as `ghostel-emacs-mode' does
+;;
+;; `eshell-hist-mode' binds <up> and <down> to the input history, and a
+;; minor mode keymap wins over `eshell-mode-map', so the global line moves
+;; never reach an eshell buffer.  `k/eshell-emacs-mode' puts its own map in
+;; place of the history one for the buffer while it is on: the arrows move
+;; by lines again (S-arrows select, as everywhere), and q or C-c C-e goes
+;; back to the prompt.  The λ of the last prompt takes the color of the
+;; mode, `k/eshell-emacs-lambda-color' or `k/eshell-lambda-color'; the
+;; prompt is text already in the buffer, so it is recolored in place.
 
-(add-hook 'eshell-mode-hook 'k/eshell-mode-hook)
+(defun k/eshell-recolor-lambda ()
+  "Give the λ of the last eshell prompt the color of the current mode."
+  (save-excursion
+    (goto-char (point-max))
+    (when (re-search-backward eshell-prompt-regexp nil t)
+      (with-silent-modifications
+        (put-text-property (point) (1+ (point)) 'face (k/eshell-lambda-face))))))
+
+(defvar-keymap k/eshell-emacs-mode-map
+  "<up>"    #'k/line-previous
+  "<down>"  #'k/line-next
+  "q"       #'k/eshell-emacs-mode
+  "C-c C-e" #'k/eshell-emacs-mode)
+
+(define-minor-mode k/eshell-emacs-mode
+  "Move through an eshell buffer by lines instead of the input history.
+Leaving the mode returns point to the end of the buffer, the prompt."
+  :lighter " Emacs"
+  (setq-local minor-mode-overriding-map-alist
+              (delq (assq 'eshell-hist-mode minor-mode-overriding-map-alist)
+                    (copy-sequence minor-mode-overriding-map-alist)))
+  (k/eshell-recolor-lambda)
+  (if k/eshell-emacs-mode
+      (push (cons 'eshell-hist-mode k/eshell-emacs-mode-map)
+            minor-mode-overriding-map-alist)
+    (deactivate-mark)
+    (goto-char (point-max))))
+
+(with-eval-after-load 'esh-mode
+  (define-key eshell-mode-map (kbd "<home>") #'eshell-maybe-bol)
+  (define-key eshell-mode-map (kbd "C-c C-e") #'k/eshell-emacs-mode))
 
 ;;------------------------------------------------------------
 ;; git options completion without the browser

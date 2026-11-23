@@ -158,6 +158,17 @@
 ;;
 
 ;;----------------------------------------------------------------------
+;; Eshell
+;; In eshell-mode
+;; <home>      eshell-maybe-bol              shell-conf.el
+;; C-c C-e     k/eshell-emacs-mode           shell-conf.el
+;; In k/eshell-emacs-mode, arrows by lines instead of the input history
+;; <up>        k/line-previous               shell-conf.el
+;; <down>      k/line-next                   shell-conf.el
+;; q           k/eshell-emacs-mode           shell-conf.el, back to the prompt
+;; C-c C-e     k/eshell-emacs-mode           shell-conf.el, back to the prompt
+
+;;----------------------------------------------------------------------
 ;; Ghostel
 ;; C-x g       ghostel                       shell-conf.el
 ;; C-x p m     ghostel-project               shell-conf.el
