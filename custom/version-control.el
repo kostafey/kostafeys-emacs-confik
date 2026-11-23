@@ -161,25 +161,54 @@ it.  Nothing higher is looked at."
            parent)
           (t root))))
 
+(defvar project-vc-extra-root-markers)
+
+(defun k/marked-project-root (directory)
+  "Return the nearest directory at or above DIRECTORY with a root marker.
+The markers are the file names of `project-vc-extra-root-markers', such
+as `.project', taken literally -- no wildcards.  Nil when there is none,
+or for a remote DIRECTORY."
+  (let ((markers (bound-and-true-p project-vc-extra-root-markers)))
+    (when (and markers (not (file-remote-p directory)))
+      (when-let* ((root (locate-dominating-file
+                         directory
+                         (lambda (dir)
+                           (seq-some (lambda (marker)
+                                       (file-exists-p
+                                        (expand-file-name marker dir)))
+                                     markers)))))
+        (file-name-as-directory (expand-file-name root))))))
+
 (defun k/multi-magit-project-status ()
-  "Open `multi-magit-status' at the root of the current git project.
+  "Open `multi-magit-status' at the root of the current project.
 The project starts from the git repository holding the buffer's file
 \(for an indirect buffer, its base buffer's file), or
 `default-directory' for a buffer visiting no file, found by its
 `.git' without running git.  A repository up to two levels above it,
-see `k/outer-git-repository', is the root instead.  The status covers
-the root and the git repositories up to two levels below it, see
-`k/git-repositories-under'.  Outside a repository the directory itself
+see `k/outer-git-repository', is the root instead.  A directory higher
+still, marked as a project root by `project-vc-extra-root-markers' (a
+`.project' file, say), see `k/marked-project-root', is the root then:
+it need not be a repository itself.  Outside a repository the marked
+directory above the starting one is the root.  The status covers the root, when it is a
+repository, and the git repositories up to two levels below it, see
+`k/git-repositories-under'.  Without either the directory itself
 stands for the root, and the status covers the repositories below it."
   (interactive)
   (let* ((file (buffer-file-name (buffer-base-buffer)))
-         (directory (if file (file-name-directory file) default-directory))
+         (directory (file-name-as-directory
+                     (expand-file-name
+                      (if file (file-name-directory file) default-directory))))
          (top (locate-dominating-file directory ".git"))
-         (root (if top
-                   (k/outer-git-repository
-                    (file-name-as-directory (expand-file-name top)))
-                 (file-name-as-directory (expand-file-name directory))))
-         (repositories (append (and top (list root))
+         (repository (and top
+                          (k/outer-git-repository
+                           (file-name-as-directory (expand-file-name top)))))
+         ;; The search starts at REPOSITORY, so a marked directory is
+         ;; never below it.
+         (root (or (k/marked-project-root (or repository directory))
+                   repository
+                   directory))
+         (repositories (append (and (file-exists-p (concat root ".git"))
+                                    (list root))
                                (k/git-repositories-under root))))
     (unless repositories
       (user-error "No git repository at or below %s" root))
