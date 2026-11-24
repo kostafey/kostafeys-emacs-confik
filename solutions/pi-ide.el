@@ -258,6 +258,10 @@ Sends C-j, Pi's newline key in every keyboard protocol."
   "Return the live Pi terminal of the current buffer's project, or nil."
   (agent-ide-session-buffer pi-ide--client))
 
+(defun pi-ide-session-buffers (directory)
+  "Return the live Pi terminals whose project root is DIRECTORY."
+  (agent-ide-session-buffers pi-ide--client directory))
+
 (defun pi-ide-send-string (text)
   "Submit TEXT as a prompt to this project's Pi session."
   (agent-ide-send-string pi-ide--client text))

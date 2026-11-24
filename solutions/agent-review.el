@@ -16,7 +16,8 @@
 ;; `agent-review-comment' comments the hunk or region at point; on an
 ;; already commented one it edits the comment, which an empty comment
 ;; removes.  `agent-review-send' sends the repository's comments to its
-;; running agent, asking which one when several run.
+;; running agent, or to one running for a directory above it, asking
+;; which one when several run.
 ;;
 ;; Diff buffers come from `agent-review-backends', which knows magit and
 ;; multi-magit; agents from `agent-review-agents', which knows
@@ -33,13 +34,14 @@
   :group 'tools :prefix "agent-review-")
 
 (defcustom agent-review-agents
-  '(("Codex" codex-ide-session-buffer codex-ide-send-string)
-    ("Pi" pi-ide-session-buffer pi-ide-send-string))
-  "Agents that review comments go to, as (NAME RUNNING-P SEND).
-Both are called in the diff buffer with `default-directory' bound to
-the repository of the comments.  RUNNING-P returns non-nil when its
-project has a live session of the agent; SEND submits a prompt string
-to that session.  Agents whose RUNNING-P is not defined are skipped."
+  '(("Codex" codex-ide-session-buffers agent-ide-send-to-buffer)
+    ("Pi" pi-ide-session-buffers agent-ide-send-to-buffer))
+  "Agents that review comments go to, as (NAME SESSIONS SEND).
+SESSIONS (DIRECTORY) returns the live sessions of the agent run for
+DIRECTORY itself, not for a directory above or below it: each a
+buffer, or (LABEL . SESSION) for a session of another kind.  SEND
+\(SESSION TEXT) submits the prompt TEXT to one of them.  Agents whose
+SESSIONS is not defined are skipped."
   :type '(repeat (list string function function)))
 
 (defcustom agent-review-backends
@@ -70,8 +72,8 @@ Each is a plist: :root of the repository, :file (absolute, or nil for a
 change without one), :line in that file, :text of the diff excerpt and
 the :comment itself.")
 
-(defvar agent-review--last-agent nil
-  "Name of the agent the last review went to.")
+(defvar agent-review--last-session nil
+  "Label of the agent session the last review went to.")
 
 (defvar-local agent-review--overlays nil
   "Overlays showing the review comments in this diff buffer.")
@@ -307,50 +309,86 @@ removes it.  \\[agent-review-send] sends the comments."
                   (plist-get comment :comment))))
       comments ""))))
 
+(defun agent-review--sessions (directory)
+  "Return the agent sessions run for DIRECTORY itself.
+Each is (LABEL SEND SESSION), LABEL naming the agent and the session."
+  (mapcan (lambda (agent)
+            (when (fboundp (nth 1 agent))
+              (mapcar (lambda (session)
+                        (let ((label (if (bufferp session)
+                                         (buffer-name session)
+                                       (car session))))
+                          (list (format "%s: %s" (car agent) label)
+                                (nth 2 agent)
+                                (if (bufferp session) session (cdr session)))))
+                      (funcall (nth 1 agent) directory))))
+          agent-review-agents))
+
+(defun agent-review--nearest-sessions (root)
+  "Return (DIRECTORY . SESSIONS) of the agents nearest to ROOT, or nil.
+DIRECTORY is ROOT when an agent session runs for it, else the closest
+directory above ROOT that has one; SESSIONS are those of DIRECTORY, as
+`agent-review--sessions' returns them."
+  (let ((directory root) found)
+    (while (and directory (not found))
+      (if-let* ((sessions (agent-review--sessions directory)))
+          (setq found (cons directory sessions))
+        (let ((parent (file-name-directory (directory-file-name directory))))
+          (setq directory (unless (or (null parent) (equal parent directory))
+                            parent)))))
+    found))
+
 ;;;###autoload
 (defun agent-review-send (&optional choose)
   "Send this repository's review comments to a coding agent in one prompt.
-The agent is the one with a session running for the repository; when
-several run, or with a prefix argument CHOOSE, ask which one.  Sent
-comments leave the queue."
-  (interactive "P")
+The agent is the one with a session running for the repository, or
+failing that for the closest directory above it; when several run
+there, or when CHOOSE is non-nil, ask which one.  Sent comments leave
+the queue.  \[agent-review-send-to] always asks."
+  (interactive)
   (let* ((root (or (agent-review--root)
                    (user-error "Not in a diff buffer of agent-review")))
-         ;; The agent of this repository, whatever the buffer's own.
-         (default-directory root)
          (comments (seq-filter (lambda (comment)
                                  (equal (plist-get comment :root) root))
                                agent-review--comments))
-         (running (progn
+         (nearest (progn
                     (unless comments
                       (user-error "No review comments for %s"
                                   (abbreviate-file-name root)))
-                    (seq-filter (lambda (agent)
-                                  (and (fboundp (nth 1 agent))
-                                       (funcall (nth 1 agent))))
-                                agent-review-agents)))
-         (agent (cond ((null running)
-                       (user-error "No %s session runs for %s"
-                                   (mapconcat #'car agent-review-agents
-                                              " or ")
-                                   (abbreviate-file-name root)))
-                      ((and (null (cdr running)) (not choose))
-                       (car running))
-                      (t
-                       (assoc (completing-read
-                               "Send review to: " (mapcar #'car running)
-                               nil t nil nil
-                               (car (assoc agent-review--last-agent
-                                           running)))
-                              running)))))
-    (funcall (nth 2 agent) (agent-review--prompt comments root))
-    (setq agent-review--last-agent (car agent)
+                    (or (agent-review--nearest-sessions root)
+                        (user-error "No %s session runs for %s or above"
+                                    (mapconcat #'car agent-review-agents
+                                               " or ")
+                                    (abbreviate-file-name root)))))
+         (directory (car nearest))
+         (sessions (cdr nearest))
+         (session (if (and (null (cdr sessions)) (not choose))
+                      (car sessions)
+                    (assoc (completing-read
+                            (format "Send review to (%s): "
+                                    (abbreviate-file-name directory))
+                            (mapcar #'car sessions) nil t nil nil
+                            (car (assoc agent-review--last-session
+                                        sessions)))
+                           sessions))))
+    ;; File names relative to where the agent runs, which may be above
+    ;; the repository.
+    (funcall (nth 1 session) (nth 2 session)
+             (agent-review--prompt comments directory))
+    (setq agent-review--last-session (car session)
           agent-review--comments (seq-remove (lambda (comment)
                                                (memq comment comments))
                                              agent-review--comments))
     (agent-review--show-everywhere)
     (message "Sent %d review comment%s to %s"
-             (length comments) (if (cdr comments) "s" "") (car agent))))
+             (length comments) (if (cdr comments) "s" "") (car session))))
+
+;;;###autoload
+(defun agent-review-send-to ()
+  "Send this repository's review comments to an agent session asked for.
+As `agent-review-send', but ask which session even when one runs."
+  (interactive)
+  (agent-review-send t))
 
 ;;;###autoload
 (defun agent-review-discard ()

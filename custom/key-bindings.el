@@ -313,6 +313,7 @@
 ;; C-s-<up>    magit-section-backward        version-control.el
 ;; ;           agent-review-comment          agent-review-conf.el
 ;; @           agent-review-send             agent-review-conf.el
+;; C-c @       agent-review-send-to          agent-review-conf.el
 ;; In magit-status-mode
 ;; C-x d       k/magit-diff-visit-worktree-file-other-window version-control.el
 ;; In pijul-commit-mode, read-only buffers such as *pijul-record-preview*
@@ -327,6 +328,7 @@
 ;; C-x d       k/pijul-commit-visit-file-other-window pijul-conf.el
 ;; ;           agent-review-comment          agent-review-conf.el
 ;; @           agent-review-send             agent-review-conf.el
+;; C-c @       agent-review-send-to          agent-review-conf.el
 ;; In pijul-commit-mode, while pijul record waits on the buffer
 ;; C-c C-c     k/pijul-commit-finish         pijul-conf.el
 ;; C-c C-k     k/pijul-commit-cancel         pijul-conf.el

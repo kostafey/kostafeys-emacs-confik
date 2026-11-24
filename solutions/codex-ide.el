@@ -187,6 +187,10 @@ UserPromptSubmit hook to be trusted in Codex's `/hooks' menu."
   "Return the live Codex terminal of the current buffer's project, or nil."
   (agent-ide-session-buffer codex-ide--client))
 
+(defun codex-ide-session-buffers (directory)
+  "Return the live Codex terminals whose project root is DIRECTORY."
+  (agent-ide-session-buffers codex-ide--client directory))
+
 (defun codex-ide-send-string (text)
   "Submit TEXT as a prompt to this project's Codex session."
   (agent-ide-send-string codex-ide--client text))

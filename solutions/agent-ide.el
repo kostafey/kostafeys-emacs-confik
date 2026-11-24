@@ -149,9 +149,9 @@ the switch to `ghostel-mode'."
   (and (bound-and-true-p ghostel--process)
        (process-live-p ghostel--process)))
 
-(defun agent-ide--session-buffer (client root)
-  "Return CLIENT's live terminal associated with project ROOT, if any."
-  (seq-some
+(defun agent-ide--session-buffers (client root)
+  "Return CLIENT's live terminals associated with project ROOT."
+  (seq-filter
    (lambda (buffer)
      (with-current-buffer buffer
        (let ((buffer-root (agent-ide--buffer-root client)))
@@ -160,9 +160,12 @@ the switch to `ghostel-mode'."
                   (condition-case nil
                       (file-equal-p buffer-root root)
                     (file-error nil)))
-              (agent-ide--live-terminal-p)
-              buffer))))
+              (agent-ide--live-terminal-p)))))
    (buffer-list)))
+
+(defun agent-ide--session-buffer (client root)
+  "Return CLIENT's live terminal associated with project ROOT, if any."
+  (car (agent-ide--session-buffers client root)))
 
 ;;; Editor tools
 
@@ -739,21 +742,30 @@ Codex binary behind npm or Pi's Node process behind its shell script."
    client (file-name-as-directory
            (expand-file-name (agent-ide--project-root (current-buffer))))))
 
-(defun agent-ide-send-string (client text)
-  "Submit TEXT as a prompt to this project's CLIENT session.
+(defun agent-ide-session-buffers (client directory)
+  "Return CLIENT's live terminals whose project root is DIRECTORY."
+  (agent-ide--session-buffers
+   client (file-name-as-directory (expand-file-name directory))))
+
+(defun agent-ide-send-to-buffer (buffer text)
+  "Submit TEXT as a prompt to the agent terminal BUFFER.
 A bracketed paste delivers TEXT as one piece; only the return after it
 submits."
-  (let ((buffer (or (agent-ide-session-buffer client)
-                    (user-error
-                     "No running %s session for this project; run `%s' first"
-                     (agent-ide-client-name client)
-                     (agent-ide-client-command client)))))
-    (when (string-blank-p text)
-      (user-error "Nothing to send"))
-    (with-current-buffer buffer
-      (ghostel-paste-string text)
-      (sit-for 0.1)
-      (ghostel-send-key "return"))))
+  (when (string-blank-p text)
+    (user-error "Nothing to send"))
+  (with-current-buffer buffer
+    (ghostel-paste-string text)
+    (sit-for 0.1)
+    (ghostel-send-key "return")))
+
+(defun agent-ide-send-string (client text)
+  "Submit TEXT as a prompt to this project's CLIENT session."
+  (agent-ide-send-to-buffer
+   (or (agent-ide-session-buffer client)
+       (user-error "No running %s session for this project; run `%s' first"
+                   (agent-ide-client-name client)
+                   (agent-ide-client-command client)))
+   text))
 
 (defun agent-ide-send-region (client beg end)
   "Paste the region between BEG and END into this project's CLIENT session."

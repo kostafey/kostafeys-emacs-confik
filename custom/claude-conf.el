@@ -229,12 +229,34 @@ current buffer: with a prefix argument and several running, it asks."
     (claude-code-ide-send-prompt text)
     (deactivate-mark)))
 
-(defun k/claude-code-ide-running-p ()
-  "Non-nil when the current buffer's project has a live Claude Code instance.
-Never loads claude-code-ide: without it, no instance can be running."
-  (and (featurep 'claude-code-ide)
-       (k/claude-code-ide--live-session-p
-        (claude-code-ide--get-working-directory))))
+(defun k/claude-code-ide-sessions (directory)
+  "Return the live Claude Code instances run for DIRECTORY.
+Each is (LABEL . SESSION), LABEL the name of the instance's buffer.  Never loads
+claude-code-ide: without it, no instance can be running."
+  (when (featurep 'claude-code-ide)
+    (let ((directory (file-name-as-directory (expand-file-name directory)))
+          (sessions nil))
+      (maphash
+       (lambda (_id session)
+         (let ((dir (file-name-as-directory
+                     (expand-file-name
+                      (claude-code-ide-mcp-session-project-dir session)))))
+           (when (and (or (string= dir directory)
+                          (condition-case nil
+                              (file-equal-p dir directory)
+                            (file-error nil)))
+                      (buffer-live-p
+                       (claude-code-ide-mcp-session-buffer session)))
+             (push (cons (buffer-name
+                          (claude-code-ide-mcp-session-buffer session))
+                         session)
+                   sessions))))
+       claude-code-ide-mcp--sessions)
+      sessions)))
+
+(defun k/claude-code-ide-send-to-session (session text)
+  "Submit TEXT as a prompt to the Claude Code instance SESSION."
+  (claude-code-ide-send-prompt text session))
 
 (use-package claude-code-ide
   :straight `(claude-code-ide

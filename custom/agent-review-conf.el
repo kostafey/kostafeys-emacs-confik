@@ -1,7 +1,8 @@
 ;;; agent-review-conf.el --- Agent diff review -*- lexical-binding: t -*-
 
-;; ;  comment the hunk or region at point, in magit and in pijul changes
-;; @  send the repository's comments to its running agent
+;; ;      comment the hunk or region at point, in magit and in pijul changes
+;; @      send the repository's comments to its running agent
+;; C-c @  the same, asking which agent session to send them to
 
 (require 'agent-review)
 
@@ -12,8 +13,8 @@
 (declare-function k/pijul-commit--hunk-location "pijul-conf" ())
 
 (add-to-list 'agent-review-agents
-             '("Claude" k/claude-code-ide-running-p
-               claude-code-ide-send-prompt))
+             '("Claude" k/claude-code-ide-sessions
+               k/claude-code-ide-send-to-session))
 
 ;;; Pijul changes, as `pijul-conf' parses them
 
@@ -47,7 +48,8 @@ Some changes, such as a file deletion, name no file line to locate."
 
 (with-eval-after-load 'magit-mode
   (define-key magit-mode-map (kbd ";") #'agent-review-comment)
-  (define-key magit-mode-map (kbd "@") #'agent-review-send))
+  (define-key magit-mode-map (kbd "@") #'agent-review-send)
+  (define-key magit-mode-map (kbd "C-c @") #'agent-review-send-to))
 
 ;; As the other keys of `pijul-commit-mode' in `pijul-conf': only in
 ;; read-only buffers, so that they self-insert while `pijul record'
@@ -58,6 +60,9 @@ Some changes, such as a file deletion, name no file line to locate."
                 :filter (lambda (cmd) (and buffer-read-only cmd))))
   (define-key pijul-commit-mode-map (kbd "@")
     '(menu-item "" agent-review-send
+                :filter (lambda (cmd) (and buffer-read-only cmd))))
+  (define-key pijul-commit-mode-map (kbd "C-c @")
+    '(menu-item "" agent-review-send-to
                 :filter (lambda (cmd) (and buffer-read-only cmd)))))
 
 (provide 'agent-review-conf)
