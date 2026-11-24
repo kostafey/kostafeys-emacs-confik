@@ -45,36 +45,39 @@
         (add-hook 'magit-status-sections-hook #'magit-insert-staged-changes)
         (message "Magit: show staged section"))))
 
-  (defvar-local magit-git--git-dir-cache nil)
-  (defvar-local magit-git--toplevel-cache nil)
-  (defvar-local magit-git--cdup-cache nil)
+  ;; The answers depend on `default-directory', which is not fixed for a
+  ;; buffer: `multi-magit-status' moves it to the repository at point.  So
+  ;; both caches are keyed by it -- a cache per buffer alone handed one
+  ;; repository's toplevel to the files of another.
+  (defvar-local magit-git--rev-parse-cache nil
+    "Alist of ((DIRECTORY . ARGS) . OUTPUT) of memoized `git rev-parse'.")
 
   (defun memoize-rev-parse (fun &rest args)
-    (pcase (car args)
-      ("--git-dir"
-       (unless magit-git--git-dir-cache
-         (setq magit-git--git-dir-cache (apply fun args)))
-       magit-git--git-dir-cache)
-      ("--show-toplevel"
-       (unless magit-git--toplevel-cache
-         (setq magit-git--toplevel-cache (apply fun args)))
-       magit-git--toplevel-cache)
-      ("--show-cdup"
-       (let ((cdup (assoc default-directory magit-git--cdup-cache)))
-         (unless cdup
-           (setq cdup (cons default-directory (apply fun args)))
-           (push cdup magit-git--cdup-cache))
-         (cdr cdup)))
-      (_ (apply fun args))))
+    (if (not (member (car args) '("--git-dir" "--show-toplevel" "--show-cdup")))
+        (apply fun args)
+      (let* ((key (cons default-directory args))
+             (hit (assoc key magit-git--rev-parse-cache)))
+        (if hit
+            (cdr hit)
+          (let ((val (apply fun args)))
+            ;; As before, outside a repository ask again next time: it
+            ;; may have been created since.  The cdup was always kept.
+            (when (or val (equal (car args) "--show-cdup"))
+              (push (cons key val) magit-git--rev-parse-cache))
+            val)))))
 
   (advice-add 'magit-rev-parse-safe :around #'memoize-rev-parse)
 
-  (defvar-local magit-git--config-cache (make-hash-table :test 'equal))
+  ;; Shared by all buffers, as the `defvar-local' it replaces was in
+  ;; effect: nothing ever set that one, so every buffer used its default.
+  (defvar magit-git--config-cache (make-hash-table :test 'equal)
+    "Memoized `magit-get' answers, keyed by (DIRECTORY . KEYS).")
 
   (defun memoize-git-config (fun &rest keys)
-    (let ((val (gethash keys magit-git--config-cache :nil)))
+    (let* ((key (cons default-directory keys))
+           (val (gethash key magit-git--config-cache :nil)))
       (when (eq val :nil)
-        (setq val (puthash keys (apply fun keys) magit-git--config-cache)))
+        (setq val (puthash key (apply fun keys) magit-git--config-cache)))
       val))
 
   (advice-add 'magit-get :around #'memoize-git-config)
