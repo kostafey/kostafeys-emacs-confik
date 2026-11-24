@@ -32,6 +32,15 @@
             (set-visited-file-name new-name)
             (set-buffer-modified-p nil)))))))
 
+(defun k/rename-buffer (newname &optional unique)
+  "Like `rename-buffer', but prompt with the current buffer name to edit.
+With a prefix argument UNIQUE, make NEWNAME unique by appending <N>."
+  (interactive
+   (list (read-string "Rename buffer (to new name): "
+                      (buffer-name) 'buffer-name-history)
+         current-prefix-arg))
+  (rename-buffer newname unique))
+
 (defun move-buffer-file (dir)
   "Moves both current buffer and file it's visiting to DIR."
   (interactive "DNew directory: ")
