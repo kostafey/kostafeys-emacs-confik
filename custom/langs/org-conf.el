@@ -101,11 +101,12 @@ The image goes to `k/org-screenshot-directory' as `screenshot-N.png';
 text is pasted by `cua-paste' with ARG."
   (interactive "P")
   (if (k/clipboard-image-only-p)
-      (progn
-        (when (use-region-p)
-          (delete-region (region-beginning) (region-end)))
-        (yank-media))
+      (yank-media)
     (cua-paste arg)))
+
+;; The active region is replaced by `delete-selection-mode' before the
+;; command runs, and only for commands marked like `cua-paste'.
+(put 'k/org-paste-dwim 'delete-selection 'yank)
 
 ;; cua-mode remaps `yank' to `cua-paste' from a minor mode map, which
 ;; outranks `org-mode-map', so a binding there is never consulted.  Join
