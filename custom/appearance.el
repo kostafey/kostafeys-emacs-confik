@@ -12,20 +12,6 @@
               :branch "master")
   :config (load-theme 'organic-green t))
 
-;; ANSI colors in Emacs buffers -- eshell, shell, compilation -- in the
-;; Organic Green palette, as ghostel has them (see `ghostel-conf.el').  The
-;; stock green3, red3, yellow3 and cyan3 barely hold together on a light
-;; background.  Each face gives its color to both the foreground and the
-;; background codes, as the stock definitions do.
-(with-eval-after-load 'ansi-color
-  (dolist (face-color '((ansi-color-green  . "#119011")   ; organic-green
-                        (ansi-color-red    . "#EF2929")   ; organic-red
-                        (ansi-color-yellow . "#999900")   ; organic-sun
-                        (ansi-color-cyan   . "#0065CC"))) ; organic-blue
-    (set-face-attribute (car face-color) nil
-                        :foreground (cdr face-color)
-                        :background (cdr face-color))))
-
 ;;-------------------------------------------------------------------
 (use-package dash
   :straight '(dash :type git :host github
