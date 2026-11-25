@@ -369,8 +369,9 @@
 ;;----------------------------------------------------------------------
 ;; Org
 ;; In org-mode
-;; C-c C-c     k/org-send-at-point           text-modes-conf.el
-;; C-c C-r     verb-command-map              text-modes-conf.el
+;; C-c C-c     k/org-send-at-point           org-conf.el
+;; C-c C-r     verb-command-map              org-conf.el
+;; C-v         k/org-paste-dwim              org-conf.el
 
 ;;----------------------------------------------------------------------
 ;; Org tables

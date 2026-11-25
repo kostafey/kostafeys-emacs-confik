@@ -65,6 +65,7 @@
 (require 'key-bindings)
 (require 'ide)
 (require 'history-conf)
+(require 'org-conf)
 (require 'text-modes-conf)
 (require 'docker-conf)
 ;; (add-to-list 'load-path (expand-file-name "foreign" site-lisp-path))
