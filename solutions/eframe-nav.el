@@ -57,12 +57,13 @@ switching to the previous buffer."
       (previous-buffer))))
 
 (defun eframe-pop-buffer (mode)
-  "Find first buffer with MODE major-mode and set focus or display it."
-  (let ((result-buffer nil))
-    (dolist (buff (buffer-list))
-      (with-current-buffer buff
-        (when (eq major-mode mode)
-          (setq result-buffer buff))))
+  "Focus or display the most recently used buffer in major mode MODE.
+`buffer-list' runs from the most recently selected buffer to the least,
+so the first match is the one last worked in.  Return the buffer, or nil
+if there is none."
+  (let ((result-buffer
+         (seq-find (lambda (buff) (eq (buffer-local-value 'major-mode buff) mode))
+                   (buffer-list))))
     (when result-buffer
       (let ((win (get-buffer-window result-buffer t)))
         (if win

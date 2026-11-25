@@ -155,6 +155,34 @@ list, drowning the popup in hundreds of candidates."
   (setq buffer-undo-list t
         buffer-read-only t))
 
+;; Position markers
+;;
+;; The binary search of `k/dict--lower-bound' jumps across the whole word
+;; list, and each jump has Emacs turn a character position into a byte
+;; position.  Where characters differ in length (Cyrillic takes two bytes
+;; in UTF-8) that is a linear scan from the nearest position it knows: the
+;; buffer ends, point, the gap, a one-entry cache shared by all buffers, and
+;; the markers of the buffer.  A long scan leaves a marker behind, but
+;; nothing refers to it and the next garbage collection drops it -- so after
+;; each one the first lookup in ru.txt (18 million characters) took 30-90
+;; ms.  Markers kept here, every `k/dict-marker-step' characters, bound the
+;; scan: 0.6-2 ms, for ~0.1 s spent once at loading.  An ASCII word list
+;; needs none, as there a character position is its byte position.
+
+(defvar k/dict-marker-step 50000
+  "Characters between the position markers of a multibyte word list.")
+
+(defvar-local k/dict--markers nil
+  "Markers keeping the byte positions of the word list known.")
+
+(defun k/dict--place-markers ()
+  "Fill `k/dict--markers' for the word list in the current buffer."
+  (unless (= (buffer-size) (- (position-bytes (point-max)) 1))
+    (setq k/dict--markers
+          (cl-loop for pos from (point-min) to (point-max)
+                   by k/dict-marker-step
+                   collect (copy-marker pos)))))
+
 (defun k/dict--buffer (file)
   "Return a buffer with the contents of word list FILE, loading it on demand."
   (let ((buffer (cdr (assoc file k/dict--buffers))))
@@ -167,7 +195,8 @@ list, drowning the popup in hundreds of candidates."
           (k/dict-mode)
           (let ((coding-system-for-read 'utf-8)
                 (inhibit-read-only t))
-            (insert-file-contents file)))
+            (insert-file-contents file))
+          (k/dict--place-markers))
         (setf (alist-get file k/dict--buffers nil nil #'equal) buffer)
         (message nil)))
     buffer))

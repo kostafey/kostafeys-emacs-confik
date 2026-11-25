@@ -7,7 +7,7 @@
 ;; docker context points at (`docker context ls'); switch contexts with
 ;; `docker context use NAME' or the transient's -H/--host option.
 ;; Commands that need a live terminal (attach, exec, run -it) pick the
-;; terminal backend on their own: ghostel, set up in `shell-conf'.
+;; terminal backend on their own: ghostel, set up in `ghostel-conf'.
 ;;
 (use-package docker
   :straight (docker :type git :host github

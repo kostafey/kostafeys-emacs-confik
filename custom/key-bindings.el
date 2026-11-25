@@ -160,21 +160,21 @@
 ;;----------------------------------------------------------------------
 ;; Eshell
 ;; In eshell-mode
-;; <home>      eshell-maybe-bol              shell-conf.el
-;; C-c C-e     k/eshell-emacs-mode           shell-conf.el, toggles on
+;; <home>      eshell-maybe-bol              eshell-conf.el
+;; C-c C-e     k/eshell-emacs-mode           eshell-conf.el, toggles on
 ;; In k/eshell-emacs-mode, arrows by lines instead of the input history
-;; <up>        k/line-previous               shell-conf.el
-;; <down>      k/line-next                   shell-conf.el
-;; <escape>    k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
-;; C-g         k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
-;; q           k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
-;; C-c C-e     k/eshell-emacs-mode           shell-conf.el, off, back to the prompt
+;; <up>        k/line-previous               eshell-conf.el
+;; <down>      k/line-next                   eshell-conf.el
+;; <escape>    k/eshell-emacs-mode           eshell-conf.el, off, back to the prompt
+;; C-g         k/eshell-emacs-mode           eshell-conf.el, off, back to the prompt
+;; q           k/eshell-emacs-mode           eshell-conf.el, off, back to the prompt
+;; C-c C-e     k/eshell-emacs-mode           eshell-conf.el, off, back to the prompt
 
 ;;----------------------------------------------------------------------
 ;; Ghostel
-;; C-x g       ghostel                       shell-conf.el
-;; C-x p m     ghostel-project               shell-conf.el
-;; C-x p M     ghostel-project-list-buffers  shell-conf.el
+;; C-x g       ghostel                       ghostel-conf.el
+;; C-x p m     ghostel-project               ghostel-conf.el
+;; C-x p M     ghostel-project-list-buffers  ghostel-conf.el
 ;;   cheat sheet, input modes bound by ghostel itself:
 ;; C-c C-e     ghostel-emacs-mode            read-only, terminal live
 ;; C-c C-t     ghostel-copy-mode             read-only, terminal frozen

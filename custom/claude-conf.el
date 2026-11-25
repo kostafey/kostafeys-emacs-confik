@@ -270,7 +270,7 @@ claude-code-ide: without it, no instance can be running."
   :config
   ;; Of the three backends (vterm, eat, ghostel) this one renders the Claude
   ;; Code TUI with the fewest artifacts.  It wants the bundled xterm-ghostty
-  ;; terminfo that `shell-conf' arranges for ghostel to ship.
+  ;; terminfo that `ghostel-conf' arranges for ghostel to ship.
   (setq claude-code-ide-terminal-backend 'ghostel)
   ;; The CLI draws its "In <file>" label inside the prompt row and takes the
   ;; columns for it out of the input field -- there is no layout in it that
