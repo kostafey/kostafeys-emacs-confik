@@ -134,6 +134,69 @@ Handle space before backslash ( \\) for multiline commands case."
 (add-hook 'eshell-prompt-load-hook 'k/eshell-load-hook)
 
 ;;------------------------------------------------------------
+;; git output in color
+;;
+;; git colors its output only for a terminal (color.ui=auto), and eshell
+;; hands it a pipe, so `git branch' shows no current branch in green and
+;; `git diff' no red and green lines -- though eshell renders ANSI colors
+;; (`eshell-handle-ansi-color').  A git command typed in eshell is run
+;; with -c color.ui=always when its output goes to the eshell buffer --
+;; what color.ui=auto does in a terminal.  Piped or redirected, as in
+;; `git log | grep ^7087' or `git log > file', it stays plain.  Only the
+;; commands typed: an environment variable, such as GIT_CONFIG_COUNT,
+;; would reach every git run from the buffer too, those of vc-git,
+;; pcmpl-git and Magit, which parse the output (and magit-git2 turns its
+;; emulation off under it).  `--no-color' after the subcommand still
+;; turns the colors off.
+
+(defvar eshell-in-pipeline-p)
+(declare-function eshell-interactive-output-p "esh-io" (&optional index handles))
+
+(defun k/eshell-output-to-buffer-p ()
+  "Non-nil when the command being run writes to the eshell buffer.
+Not when it is piped to a next command or its output is redirected."
+  (and (not (memq eshell-in-pipeline-p '(first t)))
+       (eshell-interactive-output-p)))
+
+(defun k/eshell-git-color-args (args)
+  "Add -c color.ui=always to ARGS of `eshell-external-command' for git.
+Only when git writes to the eshell buffer, see `k/eshell-output-to-buffer-p'."
+  (pcase-let ((`(,command ,command-args) args))
+    (if (and (string-equal-ignore-case
+              (file-name-sans-extension (file-name-nondirectory command)) "git")
+             (k/eshell-output-to-buffer-p))
+        (list command (append '("-c" "color.ui=always") command-args))
+      args)))
+
+(advice-add 'eshell-external-command :filter-args #'k/eshell-git-color-args)
+
+;;------------------------------------------------------------
+;; grep, egrep and fgrep: the external grep, as typed
+;;
+;; em-unix.el defines them as Lisp commands, `eshell/grep' and its kin.
+;; Alone, they send the matches to a *grep* buffer; piped into or
+;; redirected they run the external command -- but with the -H and -n
+;; meant for that buffer, so `git log | grep 1234' prefixes each line
+;; with "(standard input):9876:".  Without `eshell/grep' eshell runs
+;; grep.exe as it is, everywhere.  egrep and fgrep of Git for Windows
+;; are "#!/bin/sh" scripts, which eshell cannot start on Windows, so they
+;; become what those scripts do: grep -E and grep -F.  rgrep has no
+;; external command and stays.
+
+(declare-function eshell-parse-command "esh-cmd" (command &optional args toplevel))
+
+(with-eval-after-load 'em-unix
+  (fmakunbound 'eshell/grep)
+
+  (defun eshell/egrep (&rest args)
+    "Run the external grep -E with ARGS."
+    (throw 'eshell-replace-command (eshell-parse-command "*grep" (cons "-E" args))))
+
+  (defun eshell/fgrep (&rest args)
+    "Run the external grep -F with ARGS."
+    (throw 'eshell-replace-command (eshell-parse-command "*grep" (cons "-F" args)))))
+
+;;------------------------------------------------------------
 ;; Emacs mode: arrows move by lines, as `ghostel-emacs-mode' does
 ;;
 ;; `eshell-hist-mode' binds <up> and <down> to the input history, and a
