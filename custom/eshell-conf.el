@@ -95,6 +95,7 @@ A detached HEAD shows as its abbreviated commit.  An unborn branch, which
         (beginning-of-line))))
 
 (defalias 'eshell/ff 'find-file)
+(defalias 'eshell/emacs 'find-file)
 (defalias 'eshell/fw 'find-file-other-window)
 
 (defun eshell/cls ()
