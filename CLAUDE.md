@@ -95,6 +95,9 @@ extension and its directory are whitelisted — adding a file in a new directory
 requires a new `!dir` entry. `communications.el`, `ejc-databases.el`, and
 `.mc-lists.el` are explicitly ignored (local/secret data).
 
+`.gitattributes` (`* text=auto eol=lf`) keeps every text file LF, in the
+repository and in the working copy, Windows included.
+
 ## Applying changes
 
 There is no build step for the Elisp itself. To apply a change to a running

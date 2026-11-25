@@ -1,0 +1,4 @@
+# Line endings: LF in the repository and in every working copy, Windows
+# included, whatever core.autocrlf says.  Files git takes for binary are
+# left alone (custom/langs/xml-conf.el holds a literal CR in a string).
+* text=auto eol=lf
