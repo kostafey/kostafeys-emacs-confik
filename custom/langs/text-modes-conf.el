@@ -67,8 +67,20 @@
 ;; sh-mode
 (add-to-list 'auto-mode-alist '("\\.xsessionrc$" . sh-mode))
 
+;;------------------------------------------------------------
+;; PowerShell
+(use-package powershell
+  :straight (powershell :type git :host github
+                        :repo "jschaf/powershell.el" :branch "master")
+  :config
+  ;; Do not underline drive/scope prefixes (`env' in `$env:PATH',
+  ;; `global:', ...): the face is hard-coded in the font-lock rules.
+  (setq powershell-font-lock-keywords-3
+        (cl-subst nil ''(underline) powershell-font-lock-keywords-3
+                  :test #'equal)))
+
 ;;-------------------------------------------------------------------
-; log4j-mode
+;; log4j-mode
 (autoload 'log4j-mode "log4j-mode" "Major mode for viewing log files." t)
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log4j-mode))
 (add-hook 'log4j-mode-hook (lambda () (toggle-truncate-lines nil)))
